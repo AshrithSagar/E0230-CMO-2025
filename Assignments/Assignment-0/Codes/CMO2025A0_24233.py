@@ -250,6 +250,39 @@ class Adam(IterativeOptimiser):
         return x - self.config["lr"] * m_hat / (v_hat**0.5 + self.config["eps"])
 
 
+class BFGS(IterativeOptimiser):
+    """
+    The BFGS (Broyden-Fletcher-Goldfarb-Shanno) algorithm
+    which approximates the inverse Hessian.\\
+    The 1D case is implemented here.
+
+    `x_{k+1} = x_k - H_k * f'(x_k)`\\
+    where `H_k` is the inverse Hessian approximation at iteration `k`.
+
+    `H_init` is the initial inverse Hessian approximation.
+    """
+
+    def _initialize_state(self):
+        self.H = self.config.get("H_init", 1.0)
+        self.prev_grad = None
+        self.prev_x = None
+
+    def _step(self, x, grad, t):
+        if self.prev_x is not None and self.prev_grad is not None:
+            s = x - self.prev_x
+            y = grad - self.prev_grad
+            denom = s * y
+
+            if denom != 0:
+                self.H = (s**2) / denom  # Scalar update in 1D
+
+        # Update current values
+        self.prev_x = x
+        self.prev_grad = grad
+
+        return x - self.H * grad  # Step
+
+
 # ---------- Main ----------
 if __name__ == "__main__":
     optimisers: list[IterativeOptimiser] = [
@@ -258,6 +291,7 @@ if __name__ == "__main__":
         Adagrad(lr=1e-2, eps=1e-8),
         RMSProp(lr=1e-3, beta=0.9, eps=1e-8),
         Adam(lr=1e-3, beta1=0.9, beta2=0.999, eps=1e-8),
+        BFGS(H_init=1.0),
     ]
     for opt in optimisers:
         opt.run(oracle_f, x0=0.0)
