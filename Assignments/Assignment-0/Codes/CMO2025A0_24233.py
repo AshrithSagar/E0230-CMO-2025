@@ -127,6 +127,13 @@ class IterativeOptimiser(ABC):
 
 # ---------- Optimiser Implementations ----------
 class GradientDescent(IterativeOptimiser):
+    """
+    Standard Gradient Descent.
+
+    `x_{k+1} = x_k - eta f'(x_k)`\\
+    where `eta` is the learning rate.
+    """
+
     def _initialize_state(self):
         pass
 
@@ -135,6 +142,14 @@ class GradientDescent(IterativeOptimiser):
 
 
 class MomentumGradientDescent(IterativeOptimiser):
+    """
+    Gradient Descent with Momentum.
+
+    `v_{k+1} = gamma v_k - eta f'(x_k)`\\
+    `x_{k+1} = x_k + v_{k+1}`\\
+    where `gamma` is the momentum parameter and `eta` is the learning rate.
+    """
+
     def _initialize_state(self):
         self.v = 0.0
 
@@ -144,6 +159,15 @@ class MomentumGradientDescent(IterativeOptimiser):
 
 
 class Adagrad(IterativeOptimiser):
+    """
+    Adagrad Optimiser.
+
+    `G_{k+1} = G_k + [f'(x_k)]^2`\\
+    `x_{k+1} = x_k - [eta / (sqrt(G_{k+1}) + eps)] * f'(x_k)`\\
+    where `G` is the sum of squared gradients, `eta` is the learning rate,
+    and `eps` is a small constant for numerical stability.
+    """
+
     def _initialize_state(self):
         self.gsum = 0.0
 
@@ -154,6 +178,16 @@ class Adagrad(IterativeOptimiser):
 
 
 class RMSProp(IterativeOptimiser):
+    """
+    RMSProp Optimiser.
+
+    `S_{k+1} = beta * S_k + (1 - beta) * [f'(x_k)]^2`\\
+    `x_{k+1} = x_k - [eta / (sqrt(S_{k+1}) + eps)] * f'(x_k)`\\
+    where `S` is the moving average of squared gradients,
+    `beta` is the decay rate, `eta` is the learning rate,
+    and `eps` is a small constant for numerical stability.
+    """
+
     def _initialize_state(self):
         self.avg_sq_grad = 0.0
 
@@ -166,6 +200,19 @@ class RMSProp(IterativeOptimiser):
 
 
 class Adam(IterativeOptimiser):
+    """
+    Adam Optimiser.
+
+    `m_{k+1} = beta1 * m_k + (1 - beta1) * f'(x_k)`\\
+    `v_{k+1} = beta2 * v_k + (1 - beta2) * [f'(x_k)]^2`\\
+    `mhat_{k+1} = m_{k+1} / (1 - beta1^{k+1})`\\
+    `vhat_{k+1} = v_{k+1} / (1 - beta2^{k+1})`\\
+    `x_{k+1} = x_k - [eta / (sqrt(vhat_{k+1}) + eps)] * mhat_{k+1}`\\
+    where `m` and `v` are the first and second moment estimates,
+    `beta1` and `beta2` are decay rates, `eta` is the learning rate,
+    and `eps` is a small constant for numerical stability.
+    """
+
     def _initialize_state(self):
         self.m = 0.0
         self.v = 0.0
