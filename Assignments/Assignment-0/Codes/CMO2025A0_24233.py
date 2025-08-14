@@ -83,8 +83,13 @@ class IterativeOptimiser(ABC):
         self.fx_star: float
         self.dfx_star: float
 
+        self.oracle_fn: FirstOrderOracleFn
+        self.x0: float
+        self.maxiter: int
+        self.tol: float
+
     def run(
-        self, oracle_fn: FirstOrderOracleFn, x0: float, maxiter=1_000_000, tol=1e-6
+        self, oracle_fn: FirstOrderOracleFn, x0: float, maxiter=1_000_000, tol=1e-9
     ):
         """
         Runs the iterative algorithm.
@@ -96,6 +101,10 @@ class IterativeOptimiser(ABC):
             tol: Tolerance for stopping criterion based on the gradient.
         """
         self.oracle_fn = oracle_fn
+        self.x0 = x0
+        self.maxiter = maxiter
+        self.tol = tol
+
         self.history = [x0]
         x = x0
         self._initialize_state()
@@ -133,14 +142,21 @@ class IterativeOptimiser(ABC):
 
     def summary(self):
         """Prints a summary of the algorithm's results."""
+        num_iters = len(self.history) - 1
+        converged = abs(self.dfx_star) < self.tol
+
         print(f"\n{self.name}")
         print(
             f"x* = {self.x_star:.6f}, f(x*) = {self.fx_star:.6f}, f'(x*) = {self.dfx_star:.2e}"
         )
-        if abs(self.dfx_star) < 1e-6:
+        print(
+            f"Iterations: {num_iters} {'(Converged)' if converged else '(Did NOT converge)'}"
+        )
+
+        if converged:
             print("Success! Gradient is close to zero.")
         else:
-            print("Error: Gradient is not close to zero.")
+            print("Warning: Gradient is not close to zero. May not have converged.")
 
     def plot(self):
         """Plots the history of `x` values during the optimisation."""
