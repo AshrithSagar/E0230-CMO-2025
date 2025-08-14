@@ -7,6 +7,7 @@ from abc import ABC, abstractmethod
 from typing import Callable, TypeAlias
 
 import matplotlib.pyplot as plt
+import numpy as np
 
 sys.path.insert(0, os.path.abspath("oracle_2025A0"))
 from oracle_2025A0 import oracle  # type: ignore
@@ -34,6 +35,27 @@ FirstOrderOracleFn: TypeAlias = Callable[[float], tuple[float, float]]
 Type alias for a first-order oracle function.
 A function of this type takes a float `x` and returns a tuple `(f(x), f'(x))`.
 """
+
+
+def plot_oracle(func: FirstOrderOracleFn, x_range: tuple[float, float], num_points=100):
+    """
+    Plots the oracle function over a specified range.
+
+    Parameters:
+        func: The first-order oracle function to plot.
+        x_range: A tuple specifying the range of `x` values to plot.
+        num_points: Number of points to sample in the range.
+    """
+    x_values = np.linspace(x_range[0], x_range[1], num_points)
+    y_values = [func(x)[0] for x in x_values]
+
+    plt.plot(x_values, y_values, label="f(x)")
+    plt.xlabel("x")
+    plt.ylabel("f(x)")
+    plt.title("Oracle Function Plot")
+    plt.legend()
+    plt.grid(True)
+    plt.tight_layout()
 
 
 # ---------- Iterative Algorithm Template ----------
@@ -230,20 +252,23 @@ class Adam(IterativeOptimiser):
 
 # ---------- Main ----------
 if __name__ == "__main__":
-    optimizers: list[IterativeOptimiser] = [
+    optimisers: list[IterativeOptimiser] = [
         GradientDescent(lr=1e-3),
         MomentumGradientDescent(lr=1e-3, momentum=0.9),
         Adagrad(lr=1e-2, eps=1e-8),
         RMSProp(lr=1e-3, beta=0.9, eps=1e-8),
         Adam(lr=1e-3, beta1=0.9, beta2=0.999, eps=1e-8),
     ]
-    for opt in optimizers:
+    for opt in optimisers:
         opt.run(oracle_f, x0=0.0)
         opt.summary()
 
-    # Plot
+    # Oracle function plot
+    plot_oracle(oracle_f, x_range=(-20, 20))
+
+    # Convergence of optimisers plot
     plt.figure(figsize=(10, 6))
-    for opt in optimizers:
+    for opt in optimisers:
         opt.plot()
     plt.xlabel("Iteration")
     plt.ylabel("x value")
@@ -251,4 +276,5 @@ if __name__ == "__main__":
     plt.legend()
     plt.grid(True)
     plt.tight_layout()
+
     plt.show()
