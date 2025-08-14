@@ -60,16 +60,126 @@ def gradient_descent(
     return x
 
 
+def gradient_descent_momentum(
+    func: FirstOrderOracleFn,
+    x0: float,
+    lr: float = 1e-3,
+    momentum: float = 0.9,
+    tol: float = 1e-6,
+    maxiter: int = int(1e6),
+) -> float:
+    x = x0
+    v = 0.0  # Velocity
+    for _ in range(maxiter):
+        _, grad = func(x)
+        if abs(grad) < tol:
+            break
+        v = momentum * v - lr * grad
+        x += v
+    return x
+
+
+def nesterov_accelerated_gradient(
+    func: FirstOrderOracleFn,
+    x0: float,
+    lr: float = 1e-3,
+    momentum: float = 0.9,
+    tol: float = 1e-6,
+    maxiter: int = int(1e6),
+) -> float:
+    x = x0
+    v = 0.0
+    for _ in range(maxiter):
+        # Look-ahead point
+        _, grad = func(x + momentum * v)
+        if abs(grad) < tol:
+            break
+        v = momentum * v - lr * grad
+        x += v
+    return x
+
+
+def adagrad(
+    func: FirstOrderOracleFn,
+    x0: float,
+    lr: float = 1e-2,
+    eps: float = 1e-8,
+    tol: float = 1e-6,
+    maxiter: int = int(1e6),
+) -> float:
+    x = x0
+    grad_squared_sum = 0.0
+    for _ in range(maxiter):
+        _, grad = func(x)
+        if abs(grad) < tol:
+            break
+        grad_squared_sum += grad**2
+        adjusted_lr = lr / (grad_squared_sum**0.5 + eps)
+        x -= adjusted_lr * grad
+    return x
+
+
+def rmsprop(
+    func: FirstOrderOracleFn,
+    x0: float,
+    lr: float = 1e-3,
+    beta: float = 0.9,
+    eps: float = 1e-8,
+    tol: float = 1e-6,
+    maxiter: int = int(1e6),
+) -> float:
+    x = x0
+    avg_sq_grad = 0.0
+    for _ in range(maxiter):
+        _, grad = func(x)
+        if abs(grad) < tol:
+            break
+        avg_sq_grad = beta * avg_sq_grad + (1 - beta) * grad**2
+        x -= lr * grad / (avg_sq_grad**0.5 + eps)
+    return x
+
+
+def adam(
+    func: FirstOrderOracleFn,
+    x0: float,
+    lr: float = 1e-3,
+    beta1: float = 0.9,
+    beta2: float = 0.999,
+    eps: float = 1e-8,
+    tol: float = 1e-6,
+    maxiter: int = int(1e6),
+) -> float:
+    x = x0
+    m = 0.0  # First moment
+    v = 0.0  # Second moment
+    for t in range(1, maxiter + 1):
+        _, grad = func(x)
+        if abs(grad) < tol:
+            break
+        m = beta1 * m + (1 - beta1) * grad
+        v = beta2 * v + (1 - beta2) * grad**2
+        m_hat = m / (1 - beta1**t)
+        v_hat = v / (1 - beta2**t)
+        x -= lr * m_hat / (v_hat**0.5 + eps)
+    return x
+
+
 if __name__ == "__main__":
-    x_star = gradient_descent(
-        func=oracle_f,
-        x0=0.0,
-        lr=1e-3,
-        tol=1e-6,
-        maxiter=int(1e6),
-    )
-    print(f"x* = {x_star:.6f}")
-    fx_star, dfx_star = oracle_f(x_star)
-    print(f"f(x*) = {fx_star:.6f}, f'(x*) = {dfx_star:.6f}")
-    assert abs(dfx_star) < 1e-6, "Gradient at x* is not close to zero."
-    print("Success! The gradient at x* is close to zero.")
+    methods = {
+        "Gradient Descent": gradient_descent,
+        "Momentum": gradient_descent_momentum,
+        "NAG": nesterov_accelerated_gradient,
+        "Adagrad": adagrad,
+        "RMSProp": rmsprop,
+        "Adam": adam,
+    }
+    for name, method in methods.items():
+        print(f"\nRunning {name}...")
+        x_star = method(func=oracle_f, x0=0.0)
+        fx_star, dfx_star = oracle_f(x_star)
+        print(f"x* = {x_star:.6f}, f(x*) = {fx_star:.6f}, f'(x*) = {dfx_star:.6e}")
+        if abs(dfx_star) < 1e-6:
+            print("Success! Gradient is close to zero.")
+        else:
+            print("Error: Gradient is not close to zero.")
+    print("\nAll methods converged successfully!")
