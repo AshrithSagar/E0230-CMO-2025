@@ -5,3 +5,12 @@ description = "E0230-CMO-2025 Assignment-0"
 authors = [{ name = "Ashrith Sagar", email = "ashrithy@iisc.ac.in" }]
 readme = "../README.md"
 requires-python = ">=3.10"
+dependencies = [
+    "matplotlib>=3.10.5",
+    "numpy>=2.2.6",
+]
+
+[dependency-groups]
+dev = [
+    "scipy>=1.15.3",
+]
