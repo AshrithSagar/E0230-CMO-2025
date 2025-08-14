@@ -47,14 +47,14 @@ class IterativeOptimiser(ABC):
     `x^k` is the value at iteration `k`,
     """
 
-    def __init__(self, name: str, config: dict):
+    def __init__(self, **kwargs):
+        """Initializes the iterative optimiser with configuration parameters."""
+        self.config = kwargs
+
+        self.name = self.__class__.__name__
         """
-        Parameters:
-            name: Name of the algorithm.
-            config: Configuration parameters for the algorithm.
+        Name of the algorithm, derived from the class name.
         """
-        self.name = name
-        self.config = config
 
         self.history: list[float] = []
         self.x_star: float
@@ -184,11 +184,11 @@ class Adam(IterativeOptimiser):
 # ---------- Main ----------
 if __name__ == "__main__":
     optimizers: list[IterativeOptimiser] = [
-        GradientDescent("Gradient Descent", {"lr": 1e-3}),
-        MomentumGradientDescent("Momentum-based GD", {"lr": 1e-3, "momentum": 0.9}),
-        Adagrad("Adagrad", {"lr": 1e-2, "eps": 1e-8}),
-        RMSProp("RMSProp", {"lr": 1e-3, "beta": 0.9, "eps": 1e-8}),
-        Adam("Adam", {"lr": 1e-3, "beta1": 0.9, "beta2": 0.999, "eps": 1e-8}),
+        GradientDescent(lr=1e-3),
+        MomentumGradientDescent(lr=1e-3, momentum=0.9),
+        Adagrad(lr=1e-2, eps=1e-8),
+        RMSProp(lr=1e-3, beta=0.9, eps=1e-8),
+        Adam(lr=1e-3, beta1=0.9, beta2=0.999, eps=1e-8),
     ]
     for opt in optimizers:
         opt.run(oracle_f, x0=0.0)
