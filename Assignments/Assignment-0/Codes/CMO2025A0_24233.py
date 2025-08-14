@@ -5,14 +5,20 @@ from typing import Callable
 sys.path.insert(0, os.path.abspath("oracle_2025A0"))
 from oracle_2025A0 import oracle  # type: ignore
 
+SRN = 24233
+"""
+The 5-digit Student Registration Number (SRN) for the assignment.
+"""
+assert isinstance(SRN, int) and len(str(SRN)) == 5, "SRN must be a 5-digit integer."
+
 
 def oracle_f(x: float) -> tuple[float, float]:
     """
-    A wrapper function around `oracle`.
+    A wrapper function around the provided `oracle` function.
 
     f(x), f'(x) = oracle_f(x)
     """
-    return oracle(24233, x)
+    return oracle(SRN, x)
 
 
 def gradient_descent(
