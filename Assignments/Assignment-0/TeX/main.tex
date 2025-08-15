@@ -28,6 +28,8 @@
 \newcommand{\dataset}{{\cal D}}
 \newcommand{\fracpartial}[2]{\frac{\partial #1}{\partial  #2}}
 
+\newcommand{\argmin}{\mathop{\mathrm{argmin}}}
+
 % Heading arguments are {volume}{year}{pages}{date submitted}{date published}{paper id}{author-full-names}
 
 \firstpageno{1}
@@ -43,6 +45,12 @@
 \maketitle
 
 \section*{Question 1}
+
+We are required to find the solution of the opimisation problem
+\begin{equation}
+       x^\ast = \argmin_{x \in \mathbb{R}} f(x)
+\end{equation}
+where we are given a first-order oracle for the function \( f \) defined as \( \mathcal{O}_{SRN}(x) = \left( f(x), f'(x) \right) \).
 
 Citing in text: in \citet{Fletcher2000,Luenberger1984}.
 Citing in parenthesis: \citep{Nesterov2004,Nocedal2006}.
