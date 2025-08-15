@@ -4,7 +4,6 @@
 import os
 import sys
 from abc import ABC, abstractmethod
-from typing import Callable, TypeAlias
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -21,41 +20,35 @@ assert isinstance(SRN, int) and len(str(SRN)) == 5, "SRN must be a 5-digit integ
 
 
 # ---------- Oracle utils ----------
-def oracle_f(x: float) -> tuple[float, float]:
+class FirstOrderOracle:
     """
-    A wrapper around the provided `oracle` function.
+    A wrapper class around the provided `oracle` function.
 
-    `f(x), f'(x) = oracle_f(x)`
+    `f(x), f'(x) = oracle(SRN, x)`
     """
-    return oracle(SRN, x)
 
+    def __call__(self, x: float) -> tuple[float, float]:
+        """Evaluates the oracle function at `x`."""
+        return oracle(SRN, x)
 
-FirstOrderOracleFn: TypeAlias = Callable[[float], tuple[float, float]]
-"""
-Type alias for a first-order oracle function.
-A function of this type takes a float `x` and returns a tuple `(f(x), f'(x))`.
-"""
+    def plot(self, x_range: tuple[float, float], num_points=100):
+        """
+        Plots the oracle function over a specified range.
 
+        Parameters:
+            x_range: A tuple specifying the range of `x` values to plot.
+            num_points: Number of points to sample in the range.
+        """
+        x_values = np.linspace(x_range[0], x_range[1], num_points)
+        y_values = [self.__call__(x)[0] for x in x_values]
 
-def plot_oracle(func: FirstOrderOracleFn, x_range: tuple[float, float], num_points=100):
-    """
-    Plots the oracle function over a specified range.
-
-    Parameters:
-        func: The first-order oracle function to plot.
-        x_range: A tuple specifying the range of `x` values to plot.
-        num_points: Number of points to sample in the range.
-    """
-    x_values = np.linspace(x_range[0], x_range[1], num_points)
-    y_values = [func(x)[0] for x in x_values]
-
-    plt.plot(x_values, y_values, label="f(x)")
-    plt.xlabel("x")
-    plt.ylabel("f(x)")
-    plt.title("Oracle Function Plot")
-    plt.legend()
-    plt.grid(True)
-    plt.tight_layout()
+        plt.plot(x_values, y_values, label="f(x)")
+        plt.xlabel("x")
+        plt.ylabel("f(x)")
+        plt.title("Oracle Function Plot")
+        plt.legend()
+        plt.grid(True)
+        plt.tight_layout()
 
 
 # ---------- Iterative Algorithm Template ----------
@@ -83,14 +76,12 @@ class IterativeOptimiser(ABC):
         self.fx_star: float
         self.dfx_star: float
 
-        self.oracle_fn: FirstOrderOracleFn
+        self.oracle_fn: FirstOrderOracle
         self.x0: float
         self.maxiter: int
         self.tol: float
 
-    def run(
-        self, oracle_fn: FirstOrderOracleFn, x0: float, maxiter=1_000_000, tol=1e-9
-    ):
+    def run(self, oracle_fn: FirstOrderOracle, x0: float, maxiter=1_000_000, tol=1e-9):
         """
         Runs the iterative algorithm.
 
@@ -362,6 +353,9 @@ class BFGS(IterativeOptimiser):
 
 # ---------- Main ----------
 if __name__ == "__main__":
+    oracle_f = FirstOrderOracle()
+    oracle_f.plot(x_range=(-20, 20))
+
     optimisers: list[IterativeOptimiser] = [
         GradientDescent(lr=1e-3),
         MomentumGradientDescent(lr=1e-3, momentum=0.9),
@@ -376,11 +370,8 @@ if __name__ == "__main__":
         opt.run(oracle_f, x0=0.0)
         opt.summary()
 
-    # Oracle function plot
-    plot_oracle(oracle_f, x_range=(-20, 20))
-
     # Convergence of optimisers plot
-    plt.figure(figsize=(10, 6))
+    plt.figure()
     for opt in optimisers:
         opt.plot()
     plt.xlabel("Iteration")
