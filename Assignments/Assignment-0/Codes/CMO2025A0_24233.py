@@ -284,38 +284,6 @@ class BacktrackingGradientDescent(IterativeOptimiser):
         return x - eta * grad  # Step
 
 
-class DFP(IterativeOptimiser):
-    """
-    The DFP (Davidon-Fletcher-Powell) algorithm which is a
-    quasi-Newton method that updates the inverse Hessian approximation.\\
-    The 1D case is implemented here.
-
-    `H_{k+1} = H_k + (s^2 / (s * y)) - (H_k^2 * y^2 / (s * y))`
-
-    Requires initial approximation `H_init`.
-    """
-
-    def _initialize_state(self):
-        self.H = self.config.get("H_init", 1.0)
-        self.prev_grad = None
-        self.prev_x = None
-
-    def _step(self, x, grad, t):
-        if self.prev_x is not None and self.prev_grad is not None:
-            s = x - self.prev_x
-            y = grad - self.prev_grad
-            denom = s * y
-
-            if denom != 0:  # Scalar update in 1D
-                self.H = self.H + (s**2 / denom) - ((self.H**2) * (y**2) / denom)
-
-        # Update current values
-        self.prev_x = x
-        self.prev_grad = grad
-
-        return x - self.H * grad  # Step
-
-
 class BFGS(IterativeOptimiser):
     """
     The BFGS (Broyden-Fletcher-Goldfarb-Shanno) algorithm
@@ -361,7 +329,6 @@ if __name__ == "__main__":
         RMSProp(lr=1e-3, beta=0.9, eps=1e-8),
         Adam(lr=1e-3, beta1=0.9, beta2=0.999, eps=1e-8),
         BacktrackingGradientDescent(init_lr=0.5, alpha=0.5, beta=0.9),
-        DFP(H_init=0.5),
         BFGS(H_init=1.0),
     ]
     for opt in optimisers:
