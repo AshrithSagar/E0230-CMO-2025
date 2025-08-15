@@ -266,6 +266,35 @@ class Adam(IterativeOptimiser):
         return x - self.config["lr"] * m_hat / (v_hat**0.5 + self.config["eps"])
 
 
+class BacktrackingGradientDescent(IterativeOptimiser):
+    """
+    Gradient Descent with Backtracking Line Search.
+
+    Starts with an initial learning rate and reduces it using Armijo condition:
+    `f(x - eta * grad) <= f(x) - alpha * eta * grad^2`
+    """
+
+    def _initialize_state(self):
+        pass
+
+    def _step(self, x, grad, t):
+        eta = self.config["init_lr"]
+        alpha = self.config["alpha"]
+        beta = self.config["beta"]
+
+        f_x, _ = self.oracle_fn(x)
+        while True:
+            x_new = x - eta * grad
+            f_new, _ = self.oracle_fn(x_new)
+
+            # Armijo condition
+            if f_new <= f_x - alpha * eta * grad**2:
+                break  # Step size is good enough
+            eta *= beta  # Reduce step size
+
+        return x - eta * grad  # Step
+
+
 class DFP(IterativeOptimiser):
     """
     The DFP (Davidon-Fletcher-Powell) algorithm which is a
@@ -339,6 +368,7 @@ if __name__ == "__main__":
         Adagrad(lr=1e-2, eps=1e-8),
         RMSProp(lr=1e-3, beta=0.9, eps=1e-8),
         Adam(lr=1e-3, beta1=0.9, beta2=0.999, eps=1e-8),
+        BacktrackingGradientDescent(init_lr=0.5, alpha=0.5, beta=0.9),
         DFP(H_init=0.5),
         BFGS(H_init=1.0),
     ]
