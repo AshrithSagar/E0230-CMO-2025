@@ -63,13 +63,11 @@ class IterativeOptimiser(ABC):
     """
 
     def __init__(self, **kwargs):
-        """Initializes the iterative optimiser with configuration parameters."""
+        # Initializes the iterative optimiser with configuration parameters.
         self.config = kwargs
 
         self.name = self.__class__.__name__
-        """
-        Name of the algorithm, derived from the class name.
-        """
+        """Name of the algorithm, derived from the class name."""
 
         self.history: list[float] = []
         self.x_star: float
