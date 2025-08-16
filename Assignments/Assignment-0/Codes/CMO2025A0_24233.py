@@ -47,7 +47,8 @@ class FirstOrderOracle:
 
     def plot(self, x_range: tuple[float, float], num_points=100):
         """
-        Plots the oracle function over a specified range.
+        Plots the oracle function over a specified range.\\
+        Just for convenience, to visualise the function `f(x)`, quering the oracle multiple times.
 
         Parameters:
             x_range: A tuple specifying the range of `x` values to plot.
@@ -262,13 +263,15 @@ class BFGS(IterativeOptimiser):
 
 # ---------- Main ----------
 if __name__ == "__main__":
+    print(f"{SRN = }")
+
     oracle_f = FirstOrderOracle()
     oracle_f.plot(x_range=(-20, 20))
 
     optimisers: list[IterativeOptimiser] = [
         GradientDescent(lr=1e-3),
         MomentumGradientDescent(lr=1e-3, momentum=0.9),
-        BacktrackingGradientDescent(init_lr=0.5, alpha=0.5, beta=0.9),
+        BacktrackingGradientDescent(init_lr=0.5, alpha=0.1, beta=0.9),
         BFGS(H_init=1.0),
     ]
     for opt in optimisers:
