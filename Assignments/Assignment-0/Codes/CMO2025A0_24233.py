@@ -27,9 +27,22 @@ class FirstOrderOracle:
     `f(x), f'(x) = oracle(SRN, x)`
     """
 
+    def __init__(self):
+        self.call_count: int = 0
+        """
+        Tracks the number of times the oracle function has been called.
+        This is useful for the 'analytical complexity' of the algorithms.
+        """
+
     def __call__(self, x: float) -> tuple[float, float]:
         """Evaluates the oracle function at `x`."""
+        self.call_count += 1
         return oracle(SRN, x)
+
+    def reset_counter(self) -> "FirstOrderOracle":
+        """Resets the internal call count to zero."""
+        self.call_count = 0
+        return self
 
     def plot(self, x_range: tuple[float, float], num_points=100):
         """
@@ -67,7 +80,7 @@ class IterativeOptimiser(ABC):
         self.config = kwargs
 
         self.name = self.__class__.__name__
-        """Name of the algorithm, derived from the class name."""
+        """Name of the algorithm, derived from the class name of the optimiser."""
 
         self.history: list[float] = []
         self.x_star: float
@@ -89,7 +102,7 @@ class IterativeOptimiser(ABC):
             maxiter: Maximum number of iterations to perform.
             tol: Tolerance for stopping criterion based on the gradient.
         """
-        self.oracle_fn = oracle_fn
+        self.oracle_fn = oracle_fn.reset_counter()
         self.x0 = x0
         self.maxiter = maxiter
         self.tol = tol
@@ -133,6 +146,7 @@ class IterativeOptimiser(ABC):
         """Prints a summary of the algorithm's results."""
         num_iters = len(self.history) - 1
         converged = abs(self.dfx_star) < self.tol
+        oracle_calls = self.oracle_fn.call_count
 
         print(f"\n{self.name}")
         print(
@@ -141,6 +155,7 @@ class IterativeOptimiser(ABC):
         print(
             f"Iterations: {num_iters} {'(Converged)' if converged else '(Did NOT converge)'}"
         )
+        print(f"Number of calls to the oracle: {oracle_calls}")
 
         if converged:
             print("Success! Gradient is close to zero.")
@@ -349,7 +364,7 @@ if __name__ == "__main__":
         BFGS(H_init=1.0),
     ]
     for opt in optimisers:
-        opt.run(oracle_f, x0=0.0)
+        opt.run(oracle_f, x0=0.0, maxiter=1_000_000, tol=1e-9)
         opt.summary()
 
     # Convergence of optimisers plot
