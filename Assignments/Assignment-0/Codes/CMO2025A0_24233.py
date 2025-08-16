@@ -1,9 +1,10 @@
 # ---------- CMO 2025 Assignment 0 ----------
 
 # ---------- Imports ----------
+# Allowed libraries: os, sys, numpy, math, matplotlib.
+
 import os
 import sys
-from abc import ABC, abstractmethod
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -65,7 +66,7 @@ class FirstOrderOracle:
 
 
 # ---------- Iterative Algorithm Template ----------
-class IterativeOptimiser(ABC):
+class IterativeOptimiser:
     """
     A base template class for iterative optimisation algorithms,
     particularly for the minimisation objective.
@@ -76,7 +77,7 @@ class IterativeOptimiser(ABC):
     """
 
     def __init__(self, **kwargs):
-        # Initializes the iterative optimiser with configuration parameters.
+        # Initialises the iterative optimiser with configuration parameters.
         self.config = kwargs
 
         self.name = self.__class__.__name__
@@ -97,7 +98,7 @@ class IterativeOptimiser(ABC):
         Runs the iterative algorithm.
 
         Parameters:
-            oracle_fn: The first-order oracle function to minimize.
+            oracle_fn: The first-order oracle function to minimise.
             x0: Initial guess for the minimum point.
             maxiter: Maximum number of iterations to perform.
             tol: Tolerance for stopping criterion based on the gradient.
@@ -109,7 +110,7 @@ class IterativeOptimiser(ABC):
 
         self.history = [x0]
         x = x0
-        self._initialize_state()
+        self._initialise_state()
 
         for t in range(1, maxiter + 1):
             fx, dfx = self.oracle_fn(x)  # Query the oracle function
@@ -121,18 +122,17 @@ class IterativeOptimiser(ABC):
         self.x_star = x
         self.fx_star, self.dfx_star = self.oracle_fn(x)
 
-    @abstractmethod
-    def _initialize_state(self):
+    def _initialise_state(self) -> None:
         """
-        Initializes the state of the algorithm.
-        This method can be overridden by subclasses to set up any necessary state.
+        Initialises the state of the algorithm.\\
+        [Optional]: This method can be overridden by subclasses to set up any necessary state if needed.
         """
         pass
 
-    @abstractmethod
     def _step(self, x: float, grad: float, t: int) -> float:
         """
-        Performs a single step of the algorithm.
+        Performs a single step of the algorithm.\\
+        [Required]: This method should be implemented by subclasses to define the specific update rule.
         Parameters:
             x: Current value of `x`.
             grad: Current gradient `f'(x)`.
@@ -140,7 +140,7 @@ class IterativeOptimiser(ABC):
         Returns:
             The updated value of `x` after the step.
         """
-        pass
+        raise NotImplementedError
 
     def summary(self):
         """Prints a summary of the algorithm's results."""
@@ -149,18 +149,16 @@ class IterativeOptimiser(ABC):
         oracle_calls = self.oracle_fn.call_count
 
         print(f"\n{self.name}")
-        print(
-            f"x* = {self.x_star:.6f}, f(x*) = {self.fx_star:.6f}, f'(x*) = {self.dfx_star:.2e}"
-        )
+        print(f"x* = {self.x_star}, f(x*) = {self.fx_star}, f'(x*) = {self.dfx_star}")
         print(
             f"Iterations: {num_iters} {'(Converged)' if converged else '(Did NOT converge)'}"
         )
         print(f"Number of calls to the oracle: {oracle_calls}")
 
         if converged:
-            print("Success! Gradient is close to zero.")
+            print(f"Gradient is close to zero within the tolerance ({self.tol}).")
         else:
-            print("Warning: Gradient is not close to zero. May not have converged.")
+            print(f"Did not converge within {self.maxiter} iterations.")
 
     def plot(self):
         """Plots the history of `x` values during the optimisation."""
@@ -176,9 +174,6 @@ class GradientDescent(IterativeOptimiser):
     where `eta` is the learning rate.
     """
 
-    def _initialize_state(self):
-        pass
-
     def _step(self, x, grad, t):
         eta: float = self.config["lr"]
         return x - eta * grad
@@ -193,7 +188,7 @@ class MomentumGradientDescent(IterativeOptimiser):
     where `gamma` is the momentum parameter and `eta` is the learning rate.
     """
 
-    def _initialize_state(self):
+    def _initialise_state(self):
         self.v = 0.0
 
     def _step(self, x, grad, t):
@@ -213,9 +208,6 @@ class BacktrackingGradientDescent(IterativeOptimiser):
     where `eta` is the step size, `alpha` is a constant, and `beta` is the reduction factor.
     The step size is reduced until the condition is satisfied.
     """
-
-    def _initialize_state(self):
-        pass
 
     def _step(self, x, grad, t):
         eta = self.config["init_lr"]
@@ -247,7 +239,7 @@ class BFGS(IterativeOptimiser):
     `H_init` is the initial inverse Hessian approximation.
     """
 
-    def _initialize_state(self):
+    def _initialise_state(self):
         self.H = self.config.get("H_init", 1.0)
         self.prev_grad = None
         self.prev_x = None
@@ -280,7 +272,7 @@ if __name__ == "__main__":
         BFGS(H_init=1.0),
     ]
     for opt in optimisers:
-        opt.run(oracle_f, x0=0.0, maxiter=1_000_000, tol=1e-9)
+        opt.run(oracle_f, x0=0.0, maxiter=1_000_000, tol=1e-12)
         opt.summary()
 
     # Convergence of optimisers plot
