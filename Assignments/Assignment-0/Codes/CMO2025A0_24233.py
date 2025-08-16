@@ -165,7 +165,8 @@ class GradientDescent(IterativeOptimiser):
         pass
 
     def _step(self, x, grad, t):
-        return x - self.config["lr"] * grad
+        eta: float = self.config["lr"]
+        return x - eta * grad
 
 
 class MomentumGradientDescent(IterativeOptimiser):
@@ -181,7 +182,10 @@ class MomentumGradientDescent(IterativeOptimiser):
         self.v = 0.0
 
     def _step(self, x, grad, t):
-        self.v = self.config["momentum"] * self.v - self.config["lr"] * grad
+        gamma: float = self.config["momentum"]
+        eta: float = self.config["lr"]
+
+        self.v = gamma * self.v - eta * grad
         return x + self.v
 
 
@@ -199,8 +203,11 @@ class Adagrad(IterativeOptimiser):
         self.gsum = 0.0
 
     def _step(self, x, grad, t):
+        eta: float = self.config["lr"]
+        eps: float = self.config["eps"]
+
         self.gsum += grad**2
-        adjusted_lr = self.config["lr"] / (self.gsum**0.5 + self.config["eps"])
+        adjusted_lr = eta / (self.gsum**0.5 + eps)
         return x - adjusted_lr * grad
 
 
@@ -219,11 +226,13 @@ class RMSProp(IterativeOptimiser):
         self.avg_sq_grad = 0.0
 
     def _step(self, x, grad, t):
-        beta = self.config["beta"]
+        beta: float = self.config["beta"]
+        eta: float = self.config["lr"]
+        eps: float = self.config["eps"]
+
         self.avg_sq_grad = beta * self.avg_sq_grad + (1 - beta) * grad**2
-        return x - self.config["lr"] * grad / (
-            self.avg_sq_grad**0.5 + self.config["eps"]
-        )
+        adjusted_lr = eta / (self.avg_sq_grad**0.5 + eps)
+        return x - adjusted_lr * grad
 
 
 class Adam(IterativeOptimiser):
@@ -245,14 +254,20 @@ class Adam(IterativeOptimiser):
         self.v = 0.0
 
     def _step(self, x, grad, t):
-        b1, b2 = self.config["beta1"], self.config["beta2"]
-        self.m = b1 * self.m + (1 - b1) * grad
-        self.v = b2 * self.v + (1 - b2) * grad**2
+        beta1: float = self.config["beta1"]
+        beta2: float = self.config["beta2"]
+        eta: float = self.config["lr"]
+        eps: float = self.config["eps"]
 
-        m_hat = self.m / (1 - b1**t)
-        v_hat = self.v / (1 - b2**t)
+        # Update biased first and second moment estimates
+        self.m = beta1 * self.m + (1 - beta1) * grad
+        self.v = beta2 * self.v + (1 - beta2) * grad**2
 
-        return x - self.config["lr"] * m_hat / (v_hat**0.5 + self.config["eps"])
+        # Bias correction
+        m_hat = self.m / (1 - beta1**t)
+        v_hat = self.v / (1 - beta2**t)
+
+        return x - eta * m_hat / (v_hat**0.5 + eps)
 
 
 class BacktrackingGradientDescent(IterativeOptimiser):
@@ -261,6 +276,8 @@ class BacktrackingGradientDescent(IterativeOptimiser):
 
     Starts with an initial learning rate and reduces it using Armijo condition:
     `f(x - eta * grad) <= f(x) - alpha * eta * grad^2`
+    where `eta` is the step size, `alpha` is a constant, and `beta` is the reduction factor.
+    The step size is reduced until the condition is satisfied.
     """
 
     def _initialize_state(self):
@@ -274,7 +291,7 @@ class BacktrackingGradientDescent(IterativeOptimiser):
         f_x, _ = self.oracle_fn(x)
         while True:
             x_new = x - eta * grad
-            f_new, _ = self.oracle_fn(x_new)
+            f_new, _ = self.oracle_fn(x_new)  # Needs multiple queries
 
             # Armijo condition
             if f_new <= f_x - alpha * eta * grad**2:
@@ -288,7 +305,7 @@ class BFGS(IterativeOptimiser):
     """
     The BFGS (Broyden-Fletcher-Goldfarb-Shanno) algorithm
     which approximates the inverse Hessian.\\
-    The 1D case is implemented here.
+    This is a quasi-Newton algorithm, and the 1D case is implemented here.
 
     `x_{k+1} = x_k - H_k * f'(x_k)`\\
     where `H_k` is the inverse Hessian approximation at iteration `k`.
