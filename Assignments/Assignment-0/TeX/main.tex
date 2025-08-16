@@ -62,10 +62,10 @@ where \( \eta > 0 \) is the learning rate.
 The motivation is that \( -f'(x) \) points in the direction of steepest local decrease of \( f \), so repeated updates move \( x \) towards a (local) minimum.
 
 \paragraph{BFGS (general form).}
-The Broyden-Fletcher-Goldfarb-Shanno (BFGS) algorithm is a quasi-Newton method that approximates the inverse Hessian matrix \( \mathbf{H}_k \) of the objective function \( f:\mathbb{R}^n \to \mathbb{R} \).
+The Broyden-Fletcher-Goldfarb-Shanno (BFGS) algorithm is a quasi-Newton method that approximates the inverse Hessian matrix \( \mathbf{H}_k \) of the objective function \( f: \mathbb{R}^n \to \mathbb{R} \).
 The update step is
 \begin{equation*}
-       \mathbf{x}^{(k+1)} = \mathbf{x}^{(k)} - \mathbf{H}_k \nabla f\big(\mathbf{x}^{(k)}\big)
+       \mathbf{x}^{(k+1)} = \mathbf{x}^{(k)} - \mathbf{H}_k \, \nabla f\big(\mathbf{x}^{(k)}\big)
 \end{equation*}
 where \( \mathbf{H}_k \) is updated at each iteration using curvature information from successive iterates:
 \begin{equation*}
