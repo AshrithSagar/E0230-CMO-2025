@@ -204,87 +204,6 @@ class MomentumGradientDescent(IterativeOptimiser):
         return x + self.v
 
 
-class Adagrad(IterativeOptimiser):
-    """
-    Adagrad Optimiser.
-
-    `G_{k+1} = G_k + [f'(x_k)]^2`\\
-    `x_{k+1} = x_k - [eta / (sqrt(G_{k+1}) + eps)] * f'(x_k)`\\
-    where `G` is the sum of squared gradients, `eta` is the learning rate,
-    and `eps` is a small constant for numerical stability.
-    """
-
-    def _initialize_state(self):
-        self.gsum = 0.0
-
-    def _step(self, x, grad, t):
-        eta: float = self.config["lr"]
-        eps: float = self.config["eps"]
-
-        self.gsum += grad**2
-        adjusted_lr = eta / (self.gsum**0.5 + eps)
-        return x - adjusted_lr * grad
-
-
-class RMSProp(IterativeOptimiser):
-    """
-    RMSProp Optimiser.
-
-    `S_{k+1} = beta * S_k + (1 - beta) * [f'(x_k)]^2`\\
-    `x_{k+1} = x_k - [eta / (sqrt(S_{k+1}) + eps)] * f'(x_k)`\\
-    where `S` is the moving average of squared gradients,
-    `beta` is the decay rate, `eta` is the learning rate,
-    and `eps` is a small constant for numerical stability.
-    """
-
-    def _initialize_state(self):
-        self.avg_sq_grad = 0.0
-
-    def _step(self, x, grad, t):
-        beta: float = self.config["beta"]
-        eta: float = self.config["lr"]
-        eps: float = self.config["eps"]
-
-        self.avg_sq_grad = beta * self.avg_sq_grad + (1 - beta) * grad**2
-        adjusted_lr = eta / (self.avg_sq_grad**0.5 + eps)
-        return x - adjusted_lr * grad
-
-
-class Adam(IterativeOptimiser):
-    """
-    Adam Optimiser.
-
-    `m_{k+1} = beta1 * m_k + (1 - beta1) * f'(x_k)`\\
-    `v_{k+1} = beta2 * v_k + (1 - beta2) * [f'(x_k)]^2`\\
-    `mhat_{k+1} = m_{k+1} / (1 - beta1^{k+1})`\\
-    `vhat_{k+1} = v_{k+1} / (1 - beta2^{k+1})`\\
-    `x_{k+1} = x_k - [eta / (sqrt(vhat_{k+1}) + eps)] * mhat_{k+1}`\\
-    where `m` and `v` are the first and second moment estimates,
-    `beta1` and `beta2` are decay rates, `eta` is the learning rate,
-    and `eps` is a small constant for numerical stability.
-    """
-
-    def _initialize_state(self):
-        self.m = 0.0
-        self.v = 0.0
-
-    def _step(self, x, grad, t):
-        beta1: float = self.config["beta1"]
-        beta2: float = self.config["beta2"]
-        eta: float = self.config["lr"]
-        eps: float = self.config["eps"]
-
-        # Update biased first and second moment estimates
-        self.m = beta1 * self.m + (1 - beta1) * grad
-        self.v = beta2 * self.v + (1 - beta2) * grad**2
-
-        # Bias correction
-        m_hat = self.m / (1 - beta1**t)
-        v_hat = self.v / (1 - beta2**t)
-
-        return x - eta * m_hat / (v_hat**0.5 + eps)
-
-
 class BacktrackingGradientDescent(IterativeOptimiser):
     """
     Gradient Descent with Backtracking Line Search.
@@ -357,9 +276,6 @@ if __name__ == "__main__":
     optimisers: list[IterativeOptimiser] = [
         GradientDescent(lr=1e-3),
         MomentumGradientDescent(lr=1e-3, momentum=0.9),
-        Adagrad(lr=1e-2, eps=1e-8),
-        RMSProp(lr=1e-3, beta=0.9, eps=1e-8),
-        Adam(lr=1e-3, beta1=0.9, beta2=0.999, eps=1e-8),
         BacktrackingGradientDescent(init_lr=0.5, alpha=0.5, beta=0.9),
         BFGS(H_init=1.0),
     ]
