@@ -46,11 +46,64 @@
 
 \section*{Question 1}
 
-We are required to find the solution of the opimisation problem
+We are required to find the solution of the optimisation problem
 \begin{equation}
        x^\ast = \argmin_{x \in \mathbb{R}} f(x)
 \end{equation}
 where we are given a first-order oracle for the function \( f \) defined as \( \mathcal{O}_{SRN}(x) = \left( f(x), f'(x) \right) \).
+
+\paragraph{Gradient Descent.}
+Gradient descent is a first-order iterative optimisation algorithm for finding a local minimum of a differentiable function.
+Starting from an initial guess \( x^{(0)} \), the update rule is
+\begin{equation*}
+       x^{(k+1)} = x^{(k)} - \eta \, f'\big(x^{(k)}\big),
+\end{equation*}
+where \( \eta > 0 \) is the learning rate.
+The motivation is that \( -f'(x) \) points in the direction of steepest local decrease of \( f \), so repeated updates move \( x \) towards a (local) minimum.
+
+\paragraph{BFGS (general form).}
+The Broyden-Fletcher-Goldfarb-Shanno (BFGS) algorithm is a quasi-Newton method that approximates the inverse Hessian matrix \( \mathbf{H}_k \) of the objective function \( f:\mathbb{R}^n \to \mathbb{R} \).
+The update step is
+\begin{equation*}
+       \mathbf{x}^{(k+1)} = \mathbf{x}^{(k)} - \mathbf{H}_k \nabla f\big(\mathbf{x}^{(k)}\big)
+\end{equation*}
+where \( \mathbf{H}_k \) is updated at each iteration using curvature information from successive iterates:
+\begin{equation*}
+       \mathbf{H}_{k+1}
+       =
+       \left[ \mathbf{I} - \frac{\mathbf{s}_k \mathbf{y}_k^\top}{\mathbf{y}_k^\top \mathbf{s}_k} \right]
+       \mathbf{H}_k
+       \left[ \mathbf{I} - \frac{\mathbf{y}_k \mathbf{s}_k^\top}{\mathbf{y}_k^\top \mathbf{s}_k} \right]
+       + \frac{\mathbf{s}_k \mathbf{s}_k^\top}{\mathbf{y}_k^\top \mathbf{s}_k},
+       \quad
+       \text{where}
+       \quad
+       \begin{aligned}
+              \mathbf{s}_k & = \mathbf{x}^{(k+1)} - \mathbf{x}^{(k)},
+              \\
+              \mathbf{y}_k & = \nabla f(\mathbf{x}^{(k+1)}) - \nabla f\big(\mathbf{x}^{(k)}\big)
+       \end{aligned}
+\end{equation*}
+
+\paragraph{BFGS in 1D.}
+For the one-dimensional case (\( n = 1 \)), all vectors and matrices reduce to scalars.
+Then the BFGS update simplifies drastically:
+\begin{equation*}
+       H_{k+1} = \frac{s_k}{y_k},
+       \qquad
+       s_k = x^{(k+1)} - x^{(k)},
+       \qquad
+       y_k = f'(x^{(k+1)}) - f'\big(x^{(k)}\big)
+\end{equation*}
+The step becomes
+\begin{equation*}
+       x^{(k+1)} = x^{(k)} - H_{k+1}\, f'\big(x^{(k)}\big)
+       \implies
+       \boxed{
+       x^{(k+1)} = x^{(k)} - \frac{x^{(k+1)} - x^{(k)}}{f'(x^{(k+1)}) - f'\big(x^{(k)}\big)} \, f'\big(x^{(k)}\big)
+       }
+\end{equation*}
+Thus, in one dimension, BFGS is exactly the \emph{secant method applied to the derivative} \( f'(x) \).
 
 Citing in text: in \citet{Fletcher2000,Luenberger1984}.
 Citing in parenthesis: \citep{Nesterov2004,Nocedal2006}.
