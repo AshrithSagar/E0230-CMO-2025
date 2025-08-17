@@ -203,13 +203,13 @@ class IterativeOptimiser:
     def summary(self):
         """Prints a summary of the algorithm's results."""
         cols = [
-            ("Run", "{:^5}", 5),
-            ("x0", "{:>9} ", 10),
-            ("x*", "{:>9} ", 10),
-            ("f(x*)", "{:>9} ", 10),
-            ("f'(x*)", "{:>13} ", 14),
-            ("Iterations", "{:^12}", 12),
-            ("Oracle calls", "{:^14}", 14),
+            ("Run", "{:^5}", 5, "{}"),
+            ("x0", "{:>9} ", 10, "{:.6f}"),
+            ("x*", "{:>9} ", 10, "{:.6f}"),
+            ("f(x*)", "{:>9} ", 10, "{:.6f}"),
+            ("f'(x*)", "{:>13} ", 14, "{:.6e}"),
+            ("Iterations", "{:^12}", 12, "{}"),
+            ("Oracle calls", "{:^14}", 14, "{}"),
         ]
         width = sum(c[2] for c in cols) + len(cols) + 1
         print("\n" + self.name.center(width))
@@ -226,17 +226,8 @@ class IterativeOptimiser:
             fx_star, dfx_star = run["fx_star"], run["dfx_star"]
             oracle_calls = run["oracle_call_count"]
             num_iters = len(run["history"]) - 1
-            print(
-                row_format.format(
-                    i,
-                    f"{x0:.6f}",
-                    f"{x_star:.6f}",
-                    f"{fx_star:.6f}",
-                    f"{dfx_star:.6e}",
-                    num_iters,
-                    oracle_calls,
-                )
-            )
+            row = [i, x0, x_star, fx_star, dfx_star, num_iters, oracle_calls]
+            print(row_format.format(*[c[3].format(v) for c, v in zip(cols, row)]))
         print("\u2514" + "\u2534".join("\u2500" * c[2] for c in cols) + "\u2518")
 
     def plot(self):
