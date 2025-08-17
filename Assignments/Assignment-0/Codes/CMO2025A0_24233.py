@@ -48,7 +48,8 @@ class FirstOrderOracle:
     def plot(self, x_range: tuple[float, float], num_points: int | None = None):
         """
         Plots the oracle function over a specified range.\\
-        Just for convenience, to visualise the function `f(x)`, quering the oracle multiple times.
+        This is just a convenience method to visualise the function `f(x)`
+        as this queries the oracle multiple times, which may not be desirable in practice.
 
         Parameters:
             x_range: A tuple specifying the range of `x` values to plot.
@@ -73,11 +74,11 @@ class FirstOrderOracle:
 class IterativeOptimiser:
     """
     A base template class for iterative optimisation algorithms,
-    particularly for the minimisation objective.
+    particularly used here for the minimisation objective.
 
-    `x^{k+1} = ALGO(x^k, f'(x^k), k)`
+    `x_{k+1} = ALGO(x_k, f'(x_k), k)`\\
     where `ALGO` is the algorithm-specific step function,
-    `x^k` is the value at iteration `k`,
+    `x_k` is the value at iteration `k`.
     """
 
     def __init__(self, **kwargs):
@@ -116,11 +117,11 @@ class IterativeOptimiser:
         x = x0
         self._initialise_state()
 
-        for t in range(1, maxiter + 1):
+        for k in range(1, maxiter + 1):
             fx, dfx = self.oracle_fn(x)  # Query the oracle function
             if abs(dfx) < tol:  # Early exit if f'(x) is small enough
                 break
-            x = self._step(x, dfx, t)
+            x = self._step(x, dfx, k)
             self.history.append(x)
 
         self.x_star = x
@@ -133,16 +134,16 @@ class IterativeOptimiser:
         """
         pass
 
-    def _step(self, x: float, grad: float, t: int) -> float:
+    def _step(self, x: float, grad: float, k: int) -> float:
         """
         Performs a single step of the algorithm.\\
         [Required]: This method should be implemented by subclasses to define the specific update rule.
         Parameters:
-            x: Current value of `x`.
-            grad: Current gradient `f'(x)`.
-            t: Current iteration number.
+            x: Current value of `x`, i.e., `x_k`.
+            grad: Current gradient `f'(x)`, viz. `f'(x_k)`.
+            k: Current iteration number.
         Returns:
-            The updated value of `x` after the step.
+            The updated value of `x` after the step, viz. `x_{k+1}`.
         """
         raise NotImplementedError
 
@@ -178,7 +179,7 @@ class GradientDescent(IterativeOptimiser):
     where `eta` is the learning rate.
     """
 
-    def _step(self, x, grad, t):
+    def _step(self, x, grad, k):
         eta: float = self.config["lr"]
         return x - eta * grad
 
@@ -195,7 +196,7 @@ class MomentumGradientDescent(IterativeOptimiser):
     def _initialise_state(self):
         self.v = 0.0
 
-    def _step(self, x, grad, t):
+    def _step(self, x, grad, k):
         gamma: float = self.config["momentum"]
         eta: float = self.config["lr"]
 
@@ -213,7 +214,7 @@ class BacktrackingGradientDescent(IterativeOptimiser):
     The step size is reduced until the condition is satisfied.
     """
 
-    def _step(self, x, grad, t):
+    def _step(self, x, grad, k):
         eta = self.config["init_lr"]
         alpha = self.config["alpha"]
         beta = self.config["beta"]
@@ -248,7 +249,7 @@ class BFGS(IterativeOptimiser):
         self.prev_grad = None
         self.prev_x = None
 
-    def _step(self, x, grad, t):
+    def _step(self, x, grad, k):
         if self.prev_x is not None and self.prev_grad is not None:
             s = x - self.prev_x
             y = grad - self.prev_grad
@@ -278,7 +279,7 @@ if __name__ == "__main__":
         BFGS(H_init=1.0),
     ]
     for opt in optimisers:
-        opt.run(oracle_f, x0=0.0, maxiter=1_000_000, tol=1e-12)
+        opt.run(oracle_f, x0=0.0, maxiter=1_000_000, tol=1e-13)
         opt.summary()
 
     # Convergence of optimisers plot
