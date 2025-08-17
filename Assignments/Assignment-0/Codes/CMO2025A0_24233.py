@@ -13,11 +13,18 @@ sys.path.insert(0, os.path.abspath("oracle_2025A0"))
 from oracle_2025A0 import oracle  # type: ignore
 
 # ---------- Setup ----------
-SRN = 24233
-"""
-The 5-digit Student Registration Number (SRN) for the assignment.
-"""
+SRN: int = 24233
+"""The 5-digit Student Registration Number (SRN) for the assignment."""
 assert isinstance(SRN, int) and len(str(SRN)) == 5, "SRN must be a 5-digit integer."
+
+ORACLE_PLOT: bool = False
+"""Enable or disable plotting of the oracle function."""
+
+ORACLE_CACHE: bool = False
+"""Enable or disable caching of oracle function results."""
+
+PLOT_CONVERGENCE: bool = False
+"""Enable or disable plotting the convergence of optimisation algorithms."""
 
 
 # ---------- Oracle utils ----------
@@ -28,21 +35,41 @@ class FirstOrderOracle:
     `f(x), f'(x) = oracle(SRN, x)`
     """
 
-    def __init__(self):
+    def __init__(self, cache_digits: int = 32):
         self.call_count: int = 0
         """
         Tracks the number of times the oracle function has been called.
         This is useful for the 'analytical complexity' of the algorithms.
         """
 
-    def __call__(self, x: float) -> tuple[float, float]:
-        """Evaluates the oracle function at `x`."""
-        self.call_count += 1
-        return oracle(SRN, x)
+        self.cache: dict[float, tuple[float, float]] = {}
+        """Cache the results of the oracle function."""
 
-    def reset_counter(self) -> "FirstOrderOracle":
-        """Resets the internal call count to zero."""
+        self.cache_digits = cache_digits
+        """
+        Number of digits to round `x` for caching results.
+        This is useful to avoid floating-point precision issues when caching results.
+        """
+
+    def __call__(self, x: float) -> tuple[float, float]:
+        """Evaluates the oracle function at `x`, using cache if available."""
+        if ORACLE_CACHE:
+            x_key = round(x, self.cache_digits)  # Round for stable caching
+            if x_key in self.cache:
+                return self.cache[x_key]
+
+        fx, dfx = oracle(SRN, x)
+        self.call_count += 1
+
+        if ORACLE_CACHE:
+            self.cache[x] = (fx, dfx)
+
+        return fx, dfx
+
+    def reset(self) -> "FirstOrderOracle":
+        """Resets the internal call count and cache."""
         self.call_count = 0
+        self.cache.clear()
         return self
 
     def plot(self, x_range: tuple[float, float], num_points: int | None = None):
@@ -114,9 +141,12 @@ class IterativeOptimiser:
         self.maxiter = maxiter
         self.tol = tol
 
+        # Set oracle_fn.cache_digits in order of tol
+        oracle_fn.cache_digits = int(-np.log10(tol)) + 1
+
         self.runs = []
         for x0 in x0s:
-            oracle_fn.reset_counter()
+            oracle_fn.reset()
             history = [x0]
             x = x0
             self._initialise_state()
@@ -282,7 +312,8 @@ if __name__ == "__main__":
     print(f"{SRN = }")
 
     oracle_f = FirstOrderOracle()
-    oracle_f.plot(x_range=(-100, 100))
+    if ORACLE_PLOT:
+        oracle_f.plot(x_range=(-100, 100))
 
     x0s = np.linspace(-1, 1, 11).tolist()
     print(f"Initial points: {x0s}")
@@ -297,13 +328,14 @@ if __name__ == "__main__":
         opt.summary()
 
     # Convergence of optimisers plot
-    plt.figure()
-    for opt in optimisers:
-        opt.plot()
-    plt.xlabel("Iteration")
-    plt.ylabel("x value")
-    plt.title("Convergence of Optimisation Algorithms")
-    plt.legend()
-    plt.grid(True)
+    if PLOT_CONVERGENCE:
+        plt.figure()
+        for opt in optimisers:
+            opt.plot()
+        plt.xlabel("Iteration")
+        plt.ylabel("x value")
+        plt.title("Convergence of Optimisation Algorithms")
+        plt.legend()
+        plt.grid(True)
 
     plt.show()
