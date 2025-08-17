@@ -202,30 +202,42 @@ class IterativeOptimiser:
 
     def summary(self):
         """Prints a summary of the algorithm's results."""
-        print(f"\n{self.name}")
+        cols = [
+            ("Run", "{:^5}", 5),
+            ("x0", "{:>9} ", 10),
+            ("x*", "{:>9} ", 10),
+            ("f(x*)", "{:>9} ", 10),
+            ("f'(x*)", "{:>13} ", 14),
+            ("Iterations", "{:^12}", 12),
+            ("Oracle calls", "{:^14}", 14),
+        ]
+        width = sum(c[2] for c in cols) + len(cols) + 1
+        print("\n" + self.name.center(width))
+        row_format = "\u2502" + "\u2502".join(c[1] for c in cols) + "\u2502"
+        print("\u250f" + "\u2533".join("\u2501" * c[2] for c in cols) + "\u2513")
+        print(
+            row_format.replace(">", "^")
+            .replace("\u2502", "\u2503")
+            .format(*(c[0] for c in cols))
+        )
+        print("\u2521" + "\u2547".join("\u2501" * c[2] for c in cols) + "\u2529")
         for i, run in enumerate(self.runs, start=1):
             x0, x_star = run["x0"], run["x_star"]
             fx_star, dfx_star = run["fx_star"], run["dfx_star"]
             oracle_calls = run["oracle_call_count"]
             num_iters = len(run["history"]) - 1
-            converged = abs(dfx_star) < self.tol
-            print(f"  Run-{i} ({x0 = }):")
-            print(f"    x* = {x_star}, f(x*) = {fx_star}, f'(x*) = {dfx_star}")
             print(
-                f"    Iterations: {num_iters} {'(Converged)' if converged else '(Did NOT converge)'}"
-            )
-            print(f"    Number of calls to the oracle: {oracle_calls}")
-            if converged:
-                print(
-                    f"    Gradient is close to zero within the tolerance ({self.tol})."
+                row_format.format(
+                    i,
+                    f"{x0:.6f}",
+                    f"{x_star:.6f}",
+                    f"{fx_star:.6f}",
+                    f"{dfx_star:.6e}",
+                    num_iters,
+                    oracle_calls,
                 )
-            else:
-                print(f"    Did not converge within {self.maxiter} iterations.")
-        if len(self.runs) > 1:
-            print("  Best run:")
-            print(
-                f"    x* = {self.x_star}, f(x*) = {self.fx_star}, f'(x*) = {self.dfx_star}"
             )
+        print("\u2514" + "\u2534".join("\u2500" * c[2] for c in cols) + "\u2518")
 
     def plot(self):
         """Plots the history of `x` values during the optimisation."""
@@ -316,7 +328,7 @@ if __name__ == "__main__":
         oracle_f.plot(x_range=(-100, 100))
 
     x0s = np.linspace(-1, 1, 11).tolist()
-    print(f"Initial points: {x0s}")
+    print(f"Initial points: [{', '.join(f'{x:.3f}' for x in x0s)}]")
 
     optimisers: list[IterativeOptimiser] = [
         GradientDescent(lr=0.2),
