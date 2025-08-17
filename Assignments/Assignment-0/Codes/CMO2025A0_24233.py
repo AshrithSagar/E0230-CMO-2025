@@ -57,8 +57,8 @@ class FirstOrderOracle:
 
     def __call__(self, x: float) -> tuple[float, float]:
         """Evaluates the oracle function at `x`, using cache if available."""
+        x_key = round(x, self.cache_digits)  # Round for stable caching
         if ORACLE_CACHE:
-            x_key = round(x, self.cache_digits)  # Round for stable caching
             if x_key in self.cache:
                 return self.cache[x_key]
 
@@ -66,7 +66,7 @@ class FirstOrderOracle:
         self.call_count += 1
 
         if ORACLE_CACHE:
-            self.cache[x] = (fx, dfx)
+            self.cache[x_key] = (fx, dfx)
 
         return fx, dfx
 
@@ -320,10 +320,9 @@ class BFGS(IterativeOptimiser):
         if self.prev_x is not None and self.prev_grad is not None:
             s = x - self.prev_x
             y = grad - self.prev_grad
-            denom = s * y
 
-            if denom != 0:  # Scalar update in 1D
-                self.H = (s**2) / denom
+            if s != 0 or y != 0:  # Scalar update in 1D
+                self.H = s / y
 
         # Update current values
         self.prev_x = x
