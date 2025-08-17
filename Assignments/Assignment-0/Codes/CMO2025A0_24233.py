@@ -18,17 +18,17 @@ SRN: int = 24233
 assert isinstance(SRN, int) and len(str(SRN)) == 5, "SRN must be a 5-digit integer."
 
 ## Enable/disable optional configurations
-ORACLE_PLOT: bool = False
-"""Plot the graph of `f(x)` by querying the oracle function."""
-
 ORACLE_CACHE: bool = False
 """Cache the results of the oracle calls."""
 
-PLOT_CONVERGENCE: bool = False
-"""Plot the convergence of the optimisation algorithms over iterations."""
-
 LOG_RUNS: bool = True
 """Log all the runs of the optimisation algorithms in the summary table, not just the best one."""
+
+PLOT_ORACLE: bool = False
+"""Plot the graph of `f(x)` by querying the oracle function."""
+
+PLOT_CONVERGENCE: bool = False
+"""Plot the convergence of the optimisation algorithms over iterations."""
 
 
 # ---------- Oracle utils ----------
@@ -337,7 +337,7 @@ if __name__ == "__main__":
     print(f"{SRN = }")
 
     oracle_f = FirstOrderOracle()
-    if ORACLE_PLOT:
+    if PLOT_ORACLE:
         oracle_f.plot(x_range=(-100, 100))
 
     x0s = np.linspace(-1, 1, 11).tolist()
