@@ -17,14 +17,18 @@ SRN: int = 24233
 """The 5-digit Student Registration Number (SRN) for the assignment."""
 assert isinstance(SRN, int) and len(str(SRN)) == 5, "SRN must be a 5-digit integer."
 
+## Enable/disable optional configurations
 ORACLE_PLOT: bool = False
-"""Enable or disable plotting of the oracle function."""
+"""Plot the graph of `f(x)` by querying the oracle function."""
 
 ORACLE_CACHE: bool = False
-"""Enable or disable caching of oracle function results."""
+"""Cache the results of the oracle calls."""
 
 PLOT_CONVERGENCE: bool = False
-"""Enable or disable plotting the convergence of optimisation algorithms."""
+"""Plot the convergence of the optimisation algorithms over iterations."""
+
+LOG_RUNS: bool = True
+"""Log all the runs of the optimisation algorithms in the summary table, not just the best one."""
 
 
 # ---------- Oracle utils ----------
@@ -218,16 +222,33 @@ class IterativeOptimiser:
                     "oracle_call_count": oracle_fn.call_count,
                 }
             )
-            row = [idx, x0, x, fx, dfx, len(history) - 1, oracle_fn.call_count]
-            print(row_format.format(*[c[3].format(v) for c, v in zip(cols, row)]))
-        print("\u2514" + "\u2534".join("\u2500" * c[2] for c in cols) + "\u2518")
 
-        # Pick best run
-        best = min(self.runs, key=lambda r: r["fx_star"])
+            if LOG_RUNS:
+                row = [idx, x0, x, fx, dfx, len(history) - 1, oracle_fn.call_count]
+                print(row_format.format(*[c[3].format(v) for c, v in zip(cols, row)]))
+        if LOG_RUNS:
+            print("\u251c" + "\u253c".join("\u2500" * c[2] for c in cols) + "\u2524")
+
+        # Pick best run by lowest abs(f'(x^*)), if tied then lower oracle call count
+        best = min(
+            self.runs, key=lambda r: (abs(r["dfx_star"]), r["oracle_call_count"])
+        )
         self.x_star = best["x_star"]
         self.fx_star = best["fx_star"]
         self.dfx_star = best["dfx_star"]
         self.history = best["history"]
+
+        row = [
+            self.runs.index(best) + 1,
+            best["x0"],
+            best["x_star"],
+            best["fx_star"],
+            best["dfx_star"],
+            len(best["history"]) - 1,
+            best["oracle_call_count"],
+        ]
+        print(row_format.format(*[c[3].format(v) for c, v in zip(cols, row)]))
+        print("\u2514" + "\u2534".join("\u2500" * c[2] for c in cols) + "\u2518")
 
     def plot(self):
         """Plots the history of `x` values during the optimisation."""
