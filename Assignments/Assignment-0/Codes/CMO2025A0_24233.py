@@ -75,7 +75,7 @@ class IterativeOptimiser:
     A base template class for iterative optimisation algorithms,
     particularly used here for the minimisation objective.
 
-    `x_{k+1} = ALGO(x_k, f'(x_k), k)`\\
+    `x_{k+1} = ALGO(x_k)`\\
     where `ALGO` is the algorithm-specific step function,
     `x_k` is the value at iteration `k`.
     """
@@ -92,39 +92,59 @@ class IterativeOptimiser:
         self.fx_star: float
         self.dfx_star: float
 
-        self.oracle_fn: FirstOrderOracle
-        self.x0: float
         self.maxiter: int
         self.tol: float
 
-    def run(self, oracle_fn: FirstOrderOracle, x0: float, maxiter=1_000_000, tol=1e-9):
+    def run(
+        self,
+        oracle_fn: FirstOrderOracle,
+        x0s: list[float],
+        maxiter: int = 1_000_000,
+        tol: float = 1e-9,
+    ):
         """
         Runs the iterative algorithm.
 
         Parameters:
             oracle_fn: The first-order oracle function to minimise.
-            x0: Initial guess for the minimum point.
+            x0s: Initial guesses for the minimum point.
             maxiter: Maximum number of iterations to perform.
             tol: Tolerance for stopping criterion based on the gradient.
         """
-        self.oracle_fn = oracle_fn.reset_counter()
-        self.x0 = x0
         self.maxiter = maxiter
         self.tol = tol
 
-        self.history = [x0]
-        x = x0
-        self._initialise_state()
+        self.runs = []
+        for x0 in x0s:
+            oracle_fn.reset_counter()
+            history = [x0]
+            x = x0
+            self._initialise_state()
 
-        for k in range(1, maxiter + 1):
-            fx, dfx = self.oracle_fn(x)  # Query the oracle function
-            if abs(dfx) < tol:  # Early exit if f'(x) is small enough
-                break
-            x = self._step(x, dfx, k)
-            self.history.append(x)
+            for k in range(1, maxiter + 1):
+                fx, dfx = oracle_fn(x)  # Query the oracle function
+                if abs(dfx) < tol:  # Early exit if f'(x) is small enough
+                    break
+                x = self._step(x, k, fx, dfx, oracle_fn)
+                history.append(x)
+            fx, dfx = oracle_fn(x)
+            self.runs.append(
+                {
+                    "x0": x0,
+                    "x_star": x,
+                    "fx_star": fx,
+                    "dfx_star": dfx,
+                    "history": history,
+                    "oracle_call_count": oracle_fn.call_count,
+                }
+            )
 
-        self.x_star = x
-        self.fx_star, self.dfx_star = self.oracle_fn(x)
+        # Pick best run
+        best = min(self.runs, key=lambda r: r["fx_star"])
+        self.x_star = best["x_star"]
+        self.fx_star = best["fx_star"]
+        self.dfx_star = best["dfx_star"]
+        self.history = best["history"]
 
     def _initialise_state(self) -> None:
         """
@@ -133,14 +153,18 @@ class IterativeOptimiser:
         """
         pass
 
-    def _step(self, x: float, grad: float, k: int) -> float:
+    def _step(
+        self, x: float, k: int, f: float, grad: float, oracle_fn: FirstOrderOracle
+    ) -> float:
         """
         Performs a single step of the algorithm.\\
         [Required]: This method should be implemented by subclasses to define the specific update rule.
         Parameters:
             x: Current value of `x`, i.e., `x_k`.
-            grad: Current gradient `f'(x)`, viz. `f'(x_k)`.
             k: Current iteration number.
+            f: Current function value `f(x)`, viz. `f(x_k)`.
+            grad: Current gradient `f'(x)`, viz. `f'(x_k)`.
+            oracle_fn: The oracle function to query for `f(x)` and `f'(x)`.
         Returns:
             The updated value of `x` after the step, viz. `x_{k+1}`.
         """
@@ -148,21 +172,30 @@ class IterativeOptimiser:
 
     def summary(self):
         """Prints a summary of the algorithm's results."""
-        num_iters = len(self.history) - 1
-        converged = abs(self.dfx_star) < self.tol
-        oracle_calls = self.oracle_fn.call_count
-
         print(f"\n{self.name}")
-        print(f"x* = {self.x_star}, f(x*) = {self.fx_star}, f'(x*) = {self.dfx_star}")
-        print(
-            f"Iterations: {num_iters} {'(Converged)' if converged else '(Did NOT converge)'}"
-        )
-        print(f"Number of calls to the oracle: {oracle_calls}")
-
-        if converged:
-            print(f"Gradient is close to zero within the tolerance ({self.tol}).")
-        else:
-            print(f"Did not converge within {self.maxiter} iterations.")
+        for i, run in enumerate(self.runs, start=1):
+            num_iters = len(run["history"]) - 1
+            converged = abs(run["dfx_star"]) < self.tol
+            oracle_calls = run["oracle_call_count"]
+            print(f"  Run-{i} (x0 = {run['x0']}):")
+            print(
+                f"    x* = {run['x_star']}, f(x*) = {run['fx_star']}, f'(x*) = {run['dfx_star']}"
+            )
+            print(
+                f"    Iterations: {num_iters} {'(Converged)' if converged else '(Did NOT converge)'}"
+            )
+            print(f"    Number of calls to the oracle: {oracle_calls}")
+            if converged:
+                print(
+                    f"    Gradient is close to zero within the tolerance ({self.tol})."
+                )
+            else:
+                print(f"    Did not converge within {self.maxiter} iterations.")
+        if len(self.runs) > 1:
+            print("  Best run:")
+            print(
+                f"    x* = {self.x_star}, f(x*) = {self.fx_star}, f'(x*) = {self.dfx_star}"
+            )
 
     def plot(self):
         """Plots the history of `x` values during the optimisation."""
@@ -178,7 +211,7 @@ class GradientDescent(IterativeOptimiser):
     where `eta` is the learning rate.
     """
 
-    def _step(self, x, grad, k):
+    def _step(self, x, k, f, grad, oracle_fn):
         eta: float = self.config["lr"]
         return x - eta * grad
 
@@ -193,15 +226,15 @@ class BacktrackingGradientDescent(IterativeOptimiser):
     The step size is reduced until the condition is satisfied.
     """
 
-    def _step(self, x, grad, k):
+    def _step(self, x, k, f, grad, oracle_fn):
         eta = self.config["init_lr"]
         alpha = self.config["alpha"]
         beta = self.config["beta"]
 
-        f_x, _ = self.oracle_fn(x)
+        f_x, _ = oracle_fn(x)
         while True:
             x_new = x - eta * grad
-            f_new, _ = self.oracle_fn(x_new)  # Needs multiple queries
+            f_new, _ = oracle_fn(x_new)  # Needs multiple queries
 
             # Armijo condition
             if f_new <= f_x - alpha * eta * grad**2:
@@ -228,7 +261,7 @@ class BFGS(IterativeOptimiser):
         self.prev_grad = None
         self.prev_x = None
 
-    def _step(self, x, grad, k):
+    def _step(self, x, k, f, grad, oracle_fn):
         if self.prev_x is not None and self.prev_grad is not None:
             s = x - self.prev_x
             y = grad - self.prev_grad
@@ -251,13 +284,16 @@ if __name__ == "__main__":
     oracle_f = FirstOrderOracle()
     oracle_f.plot(x_range=(-100, 100))
 
+    x0s = np.linspace(-1, 1, 11).tolist()
+    print(f"Initial points: {x0s}")
+
     optimisers: list[IterativeOptimiser] = [
-        GradientDescent(lr=0.5),
+        GradientDescent(lr=0.2),
         BacktrackingGradientDescent(init_lr=0.5, alpha=0.1, beta=0.9),
         BFGS(H_init=0.5),
     ]
     for opt in optimisers:
-        opt.run(oracle_f, x0=0.0, maxiter=1_000_000, tol=1e-13)
+        opt.run(oracle_f, x0s=x0s, maxiter=1_000_000, tol=1e-13)
         opt.summary()
 
     # Convergence of optimisers plot
