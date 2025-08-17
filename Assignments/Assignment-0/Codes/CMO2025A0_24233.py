@@ -25,10 +25,10 @@ ORACLE_CACHE: bool = False
 LOG_RUNS: bool = True
 """Log all the runs of the optimisation algorithms in the summary table, not just the best one."""
 
-PLOT_ORACLE: bool = False
+PLOT_ORACLE: bool = True
 """Plot the graph of `f(x)` by querying the oracle function."""
 
-PLOT_CONVERGENCE: bool = False
+PLOT_CONVERGENCE: bool = True
 """Plot the convergence of the optimisation algorithms over iterations."""
 
 
