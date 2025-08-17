@@ -5,6 +5,7 @@
 
 import os
 import sys
+from math import isnan
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -231,24 +232,29 @@ class IterativeOptimiser:
         if LOG_RUNS:
             print("\u251c" + "\u253c".join("\u2500" * c[2] for c in cols) + "\u2524")
 
-        # Pick best run by lowest abs(f'(x^*)), if tied then lower oracle call count
-        best = min(
-            self.runs, key=lambda r: (abs(r["dfx_star"]), r["oracle_call_count"])
-        )
-        self.x_star = best["x_star"]
-        self.fx_star = best["fx_star"]
-        self.dfx_star = best["dfx_star"]
-        self.history = best["history"]
-
-        row = [
-            self.runs.index(best) + 1,
-            best["x0"],
-            best["x_star"],
-            best["fx_star"],
-            best["dfx_star"],
-            len(best["history"]) - 1,
-            best["oracle_call_count"],
-        ]
+        # Pick best run by lowest abs(f'(x^*)), if tied then prefer lower oracle call count
+        if valid_runs := [
+            r for r in self.runs if not (isnan(r["fx_star"]) or isnan(r["dfx_star"]))
+        ]:
+            best = min(
+                valid_runs, key=lambda r: (abs(r["dfx_star"]), r["oracle_call_count"])
+            )
+            run_idx = self.runs.index(best) + 1
+            self.x_star = best["x_star"]
+            self.fx_star, self.dfx_star = best["fx_star"], best["dfx_star"]
+            self.history = best["history"]
+            x0 = best["x0"]
+            n_iters = len(best["history"]) - 1
+            n_oracle = best["oracle_call_count"]
+        else:
+            run_idx = ""
+            self.x_star = float("nan")
+            self.fx_star, self.dfx_star = float("nan"), float("nan")
+            self.history = []
+            x0 = float("nan")
+            n_iters = ""
+            n_oracle = ""
+        row = [run_idx, x0, self.x_star, self.fx_star, self.dfx_star, n_iters, n_oracle]
         print(row_format.format(*[c[3].format(v) for c, v in zip(cols, row)]), "best")
         print("\u2514" + "\u2534".join("\u2500" * c[2] for c in cols) + "\u2518")
 
