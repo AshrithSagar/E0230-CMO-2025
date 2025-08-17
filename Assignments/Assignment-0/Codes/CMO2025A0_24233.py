@@ -122,6 +122,30 @@ class IterativeOptimiser:
         self.maxiter: int
         self.tol: float
 
+    def _initialise_state(self) -> None:
+        """
+        Initialises the state of the algorithm.\\
+        [Optional]: This method can be overridden by subclasses to set up any necessary state if needed.
+        """
+        pass
+
+    def _step(
+        self, x: float, k: int, f: float, grad: float, oracle_fn: FirstOrderOracle
+    ) -> float:
+        """
+        Performs a single step of the algorithm.\\
+        [Required]: This method should be implemented by subclasses to define the specific update rule.
+        Parameters:
+            x: Current value of `x`, i.e., `x_k`.
+            k: Current iteration number.
+            f: Current function value `f(x)`, viz. `f(x_k)`.
+            grad: Current gradient `f'(x)`, viz. `f'(x_k)`.
+            oracle_fn: The oracle function to query for `f(x)` and `f'(x)`.
+        Returns:
+            The updated value of `x` after the step, viz. `x_{k+1}`.
+        """
+        raise NotImplementedError
+
     def run(
         self,
         oracle_fn: FirstOrderOracle,
@@ -144,8 +168,29 @@ class IterativeOptimiser:
         # Set oracle_fn's cache_digits in order of tol
         oracle_fn.cache_digits = int(-np.log10(tol)) + 1
 
+        # Summary table
+        cols = [
+            ("Run", "{:^5}", 5, "{}"),
+            ("x0", "{:>9} ", 10, "{:.6f}"),
+            ("x*", "{:>19} ", 20, "{:.16f}"),
+            ("f(x*)", "{:>19} ", 20, "{:.16f}"),
+            ("f'(x*)", "{:>13} ", 14, "{:.6e}"),
+            ("Iterations", "{:^12}", 12, "{}"),
+            ("Oracle calls", "{:^14}", 14, "{}"),
+        ]
+        width = sum(c[2] for c in cols) + len(cols) + 1
+        print("\n" + self.name.center(width))
+        row_format = "\u2502" + "\u2502".join(c[1] for c in cols) + "\u2502"
+        print("\u250f" + "\u2533".join("\u2501" * c[2] for c in cols) + "\u2513")
+        print(
+            row_format.replace(">", "^")
+            .replace("\u2502", "\u2503")
+            .format(*(c[0] for c in cols))
+        )
+        print("\u2521" + "\u2547".join("\u2501" * c[2] for c in cols) + "\u2529")
+
         self.runs = []
-        for x0 in x0s:
+        for idx, x0 in enumerate(x0s, start=1):
             oracle_fn.reset()
             history = [x0]
             x = x0
@@ -173,6 +218,9 @@ class IterativeOptimiser:
                     "oracle_call_count": oracle_fn.call_count,
                 }
             )
+            row = [idx, x0, x, fx, dfx, len(history) - 1, oracle_fn.call_count]
+            print(row_format.format(*[c[3].format(v) for c, v in zip(cols, row)]))
+        print("\u2514" + "\u2534".join("\u2500" * c[2] for c in cols) + "\u2518")
 
         # Pick best run
         best = min(self.runs, key=lambda r: r["fx_star"])
@@ -180,60 +228,6 @@ class IterativeOptimiser:
         self.fx_star = best["fx_star"]
         self.dfx_star = best["dfx_star"]
         self.history = best["history"]
-
-    def _initialise_state(self) -> None:
-        """
-        Initialises the state of the algorithm.\\
-        [Optional]: This method can be overridden by subclasses to set up any necessary state if needed.
-        """
-        pass
-
-    def _step(
-        self, x: float, k: int, f: float, grad: float, oracle_fn: FirstOrderOracle
-    ) -> float:
-        """
-        Performs a single step of the algorithm.\\
-        [Required]: This method should be implemented by subclasses to define the specific update rule.
-        Parameters:
-            x: Current value of `x`, i.e., `x_k`.
-            k: Current iteration number.
-            f: Current function value `f(x)`, viz. `f(x_k)`.
-            grad: Current gradient `f'(x)`, viz. `f'(x_k)`.
-            oracle_fn: The oracle function to query for `f(x)` and `f'(x)`.
-        Returns:
-            The updated value of `x` after the step, viz. `x_{k+1}`.
-        """
-        raise NotImplementedError
-
-    def summary(self):
-        """Prints a summary of the algorithm's results."""
-        cols = [
-            ("Run", "{:^5}", 5, "{}"),
-            ("x0", "{:>9} ", 10, "{:.6f}"),
-            ("x*", "{:>19} ", 20, "{:.16f}"),
-            ("f(x*)", "{:>19} ", 20, "{:.16f}"),
-            ("f'(x*)", "{:>13} ", 14, "{:.6e}"),
-            ("Iterations", "{:^12}", 12, "{}"),
-            ("Oracle calls", "{:^14}", 14, "{}"),
-        ]
-        width = sum(c[2] for c in cols) + len(cols) + 1
-        print("\n" + self.name.center(width))
-        row_format = "\u2502" + "\u2502".join(c[1] for c in cols) + "\u2502"
-        print("\u250f" + "\u2533".join("\u2501" * c[2] for c in cols) + "\u2513")
-        print(
-            row_format.replace(">", "^")
-            .replace("\u2502", "\u2503")
-            .format(*(c[0] for c in cols))
-        )
-        print("\u2521" + "\u2547".join("\u2501" * c[2] for c in cols) + "\u2529")
-        for i, run in enumerate(self.runs, start=1):
-            x0, x_star = run["x0"], run["x_star"]
-            fx_star, dfx_star = run["fx_star"], run["dfx_star"]
-            oracle_calls = run["oracle_call_count"]
-            num_iters = len(run["history"]) - 1
-            row = [i, x0, x_star, fx_star, dfx_star, num_iters, oracle_calls]
-            print(row_format.format(*[c[3].format(v) for c, v in zip(cols, row)]))
-        print("\u2514" + "\u2534".join("\u2500" * c[2] for c in cols) + "\u2518")
 
     def plot(self):
         """Plots the history of `x` values during the optimisation."""
@@ -333,7 +327,6 @@ if __name__ == "__main__":
     ]
     for opt in optimisers:
         opt.run(oracle_f, x0s=x0s, maxiter=1_000_000, tol=1e-13)
-        opt.summary()
 
     # Convergence of optimisers plot
     if PLOT_CONVERGENCE:
