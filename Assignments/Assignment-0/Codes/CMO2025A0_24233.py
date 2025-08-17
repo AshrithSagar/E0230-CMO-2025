@@ -172,7 +172,7 @@ class IterativeOptimiser:
         # Set oracle_fn's cache_digits in order of tol
         oracle_fn.cache_digits = int(-np.log10(tol)) + 1
 
-        # Summary table
+        # Summary table for multiple starting points
         cols = [
             ("Run", "{:^5}", 5, "{}"),
             ("x0", "{:>10} ", 11, "{:2.6f}"),
@@ -182,8 +182,10 @@ class IterativeOptimiser:
             ("Iterations", "{:^12}", 12, "{}"),
             ("Oracle calls", "{:^14}", 14, "{}"),
         ]
-        width = sum(c[2] for c in cols) + len(cols) + 1
-        print("\n" + self.name.center(width))
+        print("\n" + "\033[1m\033[4m" + self.name + "\033[0m")
+        if (doc := self.__class__.__doc__) is not None:
+            print(doc.replace("\\", ""))
+        print("Run params:", ", ".join(f"{k} = {v}" for k, v in self.config.items()))
         row_format = "\u2502" + "\u2502".join(c[1] for c in cols) + "\u2502"
         print("\u250f" + "\u2533".join("\u2501" * c[2] for c in cols) + "\u2513")
         print(
@@ -247,7 +249,7 @@ class IterativeOptimiser:
             len(best["history"]) - 1,
             best["oracle_call_count"],
         ]
-        print(row_format.format(*[c[3].format(v) for c, v in zip(cols, row)]))
+        print(row_format.format(*[c[3].format(v) for c, v in zip(cols, row)]), "best")
         print("\u2514" + "\u2534".join("\u2500" * c[2] for c in cols) + "\u2518")
 
     def plot(self):
