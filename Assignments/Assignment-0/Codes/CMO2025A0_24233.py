@@ -45,7 +45,7 @@ class FirstOrderOracle:
         self.call_count = 0
         return self
 
-    def plot(self, x_range: tuple[float, float], num_points=100):
+    def plot(self, x_range: tuple[float, float], num_points: int | None = None):
         """
         Plots the oracle function over a specified range.\\
         Just for convenience, to visualise the function `f(x)`, quering the oracle multiple times.
@@ -54,7 +54,10 @@ class FirstOrderOracle:
             x_range: A tuple specifying the range of `x` values to plot.
             num_points: Number of points to sample in the range.
         """
-        x_values = np.linspace(x_range[0], x_range[1], num_points)
+        lower, upper = x_range
+        if num_points is None:
+            num_points = int(upper - lower + 1)
+        x_values = np.linspace(lower, upper, num_points)
         y_values = [self.__call__(x)[0] for x in x_values]
 
         plt.plot(x_values, y_values, label="f(x)")
@@ -266,7 +269,7 @@ if __name__ == "__main__":
     print(f"{SRN = }")
 
     oracle_f = FirstOrderOracle()
-    oracle_f.plot(x_range=(-20, 20))
+    oracle_f.plot(x_range=(-100, 100))
 
     optimisers: list[IterativeOptimiser] = [
         GradientDescent(lr=1e-3),
