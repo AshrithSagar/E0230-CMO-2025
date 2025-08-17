@@ -67,7 +67,6 @@ class FirstOrderOracle:
         plt.title("Oracle Function Plot")
         plt.legend()
         plt.grid(True)
-        plt.tight_layout()
 
 
 # ---------- Iterative Algorithm Template ----------
@@ -253,9 +252,9 @@ if __name__ == "__main__":
     oracle_f.plot(x_range=(-100, 100))
 
     optimisers: list[IterativeOptimiser] = [
-        GradientDescent(lr=1e-1),
+        GradientDescent(lr=0.5),
         BacktrackingGradientDescent(init_lr=0.5, alpha=0.1, beta=0.9),
-        BFGS(H_init=1.0),
+        BFGS(H_init=0.5),
     ]
     for opt in optimisers:
         opt.run(oracle_f, x0=0.0, maxiter=1_000_000, tol=1e-13)
@@ -270,6 +269,5 @@ if __name__ == "__main__":
     plt.title("Convergence of Optimisation Algorithms")
     plt.legend()
     plt.grid(True)
-    plt.tight_layout()
 
     plt.show()
