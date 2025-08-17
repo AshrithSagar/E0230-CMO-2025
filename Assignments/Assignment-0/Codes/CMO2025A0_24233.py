@@ -184,26 +184,6 @@ class GradientDescent(IterativeOptimiser):
         return x - eta * grad
 
 
-class MomentumGradientDescent(IterativeOptimiser):
-    """
-    Gradient Descent with Momentum.
-
-    `v_{k+1} = gamma v_k - eta f'(x_k)`\\
-    `x_{k+1} = x_k + v_{k+1}`\\
-    where `gamma` is the momentum parameter and `eta` is the learning rate.
-    """
-
-    def _initialise_state(self):
-        self.v = 0.0
-
-    def _step(self, x, grad, k):
-        gamma: float = self.config["momentum"]
-        eta: float = self.config["lr"]
-
-        self.v = gamma * self.v - eta * grad
-        return x + self.v
-
-
 class BacktrackingGradientDescent(IterativeOptimiser):
     """
     Gradient Descent with Backtracking Line Search.
@@ -273,8 +253,7 @@ if __name__ == "__main__":
     oracle_f.plot(x_range=(-100, 100))
 
     optimisers: list[IterativeOptimiser] = [
-        GradientDescent(lr=1e-3),
-        MomentumGradientDescent(lr=1e-3, momentum=0.9),
+        GradientDescent(lr=1e-1),
         BacktrackingGradientDescent(init_lr=0.5, alpha=0.1, beta=0.9),
         BFGS(H_init=1.0),
     ]
