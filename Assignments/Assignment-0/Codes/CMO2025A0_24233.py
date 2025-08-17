@@ -204,13 +204,13 @@ class IterativeOptimiser:
         """Prints a summary of the algorithm's results."""
         print(f"\n{self.name}")
         for i, run in enumerate(self.runs, start=1):
-            num_iters = len(run["history"]) - 1
-            converged = abs(run["dfx_star"]) < self.tol
+            x0, x_star = run["x0"], run["x_star"]
+            fx_star, dfx_star = run["fx_star"], run["dfx_star"]
             oracle_calls = run["oracle_call_count"]
-            print(f"  Run-{i} (x0 = {run['x0']}):")
-            print(
-                f"    x* = {run['x_star']}, f(x*) = {run['fx_star']}, f'(x*) = {run['dfx_star']}"
-            )
+            num_iters = len(run["history"]) - 1
+            converged = abs(dfx_star) < self.tol
+            print(f"  Run-{i} ({x0 = }):")
+            print(f"    x* = {x_star}, f(x*) = {fx_star}, f'(x*) = {dfx_star}")
             print(
                 f"    Iterations: {num_iters} {'(Converged)' if converged else '(Did NOT converge)'}"
             )
