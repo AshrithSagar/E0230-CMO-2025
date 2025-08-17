@@ -141,7 +141,7 @@ class IterativeOptimiser:
         self.maxiter = maxiter
         self.tol = tol
 
-        # Set oracle_fn.cache_digits in order of tol
+        # Set oracle_fn's cache_digits in order of tol
         oracle_fn.cache_digits = int(-np.log10(tol)) + 1
 
         self.runs = []
@@ -151,13 +151,18 @@ class IterativeOptimiser:
             x = x0
             self._initialise_state()
 
-            for k in range(1, maxiter + 1):
-                fx, dfx = oracle_fn(x)  # Query the oracle function
-                if abs(dfx) < tol:  # Early exit if f'(x) is small enough
-                    break
-                x = self._step(x, k, fx, dfx, oracle_fn)
-                history.append(x)
-            fx, dfx = oracle_fn(x)
+            try:
+                for k in range(1, maxiter + 1):
+                    fx, dfx = oracle_fn(x)  # Query the oracle function
+                    if abs(dfx) < tol:  # Early exit if f'(x) is small enough
+                        break
+                    x = self._step(x, k, fx, dfx, oracle_fn)
+                    history.append(x)
+                fx, dfx = oracle_fn(x)
+            except OverflowError:  # Fallback
+                x = float("nan")
+                fx, dfx = float("nan"), float("nan")
+
             self.runs.append(
                 {
                     "x0": x0,
@@ -205,8 +210,8 @@ class IterativeOptimiser:
         cols = [
             ("Run", "{:^5}", 5, "{}"),
             ("x0", "{:>9} ", 10, "{:.6f}"),
-            ("x*", "{:>9} ", 10, "{:.6f}"),
-            ("f(x*)", "{:>9} ", 10, "{:.6f}"),
+            ("x*", "{:>19} ", 20, "{:.16f}"),
+            ("f(x*)", "{:>19} ", 20, "{:.16f}"),
             ("f'(x*)", "{:>13} ", 14, "{:.6e}"),
             ("Iterations", "{:^12}", 12, "{}"),
             ("Oracle calls", "{:^14}", 14, "{}"),
