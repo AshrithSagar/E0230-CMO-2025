@@ -11,6 +11,22 @@ A \textbf{metric space} \( (S, d) \) is a set \( S \) together with a \textit{me
 
 \subsection{Norm}
 
+A \textbf{normed vector space} \( (V, \| \cdot \|) \) is a vector space \( V \) over a field \( \mathbb{F} \) (usually \( \mathbb{R} \) or \( \mathbb{C} \)) equipped with a function \( \| \cdot \|: V \to \mathbb{R} \) that satisfies the following properties for all \( u, v \in V \) and \( a \in \mathbb{F} \):
+\begin{itemize}
+    \item \textit{Non-negativity}: \( \| v \| \geq 0 \)
+    \item \textit{Definiteness}: \( \| v \| = 0 \iff v = 0 \)
+    \item \textit{Homogeneity}: \( \| a v \| = |a| \| v \| \)
+    \item \textit{Triangle inequality}: \( \| u + v \| \leq \| u \| + \| v \| \)
+\end{itemize}
+
+Norm \( \eta: \mathbb{R}^d \to \mathbb{R} \), satisfies
+\begin{itemize}
+    \item \( \eta(\mathbf{x}) \geq 0 \)
+    \item \( \eta(\mathbf{x}) = 0 \iff \mathbf{x} = \mathbf{0} \)
+    \item \( \eta(s\mathbf{x}) = |s| \; \eta(\mathbf{x}) \), \quad \( s \in \mathbb{R} \)
+    \item \( \eta(\mathbf{x} + \mathbf{y}) \leq \eta(\mathbf{x}) + \eta(\mathbf{y}) \)
+\end{itemize}
+
 \subsection{Neighborhood}
 
 \subsection{Interior point}
