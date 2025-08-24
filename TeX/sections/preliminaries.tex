@@ -29,13 +29,30 @@ Norm \( \eta: \mathbb{R}^d \to \mathbb{R} \), satisfies
 
 \subsection{Neighborhood}
 
+\begin{equation*}
+    B_{r}(\mathbf{x}) = \{ \mathbf{z} \in \mathbb{R}^d : \| \mathbf{z} - \mathbf{x} \| < r \}, \quad r > 0, \ \mathbf{x} \in \mathbb{R}^d
+\end{equation*}
+
 \subsection{Interior point}
+
+A point \( \mathbf{x} \in S \) is an \textbf{interior point} of set \( S \subseteq \mathbb{R}^d \) if there exists a neighborhood of \( \mathbf{x} \) that is entirely contained within \( S \), i.e., there exists an \( r > 0 \) such that \( B_{r}(\mathbf{x}) \subseteq S \).
 
 \subsection{Limit point}
 
+A point \( \mathbf{x} \in \mathbb{R}^d \) is a \textbf{limit point} of set \( S \subseteq \mathbb{R}^d \) if every neighborhood of \( \mathbf{x} \) contains at least one point of \( S \) different from \( \mathbf{x} \) itself, i.e., for every \( r > 0 \), there exists a point \( \mathbf{y} \in S \setminus \{ \mathbf{x} \} \) such that \( \mathbf{y} \in B_{r}(\mathbf{x}) \).
+\begin{equation*}
+    \forall r > 0, \ B_{r}(\mathbf{x}) \cap (S \setminus \{ \mathbf{x} \}) \neq \emptyset
+\end{equation*}
+
+Trivially, every interior point of \( S \) is also a limit point of \( S \).
+
 \subsection{Open set}
 
+A set \( S \subseteq \mathbb{R}^d \) is \textbf{open} if every point in \( S \) is an interior point of \( S \).
+
 \subsection{Closed set}
+
+A set \( S \subseteq \mathbb{R}^d \) is \textbf{closed} if it contains all its limit points, i.e., if \( \mathbf{x} \) is a limit point of \( S \), then \( \mathbf{x} \in S \).
 
 \subsection{Bounded set}
 
