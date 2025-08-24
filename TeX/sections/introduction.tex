@@ -4,7 +4,25 @@
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.65\textwidth]{figures/heron/_}
+    \begin{minipage}{0.6\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/heron/_}
+    \end{minipage}%
+    \hfill
+    \begin{minipage}{0.4\textwidth}
+        \paragraph{Given:}
+        Two points \( A \) and \( B \) on the same side of a line \( L \).
+
+        \paragraph{To find:}
+        A point \( P \) on line \( L \) such that the total distance \( AP + PB \) is minimized.
+
+        \paragraph{Solution:}
+        Reflect one of the points, say \( A \), across line \( L \) to get point \( A' \).
+        The optimal point \( P^* \) is the intersection of line \( L \) and the line segment \( A'B \).
+        \begin{equation*}
+            \min_{P \in L} \; AP + PB = \min_{P \in L} \; A'P + PB = A'B
+        \end{equation*}
+    \end{minipage}
 \end{figure}
 
 \subsection{Stieglar's diet problem}
