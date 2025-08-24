@@ -97,11 +97,25 @@ The \textbf{closure} of a set \( S \subseteq \mathbb{R}^d \) is the smallest clo
 
 \subsubsection{First-order methods}
 
+Assume \( f \in C^{1} \), and use \( f(\mathbf{x} + \mathbf{p}) = f(\mathbf{x}) + \nabla f(\mathbf{x})^{\top} \mathbf{p} + o(\| \mathbf{p} \|) \).
+
 \subsubsection{Second-order methods}
+
+Assume \( f \in C^{2} \), and use \( f(\mathbf{x} + \mathbf{p}) = f(\mathbf{x}) + \nabla f(\mathbf{x})^{\top} \mathbf{p} + \frac{1}{2} \mathbf{p}^{\top} \nabla^{2} f(\mathbf{x}) \mathbf{p} + o(\| \mathbf{p} \|^2) \).
+
+\subsection{Global minimum}
+
+The point \( \mathbf{x}^* \in \mathbb{R}^d \) is a \textbf{global minimum} of the function \( f: \mathbb{R}^d \to \mathbb{R} \) if
+\begin{equation*}
+    f(\mathbf{x}^*) \leq f(\mathbf{x}), \quad \forall \mathbf{x} \in \mathbb{R}^d
+\end{equation*}
 
 \subsection{Local minimum}
 
-\subsection{Global minimum}
+The point \( \mathbf{x}^* \in \mathbb{R}^d \) is a \textbf{local minimum} of the function \( f: \mathbb{R}^d \to \mathbb{R} \) if there exists a \( \delta > 0 \) such that for all \( \mathbf{x} \) in the \( \delta \)-neighborhood of \( \mathbf{x}^* \), we have \( f(\mathbf{x}^*) \leq f(\mathbf{x}) \), i.e.,
+\begin{equation*}
+    f(\mathbf{x}^*) \leq f(\mathbf{x}), \quad \forall \mathbf{x} \in B_{\delta}(\mathbf{x}^*)
+\end{equation*}
 
 \subsection{Necessary and sufficient conditions}
 
