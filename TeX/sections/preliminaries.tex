@@ -27,16 +27,26 @@ Norm \( \eta: \mathbb{R}^d \to \mathbb{R} \), satisfies
     \item \( \eta(\mathbf{x} + \mathbf{y}) \leq \eta(\mathbf{x}) + \eta(\mathbf{y}) \)
 \end{itemize}
 
-\subsubsection{\( L_p \) norm}
+\subsubsection{\texorpdfstring{\( L_p \) norm}{Lp norm}}
 \begin{equation*}
     {\Vert \mathbf{x} \Vert}_p = {\left( \sum_{i=1}^{d} {\vert x_i \vert}^p \right)}^{\frac{1}{p}},
     \quad p \geq 1
 \end{equation*}
 
+\paragraph{\( L_2 \) norm (Euclidean norm)}
+\begin{equation*}
+    {\Vert \mathbf{x} \Vert}_2
+    =
+    \sqrt{x_1^2 + x_2^2 + \ldots + x_d^2}
+    =
+    \sqrt{\mathbf{x}^{\top} \mathbf{x}}
+\end{equation*}
+
 \subsection{Neighborhood}
 
+A \textbf{neighborhood} of a point \( \mathbf{x} \in \mathbb{R}^d \) is an open ball centered at \( \mathbf{x} \) with radius \( r > 0 \), defined as
 \begin{equation*}
-    B_{r}(\mathbf{x}) = \{ \mathbf{z} \in \mathbb{R}^d : \| \mathbf{z} - \mathbf{x} \| < r \}, \quad r > 0, \ \mathbf{x} \in \mathbb{R}^d
+    B_{r}(\mathbf{x}) = \{ \mathbf{z} \in \mathbb{R}^d \mid \Vert \mathbf{z} - \mathbf{x} \Vert < r \}, \quad r > 0, \ \mathbf{x} \in \mathbb{R}^d
 \end{equation*}
 
 \subsection{Interior point}
