@@ -85,6 +85,28 @@ The \textbf{closure} of a set \( S \subseteq \mathbb{R}^d \) is the smallest clo
 
 \subsection{Derivative}
 
+The \textbf{derivative} of a function \( f: \mathbb{R} \to \mathbb{R} \) at a point \( x \in \mathbb{R} \) is defined as
+\begin{equation*}
+    f'(x) = \lim_{h \to 0} \frac{f(x + h) - f(x)}{h}
+\end{equation*}
+
+The \textbf{gradient} of a function \( f: \mathbb{R}^d \to \mathbb{R} \) at a point \( \mathbf{x} = \left(x_1, x_2, \ldots, x_d\right)^{\top} \in \mathbb{R}^d \) is defined as
+\begin{equation*}
+    \nabla f(\mathbf{x}) = \left( \frac{\partial f}{\partial x_1}(\mathbf{x}), \frac{\partial f}{\partial x_2}(\mathbf{x}), \ldots, \frac{\partial f}{\partial x_d}(\mathbf{x}) \right)^{\top}
+    \in \mathbb{R}^d
+\end{equation*}
+
+The \textbf{Hessian} of a function \( f: \mathbb{R}^d \to \mathbb{R} \) at a point \( \mathbf{x} = \left(x_1, x_2, \ldots, x_d\right)^{\top} \in \mathbb{R}^d \) is defined as
+\begin{equation*}
+    \nabla^2 f(\mathbf{x}) = \begin{bmatrix}
+    \cfrac{\partial^2 f}{\partial x_1^2}(\mathbf{x}) & \cfrac{\partial^2 f}{\partial x_1 \partial x_2}(\mathbf{x}) & \cdots & \cfrac{\partial^2 f}{\partial x_1 \partial x_d}(\mathbf{x}) \\
+    \cfrac{\partial^2 f}{\partial x_2 \partial x_1}(\mathbf{x}) & \cfrac{\partial^2 f}{\partial x_2^2}(\mathbf{x}) & \cdots & \cfrac{\partial^2 f}{\partial x_2 \partial x_d}(\mathbf{x}) \\
+    \vdots & \vdots & \ddots & \vdots \\
+    \cfrac{\partial^2 f}{\partial x_d \partial x_1}(\mathbf{x}) & \cfrac{\partial^2 f}{\partial x_d \partial x_2}(\mathbf{x}) & \cdots & \cfrac{\partial^2 f}{\partial x_d^2}(\mathbf{x})
+    \end{bmatrix}
+    \in \mathbb{R}^{d \times d}
+\end{equation*}
+
 \subsection{Wierstrass extreme value theorem}
 
 \subsection{Taylor's theorem}
