@@ -27,6 +27,12 @@ Norm \( \eta: \mathbb{R}^d \to \mathbb{R} \), satisfies
     \item \( \eta(\mathbf{x} + \mathbf{y}) \leq \eta(\mathbf{x}) + \eta(\mathbf{y}) \)
 \end{itemize}
 
+\subsubsection{\( L_p \) norm}
+\begin{equation*}
+    {\Vert \mathbf{x} \Vert}_p = {\left( \sum_{i=1}^{d} {\vert x_i \vert}^p \right)}^{\frac{1}{p}},
+    \quad p \geq 1
+\end{equation*}
+
 \subsection{Neighborhood}
 
 \begin{equation*}
@@ -56,11 +62,18 @@ A set \( S \subseteq \mathbb{R}^d \) is \textbf{closed} if it contains all its l
 
 \subsection{Bounded set}
 
+A set \( S \subseteq \mathbb{R}^d \) is \textbf{bounded} if there exists \( \mathbf{z} \in \mathbb{R}^d, M \in \mathbb{R} \) such that \( \Vert \mathbf{z} - \mathbf{x} \Vert < M, \ \forall \mathbf{x} \in S \).
+
 \subsection{Infimum}
 
 \subsection{Supremum}
 
 \subsection{Closure}
+
+The \textbf{closure} of a set \( S \subseteq \mathbb{R}^d \) is the smallest closed set containing \( S \), which can be obtained by adding all limit points of \( S \) to \( S \) itself.
+\begin{equation*}
+    \operatorname{closure}{(S)} = S \cup \{ \text{all limit points of } S \}
+\end{equation*}
 
 \subsection{Continuity}
 
