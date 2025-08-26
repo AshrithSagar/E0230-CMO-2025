@@ -295,3 +295,32 @@ If \( f \in C^2 \), then \( f \) is convex if
     \nabla^2 f(\mathbf{x}) \succeq 0,
     \quad \forall \mathbf{x} \in \mathbb{R}^n
 \end{equation*}
+
+\subsection{Algorithmic design}
+
+\paragraph{Problem:}
+\begin{align*}
+    \min_{\mathbf{x} \in \mathbb{R}^d} f(\mathbf{x}),
+    \quad \text{where }
+    f = \left( \frac{1}{2} \mathbf{x}^{\top} \mathbf{Q} \mathbf{x} + \mathbf{h}^{\top} \mathbf{x} + c \right),
+    \quad \mathbf{Q} \succ \mathbf{0}, \text{i.e.}, \mathbf{Q} \in \mathbf{S}_d^{++},
+    \quad \mathbf{h} \in \mathbb{R}^d,
+    \quad c \in \mathbb{R}
+\end{align*}
+
+\paragraph{Solution:}
+
+The gradient of \( f \) can be computed as
+\begin{equation*}
+    \nabla f(\mathbf{x}) = \mathbf{Q} \mathbf{x} + \mathbf{h}
+\end{equation*}
+and thereby from the first-order necessary condition for local minimum, the local minimum \( \mathbf{x}^* \) must necessarily satisfy
+\begin{equation*}
+    \nabla f(\mathbf{x}^*) = \mathbf{Q} \mathbf{x}^* + \mathbf{h} = \mathbf{0}
+    \quad \iff \quad
+    \boxed{
+        \mathbf{x}^* = -\mathbf{Q}^{-1} \mathbf{h}
+    }
+\end{equation*}
+
+\paragraph{Algorithm:}
