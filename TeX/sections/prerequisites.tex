@@ -17,11 +17,11 @@ i.e., \( f(\mathbf{x}) \) can be made arbitrarily close to \( L \) by making \( 
 
 \subsection{Symmetric Matrices}
 
-A matrix \( \mathbf{A} \) is symmetric if \( \mathbf{A} = \mathbf{A}^\top \), i.e., \( a_{ij} = a_{ji}, \ \forall i, j \).
+A matrix \( \mathbf{A} \in \mathbb{R}^{d \times d} \) is symmetric if \( \mathbf{A} = \mathbf{A}^\top \), i.e., \( a_{ij} = a_{ji}, \ \forall i, j \).
 
 \subsection{Positive Semi-definite Matrices}
 
-A symmetric matrix \( \mathbf{A} \in \mathbb{R}^{d \times d} \) is \textbf{positive semi-definite} (PSD), denoted as \( \mathbf{A} \succeq 0 \), if
+A symmetric matrix \( \mathbf{A} \in \mathbf{S}_{d} \) is \textbf{positive semi-definite} (PSD), denoted as \( \mathbf{A} \succeq 0 \), if
 \begin{equation*}
     \mathbf{x}^\top \mathbf{A} \mathbf{x} \geq 0,
     \quad \forall \mathbf{x} \in \mathbb{R}^d
@@ -29,7 +29,7 @@ A symmetric matrix \( \mathbf{A} \in \mathbb{R}^{d \times d} \) is \textbf{posit
 
 \subsection{Positive Definite Matrices}
 
-A symmetric matrix \( \mathbf{A} \in \mathbb{R}^{d \times d} \) is \textbf{positive definite} (PD), denoted as \( \mathbf{A} \succ 0 \), if
+A symmetric matrix \( \mathbf{A} \in \mathbf{S}_{d} \) is \textbf{positive definite} (PD), denoted as \( \mathbf{A} \succ 0 \), if
 \begin{equation*}
     \mathbf{x}^\top \mathbf{A} \mathbf{x} > 0,
     \quad \forall \mathbf{x} \in \mathbb{R}^d \setminus \{ \mathbf{0} \}
@@ -44,6 +44,8 @@ where
 \( \mathbf{A} \in \mathbb{R}^{d \times d} \), \quad
 \( \lambda \in \mathbb{R} \longrightarrow \) Eigenvalue, \quad
 \( \mathbf{v} \in \mathbb{R}^d \setminus \{ \mathbf{0} \} \longrightarrow \) corresponding Eigenvector.
+
+The set of all eigenvalues of \( \mathbf{A} \) is called the \textbf{spectrum} of \( \mathbf{A} \).
 
 \subsection{Spectral Decomposition Theorem}
 
