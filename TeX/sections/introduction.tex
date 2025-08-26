@@ -27,24 +27,28 @@
 
 \subsection{Stigler's diet problem}
 
-\begin{align*}
-    \min_{x} \quad & \sum_{i} c_i x_i \\
-    \text{subject to} \quad
-    & \sum_{i} x_i a_{ij} \geq r_j, \quad \forall j \\
-    & x_i \geq 0, \quad \forall i
-\end{align*}
+\begin{minipage}{0.4\textwidth}
+    \begin{align*}
+        \min_{x} \quad & \sum_{i} c_i x_i \\
+        \text{subject to} \quad
+        & \sum_{i} x_i a_{ij} \geq r_j, \quad \forall j \\
+        & x_i \geq 0, \quad \forall i
+    \end{align*}
+\end{minipage}
+\hfill
+\begin{minipage}{0.6\textwidth}
+    where
+    \begin{description}[align=right,labelwidth=1.2em,labelsep=0.8em]
+        \item[\( i \)] Index for food items.
 
-where
-\begin{itemize}
-    \item \( i \rightarrow \) Index for food items.
+        \item[\( j \)] Index for nutrients.
 
-    \item \( j \rightarrow \) Index for nutrients.
+        \item[\( x_i \)] Quantity of food item \( i \) to include in the diet.
 
-    \item \( x_i \rightarrow \) Quantity of food item \( i \) to include in the diet.
+        \item[\( c_i \)] Cost per unit of food item \( i \).
 
-    \item \( c_i \rightarrow \) Cost per unit of food item \( i \).
+        \item[\( a_{ij} \)] Amount of nutrient \( j \) in one unit of food item \( i \).
 
-    \item \( a_{ij} \rightarrow \) Amount of nutrient \( j \) in one unit of food item \( i \).
-
-    \item \( r_j \rightarrow \) Minimum required amount of nutrient \( j \) per day.
-\end{itemize}
+        \item[\( r_j \)] Minimum required amount of nutrient \( j \) per day.
+    \end{description}
+\end{minipage}
