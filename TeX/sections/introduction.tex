@@ -25,9 +25,26 @@
     \end{minipage}
 \end{figure}
 
-\subsection{Stieglar's diet problem}
+\subsection{Stigler's diet problem}
 
 \begin{align*}
     \min_{x} \quad & \sum_{i} c_i x_i \\
-    \text{subject to} \quad & \sum_{i} x_i a_{ij} \geq r_j, \quad \forall j
+    \text{subject to} \quad
+    & \sum_{i} x_i a_{ij} \geq r_j, \quad \forall j \\
+    & x_i \geq 0, \quad \forall i
 \end{align*}
+
+where
+\begin{itemize}
+    \item \( i \rightarrow \) Index for food items.
+
+    \item \( j \rightarrow \) Index for nutrients.
+
+    \item \( x_i \rightarrow \) Quantity of food item \( i \) to include in the diet.
+
+    \item \( c_i \rightarrow \) Cost per unit of food item \( i \).
+
+    \item \( a_{ij} \rightarrow \) Amount of nutrient \( j \) in one unit of food item \( i \).
+
+    \item \( r_j \rightarrow \) Minimum required amount of nutrient \( j \) per day.
+\end{itemize}
