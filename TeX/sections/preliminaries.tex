@@ -93,7 +93,23 @@ The \textbf{closure} of a set \( S \subseteq \mathbb{R}^d \) is the smallest clo
 
 \subsection{Continuity}
 
+For a function \( f: D \subseteq \mathbb{R}^d \to \mathbb{R} \),
+\begin{equation*}
+    \lim_{\mathbf{x} \to \mathbf{c}} f(\mathbf{x}) = L
+    \quad \iff \quad
+    \forall \epsilon > 0, \
+    \exists \delta > 0, \
+    \text{s.t.} \
+    \vert f(\mathbf{x}) - L \vert < \epsilon, \
+    \forall \mathbf{x} \in D \cap B_{\delta}(\mathbf{c}) \setminus \{ \mathbf{c} \}
+\end{equation*}
+
 \subsection{Continuous functions}
+
+A function \( f: D \subseteq \mathbb{R}^d \to \mathbb{R} \) is \textbf{continuous} at a point \( \mathbf{x}_0 \in D \) iff
+\begin{equation*}
+    \lim_{\mathbf{x} \to \mathbf{x}_0} f(\mathbf{x}) = f(\mathbf{x}_0)
+\end{equation*}
 
 \subsection{Intermediate value theorem}
 
