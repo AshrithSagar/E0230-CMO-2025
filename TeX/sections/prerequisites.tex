@@ -1,12 +1,39 @@
 \section{Prerequisites}
 
+\subsection{Limits}
+
+(\( \epsilon \)--\( \delta \)) definition of \textbf{limit} of a function \( f: \mathbb{R}^d \to \mathbb{R} \) at point \( \mathbf{x}_0 \):
+\begin{equation*}
+    \lim_{\mathbf{x} \to \mathbf{x}_0} f(\mathbf{x}) = L
+    \quad \iff \quad
+    \forall \epsilon > 0, \
+    \exists \delta > 0, \
+    \text{s.t.} \
+    0 < \Vert \mathbf{x} - \mathbf{x}_0 \Vert < \delta
+    \implies
+    \vert f(\mathbf{x}) - L \vert < \epsilon
+\end{equation*}
+i.e., \( f(\mathbf{x}) \) can be made arbitrarily close to \( L \) by making \( \mathbf{x} \) sufficiently close to \( \mathbf{x}_0 \).
+
 \subsection{Symmetric Matrices}
 
-A matrix \( \mathbf{A} \) is symmetric if \( \mathbf{A} = \mathbf{A}^\top \), i.e., \( a_{ij} = a_{ji} \ \forall i, j \).
+A matrix \( \mathbf{A} \) is symmetric if \( \mathbf{A} = \mathbf{A}^\top \), i.e., \( a_{ij} = a_{ji}, \ \forall i, j \).
 
 \subsection{Positive Semi-definite Matrices}
 
+A symmetric matrix \( \mathbf{A} \in \mathbb{R}^{d \times d} \) is \textbf{positive semi-definite} (PSD), denoted as \( \mathbf{A} \succeq 0 \), if
+\begin{equation*}
+    \mathbf{x}^\top \mathbf{A} \mathbf{x} \geq 0,
+    \quad \forall \mathbf{x} \in \mathbb{R}^d
+\end{equation*}
+
 \subsection{Positive Definite Matrices}
+
+A symmetric matrix \( \mathbf{A} \in \mathbb{R}^{d \times d} \) is \textbf{positive definite} (PD), denoted as \( \mathbf{A} \succ 0 \), if
+\begin{equation*}
+    \mathbf{x}^\top \mathbf{A} \mathbf{x} > 0,
+    \quad \forall \mathbf{x} \in \mathbb{R}^d \setminus \{ \mathbf{0} \}
+\end{equation*}
 
 \subsection{Eigenvalues and Eigenvectors}
 
