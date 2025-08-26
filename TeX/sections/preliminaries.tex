@@ -33,6 +33,15 @@ Norm \( \eta: \mathbb{R}^d \to \mathbb{R} \), satisfies
     \quad p \geq 1
 \end{equation*}
 
+\paragraph{\( L_1 \) norm (Manhattan norm)}
+\begin{equation*}
+    {\Vert \mathbf{x} \Vert}_1
+    =
+    \vert x_1 \vert + \vert x_2 \vert + \ldots + \vert x_d \vert
+    =
+    \sum_{i=1}^{d} \vert x_i \vert
+\end{equation*}
+
 \paragraph{\( L_2 \) norm (Euclidean norm)}
 \begin{equation*}
     {\Vert \mathbf{x} \Vert}_2
@@ -40,6 +49,17 @@ Norm \( \eta: \mathbb{R}^d \to \mathbb{R} \), satisfies
     \sqrt{x_1^2 + x_2^2 + \ldots + x_d^2}
     =
     \sqrt{\mathbf{x}^{\top} \mathbf{x}}
+    \triangleq
+    \Vert \mathbf{x} \Vert
+\end{equation*}
+
+\paragraph{\( L_{\infty} \) norm (Maximum norm)}
+\begin{equation*}
+    {\Vert \mathbf{x} \Vert}_{\infty}
+    =
+    \max \{ \vert x_1 \vert, \vert x_2 \vert, \ldots, \vert x_d \vert \}
+    =
+    \max_{1 \leq i \leq d} \vert x_i \vert
 \end{equation*}
 
 \subsection{Cauchy-Schwarz inequality}
@@ -181,6 +201,27 @@ The \textbf{Hessian} of a function \( f: \mathbb{R}^d \to \mathbb{R} \) at a poi
 \subsubsection{Univariate Taylor's theorem}
 
 \subsubsection{Multivariate Taylor's theorem}
+
+\subsection{Levels of smoothness}
+
+A function \( f: \mathbb{R}^d \to \mathbb{R} \) is said to be of \textbf{class} \( C^k \) if all its partial derivatives up to order \( k \in \mathbb{N} \) exist and are continuous.
+If a function is of class \( C^k \ \forall k \in \mathbb{N} \), it is said to be of class \( C^{\infty} \) or \textbf{smooth}.
+
+\subsubsection{Properties}
+
+\begin{itemize}
+    \item If \( f \in C^0 \), then \( f \) is continuous.
+
+    \item If \( f \in C^k \), then \( f \in C^{k-1} \), for \( k \geq 1 \).
+
+    \item (Schwarz's theorem) If \( f \in C^2 \), then \( \nabla^2 f(\mathbf{x}) \in \mathbf{S}_d\), i.e., \( \frac{\partial^2 f}{\partial x_i \partial x_j} = \frac{\partial^2 f}{\partial x_j \partial x_i}, \ \forall i, j = 1, 2, \ldots, d \).
+
+    \item If \( f, g \in C^k \), then \( f + g, f \cdot g \in C^k \).
+
+    \item If \( f \in C^k \) and \( g: \mathbb{R} \to \mathbb{R} \) is \( k \)-times differentiable, then \( g \circ f \in C^k \).
+
+    \item If \( f \in C^k \), then \( \frac{\partial f}{\partial x_i} \in C^{k-1}, \ \forall i = 1, 2, \ldots, d \).
+\end{itemize}
 
 \subsection{Optimisation Methods}
 
