@@ -97,7 +97,23 @@ The \textbf{closure} of a set \( S \subseteq \mathbb{R}^d \) is the smallest clo
 
 \subsection{Intermediate value theorem}
 
-\subsection{Small-oh notation}
+\subsection{Little-o notation}
+
+(Landau's notation \cite{apostol1991calculus})
+A function \( f: \mathbb{R}^d \to \mathbb{R} \) is said to be in \( o(g(\mathbf{x})) \) as \( \mathbf{x} \to \mathbf{x}_0 \), for some function \( g: \mathbb{R}^d \to \mathbb{R} \), \( g(\mathbf{x}) \neq 0 \) in a neighborhood of \( \mathbf{x}_0 \), if
+\begin{equation*}
+    \lim_{\mathbf{x} \to \mathbf{x}_0} \frac{f(\mathbf{x})}{g(\mathbf{x})} = 0
+\end{equation*}
+
+\subsubsection{Properties}
+
+\begin{itemize}
+    \item If \( f \in o(g) \), then \( c \cdot f \in o(g) \), for any non-zero constant \( c \in \mathbb{R} \).
+    \item If \( f \in o(F) \) and \( g \in o(G) \), then \( f \cdot g \in o(F \cdot G) \).
+    \item If \( f \in o(F) \) and \( g \in o(G) \), then \( f + g \in o(F + G) \).
+    \item If \( f \in o(g) \) and \( g \in o(h) \), then \( f \in o(h) \).
+    \item If \( f(\mathbf{x}) \in o(1) \) as \( \mathbf{x} \to \mathbf{x}_0 \), then \( f(\mathbf{x}) \to 0 \) as \( \mathbf{x} \to \mathbf{x}_0 \).
+\end{itemize}
 
 \subsection{Derivative}
 
