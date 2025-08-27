@@ -53,3 +53,11 @@ The set of all eigenvalues of \( \mathbf{A} \) is called the \textbf{spectrum} o
 \begin{equation*}
     \mathbf{A} = \sum_{i=1}^{d} \lambda_i \mathbf{v}_i \mathbf{v}_i^\top
 \end{equation*}
+
+\subsection{Condition number}
+
+The \textbf{condition number} of a matrix \( \mathbf{A} \in \mathbf{S}_{d} \) is defined as
+\begin{equation*}
+    \kappa(\mathbf{A}) = \frac{\lambda_{\max}(\mathbf{A})}{\lambda_{\min}(\mathbf{A})}
+\end{equation*}
+where \( \lambda_{\max}(\mathbf{A}) \) and \( \lambda_{\min}(\mathbf{A}) \) are the largest and smallest eigenvalues of \( \mathbf{A} \) respectively.
