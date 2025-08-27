@@ -4,11 +4,11 @@
 
 \subsection{First-order methods}
 
-Assume \( f \in C^{1} \), and use \( f(\mathbf{x} + \mathbf{p}) = f(\mathbf{x}) + \nabla f(\mathbf{x})^{\top} \mathbf{p} + o(\| \mathbf{p} \|) \).
+Assume \( f \in \mathcal{C}^{1} \), and use \( f(\mathbf{x} + \mathbf{p}) = f(\mathbf{x}) + \nabla f(\mathbf{x})^{\top} \mathbf{p} + o(\| \mathbf{p} \|) \).
 
 \subsection{Second-order methods}
 
-Assume \( f \in C^{2} \), and use \( f(\mathbf{x} + \mathbf{p}) = f(\mathbf{x}) + \nabla f(\mathbf{x})^{\top} \mathbf{p} + \frac{1}{2} \mathbf{p}^{\top} \nabla^{2} f(\mathbf{x}) \mathbf{p} + o(\| \mathbf{p} \|^2) \).
+Assume \( f \in \mathcal{C}^{2} \), and use \( f(\mathbf{x} + \mathbf{p}) = f(\mathbf{x}) + \nabla f(\mathbf{x})^{\top} \mathbf{p} + \frac{1}{2} \mathbf{p}^{\top} \nabla^{2} f(\mathbf{x}) \mathbf{p} + o(\| \mathbf{p} \|^2) \).
 
 \subsection{Global minimum}
 
@@ -28,19 +28,19 @@ The point \( \mathbf{x}^* \in \mathbb{R}^d \) is a \textbf{local minimum} of the
 
 \subsubsection{First-order necessary condition for local minimum}
 
-If \( f \in C^{1} \) and \( \mathbf{x}^* \) is a local minimum of \( f \), then \( \nabla f(\mathbf{x}^*) = \mathbf{0} \).
+If \( f \in \mathcal{C}^{1} \) and \( \mathbf{x}^* \) is a local minimum of \( f \), then \( \nabla f(\mathbf{x}^*) = \mathbf{0} \).
 
 \subsubsection{Second-order necessary condition for local minimum}
 
-If \( f \in C^{2} \) and \( \mathbf{x}^* \) is a local minimum of \( f \), then \( \nabla f(\mathbf{x}^*) = \mathbf{0}, \; \nabla^2 f(\mathbf{x}^*) \succeq 0 \).
+If \( f \in \mathcal{C}^{2} \) and \( \mathbf{x}^* \) is a local minimum of \( f \), then \( \nabla f(\mathbf{x}^*) = \mathbf{0}, \; \nabla^2 f(\mathbf{x}^*) \succeq 0 \).
 
 \subsubsection{Second-order sufficient condition for a strict local minimum}
 
-If \( f \in C^{2} \), \( \nabla f(\mathbf{x}^*) = \mathbf{0} \) and \( \nabla^2 f(\mathbf{x}^*) \succ 0 \), then \( \mathbf{x}^* \) is a strict local minimum of \( f \).
+If \( f \in \mathcal{C}^{2} \), \( \nabla f(\mathbf{x}^*) = \mathbf{0} \) and \( \nabla^2 f(\mathbf{x}^*) \succ 0 \), then \( \mathbf{x}^* \) is a strict local minimum of \( f \).
 
 \subsubsection{First-order sufficient condition under convexity}
 
-If \( f \in C^1 \) is a convex function and \( \nabla f(\mathbf{x}^*) = \mathbf{0} \), then \( \mathbf{x}^* \) is a global minimum of \( f \).
+If \( f \in \mathcal{C}^1 \) is a convex function and \( \nabla f(\mathbf{x}^*) = \mathbf{0} \), then \( \mathbf{x}^* \) is a global minimum of \( f \).
 
 \subsection{Convex functions}
 
@@ -53,7 +53,7 @@ A function $f: \mathbb{R}^n \to \mathbb{R}$ is \textbf{convex} if
 \end{equation*}
 
 \paragraph{First-order condition for convexity:}
-If \( f \in C^1 \), then \( f \) is convex iff
+If \( f \in \mathcal{C}^1 \), then \( f \) is convex iff
 \begin{equation*}
     f(\mathbf{y})
     \geq
@@ -62,7 +62,7 @@ If \( f \in C^1 \), then \( f \) is convex iff
 \end{equation*}
 
 \paragraph{Second-order condition for convexity:}
-If \( f \in C^2 \), then \( f \) is convex if
+If \( f \in \mathcal{C}^2 \), then \( f \) is convex if
 \begin{equation*}
     \nabla^2 f(\mathbf{x}) \succeq 0,
     \quad \forall \mathbf{x} \in \mathbb{R}^n
@@ -119,7 +119,7 @@ Matrix-vector products with \( \mathbf{Q} \) are allowed.
     \While{\( \mathbf{x}^{(k)} \) is not optimal}{
         Choose a descent direction \( \mathbf{p}^{(k)} \) from the set of descent directions
         \begin{equation*}
-            \mathcal{DS} \left( \mathbf{x}^{(k)} \right) = \left\{ \mathbf{p} \in \mathbb{R}^d \mid {\nabla f(\mathbf{x}^{(k)})}^{\top} \mathbf{p} < 0 \right\}
+            \mathcal{DS} \left( \mathbf{x}^{(k)} \right) = \left\{ \mathbf{p} \in \mathbb{R}^d \;\big|\; {\nabla f(\mathbf{x}^{(k)})}^{\top} \mathbf{p} < 0 \right\}
         \end{equation*}
 
         Choose a step size \( \alpha_k \geq 0 \)\;
@@ -130,3 +130,7 @@ Matrix-vector products with \( \mathbf{Q} \) are allowed.
     }
     \Return \( \mathbf{x}^{(k)} \)\;
 \end{algorithm}
+
+\paragraph{First-order oracle:}
+Given \( \mathbf{x} \in \mathbb{R}^d \), returns a tuple \( \big( f(\mathbf{x}), \nabla f(\mathbf{x}) \big) \).
+Typically, assumes \( f \in \mathcal{C}^1 \).

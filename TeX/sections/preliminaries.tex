@@ -204,18 +204,18 @@ The \textbf{Hessian} of a function \( f: \mathbb{R}^d \to \mathbb{R} \) at a poi
 
 \subsection{Levels of smoothness}
 
-A function \( f: \mathbb{R}^d \to \mathbb{R} \) is said to be of \textbf{class} \( C^k \) if all partial derivatives of \( f \) up to and including order \( k \in \mathbb{N} \) exist and are continuous.
+A function \( f: \mathbb{R}^d \to \mathbb{R} \) is said to be of \textbf{class} \( \mathcal{C}^k \) if all partial derivatives of \( f \) up to and including order \( k \in \mathbb{N} \) exist and are continuous.
 
-If a function is of class \( C^k \ \forall k \in \mathbb{N} \), it is said to be of class \( C^{\infty} \) or \textbf{smooth}.
+If a function is of class \( \mathcal{C}^k \ \forall k \in \mathbb{N} \), it is said to be of class \( \mathcal{C}^{\infty} \) or \textbf{smooth}.
 
 \subsubsection{Properties}
 
 \begin{itemize}
-    \item If \( f \in C^0 \), then \( f \) is continuous.
+    \item If \( f \in \mathcal{C}^0 \), then \( f \) is continuous.
 
-    \item If \( f \in C^k \), then \( f \in C^{k-1} \), for \( k \geq 1 \).
+    \item If \( f \in \mathcal{C}^k \), then \( f \in \mathcal{C}^{k-1} \), for \( k \geq 1 \).
 
-    \item (Schwarz's theorem) If \( f \in C^2 \), then \( \nabla^2 f(\mathbf{x}) \in \mathbf{S}_d\), i.e., \( \nabla^2 f(\mathbf{x}) \) is symmetric.
+    \item (Schwarz's theorem) If \( f \in \mathcal{C}^2 \), then \( \nabla^2 f(\mathbf{x}) \in \mathbf{S}_d\), i.e., \( \nabla^2 f(\mathbf{x}) \) is symmetric.
     \begin{equation*}
         \frac{\partial^2 f}{\partial x_i \partial x_j}
         =
@@ -223,7 +223,7 @@ If a function is of class \( C^k \ \forall k \in \mathbb{N} \), it is said to be
         \quad \forall i, j = 1, 2, \ldots, d
     \end{equation*}
 
-    \item If \( f, g \in C^k \), then \( f + g, f \cdot g \in C^k \).
+    \item If \( f, g \in \mathcal{C}^k \), then \( f + g, f \cdot g \in \mathcal{C}^k \).
 
-    \item If \( f \in C^k \), then \( \frac{\partial f}{\partial x_i} \in C^{k-1}, \ \forall i = 1, 2, \ldots, d \).
+    \item If \( f \in \mathcal{C}^k \), then \( \frac{\partial f}{\partial x_i} \in \mathcal{C}^{k-1}, \ \forall i = 1, 2, \ldots, d \).
 \end{itemize}
