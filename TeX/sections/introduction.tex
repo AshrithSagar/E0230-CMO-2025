@@ -68,44 +68,46 @@ An \textbf{unconstrained optimisation problem} is the problem of finding a point
 
 The function \( f \) is called the \textbf{objective function}, the point \( \mathbf{x}^* \) is called the \textbf{minimum point}, and the value \( f(\mathbf{x}^*) \) is called the \textbf{minimum value}.
 
+\newpage
 \subsection{Examples}
 
-\begin{align*}
-    &
-    f(x) = \frac{1}{2} x^2,
-    \quad x \in \mathbb{R}
-    & \implies
-    x^* = 0,
-    \quad
-    f(x^*) = 0
-    \\ &
-    f(x) = \frac{1}{2} (x - x_0)^2,
-    \quad x, x_0 \in \mathbb{R}
-    & \implies
-    x^* = x_0,
-    \quad
-    f(x^*) = 0
-    \\ &
-    f(x) = \frac{1}{2} (x - x_0)^2 + c,
-    \quad x, x_0 \in \mathbb{R}
-    & \implies
-    x^* = x_0,
-    \quad
-    f(x^*) = c
-    \\ &
-    f(x) = ax^2 + bx + c,
-    \quad x, a, b, c \in \mathbb{R}, \; a > 0
-    & \implies
-    x^* = -\frac{b}{2a},
-    \quad
-    f(x^*) = c - \frac{b^2}{4a}
-    \\ &
-    f(t) = \frac{1}{2} {\Vert \mathbf{u} - t \mathbf{v} \Vert}^2,
-    \quad t \in \mathbb{R}, \; \mathbf{u}, \mathbf{v} \in \mathbb{R}^d, \; \mathbf{v} \neq 0
-    & \implies
-    t^* = \frac{\mathbf{u}^\top \mathbf{v}}{\mathbf{v}^\top \mathbf{v}},
-    \quad
-    f(t^*) = \frac{1}{2} \left( {\Vert \mathbf{u} \Vert}^2 - \frac{(\mathbf{u}^\top \mathbf{v})^2}{\mathbf{v}^\top \mathbf{v}} \right)
-\end{align*}
+\begin{table}[h!]
+\centering
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{|l|l|l|}
+\hline
+\textbf{Objective function \( f(x) \)}
+& \textbf{Minimum point \( x^* \)}
+& \textbf{Minimum value \( f(x^*) \)} \\
+\hline
+
+\( f(x) = \frac{1}{2}x^2, \quad x \in \mathbb{R} \)
+& \( x^* = 0 \)
+& \( f(x^*) = 0 \) \\
+\hline
+
+\( f(x) = \frac{1}{2}(x - x_0)^2, \quad x, x_0 \in \mathbb{R} \)
+& \( x^* = x_0 \)
+& \( f(x^*) = 0 \) \\
+\hline
+
+\( f(x) = \frac{1}{2}(x - x_0)^2 + c, \quad x, x_0, c \in \mathbb{R} \)
+& \( x^* = x_0 \)
+& \( f(x^*) = c \) \\
+\hline
+
+\( f(x) = ax^2 + bx + c, \quad x, a, b, c \in \mathbb{R}, \; a > 0 \)
+& \( x^* = -\cfrac{b}{2a} \)
+& \( f(x^*) = c - \cfrac{b^2}{4a} \)
+\rule[-13pt]{0pt}{36pt} \\
+\hline
+
+\( f(t) = \cfrac{1}{2} {\big\Vert \mathbf{u} - t \mathbf{v} \big\Vert}^2, \quad t \in \mathbb{R}, \; \mathbf{u}, \mathbf{v} \in \mathbb{R}^d, \; \mathbf{v} \neq \mathbf{0} \)
+& \( t^* = \cfrac{\mathbf{u}^\top \mathbf{v}}{\mathbf{v}^\top \mathbf{v}} \)
+& \( f(t^*) = \cfrac{1}{2} \left( {\Vert \mathbf{u} \Vert}^2 - \cfrac{{(\mathbf{u}^\top \mathbf{v})}^2}{\mathbf{v}^\top \mathbf{v}} \right) \)
+\rule[-20pt]{0pt}{48pt} \\
+\hline
+\end{tabular}
+\end{table}
 
 Note that \( \because f(t) \geq 0, \ \forall t \in \mathbb{R} \implies f(t^*) \geq 0 \), which gives the Cauchy-Schwarz inequality~\psecref{sec:cauchy-schwarz-inequality}.
