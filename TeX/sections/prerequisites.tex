@@ -15,6 +15,18 @@
 \end{equation*}
 i.e., \( f(\mathbf{x}) \) can be made arbitrarily close to \( L \) by making \( \mathbf{x} \) sufficiently close to \( \mathbf{x}_0 \).
 
+Alternate notation~\psecref{sec:neighborhood}:
+\begin{equation*}
+    \lim_{\mathbf{x} \to \mathbf{x}_0} f(\mathbf{x}) = L
+    \quad \iff \quad
+    \forall \epsilon > 0, \
+    \exists \delta > 0, \
+    \text{s.t.} \
+    \mathbf{x} \in B_{\delta}(\mathbf{x}_0) \setminus \{ \mathbf{x}_0 \}
+    \implies
+    f(\mathbf{x}) \in B_{\epsilon}(L)
+\end{equation*}
+
 \subsection{Symmetric Matrices}
 
 A matrix \( \mathbf{A} \in \mathbb{R}^{d \times d} \) is symmetric if \( \mathbf{A} = \mathbf{A}^\top \), i.e., \( a_{ij} = a_{ji}, \ \forall i, j \).
