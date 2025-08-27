@@ -2,11 +2,11 @@
 
 \section{Optimisation methods}
 
-\subsubsection{First-order methods}
+\subsection{First-order methods}
 
 Assume \( f \in C^{1} \), and use \( f(\mathbf{x} + \mathbf{p}) = f(\mathbf{x}) + \nabla f(\mathbf{x})^{\top} \mathbf{p} + o(\| \mathbf{p} \|) \).
 
-\subsubsection{Second-order methods}
+\subsection{Second-order methods}
 
 Assume \( f \in C^{2} \), and use \( f(\mathbf{x} + \mathbf{p}) = f(\mathbf{x}) + \nabla f(\mathbf{x})^{\top} \mathbf{p} + \frac{1}{2} \mathbf{p}^{\top} \nabla^{2} f(\mathbf{x}) \mathbf{p} + o(\| \mathbf{p} \|^2) \).
 
@@ -24,7 +24,7 @@ The point \( \mathbf{x}^* \in \mathbb{R}^d \) is a \textbf{local minimum} of the
     f(\mathbf{x}^*) \leq f(\mathbf{x}), \quad \forall \mathbf{x} \in B_{\delta}(\mathbf{x}^*)
 \end{equation*}
 
-\subsection{Necessary and sufficient conditions}
+\section{Necessary and sufficient conditions}
 
 \subsubsection{First-order necessary condition for local minimum}
 
@@ -68,13 +68,13 @@ If \( f \in C^2 \), then \( f \) is convex if
     \quad \forall \mathbf{x} \in \mathbb{R}^n
 \end{equation*}
 
-\subsection{Algorithmic design}
+\section{Algorithmic design}
 
 \paragraph{Problem:}
 \begin{align*}
     \min_{\mathbf{x} \in \mathbb{R}^d} f(\mathbf{x}),
     \quad \text{where }
-    f = \left( \frac{1}{2} \mathbf{x}^{\top} \mathbf{Q} \mathbf{x} + \mathbf{h}^{\top} \mathbf{x} + c \right),
+    f(\mathbf{x}) = \left( \frac{1}{2} \mathbf{x}^{\top} \mathbf{Q} \mathbf{x} + \mathbf{h}^{\top} \mathbf{x} + c \right),
     \quad \mathbf{Q} \succ \mathbf{0}, \text{i.e.}, \mathbf{Q} \in \mathbf{S}_d^{++},
     \quad \mathbf{h} \in \mathbb{R}^d,
     \quad c \in \mathbb{R}
@@ -95,4 +95,8 @@ and thereby from the first-order necessary condition for local minimum, the loca
     }
 \end{equation*}
 
-\paragraph{Algorithm:}
+\paragraph{Challenge:}
+Not allowed to compute \( \mathbf{Q}^{-1} \) explicitly.
+Matrix-vector products with \( \mathbf{Q} \) are allowed.
+
+\subsection{Gradient descent with exact line search}
