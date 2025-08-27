@@ -70,3 +70,45 @@ and the value \( f(\mathbf{x}^*) \) is called the \textbf{minimum value}, i.e.,
 \begin{equation*}
     f(\mathbf{x}^*) = \min_{\mathbf{x} \in \mathbb{R}^d} f(\mathbf{x})
 \end{equation*}
+
+\subsection{Examples}
+
+\begin{align*}
+    &
+    f(x) = \frac{1}{2} x^2,
+    \quad x \in \mathbb{R}
+    & \implies
+    x^* = 0,
+    \quad
+    f(x^*) = 0
+    \\ &
+    f(x) = \frac{1}{2} (x - x_0)^2,
+    \quad x, x_0 \in \mathbb{R}
+    & \implies
+    x^* = x_0,
+    \quad
+    f(x^*) = 0
+    \\ &
+    f(x) = \frac{1}{2} (x - x_0)^2 + c,
+    \quad x, x_0 \in \mathbb{R}
+    & \implies
+    x^* = x_0,
+    \quad
+    f(x^*) = c
+    \\ &
+    f(x) = ax^2 + bx + c,
+    \quad x, a, b, c \in \mathbb{R}, \; a > 0
+    & \implies
+    x^* = -\frac{b}{2a},
+    \quad
+    f(x^*) = c - \frac{b^2}{4a}
+    \\ &
+    f(t) = \frac{1}{2} {\Vert \mathbf{u} - t \mathbf{v} \Vert}^2,
+    \quad t \in \mathbb{R}, \; \mathbf{u}, \mathbf{v} \in \mathbb{R}^d, \; \mathbf{v} \neq 0
+    & \implies
+    t^* = \frac{\mathbf{u}^\top \mathbf{v}}{\mathbf{v}^\top \mathbf{v}},
+    \quad
+    f(t^*) = \frac{1}{2} \left( {\Vert \mathbf{u} \Vert}^2 - \frac{(\mathbf{u}^\top \mathbf{v})^2}{\mathbf{v}^\top \mathbf{v}} \right)
+\end{align*}
+
+Note that \( \because f(t) \geq 0, \ \forall t \in \mathbb{R} \implies f(t^*) \geq 0 \), which gives the Cauchy-Schwarz inequality~\psecref{sec:cauchy-schwarz-inequality}.
