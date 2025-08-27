@@ -99,4 +99,34 @@ and thereby from the first-order necessary condition for local minimum, the loca
 Not allowed to compute \( \mathbf{Q}^{-1} \) explicitly.
 Matrix-vector products with \( \mathbf{Q} \) are allowed.
 
-\subsection{Gradient descent with exact line search}
+\subsection{Algorithm template}
+
+\begin{algorithm}[H]
+    \caption{
+        Iterative generic descent algorithm template for unconstrained minimisation
+    }
+    \SetAlgoLined
+    \KwIn{
+        First-order oracle for the objective function \( f(\mathbf{x}) \);
+        Initial point \( \mathbf{x}^{(0)} \in \mathbb{R}^d \);
+    }
+    \KwOut{
+        Approximate solution to the unconstrained minimisation problem \( \displaystyle \argmin_{\mathbf{x} \in \mathbb{R}^d} f(\mathbf{x}) \)\;
+    }
+
+    \( k \leftarrow 0 \)\;
+
+    \While{\( \mathbf{x}^{(k)} \) is not optimal}{
+        Choose a descent direction \( \mathbf{p}^{(k)} \) from the set of descent directions
+        \begin{equation*}
+            \mathcal{DS} \left( \mathbf{x}^{(k)} \right) = \left\{ \mathbf{p} \in \mathbb{R}^d \mid {\nabla f(\mathbf{x}^{(k)})}^{\top} \mathbf{p} < 0 \right\}
+        \end{equation*}
+
+        Choose a step size \( \alpha_k \geq 0 \)\;
+
+        Update the current point: \( \mathbf{x}^{(k+1)} = \mathbf{x}^{(k)} + \alpha_k \mathbf{p}^{(k)} \)\;
+
+        \( k \leftarrow k + 1 \)\;
+    }
+    \Return \( \mathbf{x}^{(k)} \)\;
+\end{algorithm}
