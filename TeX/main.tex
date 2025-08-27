@@ -1,9 +1,10 @@
-\documentclass[12pt]{article}
+\documentclass[12pt]{book}
 
 \usepackage[utf8]{inputenc}
-\usepackage{latexsym, amsfonts, amssymb, amsthm, amsmath, mathtools}
-\usepackage{enumitem, geometry, graphicx, titlesec, hyperref, microtype}
+\usepackage{amsfonts, amsmath, amssymb, amsthm, latexsym, mathtools}
+\usepackage{enumitem, geometry, graphicx, hyperref, microtype, titlesec, tocloft}
 \usepackage[numbers,sort]{natbib}
+\usepackage[dvipsnames]{xcolor}
 
 \geometry{
   a4paper,
@@ -17,9 +18,14 @@
   linkcolor=black,
   citecolor=black,
 }
-\titlespacing*{\section}{0pt}{2em}{0.2em}
-\titlespacing*{\subsection}{0pt}{1em}{0.2em}
-\titlespacing*{\subsubsection}{0pt}{1em}{0.2em}
+\setlength{\cftbeforetoctitleskip}{2em}
+\setlength{\cftaftertoctitleskip}{0pt}
+\setlength{\cftbeforesecskip}{0pt}
+\titleformat{\chapter}[hang]{\normalfont\huge\bfseries}{\thechapter.}{0.5em}{}
+\titlespacing*{\chapter}{0pt}{1em}{0.2em}
+\titlespacing*{\section}{0pt}{0.7em}{0.2em}
+\titlespacing*{\subsection}{0pt}{0.5em}{0.2em}
+\titlespacing*{\subsubsection}{0pt}{0.3em}{0.2em}
 \setlength{\parskip}{0pt}
 \setlength{\parindent}{0pt}
 \setlist{noitemsep, topsep=0pt}
@@ -28,13 +34,19 @@
 \newcommand{\peqref}[1]{(\hyperref[#1]{Eq.~\ref*{#1}})}
 
 \begin{document}
+
+\frontmatter
 \input{sections/titlepage.tex}
-\tableofcontents
+{\let\clearpage\relax \tableofcontents}
+
+\mainmatter
 \input{sections/introduction.tex}
 \input{sections/notation.tex}
 \input{sections/prerequisites.tex}
 \input{sections/preliminaries.tex}
 
+\backmatter
+\renewcommand{\bibname}{References}
 \bibliographystyle{IEEEtran}
 \bibliography{sections/references.bib}
 
