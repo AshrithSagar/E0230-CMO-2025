@@ -334,3 +334,52 @@ Now, the successive error reduction can be computed as
     & =
     \frac{\left( \nabla f(\mathbf{x}^{(k)})^{\top} \mathbf{p}^{(k)} \right)^2}{ {\left( \nabla f(\mathbf{x}^{k}) \right)}^{\top} \mathbf{Q}^{-1} \, \nabla f(\mathbf{x}^{(k)}) \; {\mathbf{p}^{(k)}}^{\top} \mathbf{Q} \mathbf{p}^{(k)}}
 \end{align*}
+
+For the choice \( \mathbf{p}^{(k)} = -\nabla f(\mathbf{x}^{(k)}) \), we have
+\begin{align*}
+    \frac{E_{k} - E_{k+1}}{E_k}
+    & =
+    \frac{{\left( \nabla f(\mathbf{x}^{(k)})^{\top} \left( -\nabla f(\mathbf{x}^{(k)}) \right) \right)}^2}{ {\left( \nabla f(\mathbf{x}^{k}) \right)}^{\top} \mathbf{Q}^{-1} \, \nabla f(\mathbf{x}^{(k)}) \; {\left( -\nabla f(\mathbf{x}^{(k)}) \right)}^{\top} \mathbf{Q} \left( -\nabla f(\mathbf{x}^{(k)}) \right)}
+    \\ & =
+    \frac{{\Vert \nabla f(\mathbf{x}^{(k)}) \Vert}^4}{ {\left( \nabla f(\mathbf{x}^{k}) \right)}^{\top} \mathbf{Q}^{-1} \, \nabla f(\mathbf{x}^{(k)}) \; \nabla f(\mathbf{x}^{(k)})^{\top} \mathbf{Q} \nabla f(\mathbf{x}^{(k)})}
+\end{align*}
+
+From Kantorovich inequality~\psecref{sec:kantorovich-inequality}, we have
+\begin{equation*}
+    \frac{{\Vert \mathbf{z} \Vert}^4}{(\mathbf{z}^{\top} \mathbf{Q} \mathbf{z}) (\mathbf{z}^{\top} \mathbf{Q}^{-1} \mathbf{z})}
+    \geq
+    \frac{4 \lambda_{\min}(\mathbf{Q}) \lambda_{\max}(\mathbf{Q})}{\left( \lambda_{\min}(\mathbf{Q}) + \lambda_{\max}(\mathbf{Q}) \right)^2},
+    \quad \forall \mathbf{z} \in \mathbb{R}^d \setminus \{ \mathbf{0} \}
+\end{equation*}
+where \( \lambda_{\min}(\mathbf{Q}) \) and \( \lambda_{\max}(\mathbf{Q}) \) are the minimum and maximum eigenvalues of \( \mathbf{Q} \), respectively.
+
+Applying this with \( \mathbf{z} = \nabla f(\mathbf{x}^{(k)}) \), we have
+\begin{align*}
+    \frac{E_k - E_{k+1}}{E_k}
+    & \geq
+    \frac{4 \lambda_{\min}(\mathbf{Q}) \lambda_{\max}(\mathbf{Q})}{\left( \lambda_{\min}(\mathbf{Q}) + \lambda_{\max}(\mathbf{Q}) \right)^2}
+    \\
+    \implies
+    \frac{E_{k+1}}{E_k}
+    & \leq
+    1 - \frac{4 \lambda_{\min}(\mathbf{Q}) \lambda_{\max}(\mathbf{Q})}{\left( \lambda_{\min}(\mathbf{Q}) + \lambda_{\max}(\mathbf{Q}) \right)^2}
+    =
+    \left( \frac{\lambda_{\max}(\mathbf{Q}) - \lambda_{\min}(\mathbf{Q})}{\lambda_{\max}(\mathbf{Q}) + \lambda_{\min}(\mathbf{Q})} \right)^2
+    \triangleq
+    \rho
+\end{align*}
+\begin{equation*}
+    \implies
+    \frac{E_k}{E_0}
+    =
+    \prod_{i=0}^{k-1} \frac{E_{i+1}}{E_i}
+    \leq
+    \prod_{i=0}^{k-1} \rho
+    =
+    \rho^k
+    \implies
+    E_k
+    \leq
+    \rho^k E_0
+\end{equation*}
+where \( \rho \in [0, 1) \) since \( \mathbf{Q} \succ \mathbf{0} \implies 0 < \lambda_{\min}(\mathbf{Q}) \leq \lambda_{\max}(\mathbf{Q}) \).
