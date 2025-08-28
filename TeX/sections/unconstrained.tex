@@ -195,24 +195,27 @@ Matrix-vector products with \( \mathbf{Q} \) are allowed.
 \paragraph{Algorithm design:}
 We have
 \begin{align*}
-    g(\alpha) = f \left( \mathbf{x} + \alpha \mathbf{p} \right)
-    & =
-    \frac{1}{2} \left( \mathbf{x} + \alpha \mathbf{p} \right)^{\top} \mathbf{Q} \left( \mathbf{x} + \alpha \mathbf{p} \right)
-    + \mathbf{h}^{\top} \left( \mathbf{x} + \alpha \mathbf{p} \right)
+    g_k(\alpha)
+    & \triangleq
+    f \left( \mathbf{x}^{(k)} + \alpha \mathbf{p}^{(k)} \right)
+    \\ & =
+    \frac{1}{2} \left( \mathbf{x}^{(k)} + \alpha \mathbf{p}^{(k)} \right)^{\top} \mathbf{Q} \left( \mathbf{x}^{(k)} + \alpha \mathbf{p}^{(k)} \right)
+    + \mathbf{h}^{\top} \left( \mathbf{x}^{(k)} + \alpha \mathbf{p}^{(k)} \right)
     + c
     \\ & =
-    \frac{1}{2} {\mathbf{x}}^{\top} \mathbf{Q} \mathbf{x}
-    + \alpha {\mathbf{x}}^{\top} \mathbf{Q} \mathbf{p}
-    + \frac{\alpha^2}{2} {\mathbf{p}}^{\top} \mathbf{Q} \mathbf{p}
-    + \mathbf{h}^{\top} \mathbf{x}
-    + \alpha \mathbf{h}^{\top} \mathbf{p}
+    \frac{1}{2} {\mathbf{x}^{(k)}}^{\top} \mathbf{Q} \mathbf{x}^{(k)}
+    + \alpha {\mathbf{x}^{(k)}}^{\top} \mathbf{Q} \mathbf{p}^{(k)}
+    + \frac{\alpha^2}{2} {\mathbf{p}^{(k)}}^{\top} \mathbf{Q} \mathbf{p}^{(k)}
+    + \mathbf{h}^{\top} \mathbf{x}^{(k)}
+    + \alpha \mathbf{h}^{\top} \mathbf{p}^{(k)}
     + c
     \\ & =
-    \alpha^2 \left( \frac{1}{2} {\mathbf{p}}^{\top} \mathbf{Q} \mathbf{p} \right)
-    + \alpha \left( {\mathbf{x}}^{\top} \mathbf{Q} \mathbf{p} + \mathbf{h}^{\top} \mathbf{p} \right)
-    + \left( \frac{1}{2} {\mathbf{x}}^{\top} \mathbf{Q} \mathbf{x} + \mathbf{h}^{\top} \mathbf{x} + c \right)
+    \alpha^2 \left( \frac{1}{2} {\mathbf{p}^{(k)}}^{\top} \mathbf{Q} \mathbf{p}^{(k)} \right)
+    + \alpha \left( {\mathbf{x}^{(k)}}^{\top} \mathbf{Q} \mathbf{p}^{(k)} + \mathbf{h}^{\top} \mathbf{p}^{(k)} \right)
+    + \left( \frac{1}{2} {\mathbf{x}^{(k)}}^{\top} \mathbf{Q} \mathbf{x}^{(k)} + \mathbf{h}^{\top} \mathbf{x}^{(k)} + c \right)
     \\ & =
-    \alpha^2 \underbrace{ \left( \frac{1}{2} {\mathbf{p}}^{\top} \mathbf{Q} \mathbf{p} \right) }_{p}
-    + \alpha \underbrace{ \left( \nabla f(\mathbf{x})^{\top} \mathbf{p} \right) }_{q}
-    + \underbrace{ \left( f(\mathbf{x}) \right) }_{r}
+    \alpha^2 \underbrace{ \left( \frac{1}{2} {\mathbf{p}^{(k)}}^{\top} \mathbf{Q} \mathbf{p}^{(k)} \right) }_{p_k}
+    + \alpha \underbrace{ \left( \nabla f(\mathbf{x}^{(k)})^{\top} \mathbf{p}^{(k)} \right) }_{q_k}
+    + \underbrace{ \left( f(\mathbf{x}^{(k)}) \right) }_{r_k}
 \end{align*}
+which is a quadratic function in \( \alpha \) with \( p_k > 0 \; \left( \because \mathbf{Q} \succ \mathbf{0} \right) \) and \( q_k < 0 \; \left( \because \mathbf{p}^{(k)} \in \mathcal{DS}(\mathbf{x}^{(k)}) \right) \).
