@@ -193,7 +193,22 @@ Not allowed to compute \( \mathbf{Q}^{-1} \) explicitly.
 Matrix-vector products with \( \mathbf{Q} \) are allowed.
 
 \paragraph{Algorithm design:}
-We have
+For a local minimum \( \mathbf{x}^* \), and any \( \mathbf{p} \in \mathbb{R}^d \), we have
+\begin{align*}
+    f(\mathbf{x}^* + \mathbf{p})
+    & =
+    \frac{1}{2} (\mathbf{x}^* + \mathbf{p})^{\top} \mathbf{Q} (\mathbf{x}^* + \mathbf{p}) + \mathbf{h}^{\top} (\mathbf{x}^* + \mathbf{p}) + c
+    \\ & =
+    \frac{1}{2} {\mathbf{x}^*}^{\top} \mathbf{Q} \mathbf{x}^* + {\mathbf{x}^*}^{\top} \mathbf{Q} \mathbf{p} + \frac{1}{2} \mathbf{p}^{\top} \mathbf{Q} \mathbf{p} + \mathbf{h}^{\top} \mathbf{x}^* + \mathbf{h}^{\top} \mathbf{p} + c
+    \\ & =
+    \left( \frac{1}{2} {\mathbf{x}^*}^{\top} \mathbf{Q} \mathbf{x}^* + \mathbf{h}^{\top} \mathbf{x}^* + c \right)
+    + {\cancel{\left( \mathbf{Q} \mathbf{x}^* + \mathbf{h} \right)}}^{\top} \mathbf{p}
+    + \frac{1}{2} \mathbf{p}^{\top} \mathbf{Q} \mathbf{p}
+    \\ & =
+    f(\mathbf{x}^*) + \frac{1}{2} \mathbf{p}^{\top} \mathbf{Q} \mathbf{p}
+\end{align*}
+
+Now, to find the optimal step size \( \alpha_k \), consider
 \begin{align*}
     g_k(\alpha)
     & \triangleq
@@ -220,7 +235,7 @@ We have
 \end{align*}
 which is a quadratic function in \( \alpha \) with \( p_k > 0 \; \left( \because \mathbf{Q} \succ \mathbf{0} \right) \) and \( q_k < 0 \; \left( \because \mathbf{p}^{(k)} \in \mathcal{DS}(\mathbf{x}^{(k)}) \right) \).
 
-For the \hyperlink{1D-quadratic}{quadratic case}, the minimiser of \( g_k(\alpha) \) is given by
+For the \hyperlink{1D-quadratic}{one-dimensional quadratic} case, we can then compute the minimum point and minimum value as
 \begin{equation*}
     \alpha_k
     = -\frac{q_k}{2 p_k}
@@ -229,4 +244,31 @@ For the \hyperlink{1D-quadratic}{quadratic case}, the minimiser of \( g_k(\alpha
         \alpha_k
         = -\frac{\nabla f(\mathbf{x}^{(k)})^{\top} \mathbf{p}^{(k)}}{{\mathbf{p}^{(k)}}^{\top} \mathbf{Q} \mathbf{p}^{(k)}}
     }
+    > 0
 \end{equation*}
+\begin{equation*}
+    f \left( \mathbf{x}^{(k+1)} \right)
+    =
+    g_k(\alpha_k)
+    =
+    r_k - \frac{q_k^2}{4 p_k}
+    \implies
+    \boxed{
+        f(\mathbf{x}^{(k+1)})
+        =
+        f(\mathbf{x}^{(k)}) - \frac{\left( \nabla f(\mathbf{x}^{(k)})^{\top} \mathbf{p}^{(k)} \right)^2}{2 {\mathbf{p}^{(k)}}^{\top} \mathbf{Q} \mathbf{p}^{(k)}}
+    }
+\end{equation*}
+
+For the choice \( \mathbf{p}^{(k)} = -\nabla f(\mathbf{x}^{(k)}) \), we have
+\begin{equation*}
+    \alpha_k
+    =
+    \frac{{\Vert \nabla f(\mathbf{x}^{(k)}) \Vert}^2} {\nabla f(\mathbf{x}^{(k)})^{\top} \mathbf{Q} \nabla f(\mathbf{x}^{(k)})},
+    \qquad
+    f(\mathbf{x}^{(k+1)})
+    =
+    f(\mathbf{x}^{(k)}) - \frac{{\Vert \nabla f(\mathbf{x}^{(k)}) \Vert}^4}{2 \nabla f(\mathbf{x}^{(k)})^{\top} \mathbf{Q} \nabla f(\mathbf{x}^{(k)})}
+\end{equation*}
+
+\paragraph{Analysis:}
