@@ -272,4 +272,65 @@ For a local minimum \( \mathbf{x}^* \), and any \( \mathbf{p} \in \mathbb{R}^d \
     + \frac{1}{2} \mathbf{p}^{\top} \mathbf{Q} \mathbf{p}
     \\ & =
     f(\mathbf{x}^*) + \frac{1}{2} \mathbf{p}^{\top} \mathbf{Q} \mathbf{p}
+    \\
+    \implies
+    f(\mathbf{x})
+    & =
+    f(\mathbf{x}^*) + \frac{1}{2} (\mathbf{x} - \mathbf{x}^*)^{\top} \mathbf{Q} (\mathbf{x} - \mathbf{x}^*), \quad \forall \mathbf{x} \in \mathbb{R}^d
+\end{align*}
+
+Now, consider the error at the \( k^{th} \) iteration defined as
+\begin{align*}
+    E_k
+    & \triangleq
+    f(\mathbf{x}^{(k)}) - f(\mathbf{x}^*)
+    \\
+    \implies
+    E_k
+    & =
+    \frac{1}{2} {\left( \mathbf{x}^{(k)} - \mathbf{x}^* \right)}^{\top} \mathbf{Q} \left( \mathbf{x}^{(k)} - \mathbf{x}^* \right)
+    \\
+    \because
+    \nabla f(\mathbf{x}^*)
+    & =
+    \mathbf{Q} \mathbf{x}^* + \mathbf{h}
+    =
+    \mathbf{0}
+    \\
+    \implies
+    \nabla f(\mathbf{x}^{(k)})
+    & =
+    \mathbf{Q} \mathbf{x}^{(k)} + \mathbf{h}
+    =
+    \mathbf{Q} \left( \mathbf{x}^{(k)} - \mathbf{x}^* \right)
+    \\
+    \implies
+    \left( \mathbf{x}^{(k)} - \mathbf{x}^* \right)
+    & =
+    \mathbf{Q}^{-1} \, \nabla f(\mathbf{x}^{(k)})
+    \\
+    \implies
+    E_k
+    & =
+    \frac{1}{2} {\left( \mathbf{x}^{(k)} - \mathbf{x}^* \right)}^{\top} \, \nabla f(\mathbf{x}^{(k)})
+    =
+    \frac{1}{2} {\Big( \mathbf{Q}^{-1} \, \nabla f \left( \mathbf{x}^{(k)} \right) \Big)}^{\top} \nabla f(\mathbf{x}^{(k)})
+    \\ & =
+    \frac{1}{2} {\left( \nabla f(\mathbf{x}^{k}) \right)}^{\top} {\left( \mathbf{Q}^{-1} \right)}^\top \nabla f(\mathbf{x}^{(k)})
+    =
+    \frac{1}{2} {\left( \nabla f(\mathbf{x}^{k}) \right)}^{\top} \mathbf{Q}^{-1} \, \nabla f(\mathbf{x}^{(k)})
+\end{align*}
+
+Now, the successive error reduction can be computed as
+\begin{align*}
+    E_k - E_{k+1}
+    & =
+    f(\mathbf{x}^{(k)}) - f(\mathbf{x}^{(k+1)})
+    =
+    \frac{\left( \nabla f(\mathbf{x}^{(k)})^{\top} \mathbf{p}^{(k)} \right)^2}{2 {\mathbf{p}^{(k)}}^{\top} \mathbf{Q} \mathbf{p}^{(k)}}
+    \\
+    \implies
+    \frac{E_{k} - E_{k+1}}{E_k}
+    & =
+    \frac{\left( \nabla f(\mathbf{x}^{(k)})^{\top} \mathbf{p}^{(k)} \right)^2}{ {\left( \nabla f(\mathbf{x}^{k}) \right)}^{\top} \mathbf{Q}^{-1} \, \nabla f(\mathbf{x}^{(k)}) \; {\mathbf{p}^{(k)}}^{\top} \mathbf{Q} \mathbf{p}^{(k)}}
 \end{align*}
