@@ -193,22 +193,8 @@ Not allowed to compute \( \mathbf{Q}^{-1} \) explicitly.
 Matrix-vector products with \( \mathbf{Q} \) are allowed.
 
 \paragraph{Algorithm design:}
-For a local minimum \( \mathbf{x}^* \), and any \( \mathbf{p} \in \mathbb{R}^d \), we have
-\begin{align*}
-    f(\mathbf{x}^* + \mathbf{p})
-    & =
-    \frac{1}{2} (\mathbf{x}^* + \mathbf{p})^{\top} \mathbf{Q} (\mathbf{x}^* + \mathbf{p}) + \mathbf{h}^{\top} (\mathbf{x}^* + \mathbf{p}) + c
-    \\ & =
-    \frac{1}{2} {\mathbf{x}^*}^{\top} \mathbf{Q} \mathbf{x}^* + {\mathbf{x}^*}^{\top} \mathbf{Q} \mathbf{p} + \frac{1}{2} \mathbf{p}^{\top} \mathbf{Q} \mathbf{p} + \mathbf{h}^{\top} \mathbf{x}^* + \mathbf{h}^{\top} \mathbf{p} + c
-    \\ & =
-    \left( \frac{1}{2} {\mathbf{x}^*}^{\top} \mathbf{Q} \mathbf{x}^* + \mathbf{h}^{\top} \mathbf{x}^* + c \right)
-    + {\cancel{\left( \mathbf{Q} \mathbf{x}^* + \mathbf{h} \right)}}^{\top} \mathbf{p}
-    + \frac{1}{2} \mathbf{p}^{\top} \mathbf{Q} \mathbf{p}
-    \\ & =
-    f(\mathbf{x}^*) + \frac{1}{2} \mathbf{p}^{\top} \mathbf{Q} \mathbf{p}
-\end{align*}
 
-Now, to find the optimal step size \( \alpha_k \), consider
+To find the optimal step size \( \alpha_k \), consider
 \begin{align*}
     g_k(\alpha)
     & \triangleq
@@ -272,3 +258,18 @@ For the choice \( \mathbf{p}^{(k)} = -\nabla f(\mathbf{x}^{(k)}) \), we have
 \end{equation*}
 
 \paragraph{Analysis:}
+
+For a local minimum \( \mathbf{x}^* \), and any \( \mathbf{p} \in \mathbb{R}^d \), we have
+\begin{align*}
+    f(\mathbf{x}^* + \mathbf{p})
+    & =
+    \frac{1}{2} (\mathbf{x}^* + \mathbf{p})^{\top} \mathbf{Q} (\mathbf{x}^* + \mathbf{p}) + \mathbf{h}^{\top} (\mathbf{x}^* + \mathbf{p}) + c
+    \\ & =
+    \frac{1}{2} {\mathbf{x}^*}^{\top} \mathbf{Q} \mathbf{x}^* + {\mathbf{x}^*}^{\top} \mathbf{Q} \mathbf{p} + \frac{1}{2} \mathbf{p}^{\top} \mathbf{Q} \mathbf{p} + \mathbf{h}^{\top} \mathbf{x}^* + \mathbf{h}^{\top} \mathbf{p} + c
+    \\ & =
+    \left( \frac{1}{2} {\mathbf{x}^*}^{\top} \mathbf{Q} \mathbf{x}^* + \mathbf{h}^{\top} \mathbf{x}^* + c \right)
+    + {\cancel{\left( \mathbf{Q} \mathbf{x}^* + \mathbf{h} \right)}}^{\top} \mathbf{p}
+    + \frac{1}{2} \mathbf{p}^{\top} \mathbf{Q} \mathbf{p}
+    \\ & =
+    f(\mathbf{x}^*) + \frac{1}{2} \mathbf{p}^{\top} \mathbf{Q} \mathbf{p}
+\end{align*}
