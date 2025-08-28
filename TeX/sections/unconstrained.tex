@@ -219,3 +219,14 @@ We have
     + \underbrace{ \left( f(\mathbf{x}^{(k)}) \right) }_{r_k}
 \end{align*}
 which is a quadratic function in \( \alpha \) with \( p_k > 0 \; \left( \because \mathbf{Q} \succ \mathbf{0} \right) \) and \( q_k < 0 \; \left( \because \mathbf{p}^{(k)} \in \mathcal{DS}(\mathbf{x}^{(k)}) \right) \).
+
+For the \hyperlink{1D-quadratic}{quadratic case}, the minimiser of \( g_k(\alpha) \) is given by
+\begin{equation*}
+    \alpha_k
+    = -\frac{q_k}{2 p_k}
+    \implies
+    \boxed{
+        \alpha_k
+        = -\frac{\nabla f(\mathbf{x}^{(k)})^{\top} \mathbf{p}^{(k)}}{{\mathbf{p}^{(k)}}^{\top} \mathbf{Q} \mathbf{p}^{(k)}}
+    }
+\end{equation*}
