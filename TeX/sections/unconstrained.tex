@@ -99,11 +99,68 @@ and thereby from the first-order necessary condition for local minimum, the loca
 Not allowed to compute \( \mathbf{Q}^{-1} \) explicitly.
 Matrix-vector products with \( \mathbf{Q} \) are allowed.
 
-\subsection{Algorithm template}
+\subsection{Iterative algorithm template}
 
 \begin{algorithm}[H]
     \caption{
-        Iterative generic descent algorithm template for unconstrained minimisation
+        Iterative algorithm template for unconstrained minimisation
+    }
+    \SetAlgoLined
+    \KwIn{
+        First-order oracle for the objective function \( f(\mathbf{x}) \);
+        Initial point \( \mathbf{x}^{(0)} \in \mathbb{R}^d \);
+    }
+    \KwOut{
+        Approximate solution to the unconstrained minimisation problem \( \displaystyle \argmin_{\mathbf{x} \in \mathbb{R}^d} f(\mathbf{x}) \)\;
+    }
+
+    \( k \leftarrow 0 \)\;
+
+    \While{\( \mathbf{x}^{(k)} \) is not optimal}{
+        Update the current point: \( \mathbf{x}^{(k+1)} = \operatorname{ALGO}(\mathbf{x^{(k)}}) \)\;
+
+        \( k \leftarrow k + 1 \)\;
+    }
+    \Return \( \mathbf{x}^{(k)} \)\;
+\end{algorithm}
+
+\paragraph{First-order oracle:}
+Given \( \mathbf{x} \in \mathbb{R}^d \), returns a tuple \( \big( f(\mathbf{x}), \nabla f(\mathbf{x}) \big) \).
+
+\subsection{Line search methods}
+
+\begin{algorithm}[H]
+    \caption{
+        Algorithm template for unconstrained minimisation using line search
+    }
+    \SetAlgoLined
+    \KwIn{
+        First-order oracle for the objective function \( f(\mathbf{x}) \);
+        Initial point \( \mathbf{x}^{(0)} \in \mathbb{R}^d \);
+    }
+    \KwOut{
+        Approximate solution to the unconstrained minimisation problem \( \displaystyle \argmin_{\mathbf{x} \in \mathbb{R}^d} f(\mathbf{x}) \)\;
+    }
+
+    \( k \leftarrow 0 \)\;
+
+    \While{\( \mathbf{x}^{(k)} \) is not optimal}{
+        Choose a descent direction \( \mathbf{p}^{(k)} \in \mathbb{R}^d \)\;
+
+        Choose a step size \( \alpha_k \geq 0 \)\;
+
+        Update the current point: \( \mathbf{x}^{(k+1)} = \mathbf{x}^{(k)} + \alpha_k \mathbf{p}^{(k)} \)\;
+
+        \( k \leftarrow k + 1 \)\;
+    }
+    \Return \( \mathbf{x}^{(k)} \)\;
+\end{algorithm}
+
+\subsection{Gradient descent with exact line search}
+
+\begin{algorithm}[H]
+    \caption{
+        Gradient descent with exact line search
     }
     \SetAlgoLined
     \KwIn{
@@ -121,8 +178,12 @@ Matrix-vector products with \( \mathbf{Q} \) are allowed.
         \begin{equation*}
             \mathcal{DS} \left( \mathbf{x}^{(k)} \right) = \left\{ \mathbf{p} \in \mathbb{R}^d \;\big|\; {\nabla f(\mathbf{x}^{(k)})}^{\top} \mathbf{p} < 0 \right\}
         \end{equation*}
+        One such choice is the negative gradient direction: \( \mathbf{p}^{(k)} = -\nabla f(\mathbf{x}^{(k)}) \)\;
 
-        Choose a step size \( \alpha_k \geq 0 \)\;
+        Choose step size \( \alpha_k \) by solving the one-dimensional optimisation problem
+        \begin{equation*}
+            \alpha_k = \argmin_{\alpha \geq 0} f\left( \mathbf{x}^{(k)} + \alpha \mathbf{p}^{(k)} \right)
+        \end{equation*}
 
         Update the current point: \( \mathbf{x}^{(k+1)} = \mathbf{x}^{(k)} + \alpha_k \mathbf{p}^{(k)} \)\;
 
@@ -130,7 +191,3 @@ Matrix-vector products with \( \mathbf{Q} \) are allowed.
     }
     \Return \( \mathbf{x}^{(k)} \)\;
 \end{algorithm}
-
-\paragraph{First-order oracle:}
-Given \( \mathbf{x} \in \mathbb{R}^d \), returns a tuple \( \big( f(\mathbf{x}), \nabla f(\mathbf{x}) \big) \).
-Typically, assumes \( f \in \mathcal{C}^1 \).
