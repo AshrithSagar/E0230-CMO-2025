@@ -191,3 +191,28 @@ Given \( \mathbf{x} \in \mathbb{R}^d \), returns a tuple \( \big( f(\mathbf{x}),
     }
     \Return \( \mathbf{x}^{(k)} \)\;
 \end{algorithm}
+
+\paragraph{Algorithm design:}
+We have
+\begin{align*}
+    g(\alpha) = f \left( \mathbf{x} + \alpha \mathbf{p} \right)
+    & =
+    \frac{1}{2} \left( \mathbf{x} + \alpha \mathbf{p} \right)^{\top} \mathbf{Q} \left( \mathbf{x} + \alpha \mathbf{p} \right)
+    + \mathbf{h}^{\top} \left( \mathbf{x} + \alpha \mathbf{p} \right)
+    + c
+    \\ & =
+    \frac{1}{2} {\mathbf{x}}^{\top} \mathbf{Q} \mathbf{x}
+    + \alpha {\mathbf{x}}^{\top} \mathbf{Q} \mathbf{p}
+    + \frac{\alpha^2}{2} {\mathbf{p}}^{\top} \mathbf{Q} \mathbf{p}
+    + \mathbf{h}^{\top} \mathbf{x}
+    + \alpha \mathbf{h}^{\top} \mathbf{p}
+    + c
+    \\ & =
+    \alpha^2 \left( \frac{1}{2} {\mathbf{p}}^{\top} \mathbf{Q} \mathbf{p} \right)
+    + \alpha \left( {\mathbf{x}}^{\top} \mathbf{Q} \mathbf{p} + \mathbf{h}^{\top} \mathbf{p} \right)
+    + \left( \frac{1}{2} {\mathbf{x}}^{\top} \mathbf{Q} \mathbf{x} + \mathbf{h}^{\top} \mathbf{x} + c \right)
+    \\ & =
+    \alpha^2 \underbrace{ \left( \frac{1}{2} {\mathbf{p}}^{\top} \mathbf{Q} \mathbf{p} \right) }_{p}
+    + \alpha \underbrace{ \left( \nabla f(\mathbf{x})^{\top} \mathbf{p} \right) }_{q}
+    + \underbrace{ \left( f(\mathbf{x}) \right) }_{r}
+\end{align*}
