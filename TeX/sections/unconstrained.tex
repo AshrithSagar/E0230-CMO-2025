@@ -116,7 +116,10 @@ Given \( \mathbf{x} \in \mathbb{R}^d \), returns a tuple \( \big( f(\mathbf{x}),
     \( k \leftarrow 0 \)\;
 
     \While{\( \mathbf{x}^{(k)} \) is not optimal}{
-        Choose a descent direction \( \mathbf{p}^{(k)} \in \mathbb{R}^d \)\;
+        Choose a descent direction \( \mathbf{p}^{(k)} \) from the set of descent directions
+        \begin{equation*}
+            \mathcal{DS} \left( \mathbf{x}^{(k)} \right) = \left\{ \mathbf{p} \in \mathbb{R}^d \;\big|\; {\nabla f(\mathbf{x}^{(k)})}^{\top} \mathbf{p} < 0 \right\}
+        \end{equation*}
 
         Choose a step size \( \alpha_k \geq 0 \)\;
 
@@ -127,11 +130,19 @@ Given \( \mathbf{x} \in \mathbb{R}^d \), returns a tuple \( \big( f(\mathbf{x}),
     \Return \( \mathbf{x}^{(k)} \)\;
 \end{algorithm}
 
-\subsection{Gradient descent with exact line search}
+\paragraph{Gradient descent:}
+One such choice for \( \mathbf{p}^{(k)} \in \mathcal{DS} \left( \mathbf{x}^{(k)} \right) \) is the negative gradient direction,
+\begin{equation*}
+    \mathbf{p}^{(k)} = -\nabla f(\mathbf{x}^{(k)})
+\end{equation*}
+which is the direction of steepest descent.
+
+\newpage
+\subsection{Exact line search}
 
 \begin{algorithm}[H]
     \caption{
-        Gradient descent with exact line search
+        Exact line search
     }
     \SetAlgoLined
     \KwIn{
@@ -145,11 +156,7 @@ Given \( \mathbf{x} \in \mathbb{R}^d \), returns a tuple \( \big( f(\mathbf{x}),
     \( k \leftarrow 0 \)\;
 
     \While{\( \mathbf{x}^{(k)} \) is not optimal}{
-        Choose a descent direction \( \mathbf{p}^{(k)} \) from the set of descent directions
-        \begin{equation*}
-            \mathcal{DS} \left( \mathbf{x}^{(k)} \right) = \left\{ \mathbf{p} \in \mathbb{R}^d \;\big|\; {\nabla f(\mathbf{x}^{(k)})}^{\top} \mathbf{p} < 0 \right\}
-        \end{equation*}
-        One such choice is the negative gradient direction: \( \mathbf{p}^{(k)} = -\nabla f(\mathbf{x}^{(k)}) \)\;
+        Choose a descent direction \( \mathbf{p}^{(k)} \in \mathcal{DS} \left( \mathbf{x}^{(k)} \right) \)\;
 
         Choose step size \( \alpha_k \) by solving the one-dimensional optimisation problem
         \begin{equation*}
