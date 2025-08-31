@@ -374,7 +374,7 @@ where \( \rho \in [0, 1) \) since \( \mathbf{Q} \succ \mathbf{0} \implies \lambd
 
 \subsection{Inexact line search}
 
-\paragraph{Condition for sufficient decrease (Armijo rule):}
+\paragraph{Sufficient decrease condition (Armijo rule):}
 \begin{equation*}
     f \left( \mathbf{x}^{(k)} + \alpha_k \mathbf{p}^{(k)} \right)
     \leq
@@ -382,7 +382,7 @@ where \( \rho \in [0, 1) \) since \( \mathbf{Q} \succ \mathbf{0} \implies \lambd
     \quad c_1 \in (0, 1)
 \end{equation*}
 
-\paragraph{Condition for curvature (Wolfe condition):}
+\paragraph{Curvature condition (Wolfe condition):}
 \begin{equation*}
     \nabla f \left( \mathbf{x}^{(k)} + \alpha_k \mathbf{p}^{(k)} \right)^{\top} \mathbf{p}^{(k)}
     \geq
@@ -390,7 +390,7 @@ where \( \rho \in [0, 1) \) since \( \mathbf{Q} \succ \mathbf{0} \implies \lambd
     \quad c_2 \in (c_1, 1)
 \end{equation*}
 
-\paragraph{Condition for strong curvature (strong Wolfe condition):}
+\paragraph{Strong curvature condition (Strong Wolfe condition):}
 \begin{equation*}
     \left| \nabla f \left( \mathbf{x}^{(k)} + \alpha_k \mathbf{p}^{(k)} \right)^{\top} \mathbf{p}^{(k)} \right|
     \leq

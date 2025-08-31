@@ -1,0 +1,26 @@
+\documentclass[tikz,border=5pt]{standalone}
+\usepackage{amsmath, pgfplots, tikz}
+\pgfplotsset{compat=newest}
+\usetikzlibrary{calc, intersections}
+
+\begin{document}
+\begin{tikzpicture}
+\begin{axis}[
+    axis lines = middle,
+    xlabel = \( \alpha \),
+    ylabel = {\( f(\mathbf{x}^{(k)} + \alpha \mathbf{p}^{(k)}) \)},
+    xmin=0, xmax=5,
+    ymin=0, ymax=2,
+    samples=100,
+    domain=0:5,
+    legend style={at={(1,1)},anchor=north east},
+    every axis y label/.style={at={(ticklabel* cs:1.05)}, anchor=south},
+    every axis x label/.style={at={(ticklabel* cs:1.05)}, anchor=west},
+]
+
+\addplot[blue, thick] {1 - 0.8*x + 0.3*x^2};
+\addplot[dashed] {1};
+
+\end{axis}
+\end{tikzpicture}
+\end{document}
