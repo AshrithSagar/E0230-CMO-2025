@@ -84,23 +84,15 @@ def question_1():
     print("\n" + "\033[1m\033[4m" + "Question 1" + "\033[0m")
 
     Q_a, Q_b, Q_c, Q_d, Q_e = oq1(SRN)  # noqa: F841
-
-    # Q matrices table
-    cols = [("Matrix", "{:^8}", 8, "{}"), ("Value", "{:^28} ", 29, "{}")]
-    row_format = "\u2502" + "\u2502".join(c[1] for c in cols) + "\u2502"
-    print("\u250f" + "\u2533".join("\u2501" * c[2] for c in cols) + "\u2513")
-    print(row_format.replace("\u2502", "\u2503").format(*(c[0] for c in cols)))
-    print("\u2521" + "\u2547".join("\u2501" * c[2] for c in cols) + "\u2529")
     for i in range(5):
         name = f"Q_{chr(ord('a') + i)}"
         Q = locals()[name]
-        print("\u2502" + " " * 8 + "\u2502\u250c" + " " * 27 + "\u2510\u2502")
-        print("\u2502" + f"{name:^8}" + "\u2502\u2502", end="")
-        print(" ".join(f"{val:13.8f}" for val in Q[0]) + "\u2502\u2502")
-        print("\u2502" + " " * 8 + "\u2502\u2502", end="")
-        print(" ".join(f"{val:13.8f}" for val in Q[1]) + "\u2502\u2502")
-        print("\u2502" + " " * 8 + "\u2502\u2514" + " " * 27 + "\u2518\u2502")
-    print("\u2514" + "\u2534".join("\u2500" * c[2] for c in cols) + "\u2518")
+        print(" " * 7 + "\u250c" + " " * 28 + "\u2510")
+        print(f"{name:^5}= \u2502", end="")
+        print(" ".join(f"{val:13.8f}" for val in Q[0]) + " \u2502")
+        print(" " * 7 + "\u2502", end="")
+        print(" ".join(f"{val:13.8f}" for val in Q[1]) + " \u2502")
+        print(" " * 7 + "\u2514" + " " * 28 + "\u2518")
 
 
 def question_2():
