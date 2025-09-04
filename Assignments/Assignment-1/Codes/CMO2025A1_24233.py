@@ -91,7 +91,7 @@ class FirstOrderOracle:
         return self
 
 
-# ---------- Iterative Algorithm Template ----------
+# ---------- Algorithm Templates ----------
 class IterativeOptimiser:
     """
     A base template class for iterative optimisation algorithms,
@@ -298,18 +298,92 @@ class IterativeOptimiser:
         plt.plot(self.history, label=self.name)
 
 
-# ---------- Optimiser Implementations ----------
-class GradientDescent(IterativeOptimiser):
+class LineSearchOptimiser(IterativeOptimiser):
     """
-    Standard Gradient Descent.
+    A base template class for line search-based iterative optimisation algorithms.
 
-    `x_{k+1} = x_k - eta f'(x_k)`\\
-    where `eta` is the learning rate.
+    `x_{k+1} = x_k + eta_k * d_k`\\
+    where `eta_k` is the step size along the descent direction `d_k`.
     """
+
+    def _direction(self, x: floatVec, grad: floatVec) -> floatVec:
+        """
+        Returns the descent direction `d_k` to move towards from `x_k`.\\
+        [Required]: This method should be implemented by subclasses to define the specific direction strategy.
+        """
+        raise NotImplementedError
+
+    def _step_size(
+        self,
+        x: floatVec,
+        k: int,
+        f: float,
+        grad: floatVec,
+        direction: floatVec,
+        oracle_fn: FirstOrderOracle,
+    ) -> float:
+        """Returns step size `eta_k` to take along the descent direction `d_k`.\\
+        [Required]: This method should be implemented by subclasses to define the specific step size strategy.
+        """
+        raise NotImplementedError
 
     def _step(self, x, k, f, grad, oracle_fn):
-        eta = float(self.config["lr"])
-        return np.asarray(x - eta * grad)
+        d_k = self._direction(x, grad)
+        eta_k = self._step_size(x, k, f, grad, d_k, oracle_fn)
+        return x + eta_k * d_k
+
+
+class SteepestDescentDirectionMixin(LineSearchOptimiser):
+    """
+    A mixin class that provides the steepest descent direction strategy.
+
+    `d_k = -f'(x_k)`
+    """
+
+    def _direction(self, x: floatVec, grad: floatVec) -> floatVec:
+        return -grad
+
+
+class ExactLineSearchMixin(LineSearchOptimiser):
+    """
+    A mixin class that provides the exact line search step size strategy for quadratic functions.
+    
+    `eta_k = - (f'(x_k)^T d_k) / (d_k^T Q d_k)`\\
+    where `Q` is the Hessian matrix of the quadratic function.
+    """
+
+    def _initialise_state(self):
+        Q = self.config.get("Q", None)
+        if Q is None:
+            raise ValueError("Q matrix is required for exact line search.")
+        self.Q: floatVec = np.array(Q, dtype=float)
+
+    def _step_size(
+        self,
+        x: floatVec,
+        k: int,
+        f: float,
+        grad: floatVec,
+        direction: floatVec,
+        oracle_fn: FirstOrderOracle,
+    ) -> float:
+        numer = float(grad.T @ direction)
+        denom = float(direction.T @ self.Q @ direction)
+        if abs(denom) < 1e-14:
+            return 1e-8
+        return -numer / denom
+
+
+# ---------- Optimiser Implementations ----------
+class SteepestGradientDescentExactLineSearch(
+    SteepestDescentDirectionMixin, ExactLineSearchMixin
+):
+    """
+    Steepest Gradient Descent with Exact Line Search for Quadratic Functions.
+    
+    `x_{k+1} = x_k - eta_k * f'(x_k)`\\
+    where `eta_k = (f'(x_k)^T f'(x_k)) / (f'(x_k)^T Q f'(x_k))`
+    """
 
 
 # ---------- Questions ----------
@@ -328,7 +402,7 @@ def question_1():
         oracle_f = FirstOrderOracle(
             lambda _, x: (0.5 * x.T @ Q @ x + b.T @ x, Q @ x + b), dim=2
         )
-        optim = GradientDescent(lr=0.001)
+        optim = SteepestGradientDescentExactLineSearch(Q=Q)
         x0s = [np.array([1.0, 1.0]), np.array([-1.0, -1.0])]
         optim.run(oracle_f, x0s=x0s, maxiter=1_000_000, tol=1e-13)
 
