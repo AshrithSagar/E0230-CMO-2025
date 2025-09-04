@@ -3,13 +3,18 @@
 # ---------- Imports ----------
 # Allowed libraries: os, sys, numpy, math, matplotlib.
 
+import math
 import os
 import sys
 
+import matplotlib.pyplot as plt
 import numpy as np
 
 sys.path.insert(0, os.path.abspath("oracle_2025A1"))
 from oracle_2025A1 import oq1, oq2f, oq2g, oq3  # type: ignore
+
+floatVec = np.typing.NDArray[np.float64]
+"""A type alias for a numpy array of real numbers (i.e., float)."""
 
 # ---------- Setup ----------
 SRN: int = 24233
@@ -19,6 +24,12 @@ assert isinstance(SRN, int) and len(str(SRN)) == 5, "SRN must be a 5-digit integ
 ## Enable/disable optional configurations
 ORACLE_CACHE: bool = False
 """Cache the results of the oracle calls."""
+
+LOG_RUNS: bool = True
+"""Log all the runs of the optimisation algorithms in the summary table, not just the best one."""
+
+PLOT_CONVERGENCE: bool = True
+"""Plot the convergence of the optimisation algorithms over iterations."""
 
 
 # ---------- Oracle utils ----------
@@ -45,7 +56,7 @@ class FirstOrderOracle:
         This is useful for the 'analytical complexity' of the algorithms.
         """
 
-        self.cache: dict[np.ndarray, tuple[np.ndarray, np.ndarray]] = {}
+        self.cache: dict[tuple[float], tuple[float, floatVec]] = {}
         """Cache the results of the oracle function."""
 
         self.cache_digits = cache_digits
@@ -54,12 +65,13 @@ class FirstOrderOracle:
         This is useful to avoid floating-point precision issues when caching results.
         """
 
-    def __call__(self, x: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+    def __call__(self, x: floatVec) -> tuple[float, floatVec]:
         """Evaluates the oracle function at `x`, using cache if available."""
         x = np.asarray(x, dtype=float)
         assert x.shape == (self.dim,), f"x must be of shape ({self.dim},)"
 
-        x_key = np.round(x, self.cache_digits)  # Round for stable caching
+        # Round for stable caching, and hash as a tuple
+        x_key = tuple(np.round(x, self.cache_digits))
         if ORACLE_CACHE:
             if x_key in self.cache:
                 return self.cache[x_key]
@@ -79,20 +91,246 @@ class FirstOrderOracle:
         return self
 
 
+# ---------- Iterative Algorithm Template ----------
+class IterativeOptimiser:
+    """
+    A base template class for iterative optimisation algorithms,
+    particularly used here for the minimisation objective.
+
+    `x_{k+1} = ALGO(x_k)`\\
+    where `ALGO` is the algorithm-specific step function,
+    `x_k` is the value at iteration `k`.
+    """
+
+    def __init__(self, **kwargs):
+        # Initialises the iterative optimiser with configuration parameters.
+        self.config = kwargs
+
+        self.name = self.__class__.__name__
+        """Name of the algorithm, derived from the class name of the optimiser."""
+
+        self.history: list[floatVec] = []
+        self.x_star: floatVec
+        self.fx_star: float
+        self.dfx_star: floatVec
+
+        self.maxiter: int
+        self.tol: float
+
+    def _initialise_state(self) -> None:
+        """
+        Initialises the state of the algorithm.\\
+        [Optional]: This method can be overridden by subclasses to set up any necessary state if needed.
+        """
+        pass
+
+    def _step(
+        self,
+        x: floatVec,
+        k: int,
+        f: float,
+        grad: floatVec,
+        oracle_fn: FirstOrderOracle,
+    ) -> floatVec:
+        """
+        Performs a single step of the algorithm.\\
+        [Required]: This method should be implemented by subclasses to define the specific update rule.
+        Parameters:
+            x: Current value of `x`, i.e., `x_k`.
+            k: Current iteration number.
+            f: Current function value `f(x)`, viz. `f(x_k)`.
+            grad: Current gradient `f'(x)`, viz. `f'(x_k)`.
+            oracle_fn: The oracle function to query for `f(x)` and `f'(x)`.
+        Returns:
+            The updated value of `x` after the step, viz. `x_{k+1}`.
+        """
+        raise NotImplementedError
+
+    def run(
+        self,
+        oracle_fn: FirstOrderOracle,
+        x0s: list[floatVec],
+        maxiter: int = 1_000_000,
+        tol: float = 1e-9,
+    ):
+        """
+        Runs the iterative algorithm.
+
+        Parameters:
+            oracle_fn: The first-order oracle function to minimise.
+            x0s: Initial guesses for the minimum point.
+            maxiter: Maximum number of iterations to perform.
+            tol: Tolerance for stopping criterion based on the gradient.
+        """
+        self.maxiter = maxiter
+        self.tol = tol
+
+        # Set oracle_fn's cache_digits in order of tol
+        oracle_fn.cache_digits = int(-np.log10(tol)) + 1
+
+        # Summary table for multiple starting points
+        def format_array(arr, precision=6):
+            return "[" + ", ".join(f"{x:.{precision}f}" for x in arr) + "]"
+
+        cols = [
+            ("Run", "{:^5}", 5, "{}"),
+            (
+                "x0",
+                "{:>24} ",
+                25,
+                lambda v: format_array(v, 6)
+                if isinstance(v, np.ndarray)
+                else f"{v:2.6f}",
+            ),
+            (
+                "x*",
+                "{:>24} ",
+                25,
+                lambda v: format_array(v, 6)
+                if isinstance(v, np.ndarray)
+                else f"{v:2.6f}",
+            ),
+            ("f(x*)", "{:>20} ", 21, "{:2.16f}"),
+            (
+                "f'(x*)",
+                "{:>24} ",
+                25,
+                lambda v: format_array(v, 6)
+                if isinstance(v, np.ndarray)
+                else f"{v:.6e}",
+            ),
+            ("Iterations", "{:^12}", 12, "{}"),
+            ("Oracle calls", "{:^14}", 14, "{}"),
+        ]
+        print("\033[1m" + self.name + "\033[0m")
+        print("Run params:", ", ".join(f"{k} = {v}" for k, v in self.config.items()))
+        row_format = "\u2502" + "\u2502".join(c[1] for c in cols) + "\u2502"
+        print("\u250f" + "\u2533".join("\u2501" * c[2] for c in cols) + "\u2513")
+        print(
+            row_format.replace(">", "^")
+            .replace("\u2502", "\u2503")
+            .format(*(c[0] for c in cols))
+        )
+        print("\u2521" + "\u2547".join("\u2501" * c[2] for c in cols) + "\u2529")
+
+        self.runs = []
+        for idx, x0 in enumerate(x0s, start=1):
+            oracle_fn.reset()
+            history = [x0]
+            x = x0
+            self._initialise_state()
+
+            try:
+                for k in range(1, maxiter + 1):
+                    fx, dfx = oracle_fn(x)  # Query the oracle function
+                    if np.linalg.norm(dfx) < tol:  # Early exit, ||f'(x)|| small enough
+                        break
+                    x = self._step(x, k, fx, dfx, oracle_fn)
+                    history.append(x)
+                fx, dfx = oracle_fn(x)
+            except OverflowError:  # Fallback
+                x = np.full(oracle_fn.dim, np.nan)
+                fx, dfx = float("nan"), np.full(oracle_fn.dim, np.nan)
+
+            self.runs.append(
+                {
+                    "x0": x0,
+                    "x_star": x,
+                    "fx_star": fx,
+                    "dfx_star": dfx,
+                    "history": history,
+                    "oracle_call_count": oracle_fn.call_count,
+                }
+            )
+
+            if LOG_RUNS:
+                row = [idx, x0, x, fx, dfx, len(history) - 1, oracle_fn.call_count]
+                print(
+                    row_format.format(
+                        *[
+                            c[3](v) if callable(c[3]) else c[3].format(v)
+                            for c, v in zip(cols, row)
+                        ]
+                    )
+                )
+        if LOG_RUNS:
+            print("\u251c" + "\u253c".join("\u2500" * c[2] for c in cols) + "\u2524")
+
+        # Pick best run by lowest ||f'(x^*)||, if tied then prefer lower oracle call count
+        if valid_runs := [
+            r
+            for r in self.runs
+            if not (math.isnan(r["fx_star"]) or np.any(np.isnan(r["dfx_star"])))
+        ]:
+            best = min(
+                valid_runs,
+                key=lambda r: (np.linalg.norm(r["dfx_star"]), r["oracle_call_count"]),
+            )
+            run_idx = next(i for i, run in enumerate(self.runs, start=1) if run is best)
+            self.x_star = best["x_star"]
+            self.fx_star, self.dfx_star = best["fx_star"], best["dfx_star"]
+            self.history = best["history"]
+            x0 = best["x0"]
+            n_iters = len(best["history"]) - 1
+            n_oracle = best["oracle_call_count"]
+        else:
+            run_idx = ""
+            self.x_star = np.full(oracle_fn.dim, np.nan)
+            self.fx_star, self.dfx_star = float("nan"), np.full(oracle_fn.dim, np.nan)
+            self.history = []
+            x0 = np.full(oracle_fn.dim, np.nan)
+            n_iters = ""
+            n_oracle = ""
+        row = [run_idx, x0, self.x_star, self.fx_star, self.dfx_star, n_iters, n_oracle]
+        print(
+            row_format.format(
+                *[
+                    c[3](v) if callable(c[3]) else c[3].format(v)
+                    for c, v in zip(cols, row)
+                ]
+            )
+        )
+
+        print("\u2514" + "\u2534".join("\u2500" * c[2] for c in cols) + "\u2518")
+
+    def plot(self):
+        """Plots the history of `x` values during the optimisation."""
+        plt.plot(self.history, label=self.name)
+
+
+# ---------- Optimiser Implementations ----------
+class GradientDescent(IterativeOptimiser):
+    """
+    Standard Gradient Descent.
+
+    `x_{k+1} = x_k - eta f'(x_k)`\\
+    where `eta` is the learning rate.
+    """
+
+    def _step(self, x, k, f, grad, oracle_fn):
+        eta = float(self.config["lr"])
+        return np.asarray(x - eta * grad)
+
+
 # ---------- Questions ----------
 def question_1():
     print("\n" + "\033[1m\033[4m" + "Question 1" + "\033[0m")
 
-    Q_a, Q_b, Q_c, Q_d, Q_e = oq1(SRN)  # noqa: F841
-    for i in range(5):
-        name = f"Q_{chr(ord('a') + i)}"
-        Q = locals()[name]
-        print(" " * 7 + "\u250c" + " " * 28 + "\u2510")
-        print(f"{name:^5}= \u2502", end="")
+    b = np.array([1, 1], dtype=float)
+    for i, Q in enumerate(oq1(SRN)):
+        print("\n" + " " * 7 + "\u250c" + " " * 28 + "\u2510")
+        print(f"{'Q_' + chr(ord('a') + i):^5}= \u2502", end="")
         print(" ".join(f"{val:13.8f}" for val in Q[0]) + " \u2502")
         print(" " * 7 + "\u2502", end="")
         print(" ".join(f"{val:13.8f}" for val in Q[1]) + " \u2502")
         print(" " * 7 + "\u2514" + " " * 28 + "\u2518")
+
+        oracle_f = FirstOrderOracle(
+            lambda _, x: (0.5 * x.T @ Q @ x + b.T @ x, Q @ x + b), dim=2
+        )
+        optim = GradientDescent(lr=0.001)
+        x0s = [np.array([1.0, 1.0]), np.array([-1.0, -1.0])]
+        optim.run(oracle_f, x0s=x0s, maxiter=1_000_000, tol=1e-13)
 
 
 def question_2():
