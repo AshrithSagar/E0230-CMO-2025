@@ -15,7 +15,6 @@ from oracle_2025A1 import oq1, oq2f, oq2g, oq3  # type: ignore
 SRN: int = 24233
 """The 5-digit Student Registration Number (SRN) for the assignment."""
 assert isinstance(SRN, int) and len(str(SRN)) == 5, "SRN must be a 5-digit integer."
-print(f"{SRN = }")
 
 ## Enable/disable optional configurations
 ORACLE_CACHE: bool = False
@@ -80,36 +79,48 @@ class FirstOrderOracle:
         return self
 
 
-# ---------- Question 1 ----------
-print("\n" + "\033[1m\033[4m" + "Question 1" + "\033[0m")
-Q_a, Q_b, Q_c, Q_d, Q_e = oq1(SRN)
+# ---------- Questions ----------
+def question_1():
+    print("\n" + "\033[1m\033[4m" + "Question 1" + "\033[0m")
 
-# Q matrices table
-cols = [("Matrix", "{:^8}", 8, "{}"), ("Value", "{:^28} ", 29, "{}")]
-row_format = "\u2502" + "\u2502".join(c[1] for c in cols) + "\u2502"
-print("\u250f" + "\u2533".join("\u2501" * c[2] for c in cols) + "\u2513")
-print(row_format.replace("\u2502", "\u2503").format(*(c[0] for c in cols)))
-print("\u2521" + "\u2547".join("\u2501" * c[2] for c in cols) + "\u2529")
-for i in range(5):
-    name = f"Q_{chr(ord('a') + i)}"
-    Q = locals()[name]
-    print("\u2502" + " " * 8 + "\u2502\u250c" + " " * 27 + "\u2510\u2502")
-    print("\u2502" + f"{name:^8}" + "\u2502\u2502", end="")
-    print(" ".join(f"{val:13.8f}" for val in Q[0]) + "\u2502\u2502")
-    print("\u2502" + " " * 8 + "\u2502\u2502", end="")
-    print(" ".join(f"{val:13.8f}" for val in Q[1]) + "\u2502\u2502")
-    print("\u2502" + " " * 8 + "\u2502\u2514" + " " * 27 + "\u2518\u2502")
-print("\u2514" + "\u2534".join("\u2500" * c[2] for c in cols) + "\u2518")
+    Q_a, Q_b, Q_c, Q_d, Q_e = oq1(SRN)  # noqa: F841
 
-
-# ---------- Question 2 ----------
-print("\n" + "\033[1m\033[4m" + "Question 2" + "\033[0m")
-oracle_f = FirstOrderOracle(oq2f, dim=5)
-oracle_g = FirstOrderOracle(oq2g, dim=5)
+    # Q matrices table
+    cols = [("Matrix", "{:^8}", 8, "{}"), ("Value", "{:^28} ", 29, "{}")]
+    row_format = "\u2502" + "\u2502".join(c[1] for c in cols) + "\u2502"
+    print("\u250f" + "\u2533".join("\u2501" * c[2] for c in cols) + "\u2513")
+    print(row_format.replace("\u2502", "\u2503").format(*(c[0] for c in cols)))
+    print("\u2521" + "\u2547".join("\u2501" * c[2] for c in cols) + "\u2529")
+    for i in range(5):
+        name = f"Q_{chr(ord('a') + i)}"
+        Q = locals()[name]
+        print("\u2502" + " " * 8 + "\u2502\u250c" + " " * 27 + "\u2510\u2502")
+        print("\u2502" + f"{name:^8}" + "\u2502\u2502", end="")
+        print(" ".join(f"{val:13.8f}" for val in Q[0]) + "\u2502\u2502")
+        print("\u2502" + " " * 8 + "\u2502\u2502", end="")
+        print(" ".join(f"{val:13.8f}" for val in Q[1]) + "\u2502\u2502")
+        print("\u2502" + " " * 8 + "\u2502\u2514" + " " * 27 + "\u2518\u2502")
+    print("\u2514" + "\u2534".join("\u2500" * c[2] for c in cols) + "\u2518")
 
 
-# ---------- Question 3 ----------
-print("\n" + "\033[1m\033[4m" + "Question 3" + "\033[0m")
-A, b = oq3(SRN)
-print(f"A.shape: {A.shape}")
-print(f"b.shape: {b.shape}")
+def question_2():
+    print("\n" + "\033[1m\033[4m" + "Question 2" + "\033[0m")
+
+    oracle_f = FirstOrderOracle(oq2f, dim=5)  # noqa: F841
+    oracle_g = FirstOrderOracle(oq2g, dim=5)  # noqa: F841
+
+
+def question_3():
+    print("\n" + "\033[1m\033[4m" + "Question 3" + "\033[0m")
+
+    A, b = oq3(SRN)
+    print(f"A.shape: {A.shape}")
+    print(f"b.shape: {b.shape}")
+
+
+# ---------- Main ----------
+if __name__ == "__main__":
+    print(f"{SRN = }")
+    question_1()
+    question_2()
+    question_3()
