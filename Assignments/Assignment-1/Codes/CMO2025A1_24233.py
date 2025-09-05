@@ -323,7 +323,7 @@ class SteepestDescentDirectionMixin(LineSearchOptimiser):
 class ExactLineSearchMixin(LineSearchOptimiser):
     """
     A mixin class that provides the exact line search step size strategy for quadratic functions.
-    
+
     `eta_k = - (f'(x_k)^T d_k) / (d_k^T Q d_k)`\\
     where `Q` is the Hessian matrix of the quadratic function.
     """
@@ -352,14 +352,155 @@ class ExactLineSearchMixin(LineSearchOptimiser):
 
 # ---------- Optimiser Implementations ----------
 class SteepestGradientDescentExactLineSearch(
-    SteepestDescentDirectionMixin, ExactLineSearchMixin
+    SteepestDescentDirectionMixin, ExactLineSearchMixin, LineSearchOptimiser
 ):
     """
     Steepest Gradient Descent with Exact Line Search for Quadratic Functions.
-    
+
     `x_{k+1} = x_k - eta_k * f'(x_k)`\\
     where `eta_k = (f'(x_k)^T f'(x_k)) / (f'(x_k)^T Q f'(x_k))`
     """
+
+
+class SteepestGradientDescentArmijo(SteepestDescentDirectionMixin, LineSearchOptimiser):
+    """
+    Steepest Gradient Descent using (Inexact) Line Search with Armijo condition.
+
+    `f(x_k + eta_k * d_k) <= f(x_k) + alpha * eta_k * f'(x_k)^T d_k`
+    """
+
+    def _step_size(
+        self,
+        x: floatVec,
+        k: int,
+        f: float,
+        grad: floatVec,
+        direction: floatVec,
+        oracle_fn: FirstOrderOracle,
+    ) -> float:
+        alpha: float = self.config.get("alpha", 0.3)
+        beta: float = self.config.get("beta", 0.8)
+        eta: float = self.config.get("initial_step_size", 1.0)
+
+        while True:
+            new_x = x + eta * direction
+            new_f, _ = oracle_fn(new_x)
+            if new_f <= f + alpha * eta * (grad.T @ direction):
+                break
+            eta *= beta
+            if eta < 1e-14:
+                eta = 1e-14
+                break
+        return eta
+
+
+class SteepestGradientDescentArmijoGoldstein(
+    SteepestDescentDirectionMixin, LineSearchOptimiser
+):
+    """
+    Steepest Gradient Descent using (Inexact) Line Search with Armijo-Goldstein condition.
+
+    `f(x_k + eta_k * d_k) <= f(x_k) + alpha * eta_k * f'(x_k)^T d_k`\\
+    `f(x_k + eta_k * d_k) >= f(x_k) + (1 - alpha) * eta_k * f'(x_k)^T d_k`\\
+    where `0 < alpha < 0.5`.
+    """
+
+    def _step_size(
+        self,
+        x: floatVec,
+        k: int,
+        f: float,
+        grad: floatVec,
+        direction: floatVec,
+        oracle_fn: FirstOrderOracle,
+    ) -> float:
+        alpha: float = self.config.get("alpha", 0.3)
+        beta: float = self.config.get("beta", 0.8)
+        eta: float = self.config.get("initial_step_size", 1.0)
+
+        while True:
+            new_x = x + eta * direction
+            new_f, _ = oracle_fn(new_x)
+            if new_f <= f + alpha * eta * (grad.T @ direction) and new_f >= f + (
+                1 - alpha
+            ) * eta * (grad.T @ direction):
+                break
+            eta *= beta
+            if eta < 1e-14:
+                eta = 1e-14
+                break
+        return eta
+
+
+class SteepestGradientDescentWolfe(SteepestDescentDirectionMixin, LineSearchOptimiser):
+    """
+    Steepest Gradient Descent using (Inexact) Line Search with Wolfe condition.
+
+    `f(x_k + eta_k * d_k) <= f(x_k) + alpha * eta_k * f'(x_k)^T d_k`\\
+    `f'(x_k + eta_k * d_k)^T d_k >= beta * f'(x_k)^T d_k`\\
+    where `0 < alpha < beta < 1`.
+    """
+
+    def _step_size(
+        self,
+        x: floatVec,
+        k: int,
+        f: float,
+        grad: floatVec,
+        direction: floatVec,
+        oracle_fn: FirstOrderOracle,
+    ) -> float:
+        alpha: float = self.config.get("alpha", 0.3)
+        beta: float = self.config.get("beta", 0.8)
+        eta: float = self.config.get("initial_step_size", 1.0)
+
+        while True:
+            new_x = x + eta * direction
+            new_f, new_grad = oracle_fn(new_x)
+            if new_f <= f + alpha * eta * (grad.T @ direction) and (
+                new_grad.T @ direction
+            ) >= beta * (grad.T @ direction):
+                break
+            eta *= 0.5
+            if eta < 1e-14:
+                eta = 1e-14
+                break
+        return eta
+
+
+class SteepestGradientDescentBacktracking(
+    SteepestDescentDirectionMixin, LineSearchOptimiser
+):
+    """
+    Steepest Gradient Descent using (Inexact) Line Search with Backtracking.
+
+    `f(x_k + eta_k * d_k) <= f(x_k) + alpha * eta_k * f'(x_k)^T d_k`\\
+    where `0 < alpha < 0.5`.
+    """
+
+    def _step_size(
+        self,
+        x: floatVec,
+        k: int,
+        f: float,
+        grad: floatVec,
+        direction: floatVec,
+        oracle_fn: FirstOrderOracle,
+    ) -> float:
+        alpha: float = self.config.get("alpha", 0.3)
+        beta: float = self.config.get("beta", 0.8)
+        eta: float = self.config.get("initial_step_size", 1.0)
+
+        while True:
+            new_x = x + eta * direction
+            new_f, _ = oracle_fn(new_x)
+            if new_f <= f + alpha * eta * (grad.T @ direction):
+                break
+            eta *= beta
+            if eta < 1e-14:
+                eta = 1e-14
+                break
+        return eta
 
 
 # ---------- Questions ----------
@@ -383,7 +524,7 @@ def question_1():
         )
         optim = SteepestGradientDescentExactLineSearch(Q=Q)
         x0s = [np.array([1.0, 1.0]), np.array([-1.0, -1.0])]
-        optim.run(oracle_f, x0s=x0s, maxiter=1_000_000, tol=1e-13)
+        optim.run(oracle_f, x0s=x0s, maxiter=1_000, tol=1e-13)
 
         x_star_analytical = -np.linalg.solve(Q, b)
         fx_star_analytical, dfx_star_analytical = oracle_f(x_star_analytical)
