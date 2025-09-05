@@ -12,12 +12,18 @@ import numpy as np
 from rich.console import Console
 from rich.live import Live
 from rich.table import Table
+from rich.traceback import install
 
 sys.path.insert(0, os.path.abspath("oracle_2025A1"))
 from oracle_2025A1 import oq1, oq2f, oq2g, oq3  # type: ignore
 
+install()  # For rich tracebacks in case of errors
+console = Console()
+
+# Type Aliases
 floatVec = np.typing.NDArray[np.float64]
 """A type alias for a numpy array of real numbers (i.e., float)."""
+
 
 # ---------- Setup ----------
 SRN: int = 24233
@@ -358,11 +364,13 @@ class SteepestGradientDescentExactLineSearch(
 
 # ---------- Questions ----------
 def question_1():
-    print("\n" + "\033[1m\033[4m" + "Question 1" + "\033[0m")
+    console.rule("[bold green]Question 1")
 
     b = np.array([1, 1], dtype=float)
     for i, Q in enumerate(oq1(SRN)):
-        print("\n" + " " * 7 + "\u250c" + " " * 28 + "\u2510")
+        if i != 0:
+            console.rule(style="default")
+        print(" " * 7 + "\u250c" + " " * 28 + "\u2510")
         print(f"{'Q_' + chr(ord('a') + i):^5}= \u2502", end="")
         print(" ".join(f"{val:13.8f}" for val in Q[0]) + " \u2502")
         print(" " * 7 + "\u2502", end="")
@@ -376,16 +384,23 @@ def question_1():
         x0s = [np.array([1.0, 1.0]), np.array([-1.0, -1.0])]
         optim.run(oracle_f, x0s=x0s, maxiter=1_000_000, tol=1e-13)
 
+        x_star_analytical = -np.linalg.solve(Q, b)
+        fx_star_analytical, dfx_star_analytical = oracle_f(x_star_analytical)
+        console.print("[bold green]Analytical solution:[/]")
+        print(f"x* = {x_star_analytical}")
+        print(f"f(x*) = {fx_star_analytical:2.16f}")
+        print(f"f'(x*) = {dfx_star_analytical}")
+
 
 def question_2():
-    print("\n" + "\033[1m\033[4m" + "Question 2" + "\033[0m")
+    console.rule("[bold green]Question 2")
 
     oracle_f = FirstOrderOracle(oq2f, dim=5)  # noqa: F841
     oracle_g = FirstOrderOracle(oq2g, dim=5)  # noqa: F841
 
 
 def question_3():
-    print("\n" + "\033[1m\033[4m" + "Question 3" + "\033[0m")
+    console.rule("[bold green]Question 3")
 
     A, b = oq3(SRN)
     print(f"A.shape: {A.shape}")
