@@ -10,6 +10,7 @@ import sys
 import matplotlib.pyplot as plt
 import numpy as np
 from rich.console import Console
+from rich.live import Live
 from rich.table import Table
 
 sys.path.insert(0, os.path.abspath("oracle_2025A1"))
@@ -176,53 +177,52 @@ class IterativeOptimiser:
 
         console = Console()
         table = Table(title=f"{self.name}", show_lines=True)
-        table.add_column("Run", justify="center")
-        table.add_column("x0", justify="right")
-        table.add_column("x*", justify="right")
-        table.add_column("f(x*)", justify="right")
-        table.add_column("f'(x*)", justify="right")
-        table.add_column("Iterations", justify="center")
-        table.add_column("Oracle calls", justify="center")
+        cols = ["Run", "x0", "x*", "f(x*)", "f'(x*)", "Iterations", "Oracle calls"]
+        for col in cols:
+            table.add_column(col, justify="center")
 
         self.runs = []
-        for idx, x0 in enumerate(x0s, start=1):
-            oracle_fn.reset()
-            history = [x0]
-            x = x0
-            self._initialise_state()
+        with Live(table, console=console, transient=True) as live:
+            for idx, x0 in enumerate(x0s, start=1):
+                oracle_fn.reset()
+                history = [x0]
+                x = x0
+                self._initialise_state()
 
-            try:
-                for k in range(1, maxiter + 1):
-                    fx, dfx = oracle_fn(x)  # Query the oracle function
-                    if np.linalg.norm(dfx) < tol:  # Early exit, ||f'(x)|| small enough
-                        break
-                    x = self._step(x, k, fx, dfx, oracle_fn)
-                    history.append(x)
-                fx, dfx = oracle_fn(x)
-            except OverflowError:  # Fallback
-                x = np.full(oracle_fn.dim, np.nan)
-                fx, dfx = float("nan"), np.full(oracle_fn.dim, np.nan)
+                try:
+                    for k in range(1, maxiter + 1):
+                        fx, dfx = oracle_fn(x)  # Query the oracle function
+                        if np.linalg.norm(dfx) < tol:
+                            # Early exit, ||f'(x)|| is small enough
+                            break
+                        x = self._step(x, k, fx, dfx, oracle_fn)
+                        history.append(x)
+                    fx, dfx = oracle_fn(x)
+                except OverflowError:  # Fallback
+                    x = np.full(oracle_fn.dim, np.nan)
+                    fx, dfx = float("nan"), np.full(oracle_fn.dim, np.nan)
 
-            self.runs.append(
-                {
-                    "x0": x0,
-                    "x_star": x,
-                    "fx_star": fx,
-                    "dfx_star": dfx,
-                    "history": history,
-                    "oracle_call_count": oracle_fn.call_count,
-                }
-            )
-            if LOG_RUNS:
-                table.add_row(
-                    str(idx),
-                    format_array(x0),
-                    format_array(x),
-                    f"{fx:2.16f}",
-                    format_array(dfx),
-                    str(len(history) - 1),
-                    str(oracle_fn.call_count),
+                self.runs.append(
+                    {
+                        "x0": x0,
+                        "x_star": x,
+                        "fx_star": fx,
+                        "dfx_star": dfx,
+                        "history": history,
+                        "oracle_call_count": oracle_fn.call_count,
+                    }
                 )
+                if LOG_RUNS:
+                    table.add_row(
+                        str(idx),
+                        format_array(x0),
+                        format_array(x),
+                        f"{fx:2.16f}",
+                        format_array(dfx),
+                        str(len(history) - 1),
+                        str(oracle_fn.call_count),
+                    )
+                    live.refresh()
 
         # Pick best run by lowest ||f'(x^*)||, if tied then prefer lower oracle call count
         if valid_runs := [
