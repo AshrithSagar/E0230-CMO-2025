@@ -370,8 +370,9 @@ def question_1():
     for i, Q in enumerate(oq1(SRN)):
         if i != 0:
             console.rule(style="default")
+        Q_name = "Q_" + chr(ord("a") + i)
         print(" " * 7 + "\u250c" + " " * 28 + "\u2510")
-        print(f"{'Q_' + chr(ord('a') + i):^5}= \u2502", end="")
+        print(f"{Q_name:^5}= \u2502", end="")
         print(" ".join(f"{val:13.8f}" for val in Q[0]) + " \u2502")
         print(" " * 7 + "\u2502", end="")
         print(" ".join(f"{val:13.8f}" for val in Q[1]) + " \u2502")
@@ -390,6 +391,16 @@ def question_1():
         print(f"x* = {x_star_analytical}")
         print(f"f(x*) = {fx_star_analytical:2.16f}")
         print(f"f'(x*) = {dfx_star_analytical}")
+
+        # Plot ||x^(k) - x^*|| for the best run
+        xk_history = np.array(optim.history)
+        norm_diff = np.linalg.norm(xk_history - x_star_analytical, axis=1)
+        plt.figure()
+        plt.plot(norm_diff, marker="o")
+        plt.title(r"$\|x^{(k)} - x^*\|$ vs Iteration $k$" + f" for {Q_name}")
+        plt.xlabel(r"Iteration $k$")
+        plt.ylabel(r"$\|x^{(k)} - x^*\|$")
+        plt.grid(True)
 
 
 def question_2():
@@ -410,6 +421,9 @@ def question_3():
 # ---------- Main ----------
 if __name__ == "__main__":
     print(f"{SRN = }")
+
     question_1()
     question_2()
     question_3()
+
+    plt.show()
