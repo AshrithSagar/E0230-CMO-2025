@@ -9,6 +9,8 @@ import sys
 
 import matplotlib.pyplot as plt
 import numpy as np
+from rich.console import Console
+from rich.table import Table
 
 sys.path.insert(0, os.path.abspath("oracle_2025A1"))
 from oracle_2025A1 import oq1, oq2f, oq2g, oq3  # type: ignore
@@ -172,46 +174,15 @@ class IterativeOptimiser:
         def format_array(arr, precision=6):
             return "[" + ", ".join(f"{x:.{precision}f}" for x in arr) + "]"
 
-        cols = [
-            ("Run", "{:^5}", 5, "{}"),
-            (
-                "x0",
-                "{:>24} ",
-                25,
-                lambda v: format_array(v, 6)
-                if isinstance(v, np.ndarray)
-                else f"{v:2.6f}",
-            ),
-            (
-                "x*",
-                "{:>24} ",
-                25,
-                lambda v: format_array(v, 6)
-                if isinstance(v, np.ndarray)
-                else f"{v:2.6f}",
-            ),
-            ("f(x*)", "{:>20} ", 21, "{:2.16f}"),
-            (
-                "f'(x*)",
-                "{:>24} ",
-                25,
-                lambda v: format_array(v, 6)
-                if isinstance(v, np.ndarray)
-                else f"{v:.6e}",
-            ),
-            ("Iterations", "{:^12}", 12, "{}"),
-            ("Oracle calls", "{:^14}", 14, "{}"),
-        ]
-        print("\033[1m" + self.name + "\033[0m")
-        print("Run params:", ", ".join(f"{k} = {v}" for k, v in self.config.items()))
-        row_format = "\u2502" + "\u2502".join(c[1] for c in cols) + "\u2502"
-        print("\u250f" + "\u2533".join("\u2501" * c[2] for c in cols) + "\u2513")
-        print(
-            row_format.replace(">", "^")
-            .replace("\u2502", "\u2503")
-            .format(*(c[0] for c in cols))
-        )
-        print("\u2521" + "\u2547".join("\u2501" * c[2] for c in cols) + "\u2529")
+        console = Console()
+        table = Table(title=f"{self.name}", show_lines=True)
+        table.add_column("Run", justify="center")
+        table.add_column("x0", justify="right")
+        table.add_column("x*", justify="right")
+        table.add_column("f(x*)", justify="right")
+        table.add_column("f'(x*)", justify="right")
+        table.add_column("Iterations", justify="center")
+        table.add_column("Oracle calls", justify="center")
 
         self.runs = []
         for idx, x0 in enumerate(x0s, start=1):
@@ -242,19 +213,16 @@ class IterativeOptimiser:
                     "oracle_call_count": oracle_fn.call_count,
                 }
             )
-
             if LOG_RUNS:
-                row = [idx, x0, x, fx, dfx, len(history) - 1, oracle_fn.call_count]
-                print(
-                    row_format.format(
-                        *[
-                            c[3](v) if callable(c[3]) else c[3].format(v)
-                            for c, v in zip(cols, row)
-                        ]
-                    )
+                table.add_row(
+                    str(idx),
+                    format_array(x0),
+                    format_array(x),
+                    f"{fx:2.16f}",
+                    format_array(dfx),
+                    str(len(history) - 1),
+                    str(oracle_fn.call_count),
                 )
-        if LOG_RUNS:
-            print("\u251c" + "\u253c".join("\u2500" * c[2] for c in cols) + "\u2524")
 
         # Pick best run by lowest ||f'(x^*)||, if tied then prefer lower oracle call count
         if valid_runs := [
@@ -281,17 +249,19 @@ class IterativeOptimiser:
             x0 = np.full(oracle_fn.dim, np.nan)
             n_iters = ""
             n_oracle = ""
-        row = [run_idx, x0, self.x_star, self.fx_star, self.dfx_star, n_iters, n_oracle]
-        print(
-            row_format.format(
-                *[
-                    c[3](v) if callable(c[3]) else c[3].format(v)
-                    for c, v in zip(cols, row)
-                ]
-            )
-        )
 
-        print("\u2514" + "\u2534".join("\u2500" * c[2] for c in cols) + "\u2518")
+        table.add_row(
+            str(run_idx),
+            format_array(x0),
+            format_array(self.x_star),
+            f"{self.fx_star:2.16f}",
+            format_array(self.dfx_star),
+            str(n_iters),
+            str(n_oracle),
+            style="bold magenta",
+        )
+        if LOG_RUNS:
+            console.print(table)
 
     def plot(self):
         """Plots the history of `x` values during the optimisation."""
