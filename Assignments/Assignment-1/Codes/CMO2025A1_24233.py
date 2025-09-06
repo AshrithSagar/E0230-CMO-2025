@@ -6,9 +6,11 @@
 import math
 import os
 import sys
+import time
 
 import matplotlib.pyplot as plt
 import numpy as np
+import numpy.typing as npt
 from rich.console import Console
 from rich.live import Live
 from rich.table import Table
@@ -21,7 +23,7 @@ install()  # For rich tracebacks in case of errors
 console = Console()
 
 # Type Aliases
-floatVec = np.typing.NDArray[np.float64]
+floatVec = npt.NDArray[np.float64]
 """A type alias for a numpy array of real numbers (i.e., float)."""
 
 
@@ -39,6 +41,8 @@ LOG_RUNS: bool = True
 
 PLOT_CONVERGENCE: bool = True
 """Plot the convergence of the optimisation algorithms over iterations."""
+
+rng = np.random.default_rng(SRN)
 
 
 # ---------- Oracle utils ----------
@@ -521,6 +525,31 @@ class SteepestGradientDescentBacktracking(
         return eta
 
 
+# ---------- Utils ----------
+class LinearSystem:
+    def __init__(self, A: np.ndarray, b: np.ndarray):
+        self.A = A
+        self.b = b
+
+        self.dim = A.shape[1]
+        assert A.shape[0] == b.shape[0], "A and b must have compatible dimensions."
+
+    def solve(self) -> floatVec:
+        return np.linalg.solve(self.A, self.b)
+
+    def residual(self, x: floatVec) -> floatVec:
+        return self.A @ x - self.b
+
+    def make_oracle(self) -> FirstOrderOracle:
+        def oracle(_srn: int, x: floatVec) -> tuple[float, floatVec]:
+            r = self.residual(x)
+            f = float(0.5 * r.T @ r)
+            grad = self.A.T @ r
+            return f, grad
+
+        return FirstOrderOracle(oracle, dim=self.dim)
+
+
 # ---------- Questions ----------
 def question_1():
     console.rule("[bold green]Question 1")
@@ -597,9 +626,19 @@ def question_2():
 def question_3():
     console.rule("[bold green]Question 3")
 
+    t0 = time.perf_counter()
     A, b = oq3(SRN)
+    t1 = time.perf_counter()
+    console.print(
+        f"[bright_black]Time taken to load A, b from oracle: {t1 - t0:.6f} seconds[/]"
+    )
+    A: floatVec = np.array(A, dtype=np.float64)
+    b: floatVec = np.array(b.reshape(-1), dtype=np.float64)
     print(f"A.shape: {A.shape}")
     print(f"b.shape: {b.shape}")
+
+    ls = LinearSystem(A, b)
+    oracle = ls.make_oracle()
 
 
 # ---------- Main ----------
