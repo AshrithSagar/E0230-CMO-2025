@@ -4,3 +4,27 @@ Suppose \( x \in \mathbb{R} \).
 Show that \( e^{x} \geq 1+x \).
 
 \subsection*{Solution}
+
+We have
+\begin{align*}
+  e^{x}
+  & =
+  \sum_{n = 0}^{\infty} \frac{x^{n}}{n!} = 1 + x + \sum_{n=2}^{\infty} \frac{x^{n}}{n!}
+\end{align*}
+
+\paragraph{Alternate solution:}
+
+Define
+\begin{equation*}
+  g(x) \triangleq e^{x} - (1+x).
+\end{equation*}
+Then we have
+\begin{equation*}
+  g'(x) = e^{x} - 1, \quad g''(x) = e^{x}.
+\end{equation*}
+
+Note that \( g''(x) > 0 \) for all \( x \in \mathbb{R} \), which implies that \( g'(x) \) is strictly increasing.
+
+Also, \( g'(0) = 0 \).
+Thus, \( g'(x) < 0 \) for all \( x < 0 \) and \( g'(x) > 0 \) for all \( x > 0 \).
+This implies that \( g(x) \) is strictly decreasing for all \( x < 0 \) and strictly increasing for all \( x > 0 \).
