@@ -527,6 +527,10 @@ class SteepestGradientDescentBacktracking(
 
 # ---------- Utils ----------
 class LinearSystem:
+    """
+    A class to represent and solve a linear system of equations `Ax = b`.
+    """
+
     def __init__(self, A: np.ndarray, b: np.ndarray):
         self.A = A
         self.b = b
@@ -535,12 +539,21 @@ class LinearSystem:
         assert self.m == b.shape[0], "A and b must have compatible dimensions."
 
     def solve(self) -> floatVec:
+        """Solves the linear system `Ax = b` using numpy's solver."""
         return np.linalg.solve(self.A, self.b)
 
     def residual(self, x: floatVec) -> floatVec:
+        """Computes the residual `Ax - b` for a given `x`."""
         return self.A @ x - self.b
 
     def make_oracle(self) -> FirstOrderOracle:
+        """
+        Creates a first-order oracle for the least squares problem.
+
+        `f(x) = 0.5 * ||Ax - b||^2`\\
+        `f'(x) = A^T (Ax - b)`
+        """
+
         def oracle(_srn: int, x: floatVec) -> tuple[float, floatVec]:
             r = self.residual(x)
             f = float(0.5 * r.T @ r)
