@@ -99,6 +99,15 @@ class FirstOrderOracle:
         self.cache.clear()
         return self
 
+    @classmethod
+    def from_separate(cls, f_fn, grad_fn, dim: int, cache_digits: int = 32):
+        """Construct an oracle from separate f(x) and f'(x) functions."""
+
+        def oracle(srn: int, x: floatVec) -> tuple[float, floatVec]:
+            return f_fn(srn, x), grad_fn(srn, x)
+
+        return cls(oracle, dim=dim, cache_digits=cache_digits)
+
 
 # ---------- Algorithm Templates ----------
 class IterativeOptimiser:
@@ -378,9 +387,9 @@ class SteepestGradientDescentArmijo(SteepestDescentDirectionMixin, LineSearchOpt
         direction: floatVec,
         oracle_fn: FirstOrderOracle,
     ) -> float:
-        alpha: float = self.config.get("alpha", 0.3)
-        beta: float = self.config.get("beta", 0.8)
-        eta: float = self.config.get("initial_step_size", 1.0)
+        alpha = float(self.config.get("alpha", 0.3))
+        beta = float(self.config.get("beta", 0.8))
+        eta = float(self.config.get("initial_step_size", 1.0))
 
         while True:
             new_x = x + eta * direction
@@ -414,9 +423,9 @@ class SteepestGradientDescentArmijoGoldstein(
         direction: floatVec,
         oracle_fn: FirstOrderOracle,
     ) -> float:
-        alpha: float = self.config.get("alpha", 0.3)
-        beta: float = self.config.get("beta", 0.8)
-        eta: float = self.config.get("initial_step_size", 1.0)
+        alpha = float(self.config.get("alpha", 0.3))
+        beta = float(self.config.get("beta", 0.8))
+        eta = float(self.config.get("initial_step_size", 1.0))
 
         while True:
             new_x = x + eta * direction
@@ -450,9 +459,9 @@ class SteepestGradientDescentWolfe(SteepestDescentDirectionMixin, LineSearchOpti
         direction: floatVec,
         oracle_fn: FirstOrderOracle,
     ) -> float:
-        alpha: float = self.config.get("alpha", 0.3)
-        beta: float = self.config.get("beta", 0.8)
-        eta: float = self.config.get("initial_step_size", 1.0)
+        alpha = float(self.config.get("alpha", 0.3))
+        beta = float(self.config.get("beta", 0.8))
+        eta = float(self.config.get("initial_step_size", 1.0))
 
         while True:
             new_x = x + eta * direction
@@ -487,9 +496,9 @@ class SteepestGradientDescentBacktracking(
         direction: floatVec,
         oracle_fn: FirstOrderOracle,
     ) -> float:
-        alpha: float = self.config.get("alpha", 0.3)
-        beta: float = self.config.get("beta", 0.8)
-        eta: float = self.config.get("initial_step_size", 1.0)
+        alpha = float(self.config.get("alpha", 0.3))
+        beta = float(self.config.get("beta", 0.8))
+        eta = float(self.config.get("initial_step_size", 1.0))
 
         while True:
             new_x = x + eta * direction
@@ -519,15 +528,15 @@ def question_1():
         print(" ".join(f"{val:13.8f}" for val in Q[1]) + " \u2502")
         print(" " * 7 + "\u2514" + " " * 28 + "\u2518")
 
-        oracle_f = FirstOrderOracle(
+        oracle = FirstOrderOracle(
             lambda _, x: (0.5 * x.T @ Q @ x + b.T @ x, Q @ x + b), dim=2
         )
         optim = SteepestGradientDescentExactLineSearch(Q=Q)
         x0s = [np.array([1.0, 1.0]), np.array([-1.0, -1.0])]
-        optim.run(oracle_f, x0s=x0s, maxiter=1_000, tol=1e-13)
+        optim.run(oracle, x0s=x0s, maxiter=1_000, tol=1e-13)
 
         x_star_analytical = -np.linalg.solve(Q, b)
-        fx_star_analytical, dfx_star_analytical = oracle_f(x_star_analytical)
+        fx_star_analytical, dfx_star_analytical = oracle(x_star_analytical)
         console.print("[bold green]Analytical solution:[/]")
         print(f"x* = {x_star_analytical}")
         print(f"f(x*) = {fx_star_analytical:2.16f}")
@@ -547,8 +556,26 @@ def question_1():
 def question_2():
     console.rule("[bold green]Question 2")
 
-    oracle_f = FirstOrderOracle(oq2f, dim=5)  # noqa: F841
-    oracle_g = FirstOrderOracle(oq2g, dim=5)  # noqa: F841
+    def grad_fn(srn: int, x: floatVec) -> floatVec:
+        g: floatVec = oq2g(srn, x)
+        return g.reshape(-1)
+
+    oracle = FirstOrderOracle.from_separate(oq2f, grad_fn, dim=5)
+
+    optimisers: list[IterativeOptimiser] = [
+        SteepestGradientDescentArmijo(alpha=0.3, beta=0.8, initial_step_size=1.0),
+        SteepestGradientDescentArmijoGoldstein(
+            alpha=0.3, beta=0.8, initial_step_size=1.0
+        ),
+        SteepestGradientDescentWolfe(alpha=0.3, beta=0.8, initial_step_size=1.0),
+        SteepestGradientDescentBacktracking(alpha=0.3, beta=0.8, initial_step_size=1.0),
+    ]
+    x0s = [
+        np.array([1.0, 1.0, 1.0, 1.0, 1.0]),
+        np.array([-1.0, -1.0, -1.0, -1.0, -1.0]),
+    ]
+    for optim in optimisers:
+        optim.run(oracle, x0s=x0s, maxiter=1_000, tol=1e-7)
 
 
 def question_3():
