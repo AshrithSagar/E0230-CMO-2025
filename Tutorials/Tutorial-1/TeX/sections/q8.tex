@@ -1,3 +1,53 @@
 \section*{Question 8}
 
+Suppose we have matrices \( A \in \mathbb{R}^{n \times n} \) and \( B \in \mathbb{R}^{m \times n}, m \neq n \).
+\begin{enumerate}[label=(\alph*), noitemsep]
+  \item Suppose \( A \) has \( n \) orthogonal eigenvectors.
+    Show that we can write \( A=V^{\top} \Lambda V \), where the columns of \( V \) are the eigenvectors of \( A \), and the diagonal elements of \( \Lambda \) are the eigenvalues of \( A \).
+    When are we unable to use this decomposition? Verify this with the matrices
+    \begin{equation*}
+      A_1 =
+      \begin{bmatrix}
+        2 & 1 \\
+        1 & 3
+      \end{bmatrix}
+      \qquad
+      A_2 =
+      \begin{bmatrix}
+        2 & 0.5 \\
+        1 & 3
+      \end{bmatrix}
+    \end{equation*}
+
+  \item Suppose \( B \) is of rank \( r \).
+    What are the ranks of \( B B^{\top} \) and \( B^{\top} B \)?
+    With this result, what can you say about the row and column ranks of \( B \) and \( B^{\top} \)?
+
+  \item Show that we can decompose \( B=U \Sigma V^{\top} \), where \( \Sigma \) is diagonal and positive-semidefinite, and \( U \) and \( V \) have orthogonal columns.
+    The diagonal elements of \( \Sigma \) are known as the singular values -- how would you define them?
+    Verify these results with the matrix
+    \begin{equation*}
+      B =
+      \begin{bmatrix}
+        4 & -1 & 5 \\
+        1 & 3 & -2
+      \end{bmatrix}
+    \end{equation*}
+
+  \item Let \( B \in \mathbb{R}^{m \times n} \) be of rank \( n<m \).
+    Show that \( {\Vert B \Vert}_{F}=\sqrt{\sum_{k} \sigma_{k}(B)^{2}} \), where \( \sigma_{k}(B) \) is the \( k \) th largest singular value of \( B \).
+    Using this result, show that \( {\Vert B \Vert}_{F}^{2} \geq n\left(\operatorname{det}\left(B^{\top} B\right)\right)^{\frac{1}{n}} \).
+    Verify these results with \( \hat{B}=B^{\top} \) from the previous example (in this example, \( n=2 \) and \( m=3 \) ).
+
+  \item Consider the function \( f: U \rightarrow \mathbb{R} \), where \( f(x)=x^{\top} A x \) and \( U \) is the set of all unit vectors of dimension \( n \).
+    Show that, if \( A \) is symmetric, \( \operatorname{range}(f) \subseteq\left[\lambda_{\min }(A), \lambda_{\max }(A)\right] \).
+
+  \item What is the solution to
+    \begin{equation*}
+      s^{*}=\max _{x: {\Vert x \Vert}_{2}=1} x^{\top} B x
+    \end{equation*}
+    where \( B \) is symmetric?
+    Remark: \( s^{*} \) is the Spectral norm of \( B \), denoted by \( \Vert B \Vert_{2} \).
+\end{enumerate}
+
 \subsection*{Solution}
