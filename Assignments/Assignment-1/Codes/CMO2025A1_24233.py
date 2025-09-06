@@ -291,6 +291,10 @@ class LineSearchOptimiser(IterativeOptimiser):
     where `eta_k` is the step size along the descent direction `d_k`.
     """
 
+    def _initialise_state(self):
+        super()._initialise_state()
+        self.step_sizes: list[float] = []
+
     def _direction(self, x: floatVec, grad: floatVec) -> floatVec:
         """
         Returns the descent direction `d_k` to move towards from `x_k`.\\
@@ -315,7 +319,12 @@ class LineSearchOptimiser(IterativeOptimiser):
     def _step(self, x, k, f, grad, oracle_fn):
         d_k = self._direction(x, grad)
         eta_k = self._step_size(x, k, f, grad, d_k, oracle_fn)
+        self.step_sizes.append(eta_k)
         return x + eta_k * d_k
+
+    def plot_step_sizes(self):
+        """Plot step sizes vs iterations for the best run."""
+        plt.plot(self.step_sizes, marker="o", label=self.name)
 
 
 class SteepestDescentDirectionMixin(LineSearchOptimiser):
@@ -562,7 +571,7 @@ def question_2():
 
     oracle = FirstOrderOracle.from_separate(oq2f, grad_fn, dim=5)
 
-    optimisers: list[IterativeOptimiser] = [
+    optimisers: list[LineSearchOptimiser] = [
         SteepestGradientDescentArmijo(alpha=0.3, beta=0.8, initial_step_size=1.0),
         SteepestGradientDescentArmijoGoldstein(
             alpha=0.3, beta=0.8, initial_step_size=1.0
@@ -574,8 +583,15 @@ def question_2():
         np.array([1.0, 1.0, 1.0, 1.0, 1.0]),
         np.array([-1.0, -1.0, -1.0, -1.0, -1.0]),
     ]
+    plt.figure()
     for optim in optimisers:
         optim.run(oracle, x0s=x0s, maxiter=1_000, tol=1e-7)
+        optim.plot_step_sizes()
+    plt.title(r"Step Size vs Iteration for different (Inexact) Line Search methods")
+    plt.xlabel(r"Iteration $k$")
+    plt.ylabel(r"Step Size $\eta_k$")
+    plt.legend()
+    plt.grid(True)
 
 
 def question_3():
