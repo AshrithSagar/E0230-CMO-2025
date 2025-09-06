@@ -68,6 +68,16 @@ If \( f \in \mathcal{C}^2 \), then \( f \) is convex if
     \quad \forall \mathbf{x} \in \mathbb{R}^n
 \end{equation*}
 
+\paragraph{Strong convexity:}
+A function \( f: \mathbb{R}^n \to \mathbb{R} \) is \textbf{strongly convex} with parameter \( m > 0 \) if
+\begin{equation*}
+    f(\lambda \mathbf{x} + (1 - \lambda) \mathbf{y})
+    \leq
+    \lambda f(\mathbf{x}) + (1 - \lambda) f(\mathbf{y})
+    - \frac{m}{2} \lambda (1 - \lambda) \Vert \mathbf{x} - \mathbf{y} \Vert^2,
+    \quad \forall \mathbf{x}, \mathbf{y} \in \mathbb{R}^n, \; \lambda \in [0, 1]
+\end{equation*}
+
 \section{Algorithmic design}
 
 \subsection{Iterative algorithm template}
