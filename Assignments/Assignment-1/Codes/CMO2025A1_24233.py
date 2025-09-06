@@ -531,8 +531,8 @@ class LinearSystem:
         self.A = A
         self.b = b
 
-        self.dim = A.shape[1]
-        assert A.shape[0] == b.shape[0], "A and b must have compatible dimensions."
+        self.m, self.n = A.shape
+        assert self.m == b.shape[0], "A and b must have compatible dimensions."
 
     def solve(self) -> floatVec:
         return np.linalg.solve(self.A, self.b)
@@ -547,7 +547,7 @@ class LinearSystem:
             grad = self.A.T @ r
             return f, grad
 
-        return FirstOrderOracle(oracle, dim=self.dim)
+        return FirstOrderOracle(oracle, dim=self.n)
 
 
 # ---------- Questions ----------
