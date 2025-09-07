@@ -194,11 +194,12 @@ The \textbf{gradient} of a function \( f: \mathbb{R}^d \to \mathbb{R} \) at a po
 
 The \textbf{Hessian} of a function \( f: \mathbb{R}^d \to \mathbb{R} \) at a point \( \mathbf{x} = \left(x_1, x_2, \ldots, x_d\right)^{\top} \in \mathbb{R}^d \) is defined as
 \begin{equation*}
-    \nabla^2 f(\mathbf{x}) = \begin{bmatrix}
-    \cfrac{\partial^2 f}{\partial x_1^2}(\mathbf{x}) & \cfrac{\partial^2 f}{\partial x_1 \partial x_2}(\mathbf{x}) & \cdots & \cfrac{\partial^2 f}{\partial x_1 \partial x_d}(\mathbf{x}) \\
-    \cfrac{\partial^2 f}{\partial x_2 \partial x_1}(\mathbf{x}) & \cfrac{\partial^2 f}{\partial x_2^2}(\mathbf{x}) & \cdots & \cfrac{\partial^2 f}{\partial x_2 \partial x_d}(\mathbf{x}) \\
-    \vdots & \vdots & \ddots & \vdots \\
-    \cfrac{\partial^2 f}{\partial x_d \partial x_1}(\mathbf{x}) & \cfrac{\partial^2 f}{\partial x_d \partial x_2}(\mathbf{x}) & \cdots & \cfrac{\partial^2 f}{\partial x_d^2}(\mathbf{x})
+    \nabla^2 f(\mathbf{x}) =
+    \begin{bmatrix}
+        \cfrac{\partial^2 f}{\partial x_1^2}(\mathbf{x}) & \cfrac{\partial^2 f}{\partial x_1 \partial x_2}(\mathbf{x}) & \cdots & \cfrac{\partial^2 f}{\partial x_1 \partial x_d}(\mathbf{x}) \\
+        \cfrac{\partial^2 f}{\partial x_2 \partial x_1}(\mathbf{x}) & \cfrac{\partial^2 f}{\partial x_2^2}(\mathbf{x}) & \cdots & \cfrac{\partial^2 f}{\partial x_2 \partial x_d}(\mathbf{x}) \\
+        \vdots & \vdots & \ddots & \vdots \\
+        \cfrac{\partial^2 f}{\partial x_d \partial x_1}(\mathbf{x}) & \cfrac{\partial^2 f}{\partial x_d \partial x_2}(\mathbf{x}) & \cdots & \cfrac{\partial^2 f}{\partial x_d^2}(\mathbf{x})
     \end{bmatrix}
     \in \mathbb{R}^{d \times d}
 \end{equation*}
@@ -230,12 +231,12 @@ If a function is of class \( \mathcal{C}^k \ \forall k \in \mathbb{N} \), it is 
     \item If \( f \in \mathcal{C}^k \), then \( f \in \mathcal{C}^{k-1} \), for \( k \geq 1 \).
 
     \item (Schwarz's theorem) If \( f \in \mathcal{C}^2 \), then \( \nabla^2 f(\mathbf{x}) \in \mathbf{S}_d\), i.e., \( \nabla^2 f(\mathbf{x}) \) is symmetric.
-    \begin{equation*}
-        \frac{\partial^2 f}{\partial x_i \partial x_j}
-        =
-        \frac{\partial^2 f}{\partial x_j \partial x_i},
-        \quad \forall i, j = 1, 2, \ldots, d
-    \end{equation*}
+        \begin{equation*}
+            \frac{\partial^2 f}{\partial x_i \partial x_j}
+            =
+            \frac{\partial^2 f}{\partial x_j \partial x_i},
+            \quad \forall i, j = 1, 2, \ldots, d
+        \end{equation*}
 
     \item If \( f, g \in \mathcal{C}^k \), then \( f + g, f \cdot g \in \mathcal{C}^k \).
 
@@ -262,12 +263,12 @@ Here, we denote \( f \in \mathcal{C}^{1}_L \) to mean that \( f \) is \( L \)-sm
     \item If \( f \in \mathcal{C}^{2} \), then \( f \in \mathcal{C}^{1}_L \) iff \( \nabla^2 f(\mathbf{x}) \preceq L \mathbf{I}, \ \forall \mathbf{x} \in \mathbb{R}^d \).
 
     \item If \( f \in \mathcal{C}^{1}_L \), then
-    \begin{equation*}
-        \left\vert f(\mathbf{y}) - f(\mathbf{x}) - {\nabla f(\mathbf{x})}^\top (\mathbf{y} - \mathbf{x}) \right\vert
-        \leq
-        \frac{L}{2} {\Vert \mathbf{y} - \mathbf{x} \Vert}^2,
-        \quad \forall \mathbf{x}, \mathbf{y} \in \mathbb{R}^d
-    \end{equation*}
+        \begin{equation*}
+            \left\vert f(\mathbf{y}) - f(\mathbf{x}) - {\nabla f(\mathbf{x})}^\top (\mathbf{y} - \mathbf{x}) \right\vert
+            \leq
+            \frac{L}{2} {\Vert \mathbf{y} - \mathbf{x} \Vert}^2,
+            \quad \forall \mathbf{x}, \mathbf{y} \in \mathbb{R}^d
+        \end{equation*}
 \end{itemize}
 
 \subsection{Kantorovich inequality}\label{sec:kantorovich-inequality}
