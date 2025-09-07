@@ -215,6 +215,20 @@ If a function \( f: S \to \mathbb{R} \) is continuous on a set \( S \subseteq \m
 
 \subsubsection{Univariate Taylor's theorem}
 
+Let \( f: \mathbb{R} \to \mathbb{R} \) be \( (n+1) \) times continuously differentiable on an interval containing \( a \) and \( x \).
+Then, for some \( \xi \) between \( a \) and \( x \),
+\begin{align*}
+    f(x)
+    & =
+    f(a) + f'(a)(x - a) + \frac{f''(a)}{2!}{(x - a)}^2 + \cdots + \frac{f^{(n)}(a)}{n!}{(x - a)}^n + R_{n+1}(x)
+    \\ & =
+    \sum_{k=0}^{n} \frac{f^{(k)}(a)}{k!} {(x - a)}^k + R_{n+1}(x)
+\end{align*}
+where the remainder term \( R_{n+1}(x) \) is given by the Lagrange form:
+\begin{equation*}
+    R_{n+1}(x) = \frac{f^{(n+1)}(\xi)}{(n+1)!} {(x - a)}^{n+1}
+\end{equation*}
+
 \subsubsection{Multivariate Taylor's theorem}
 
 \subsection{Levels of smoothness}
