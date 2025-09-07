@@ -2,39 +2,39 @@
 
 Suppose \( f: \mathbb{R}^{n} \rightarrow \mathbb{R} \) is a convex function; that is, for each \( x, y \) and each \( \alpha \in[0,1] \), we have
 \begin{equation*}
-  f(\alpha x+(1-\alpha) y) \leq \alpha f(x)+(1-\alpha) f(y)
+    f(\alpha x+(1-\alpha) y) \leq \alpha f(x)+(1-\alpha) f(y)
 \end{equation*}
 Prove the following.
 \begin{enumerate}[label=(\alph*), noitemsep]
-  \item Show that if \( f \) is convex, then every local minimum is a global minimum as well.
+    \item Show that if \( f \) is convex, then every local minimum is a global minimum as well.
 
-  \item Show that if \( f \) is convex, then for each \( x, y \), we have
-    \begin{equation*}
-      f(y) \geq f(x)+\nabla f(x)^{\top}(y-x)
-    \end{equation*}
+    \item Show that if \( f \) is convex, then for each \( x, y \), we have
+        \begin{equation*}
+            f(y) \geq f(x)+\nabla f(x)^{\top}(y-x)
+        \end{equation*}
 
-  \item Show that \( f \) is convex if and only if \( \nabla f(x) \) satisfies, for each \( x, y \),
-    \begin{equation*}
-      (\nabla f(x)-\nabla f(y))^{\top}(x-y) \geq 0 .
-    \end{equation*}
-    Use this property to verify if the function
-    \begin{equation*}
-      x^{\top} Q x,
-      \quad
-      Q =
-      \begin{bmatrix}
-        3 & 2 \\
-        2 & 2
-      \end{bmatrix}
-    \end{equation*}
-    is convex.
+    \item Show that \( f \) is convex if and only if \( \nabla f(x) \) satisfies, for each \( x, y \),
+        \begin{equation*}
+            (\nabla f(x)-\nabla f(y))^{\top}(x-y) \geq 0 .
+        \end{equation*}
+        Use this property to verify if the function
+        \begin{equation*}
+            x^{\top} Q x,
+            \quad
+            Q =
+            \begin{bmatrix}
+                3 & 2 \\
+                2 & 2
+            \end{bmatrix}
+        \end{equation*}
+        is convex.
 
-  \item Suppose \( f \in C^{2} \).
-    Then, show that for each \( x, H_{f}(x) \equiv \nabla^{2} f(x) \) is positive semidefinite.
-    Furthermore, show that the converse is true as well. Use this property to check the convexity of the function given in Problem 6.
+    \item Suppose \( f \in C^{2} \).
+        Then, show that for each \( x, H_{f}(x) \equiv \nabla^{2} f(x) \) is positive semidefinite.
+        Furthermore, show that the converse is true as well. Use this property to check the convexity of the function given in Problem 6.
 
-  \item Show that the set \( S:=\{x: f(x) \leq t\} \), assuming \( S \) is nonempty, is convex.
-    Verify this property for the function \( f(x)=e^{x} \), and where \( t=e \).
+    \item Show that the set \( S:=\{x: f(x) \leq t\} \), assuming \( S \) is nonempty, is convex.
+        Verify this property for the function \( f(x)=e^{x} \), and where \( t=e \).
 \end{enumerate}
 
 \subsection*{Solution}
