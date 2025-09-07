@@ -42,50 +42,46 @@ If \( f \in \mathcal{C}^{2} \), \( \nabla f(\mathbf{x}^*) = \mathbf{0} \) and \(
 
 If \( f \in \mathcal{C}^1 \) is a convex function and \( \nabla f(\mathbf{x}^*) = \mathbf{0} \), then \( \mathbf{x}^* \) is a global minimum of \( f \).
 
-\subsection{Convex functions}
+\subsection{Convexity}
 
-A function $f: \mathbb{R}^n \to \mathbb{R}$ is \textbf{convex} if
-\begin{equation*}
-    f(\lambda \mathbf{x} + (1 - \lambda) \mathbf{y})
-    \leq
-    \lambda f(\mathbf{x}) + (1 - \lambda) f(\mathbf{y}),
-    \quad \forall \mathbf{x}, \mathbf{y} \in \mathbb{R}^n, \; \lambda \in [0, 1]
-\end{equation*}
+\begin{definition}{Convex set}{}
+    A set \( S \subseteq \mathbb{R}^n \) is \textbf{convex} if
+    \begin{equation*}
+        \lambda \mathbf{x} + (1 - \lambda) \mathbf{y} \in S,
+        \quad \forall \mathbf{x}, \mathbf{y} \in S,
+        \; \lambda \in [0, 1]
+    \end{equation*}
+\end{definition}
 
-\paragraph{First-order condition for convexity:}
-If \( f \in \mathcal{C}^1 \), then \( f \) is convex iff
-\begin{equation*}
-    f(\mathbf{y})
-    \geq
-    f(\mathbf{x}) + {\nabla f(\mathbf{x})}^\top (\mathbf{y} - \mathbf{x}),
-    \quad \forall \mathbf{x}, \mathbf{y} \in \mathbb{R}^n
-\end{equation*}
+\begin{definition}{Convex function}{}
+    A function $f: D \subseteq \mathbb{R}^n \to \mathbb{R}$ is \textbf{convex} on a convex set \( D \) if
+    \begin{equation*}
+        f(\lambda \mathbf{x} + (1 - \lambda) \mathbf{y})
+        \leq
+        \lambda f(\mathbf{x}) + (1 - \lambda) f(\mathbf{y}),
+        \quad \forall \mathbf{x}, \mathbf{y} \in D,
+        \; \lambda \in [0, 1]
+    \end{equation*}
+\end{definition}
 
-\paragraph{Second-order condition for convexity:}
-If \( f \in \mathcal{C}^2 \), then \( f \) is convex if
-\begin{equation*}
-    \nabla^2 f(\mathbf{x}) \succeq 0,
-    \quad \forall \mathbf{x} \in \mathbb{R}^n
-\end{equation*}
+\begin{theorem}{First-order condition for convexity}{}
+    For a function \( f \in \mathcal{C}^1 \), \( f \) is convex on \( D \) iff
+    \begin{equation*}
+        f(\mathbf{y})
+        \geq
+        f(\mathbf{x}) + {\nabla f(\mathbf{x})}^\top (\mathbf{y} - \mathbf{x}),
+        \quad \forall \mathbf{x}, \mathbf{y} \in \mathbb{R}^n
+    \end{equation*}
+\end{theorem}
 
-\paragraph{Strong convexity:}
-A function \( f: \mathbb{R}^n \to \mathbb{R} \) is \textbf{strongly convex} with parameter \( m > 0 \) if
-\begin{equation*}
-    f(\lambda \mathbf{x} + (1 - \lambda) \mathbf{y})
-    \leq
-    \lambda f(\mathbf{x}) + (1 - \lambda) f(\mathbf{y})
-    - \frac{m}{2} \lambda (1 - \lambda) \Vert \mathbf{x} - \mathbf{y} \Vert^2,
-    \quad \forall \mathbf{x}, \mathbf{y} \in \mathbb{R}^n, \; \lambda \in [0, 1]
-\end{equation*}
-
-\begin{theorem}
+\begin{corollary}{}{}
     A function \( f: D \subseteq \mathbb{R}^n \to \mathbb{R} \) is convex iff its domain \( D \) is convex and
     \begin{equation*}
         {\big( \nabla f(\mathbf{x}) - \nabla f(\mathbf{y}) \big)}^{\top} \big( \mathbf{x} - \mathbf{y} \big) \geq 0
         , \quad
         \forall \mathbf{x}, \mathbf{y} \in D
     \end{equation*}
-\end{theorem}
+\end{corollary}
 
 \begin{proof}
     \( (\Rightarrow) \)
@@ -142,8 +138,8 @@ A function \( f: \mathbb{R}^n \to \mathbb{R} \) is \textbf{strongly convex} with
     for all \( \mathbf{x}, \mathbf{y} \in D \), which is the first-order condition for convexity, and thereby \( f \) is convex.
 \end{proof}
 
-\begin{theorem}
-    For a function \( f \in \mathcal{C}^2 \), \( f \) is convex iff
+\begin{theorem}{Second-order condition for convexity}{}
+    For a function \( f \in \mathcal{C}^2 \), \( f \) is convex on \( D \) iff
     \begin{equation*}
         \nabla^2 f(\mathbf{x}) \succeq 0
         , \quad
@@ -195,6 +191,17 @@ A function \( f: \mathbb{R}^n \to \mathbb{R} \) is \textbf{strongly convex} with
     \end{equation*}
     which is the first-order condition for convexity, and thereby \( f \) is convex.
 \end{proof}
+
+\begin{definition}{Strong convexity}{}
+    A function \( f: \mathbb{R}^n \to \mathbb{R} \) is \textbf{strongly convex} with parameter \( m > 0 \) if
+    \begin{equation*}
+        f(\lambda \mathbf{x} + (1 - \lambda) \mathbf{y})
+        \leq
+        \lambda f(\mathbf{x}) + (1 - \lambda) f(\mathbf{y})
+        - \frac{m}{2} \lambda (1 - \lambda) \Vert \mathbf{x} - \mathbf{y} \Vert^2,
+        \quad \forall \mathbf{x}, \mathbf{y} \in \mathbb{R}^n, \; \lambda \in [0, 1]
+    \end{equation*}
+\end{definition}
 
 \section{Algorithmic design}
 

@@ -35,15 +35,30 @@
 \setlength{\parindent}{0pt}
 \setlist{noitemsep, topsep=0pt}
 
-\newtheorem{lemma}{Lemma}
-\newtheorem{definition}{Definition}
-\newtheorem{theorem}{Theorem}
-\tcolorboxenvironment{theorem}{
-    colback=white,
-    sharp corners,
+\NewTcbTheorem[number within=section]{definition}{Definition}{
+    colback=cyan!5!white,
     boxrule=0.8pt,
+    fonttitle=\bfseries,
     enhanced,
-}
+}{def}
+\NewTcbTheorem[number within=section]{theorem}{Theorem}{
+    colback=green!5!white,
+    boxrule=0.8pt,
+    fonttitle=\bfseries,
+    enhanced,
+}{th}
+\NewTcbTheorem[number within=section]{lemma}{Lemma}{
+    colback=green!5!white,
+    boxrule=0.8pt,
+    fonttitle=\bfseries,
+    enhanced,
+}{lem}
+\NewTcbTheorem[number within=section]{corollary}{Corollary}{
+    colback=yellow!5!white,
+    boxrule=0.8pt,
+    fonttitle=\bfseries,
+    enhanced,
+}{cor}
 
 \intervalconfig{soft open fences}
 
