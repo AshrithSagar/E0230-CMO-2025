@@ -65,7 +65,7 @@ If \( f \in \mathcal{C}^1 \) is a convex function and \( \nabla f(\mathbf{x}^*) 
 \end{definition}
 
 \begin{theorem}{First-order condition for convexity}{}
-    For a function \( f \in \mathcal{C}^1 \), \( f \) is convex on \( D \) iff
+    For a function \( f \in \mathcal{C}^1 \) with a convex domain \( D \), \( f \) is convex on \( D \) iff
     \begin{equation*}
         f(\mathbf{y})
         \geq
@@ -74,8 +74,30 @@ If \( f \in \mathcal{C}^1 \) is a convex function and \( \nabla f(\mathbf{x}^*) 
     \end{equation*}
 \end{theorem}
 
+\begin{proof}
+    \( (\Rightarrow) \)
+    Rearranging the definition of convexity, we get
+    \begin{equation*}
+        \frac{f(\lambda \mathbf{x} + (1 - \lambda) \mathbf{y}) - f(\mathbf{x})}{\lambda}
+        \leq
+        f(\mathbf{y}) - f(\mathbf{x}),
+        \quad \forall \mathbf{x}, \mathbf{y} \in D,
+        \; \lambda \in \linterval{0}{1}
+    \end{equation*}
+    Taking the limit as \( \lambda \to 0^+ \), we have
+    \begin{equation*}
+        {\nabla f(\mathbf{x})}^{\top} (\mathbf{y} - \mathbf{x})
+        =
+        \lim_{\lambda \to 0^+} \frac{f(\lambda \mathbf{x} + (1 - \lambda) \mathbf{y}) - f(\mathbf{x})}{\lambda}
+        \leq
+        f(\mathbf{y}) - f(\mathbf{x}),
+        \quad \forall \mathbf{x}, \mathbf{y} \in D
+    \end{equation*}
+    which is the desired result.
+\end{proof}
+
 \begin{corollary}{}{}
-    A function \( f: D \subseteq \mathbb{R}^n \to \mathbb{R} \) is convex iff its domain \( D \) is convex and
+    For a function \( f \in \mathcal{C}^1 \) with a convex domain \( D \), \( f \) is convex on \( D \) iff
     \begin{equation*}
         {\big( \nabla f(\mathbf{x}) - \nabla f(\mathbf{y}) \big)}^{\top} \big( \mathbf{x} - \mathbf{y} \big) \geq 0
         , \quad
@@ -139,7 +161,7 @@ If \( f \in \mathcal{C}^1 \) is a convex function and \( \nabla f(\mathbf{x}^*) 
 \end{proof}
 
 \begin{theorem}{Second-order condition for convexity}{}
-    For a function \( f \in \mathcal{C}^2 \), \( f \) is convex on \( D \) iff
+    For a function \( f \in \mathcal{C}^2 \) with a convex domain \( D \), \( f \) is convex on \( D \) iff
     \begin{equation*}
         \nabla^2 f(\mathbf{x}) \succeq 0
         , \quad
