@@ -151,6 +151,51 @@ A function \( f: \mathbb{R}^n \to \mathbb{R} \) is \textbf{strongly convex} with
     \end{equation*}
 \end{theorem}
 
+\begin{proof}
+    \( (\Rightarrow) \)
+    The first-order condition for convexity can be rewritten as
+    \begin{equation*}
+        f(\mathbf{y}) - f(\mathbf{x}) - {\nabla f(\mathbf{x})}^{\top} (\mathbf{y} - \mathbf{x}) \geq 0
+        , \quad
+        \forall \mathbf{x}, \mathbf{y} \in D
+    \end{equation*}
+    Using Taylor's theorem, we have
+    \begin{equation*}
+        f(\mathbf{y}) - f(\mathbf{x}) - {\nabla f(\mathbf{x})}^{\top} (\mathbf{y} - \mathbf{x})
+        =
+        \frac{1}{2} {(\mathbf{y} - \mathbf{x})}^{\top} \nabla^2 f(\boldsymbol{\xi}) (\mathbf{y} - \mathbf{x})
+        , \quad
+        \boldsymbol{\xi} = (1 - t) \mathbf{x} + t \mathbf{y}, \; t \in (0, 1)
+    \end{equation*}
+    for some \( t \in (0, 1) \).
+    Therefore, we have
+    \begin{equation*}
+        {(\mathbf{y} - \mathbf{x})}^{\top} \nabla^2 f(\boldsymbol{\xi}) (\mathbf{y} - \mathbf{x}) \geq 0
+        , \quad
+        \forall \mathbf{x}, \mathbf{y} \in D
+    \end{equation*}
+    which implies \( \nabla^2 f(\mathbf{x}) \succeq 0, \; \forall \mathbf{x} \in D \).
+    (Note: \( \boldsymbol{\xi} \in D \) since \( D \) is convex.)
+
+    \( (\Leftarrow) \)
+    From Taylor's theorem, we have
+    \begin{equation*}
+        f(\mathbf{y}) - f(\mathbf{x}) - {\nabla f(\mathbf{x})}^{\top} (\mathbf{y} - \mathbf{x})
+        =
+        \frac{1}{2} {(\mathbf{y} - \mathbf{x})}^{\top} \nabla^2 f(\boldsymbol{\xi}) (\mathbf{y} - \mathbf{x})
+        , \quad
+        \boldsymbol{\xi} = (1 - t) \mathbf{x} + t \mathbf{y}, \; t \in (0, 1)
+    \end{equation*}
+    for some \( t \in (0, 1) \).
+    Since \( \nabla^2 f(\mathbf{x}) \succeq 0, \; \forall \mathbf{x} \in D \), we have
+    \begin{equation*}
+        f(\mathbf{y}) - f(\mathbf{x}) - {\nabla f(\mathbf{x})}^{\top} (\mathbf{y} - \mathbf{x}) \geq 0
+        , \quad
+        \forall \mathbf{x}, \mathbf{y} \in D
+    \end{equation*}
+    which is the first-order condition for convexity, and thereby \( f \) is convex.
+\end{proof}
+
 \section{Algorithmic design}
 
 \subsection{Iterative algorithm template}
