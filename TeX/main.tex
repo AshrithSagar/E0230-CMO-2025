@@ -4,6 +4,7 @@
 \usepackage{amsfonts, amsmath, amssymb, amsthm, cancel, interval, latexsym, mathtools}
 \usepackage{enumitem, geometry, graphicx, hyperref, microtype, titlesec, tocloft}
 \usepackage[linesnumbered,ruled,vlined]{algorithm2e}
+\usepackage[most]{tcolorbox}
 \usepackage[numbers,sort]{natbib}
 \usepackage[dvipsnames]{xcolor}
 
@@ -37,6 +38,12 @@
 \newtheorem{lemma}{Lemma}
 \newtheorem{definition}{Definition}
 \newtheorem{theorem}{Theorem}
+\tcolorboxenvironment{theorem}{
+    colback=white,
+    sharp corners,
+    boxrule=0.8pt,
+    enhanced,
+}
 
 \intervalconfig{soft open fences}
 
