@@ -78,6 +78,24 @@ A function \( f: \mathbb{R}^n \to \mathbb{R} \) is \textbf{strongly convex} with
     \quad \forall \mathbf{x}, \mathbf{y} \in \mathbb{R}^n, \; \lambda \in [0, 1]
 \end{equation*}
 
+\begin{theorem}
+    A function \( f: D \subseteq \mathbb{R}^n \to \mathbb{R} \) is convex iff its domain \( D \) is convex and
+    \begin{equation*}
+        {\big( \nabla f(\mathbf{x}) - \nabla f(\mathbf{y}) \big)}^{\top} \big( \mathbf{x} - \mathbf{y} \big) \geq 0
+        , \quad
+        \forall \mathbf{x}, \mathbf{y} \in D
+    \end{equation*}
+\end{theorem}
+
+\begin{theorem}
+    For a function \( f \in \mathcal{C}^2 \), \( f \) is convex iff
+    \begin{equation*}
+        \nabla^2 f(\mathbf{x}) \succeq 0
+        , \quad
+        \forall \mathbf{x} \in D
+    \end{equation*}
+\end{theorem}
+
 \section{Algorithmic design}
 
 \subsection{Iterative algorithm template}
