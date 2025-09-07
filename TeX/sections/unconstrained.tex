@@ -583,3 +583,14 @@ where \( \rho \in \rinterval{0}{1} \) since \( \mathbf{Q} \succ \mathbf{0} \impl
     c_2 \left| {\nabla f(\mathbf{x}^{(k)})}^{\top} \mathbf{p}^{(k)} \right|,
     \quad c_2 \in (c_1, 1)
 \end{equation*}
+
+\begin{lemma}{Sufficient decrease lemma (Armijo condition)}{}
+    Suppose \( f \in \mathcal{C}^{1} \) is bounded below and \( \nabla f \in \mathcal{C}^{1}_{L} \), then for any \( \mathbf{x} \in \mathbb{R}^n \) and any step size \( \alpha \in \linterval[scaled]{0}{\frac{1}{L}} \), the gradient descent update
+    \begin{equation*}
+        \mathbf{x}^+ = \mathbf{x} - \alpha \nabla f(\mathbf{x})
+    \end{equation*}
+    yields a sufficient decrease in the function value:
+    \begin{equation*}
+        f(\mathbf{x}^+) \leq f(\mathbf{x}) - \frac{\alpha}{2} {\Vert \nabla f(\mathbf{x}) \Vert}^2
+    \end{equation*}
+\end{lemma}
