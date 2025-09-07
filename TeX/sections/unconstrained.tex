@@ -87,6 +87,61 @@ A function \( f: \mathbb{R}^n \to \mathbb{R} \) is \textbf{strongly convex} with
     \end{equation*}
 \end{theorem}
 
+\begin{proof}
+    \( (\Rightarrow) \)
+    From the first-order condition for convexity, we have
+    \begin{align*}
+        f(\mathbf{y})
+        & \geq
+        f(\mathbf{x}) + {\nabla f(\mathbf{x})}^{\top} (\mathbf{y} - \mathbf{x})
+        , \quad
+        \forall \mathbf{x}, \mathbf{y} \in D
+        \\
+        f(\mathbf{x})
+        & \geq
+        f(\mathbf{y}) + {\nabla f(\mathbf{y})}^{\top} (\mathbf{x} - \mathbf{y})
+        , \quad
+        \forall \mathbf{x}, \mathbf{y} \in D
+    \end{align*}
+    Adding the two inequalities, we get
+    \begin{equation*}
+        0 \geq {\big( \nabla f(\mathbf{x}) - \nabla f(\mathbf{y}) \big)}^{\top} (\mathbf{y} - \mathbf{x})
+        , \quad
+        \forall \mathbf{x}, \mathbf{y} \in D
+    \end{equation*}
+    which is equivalent to the desired result.
+
+    \( (\Leftarrow) \)
+    Define \( g(t) = f(\mathbf{x} + t (\mathbf{y} - \mathbf{x})), \;\; t \in [0, 1], \;\; \mathbf{x}, \mathbf{y} \in D \).
+
+    Then, \( g(0) = f(\mathbf{x}), \quad g(1) = f(\mathbf{y}), \quad g'(t) = {(\nabla f(\mathbf{x} + t (\mathbf{y} - \mathbf{x})))}^{\top} (\mathbf{y} - \mathbf{x}) \).
+
+    From the given condition, we have
+    \begin{align*}
+        g'(t)
+        & =
+        {\big( \nabla f(\mathbf{x} + t (\mathbf{y} - \mathbf{x})) - \nabla f(\mathbf{x}) + \nabla f(\mathbf{x}) \big)}^{\top} (\mathbf{y} - \mathbf{x})
+        \\ & =
+        {\big( \nabla f(\mathbf{x} + t (\mathbf{y} - \mathbf{x})) - \nabla f(\mathbf{x}) \big)}^{\top} (\mathbf{y} - \mathbf{x}) + {\big( \nabla f(\mathbf{x}) \big)}^{\top} (\mathbf{y} - \mathbf{x})
+        \geq
+        {\big( \nabla f(\mathbf{x}) \big)}^{\top} (\mathbf{y} - \mathbf{x})
+    \end{align*}
+    for all \( t \in [0, 1] \).
+    Integrating from \( 0 \) to \( 1 \), we get
+    \begin{equation*}
+        f(\mathbf{y}) - f(\mathbf{x})
+        =
+        g(1) - g(0)
+        =
+        \int_0^1 g'(t) \, dt
+        \geq
+        \int_0^1 {\big( \nabla f(\mathbf{x}) \big)}^{\top} (\mathbf{y} - \mathbf{x}) \, dt
+        =
+        {\big( \nabla f(\mathbf{x}) \big)}^{\top} (\mathbf{y} - \mathbf{x})
+    \end{equation*}
+    for all \( \mathbf{x}, \mathbf{y} \in D \), which is the first-order condition for convexity, and thereby \( f \) is convex.
+\end{proof}
+
 \begin{theorem}
     For a function \( f \in \mathcal{C}^2 \), \( f \) is convex iff
     \begin{equation*}
