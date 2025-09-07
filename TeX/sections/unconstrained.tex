@@ -14,10 +14,10 @@ Assume \( f \in \mathcal{C}^{2} \), and use \( f(\mathbf{x} + \mathbf{p}) = f(\m
 
 \subsection{Global minimum}
 
-\begin{definition}{Global minimum}{}
-    The point \( \mathbf{x}^* \in \mathbb{R}^d \) is a \textbf{global minimum} of the function \( f: \mathbb{R}^d \to \mathbb{R} \) if
+\begin{definition}{Global minimum}{global-minimum}
+    The point \( \mathbf{x}^* \in \mathbb{R}^d \) is a \textbf{global minimum} of the function \( f: D \subseteq \mathbb{R}^d \to \mathbb{R} \) if
     \begin{equation*}
-        f(\mathbf{x}^*) \leq f(\mathbf{x}), \quad \forall \mathbf{x} \in \mathbb{R}^d
+        f(\mathbf{x}^*) \leq f(\mathbf{x}), \quad \forall \mathbf{x} \in D
     \end{equation*}
 \end{definition}
 
@@ -65,6 +65,23 @@ Assume \( f \in \mathcal{C}^{2} \), and use \( f(\mathbf{x} + \mathbf{p}) = f(\m
     For a convex function \( f \in \mathcal{C}^1 \) with \( \nabla f(\mathbf{x}^*) = \mathbf{0} \), then \( \mathbf{x}^* \) is a global minimum of \( f \).
 \end{theorem}
 
+\begin{proof}
+    From the first-order condition for convexity~\pthmref{thm:first-order-condition-for-convexity}, we have
+    \begin{align*}
+        f(\mathbf{y})
+        & \geq
+        f(\mathbf{x}^*) + \cancel{ {\nabla f(\mathbf{x}^*)}^{\top} (\mathbf{y} - \mathbf{x}^*) }
+        , \quad \forall \mathbf{y} \in D
+        \\
+        \implies
+        f(\mathbf{y})
+        & \geq
+        f(\mathbf{x}^*)
+        , \quad \forall \mathbf{y} \in D
+    \end{align*}
+    which is the definition of a global minimum~\pdefref{def:global-minimum}.
+\end{proof}
+
 \subsection{Convexity}
 
 \begin{definition}{Convex set}{}
@@ -89,7 +106,7 @@ Assume \( f \in \mathcal{C}^{2} \), and use \( f(\mathbf{x} + \mathbf{p}) = f(\m
 
 \subsubsection{First-order condition for convexity}
 
-\begin{theorem}{First-order condition for convexity}{}
+\begin{theorem}{First-order condition for convexity}{first-order-condition-for-convexity}
     For a function \( f \in \mathcal{C}^1 \) with a convex domain \( D \), \( f \) is convex on \( D \) iff
     \begin{equation*}
         f(\mathbf{y})

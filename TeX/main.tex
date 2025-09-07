@@ -46,7 +46,7 @@
     boxrule=0.8pt,
     fonttitle=\bfseries,
     enhanced,
-}{th}
+}{thm}
 \NewTcbTheorem[number within=section]{lemma}{Lemma}{
     colback=green!5!white,
     boxrule=0.8pt,
@@ -64,6 +64,8 @@
 
 \newcommand{\psecref}[1]{(\hyperref[#1]{\S\ref*{#1}})}
 \newcommand{\peqref}[1]{(\hyperref[#1]{Eq.~\ref*{#1}})}
+\newcommand{\pdefref}[1]{(\hyperref[#1]{Def.~\ref*{#1}})}
+\newcommand{\pthmref}[1]{(\hyperref[#1]{Thm.~\ref*{#1}})}
 \newcommand{\argmin}{\mathop{\mathrm{argmin}}}
 
 \begin{document}
