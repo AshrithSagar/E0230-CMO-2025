@@ -4,11 +4,11 @@
 
 \subsection{First-order methods}
 
-Assume \( f \in \mathcal{C}^{1} \), and use \( f(\mathbf{x} + \mathbf{p}) = f(\mathbf{x}) + \nabla f(\mathbf{x})^{\top} \mathbf{p} + o(\| \mathbf{p} \|) \).
+Assume \( f \in \mathcal{C}^{1} \), and use \( f(\mathbf{x} + \mathbf{p}) = f(\mathbf{x}) + {\nabla f(\mathbf{x})}^{\top} \mathbf{p} + o(\| \mathbf{p} \|) \).
 
 \subsection{Second-order methods}
 
-Assume \( f \in \mathcal{C}^{2} \), and use \( f(\mathbf{x} + \mathbf{p}) = f(\mathbf{x}) + \nabla f(\mathbf{x})^{\top} \mathbf{p} + \frac{1}{2} \mathbf{p}^{\top} \nabla^{2} f(\mathbf{x}) \mathbf{p} + o(\| \mathbf{p} \|^2) \).
+Assume \( f \in \mathcal{C}^{2} \), and use \( f(\mathbf{x} + \mathbf{p}) = f(\mathbf{x}) + {\nabla f(\mathbf{x})}^{\top} \mathbf{p} + \frac{1}{2} \mathbf{p}^{\top} \nabla^{2} f(\mathbf{x}) \mathbf{p} + o(\| \mathbf{p} \|^2) \).
 
 \subsection{Global minimum}
 
@@ -57,7 +57,7 @@ If \( f \in \mathcal{C}^1 \), then \( f \) is convex iff
 \begin{equation*}
     f(\mathbf{y})
     \geq
-    f(\mathbf{x}) + \nabla f(\mathbf{x})^\top (\mathbf{y} - \mathbf{x}),
+    f(\mathbf{x}) + {\nabla f(\mathbf{x})}^\top (\mathbf{y} - \mathbf{x}),
     \quad \forall \mathbf{x}, \mathbf{y} \in \mathbb{R}^n
 \end{equation*}
 
@@ -159,7 +159,7 @@ A function \( f: \mathbb{R}^n \to \mathbb{R} \) is \textbf{strongly convex} with
     \caption{
         Iterative algorithm template for unconstrained minimisation
     }
-    \SetAlgoLined
+    \SetAlgoLined{}
     \KwIn{
         First-order oracle for the objective function \( f(\mathbf{x}) \);
         Initial point \( \mathbf{x}^{(0)} \in \mathbb{R}^d \);
@@ -175,7 +175,7 @@ A function \( f: \mathbb{R}^n \to \mathbb{R} \) is \textbf{strongly convex} with
 
         \( k \leftarrow k + 1 \)\;
     }
-    \Return \( \mathbf{x}^{(k)} \)\;
+    \Return{\( \mathbf{x}^{(k)} \)\;}
 \end{algorithm}
 
 \paragraph{First-order oracle:}
@@ -187,7 +187,7 @@ Given \( \mathbf{x} \in \mathbb{R}^d \), returns a tuple \( \big( f(\mathbf{x}),
     \caption{
         Algorithm template for unconstrained minimisation using line search
     }
-    \SetAlgoLined
+    \SetAlgoLined{}
     \KwIn{
         First-order oracle for the objective function \( f(\mathbf{x}) \);
         Initial point \( \mathbf{x}^{(0)} \in \mathbb{R}^d \);
@@ -210,7 +210,7 @@ Given \( \mathbf{x} \in \mathbb{R}^d \), returns a tuple \( \big( f(\mathbf{x}),
 
         \( k \leftarrow k + 1 \)\;
     }
-    \Return \( \mathbf{x}^{(k)} \)\;
+    \Return{\( \mathbf{x}^{(k)} \)\;}
 \end{algorithm}
 
 \paragraph{Gradient descent:}
@@ -271,7 +271,7 @@ To find the optimal step size \( \alpha_k \), consider
     & \triangleq
     f \left( \mathbf{x}^{(k)} + \alpha \mathbf{p}^{(k)} \right)
     \\ & =
-    \frac{1}{2} \left( \mathbf{x}^{(k)} + \alpha \mathbf{p}^{(k)} \right)^{\top} \mathbf{Q} \left( \mathbf{x}^{(k)} + \alpha \mathbf{p}^{(k)} \right)
+    \frac{1}{2} {\left( \mathbf{x}^{(k)} + \alpha \mathbf{p}^{(k)} \right)}^{\top} \mathbf{Q} \left( \mathbf{x}^{(k)} + \alpha \mathbf{p}^{(k)} \right)
     + \mathbf{h}^{\top} \left( \mathbf{x}^{(k)} + \alpha \mathbf{p}^{(k)} \right)
     + c
     \\ & =
@@ -287,7 +287,7 @@ To find the optimal step size \( \alpha_k \), consider
     + \left( \frac{1}{2} {\mathbf{x}^{(k)}}^{\top} \mathbf{Q} \mathbf{x}^{(k)} + \mathbf{h}^{\top} \mathbf{x}^{(k)} + c \right)
     \\ & =
     \alpha^2 \underbrace{ \left( \frac{1}{2} {\mathbf{p}^{(k)}}^{\top} \mathbf{Q} \mathbf{p}^{(k)} \right) }_{p_k}
-    + \alpha \underbrace{ \left( \nabla f(\mathbf{x}^{(k)})^{\top} \mathbf{p}^{(k)} \right) }_{q_k}
+    + \alpha \underbrace{ \left( {\nabla f(\mathbf{x}^{(k)})}^{\top} \mathbf{p}^{(k)} \right) }_{q_k}
     + \underbrace{ \left( f(\mathbf{x}^{(k)}) \right) }_{r_k}
 \end{align*}
 which is a quadratic function in \( \alpha \) with \( p_k > 0 \; \left( \because \mathbf{Q} \succ \mathbf{0} \right) \) and \( q_k < 0 \; \left( \because \mathbf{p}^{(k)} \in \mathcal{DS}(\mathbf{x}^{(k)}) \right) \).
@@ -299,7 +299,7 @@ For the \hyperlink{1D-quadratic}{one-dimensional quadratic} case, we can then co
     \implies
     \boxed{
         \alpha_k
-        = -\frac{\nabla f(\mathbf{x}^{(k)})^{\top} \mathbf{p}^{(k)}}{{\mathbf{p}^{(k)}}^{\top} \mathbf{Q} \mathbf{p}^{(k)}}
+        = -\frac{{\nabla f(\mathbf{x}^{(k)})}^{\top} \mathbf{p}^{(k)}}{{\mathbf{p}^{(k)}}^{\top} \mathbf{Q} \mathbf{p}^{(k)}}
     }
     > 0
 \end{equation*}
@@ -313,7 +313,7 @@ For the \hyperlink{1D-quadratic}{one-dimensional quadratic} case, we can then co
     \boxed{
         f(\mathbf{x}^{(k+1)})
         =
-        f(\mathbf{x}^{(k)}) - \frac{\left( \nabla f(\mathbf{x}^{(k)})^{\top} \mathbf{p}^{(k)} \right)^2}{2 {\mathbf{p}^{(k)}}^{\top} \mathbf{Q} \mathbf{p}^{(k)}}
+        f(\mathbf{x}^{(k)}) - \frac{{\left( {\nabla f(\mathbf{x}^{(k)})}^{\top} \mathbf{p}^{(k)} \right)}^2}{2 {\mathbf{p}^{(k)}}^{\top} \mathbf{Q} \mathbf{p}^{(k)}}
     }
 \end{equation*}
 
@@ -321,11 +321,11 @@ For the choice \( \mathbf{p}^{(k)} = -\nabla f(\mathbf{x}^{(k)}) \), we have
 \begin{equation*}
     \alpha_k
     =
-    \frac{{\Vert \nabla f(\mathbf{x}^{(k)}) \Vert}^2} {\nabla f(\mathbf{x}^{(k)})^{\top} \mathbf{Q} \nabla f(\mathbf{x}^{(k)})},
+    \frac{{\Vert \nabla f(\mathbf{x}^{(k)}) \Vert}^2} {{\nabla f(\mathbf{x}^{(k)})}^{\top} \mathbf{Q} \nabla f(\mathbf{x}^{(k)})},
     \qquad
     f(\mathbf{x}^{(k+1)})
     =
-    f(\mathbf{x}^{(k)}) - \frac{{\Vert \nabla f(\mathbf{x}^{(k)}) \Vert}^4}{2 \nabla f(\mathbf{x}^{(k)})^{\top} \mathbf{Q} \nabla f(\mathbf{x}^{(k)})}
+    f(\mathbf{x}^{(k)}) - \frac{{\Vert \nabla f(\mathbf{x}^{(k)}) \Vert}^4}{2 {\nabla f(\mathbf{x}^{(k)})}^{\top} \mathbf{Q} \nabla f(\mathbf{x}^{(k)})}
 \end{equation*}
 
 \paragraph{Analysis:}
@@ -334,7 +334,7 @@ For a local minimum \( \mathbf{x}^* \), and any \( \mathbf{p} \in \mathbb{R}^d \
 \begin{align*}
     f(\mathbf{x}^* + \mathbf{p})
     & =
-    \frac{1}{2} (\mathbf{x}^* + \mathbf{p})^{\top} \mathbf{Q} (\mathbf{x}^* + \mathbf{p}) + \mathbf{h}^{\top} (\mathbf{x}^* + \mathbf{p}) + c
+    \frac{1}{2} {(\mathbf{x}^* + \mathbf{p})}^{\top} \mathbf{Q} (\mathbf{x}^* + \mathbf{p}) + \mathbf{h}^{\top} (\mathbf{x}^* + \mathbf{p}) + c
     \\ & =
     \frac{1}{2} {\mathbf{x}^*}^{\top} \mathbf{Q} \mathbf{x}^* + {\mathbf{x}^*}^{\top} \mathbf{Q} \mathbf{p} + \frac{1}{2} \mathbf{p}^{\top} \mathbf{Q} \mathbf{p} + \mathbf{h}^{\top} \mathbf{x}^* + \mathbf{h}^{\top} \mathbf{p} + c
     \\ & =
@@ -347,7 +347,7 @@ For a local minimum \( \mathbf{x}^* \), and any \( \mathbf{p} \in \mathbb{R}^d \
     \implies
     f(\mathbf{x})
     & =
-    f(\mathbf{x}^*) + \frac{1}{2} (\mathbf{x} - \mathbf{x}^*)^{\top} \mathbf{Q} (\mathbf{x} - \mathbf{x}^*), \quad \forall \mathbf{x} \in \mathbb{R}^d
+    f(\mathbf{x}^*) + \frac{1}{2} {(\mathbf{x} - \mathbf{x}^*)}^{\top} \mathbf{Q} (\mathbf{x} - \mathbf{x}^*), \quad \forall \mathbf{x} \in \mathbb{R}^d
 \end{align*}
 
 Now, consider the error at the \( k^{th} \) iteration defined as
@@ -398,28 +398,28 @@ Now, the successive error reduction can be computed as
     & =
     f(\mathbf{x}^{(k)}) - f(\mathbf{x}^{(k+1)})
     =
-    \frac{\left( \nabla f(\mathbf{x}^{(k)})^{\top} \mathbf{p}^{(k)} \right)^2}{2 {\mathbf{p}^{(k)}}^{\top} \mathbf{Q} \mathbf{p}^{(k)}}
+    \frac{{\left( {\nabla f(\mathbf{x}^{(k)})}^{\top} \mathbf{p}^{(k)} \right)}^2}{2 {\mathbf{p}^{(k)}}^{\top} \mathbf{Q} \mathbf{p}^{(k)}}
     \\
     \implies
     \frac{E_{k} - E_{k+1}}{E_k}
     & =
-    \frac{\left( \nabla f(\mathbf{x}^{(k)})^{\top} \mathbf{p}^{(k)} \right)^2}{ {\left( \nabla f(\mathbf{x}^{k}) \right)}^{\top} \mathbf{Q}^{-1} \, \nabla f(\mathbf{x}^{(k)}) \; {\mathbf{p}^{(k)}}^{\top} \mathbf{Q} \mathbf{p}^{(k)}}
+    \frac{{\left( {\nabla f(\mathbf{x}^{(k)})}^{\top} \mathbf{p}^{(k)} \right)}^2}{ {\left( \nabla f(\mathbf{x}^{k}) \right)}^{\top} \mathbf{Q}^{-1} \, \nabla f(\mathbf{x}^{(k)}) \; {\mathbf{p}^{(k)}}^{\top} \mathbf{Q} \mathbf{p}^{(k)}}
 \end{align*}
 
 For the choice \( \mathbf{p}^{(k)} = -\nabla f(\mathbf{x}^{(k)}) \), we have
 \begin{align*}
     \frac{E_{k} - E_{k+1}}{E_k}
     & =
-    \frac{{\left( \nabla f(\mathbf{x}^{(k)})^{\top} \left( -\nabla f(\mathbf{x}^{(k)}) \right) \right)}^2}{ {\left( \nabla f(\mathbf{x}^{k}) \right)}^{\top} \mathbf{Q}^{-1} \, \nabla f(\mathbf{x}^{(k)}) \; {\left( -\nabla f(\mathbf{x}^{(k)}) \right)}^{\top} \mathbf{Q} \left( -\nabla f(\mathbf{x}^{(k)}) \right)}
+    \frac{{\left( {\nabla f(\mathbf{x}^{(k)})}^{\top} \left( -\nabla f(\mathbf{x}^{(k)}) \right) \right)}^2}{ {\left( \nabla f(\mathbf{x}^{k}) \right)}^{\top} \mathbf{Q}^{-1} \, \nabla f(\mathbf{x}^{(k)}) \; {\left( -\nabla f(\mathbf{x}^{(k)}) \right)}^{\top} \mathbf{Q} \left( -\nabla f(\mathbf{x}^{(k)}) \right)}
     \\ & =
-    \frac{{\Vert \nabla f(\mathbf{x}^{(k)}) \Vert}^4}{ {\left( \nabla f(\mathbf{x}^{k}) \right)}^{\top} \mathbf{Q}^{-1} \, \nabla f(\mathbf{x}^{(k)}) \; \nabla f(\mathbf{x}^{(k)})^{\top} \mathbf{Q} \nabla f(\mathbf{x}^{(k)})}
+    \frac{{\Vert \nabla f(\mathbf{x}^{(k)}) \Vert}^4}{ {\left( \nabla f(\mathbf{x}^{k}) \right)}^{\top} \mathbf{Q}^{-1} \, \nabla f(\mathbf{x}^{(k)}) \; {\nabla f(\mathbf{x}^{(k)})}^{\top} \mathbf{Q} \nabla f(\mathbf{x}^{(k)})}
 \end{align*}
 
 From Kantorovich inequality~\psecref{sec:kantorovich-inequality}, we have
 \begin{equation*}
     \frac{{\Vert \mathbf{z} \Vert}^4}{(\mathbf{z}^{\top} \mathbf{Q} \mathbf{z}) (\mathbf{z}^{\top} \mathbf{Q}^{-1} \mathbf{z})}
     \geq
-    \frac{4 \lambda_{\min}(\mathbf{Q}) \lambda_{\max}(\mathbf{Q})}{\left( \lambda_{\min}(\mathbf{Q}) + \lambda_{\max}(\mathbf{Q}) \right)^2},
+    \frac{4 \lambda_{\min}(\mathbf{Q}) \lambda_{\max}(\mathbf{Q})}{{\left( \lambda_{\min}(\mathbf{Q}) + \lambda_{\max}(\mathbf{Q}) \right)}^2},
     \quad \forall \mathbf{z} \in \mathbb{R}^d \setminus \{ \mathbf{0} \}
 \end{equation*}
 where \( \lambda_{\min}(\mathbf{Q}) \) and \( \lambda_{\max}(\mathbf{Q}) \) are the minimum and maximum eigenvalues of \( \mathbf{Q} \), respectively.
@@ -428,14 +428,14 @@ Applying this with \( \mathbf{z} = \nabla f(\mathbf{x}^{(k)}) \), we have
 \begin{align*}
     \frac{E_k - E_{k+1}}{E_k}
     & \geq
-    \frac{4 \lambda_{\min}(\mathbf{Q}) \lambda_{\max}(\mathbf{Q})}{\left( \lambda_{\min}(\mathbf{Q}) + \lambda_{\max}(\mathbf{Q}) \right)^2}
+    \frac{4 \lambda_{\min}(\mathbf{Q}) \lambda_{\max}(\mathbf{Q})}{{\left( \lambda_{\min}(\mathbf{Q}) + \lambda_{\max}(\mathbf{Q}) \right)}^2}
     \\
     \implies
     \frac{E_{k+1}}{E_k}
     & \leq
-    1 - \frac{4 \lambda_{\min}(\mathbf{Q}) \lambda_{\max}(\mathbf{Q})}{\left( \lambda_{\min}(\mathbf{Q}) + \lambda_{\max}(\mathbf{Q}) \right)^2}
+    1 - \frac{4 \lambda_{\min}(\mathbf{Q}) \lambda_{\max}(\mathbf{Q})}{{\left( \lambda_{\min}(\mathbf{Q}) + \lambda_{\max}(\mathbf{Q}) \right)}^2}
     =
-    \left( \frac{\lambda_{\max}(\mathbf{Q}) - \lambda_{\min}(\mathbf{Q})}{\lambda_{\max}(\mathbf{Q}) + \lambda_{\min}(\mathbf{Q})} \right)^2
+    {\left( \frac{\lambda_{\max}(\mathbf{Q}) - \lambda_{\min}(\mathbf{Q})}{\lambda_{\max}(\mathbf{Q}) + \lambda_{\min}(\mathbf{Q})} \right)}^2
     \triangleq
     \rho
 \end{align*}
@@ -453,7 +453,7 @@ Applying this with \( \mathbf{z} = \nabla f(\mathbf{x}^{(k)}) \), we have
     \leq
     \rho^k E_0
 \end{equation*}
-where \( \rho \in [0, 1) \) since \( \mathbf{Q} \succ \mathbf{0} \implies \lambda_{\max}(\mathbf{Q}) \geq \lambda_{\min}(\mathbf{Q}) > 0 \), and \( 4ab \leq (a+b)^2, \; \forall a, b \).
+where \( \rho \in \rinterval{0}{1} \) since \( \mathbf{Q} \succ \mathbf{0} \implies \lambda_{\max}(\mathbf{Q}) \geq \lambda_{\min}(\mathbf{Q}) > 0 \), and \( 4ab \leq {(a+b)}^2, \; \forall a, b \).
 
 \subsection{Inexact line search}
 
@@ -461,22 +461,22 @@ where \( \rho \in [0, 1) \) since \( \mathbf{Q} \succ \mathbf{0} \implies \lambd
 \begin{equation*}
     f \left( \mathbf{x}^{(k)} + \alpha_k \mathbf{p}^{(k)} \right)
     \leq
-    f(\mathbf{x}^{(k)}) + c_1 \alpha_k \nabla f(\mathbf{x}^{(k)})^{\top} \mathbf{p}^{(k)},
+    f(\mathbf{x}^{(k)}) + c_1 \alpha_k {\nabla f(\mathbf{x}^{(k)})}^{\top} \mathbf{p}^{(k)},
     \quad c_1 \in (0, 1)
 \end{equation*}
 
 \paragraph{Curvature condition (Wolfe condition):}
 \begin{equation*}
-    \nabla f \left( \mathbf{x}^{(k)} + \alpha_k \mathbf{p}^{(k)} \right)^{\top} \mathbf{p}^{(k)}
+    {\nabla f \left( \mathbf{x}^{(k)} + \alpha_k \mathbf{p}^{(k)} \right)}^{\top} \mathbf{p}^{(k)}
     \geq
-    c_2 \nabla f(\mathbf{x}^{(k)})^{\top} \mathbf{p}^{(k)},
+    c_2 {\nabla f(\mathbf{x}^{(k)})}^{\top} \mathbf{p}^{(k)},
     \quad c_2 \in (c_1, 1)
 \end{equation*}
 
 \paragraph{Strong curvature condition (Strong Wolfe condition):}
 \begin{equation*}
-    \left| \nabla f \left( \mathbf{x}^{(k)} + \alpha_k \mathbf{p}^{(k)} \right)^{\top} \mathbf{p}^{(k)} \right|
+    \left| {\nabla f \left( \mathbf{x}^{(k)} + \alpha_k \mathbf{p}^{(k)} \right)}^{\top} \mathbf{p}^{(k)} \right|
     \leq
-    c_2 \left| \nabla f(\mathbf{x}^{(k)})^{\top} \mathbf{p}^{(k)} \right|,
+    c_2 \left| {\nabla f(\mathbf{x}^{(k)})}^{\top} \mathbf{p}^{(k)} \right|,
     \quad c_2 \in (c_1, 1)
 \end{equation*}

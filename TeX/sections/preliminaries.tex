@@ -37,7 +37,7 @@ Norm \( \eta: \mathbb{R}^d \to \mathbb{R} \), satisfies
 \begin{equation*}
     {\Vert \mathbf{x} \Vert}_1
     =
-    \vert x_1 \vert + \vert x_2 \vert + \ldots + \vert x_d \vert
+    \vert x_1 \vert + \vert x_2 \vert + \cdots + \vert x_d \vert
     =
     \sum_{i=1}^{d} \vert x_i \vert
 \end{equation*}
@@ -46,7 +46,7 @@ Norm \( \eta: \mathbb{R}^d \to \mathbb{R} \), satisfies
 \begin{equation*}
     {\Vert \mathbf{x} \Vert}_2
     =
-    \sqrt{x_1^2 + x_2^2 + \ldots + x_d^2}
+    \sqrt{x_1^2 + x_2^2 + \cdots + x_d^2}
     =
     \sqrt{\mathbf{x}^{\top} \mathbf{x}}
     \triangleq
@@ -144,7 +144,7 @@ For a function \( f: [a, b] \to \mathbb{R} \) that is continuous on the closed i
 
 \subsection{Little-o notation}
 
-(Landau's notation \cite{apostol1991calculus})
+(Landau's notation~\cite{apostol1991calculus})
 A function \( f: \mathbb{R}^d \to \mathbb{R} \) is said to be in \( o(g(\mathbf{x})) \) as \( \mathbf{x} \to \mathbf{x}_0 \), for some function \( g: \mathbb{R}^d \to \mathbb{R} \), \( g(\mathbf{x}) \neq 0 \) in a neighborhood of \( \mathbf{x}_0 \), if
 \begin{equation*}
     \lim_{\mathbf{x} \to \mathbf{x}_0} \frac{f(\mathbf{x})}{g(\mathbf{x})} = 0
@@ -186,13 +186,13 @@ The \textbf{derivative} of a function \( f: \mathbb{R} \to \mathbb{R} \) at a po
     f'(x) = \lim_{h \to 0} \frac{f(x + h) - f(x)}{h}
 \end{equation*}
 
-The \textbf{gradient} of a function \( f: \mathbb{R}^d \to \mathbb{R} \) at a point \( \mathbf{x} = \left(x_1, x_2, \ldots, x_d\right)^{\top} \in \mathbb{R}^d \) is defined as
+The \textbf{gradient} of a function \( f: \mathbb{R}^d \to \mathbb{R} \) at a point \( \mathbf{x} = {\left(x_1, x_2, \ldots, x_d\right)}^{\top} \in \mathbb{R}^d \) is defined as
 \begin{equation*}
-    \nabla f(\mathbf{x}) = \left( \frac{\partial f}{\partial x_1}(\mathbf{x}), \frac{\partial f}{\partial x_2}(\mathbf{x}), \ldots, \frac{\partial f}{\partial x_d}(\mathbf{x}) \right)^{\top}
+    \nabla f(\mathbf{x}) = {\left( \frac{\partial f}{\partial x_1}(\mathbf{x}), \frac{\partial f}{\partial x_2}(\mathbf{x}), \ldots, \frac{\partial f}{\partial x_d}(\mathbf{x}) \right)}^{\top}
     \in \mathbb{R}^d
 \end{equation*}
 
-The \textbf{Hessian} of a function \( f: \mathbb{R}^d \to \mathbb{R} \) at a point \( \mathbf{x} = \left(x_1, x_2, \ldots, x_d\right)^{\top} \in \mathbb{R}^d \) is defined as
+The \textbf{Hessian} of a function \( f: \mathbb{R}^d \to \mathbb{R} \) at a point \( \mathbf{x} = {\left(x_1, x_2, \ldots, x_d\right)}^{\top} \in \mathbb{R}^d \) is defined as
 \begin{equation*}
     \nabla^2 f(\mathbf{x}) =
     \begin{bmatrix}
@@ -275,17 +275,17 @@ Here, we denote \( f \in \mathcal{C}^{1}_L \) to mean that \( f \) is \( L \)-sm
 
 For any \( \mathbf{Q} \in \mathbf{S}_{d}^{++} \), with smallest eigenvalue \( \lambda_{\min} \) and largest eigenvalue \( \lambda_{\max} \), and for any \( \mathbf{x} \in \mathbb{R}^d \setminus \{ \mathbf{0} \} \),
 \begin{equation*}
-    \frac{{\Vert \mathbf{x} \Vert}^2 \; {\Vert \mathbf{Q} \mathbf{x} \Vert}^2}{(\mathbf{x}^{\top} \mathbf{Q} \mathbf{x})^2}
+    \frac{{\Vert \mathbf{x} \Vert}^2 \; {\Vert \mathbf{Q} \mathbf{x} \Vert}^2}{{(\mathbf{x}^{\top} \mathbf{Q} \mathbf{x})}^2}
     \leq
-    \frac{(\lambda_{\max} + \lambda_{\min})^2}{4 \lambda_{\max} \lambda_{\min}}
+    \frac{{(\lambda_{\max} + \lambda_{\min})}^2}{4 \lambda_{\max} \lambda_{\min}}
 \end{equation*}
 
 \subsection{AM-GM inequality}
 
 For any non-negative real numbers \( a_1, a_2, \ldots, a_n \geq 0 \),
 \begin{equation*}
-    \frac{a_1 + a_2 + \ldots + a_n}{n}
+    \frac{a_1 + a_2 + \cdots + a_n}{n}
     \geq
     \sqrt[n]{a_1 a_2 \ldots a_n}
 \end{equation*}
-with equality iff \( a_1 = a_2 = \ldots = a_n \).
+with equality iff \( a_1 = a_2 = \cdots = a_n \).

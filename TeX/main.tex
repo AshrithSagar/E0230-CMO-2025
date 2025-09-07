@@ -1,7 +1,7 @@
 \documentclass[12pt]{book}
 
 \usepackage[utf8]{inputenc}
-\usepackage{amsfonts, amsmath, amssymb, amsthm, cancel, latexsym, mathtools}
+\usepackage{amsfonts, amsmath, amssymb, amsthm, cancel, interval, latexsym, mathtools}
 \usepackage{enumitem, geometry, graphicx, hyperref, microtype, titlesec, tocloft}
 \usepackage[linesnumbered,ruled,vlined]{algorithm2e}
 \usepackage[numbers,sort]{natbib}
@@ -14,11 +14,13 @@
     top=2cm,
     bottom=2cm,
 }
+
 \hypersetup{
     colorlinks=true,
     linkcolor=blue,
     citecolor=red,
 }
+
 \setlength{\cftbeforetoctitleskip}{2em}
 \setlength{\cftaftertoctitleskip}{0pt}
 \setlength{\cftbeforesecskip}{0pt}
@@ -27,12 +29,16 @@
 \titlespacing*{\section}{0pt}{0.7em}{0.2em}
 \titlespacing*{\subsection}{0pt}{0.5em}{0.2em}
 \titlespacing*{\subsubsection}{0pt}{0.3em}{0.2em}
+
 \setlength{\parskip}{0pt}
 \setlength{\parindent}{0pt}
 \setlist{noitemsep, topsep=0pt}
+
 \newtheorem{lemma}{Lemma}
 \newtheorem{definition}{Definition}
 \newtheorem{theorem}{Theorem}
+
+\intervalconfig{soft open fences}
 
 \newcommand{\psecref}[1]{(\hyperref[#1]{\S\ref*{#1}})}
 \newcommand{\peqref}[1]{(\hyperref[#1]{Eq.~\ref*{#1}})}
@@ -40,20 +46,21 @@
 
 \begin{document}
 
-\frontmatter
-\input{sections/titlepage.tex}
-{\let\clearpage\relax \tableofcontents}
-
-\mainmatter
-\input{sections/introduction.tex}
-\input{sections/notation.tex}
-\input{sections/prerequisites.tex}
-\input{sections/preliminaries.tex}
-\input{sections/unconstrained.tex}
-
-\backmatter
-\renewcommand{\bibname}{References}
-\bibliographystyle{IEEEtran}
-\bibliography{sections/references.bib}
+\frontmatter{
+    \input{sections/titlepage.tex}
+    {\let\clearpage\relax \tableofcontents}
+}
+\mainmatter{
+    \input{sections/introduction.tex}
+    \input{sections/notation.tex}
+    \input{sections/prerequisites.tex}
+    \input{sections/preliminaries.tex}
+    \input{sections/unconstrained.tex}
+}
+\backmatter{
+    \renewcommand{\bibname}{References}
+    \bibliographystyle{IEEEtran}
+    \bibliography{sections/references.bib}
+}
 
 \end{document}
