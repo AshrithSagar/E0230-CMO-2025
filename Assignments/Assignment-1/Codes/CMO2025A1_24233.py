@@ -541,8 +541,14 @@ class LinearSystem:
         assert self.m == b.shape[0], "A and b must have compatible dimensions."
 
     def solve(self) -> floatVec:
-        """Solves the linear system `Ax = b` using numpy's solver."""
-        return np.linalg.solve(self.A, self.b)
+        """Solves the linear system `Ax = b`."""
+        if self.m == self.n:
+            self._solution_method = "direct"
+            return np.linalg.solve(self.A, self.b)
+        else:
+            self._solution_method = "least_squares"
+            x, *_ = np.linalg.lstsq(self.A, self.b, rcond=None)
+            return x
 
     def residual(self, x: floatVec) -> floatVec:
         """Computes the residual `Ax - b` for a given `x`."""
@@ -563,6 +569,11 @@ class LinearSystem:
             return f, grad
 
         return FirstOrderOracle(oracle, dim=self.n)
+
+    @property
+    def solution_method(self) -> str:
+        """Returns the method used to solve the system."""
+        return getattr(self, "_solution_method", "unsolved")
 
 
 # ---------- Questions ----------
