@@ -1,7 +1,8 @@
 # ---------- CMO 2025 Assignment 1 ----------
 
 # ---------- Imports ----------
-# Allowed libraries: os, sys, numpy, math, matplotlib.
+# Allowed libraries: `os`, `sys`, `numpy`, `math`, `matplotlib`.
+# Additional allowed: `time``, `tqdm`-like.
 
 import math
 import os
@@ -42,7 +43,7 @@ LOG_RUNS: bool = True
 PLOT_CONVERGENCE: bool = True
 """Plot the convergence of the optimisation algorithms over iterations."""
 
-rng = np.random.default_rng(SRN)
+np.random.seed(SRN)
 
 
 # ---------- Oracle utils ----------
@@ -640,6 +641,11 @@ def question_2():
 def question_3():
     console.rule("[bold green]Question 3")
 
+    question_3_2()
+    question_3_5()
+
+
+def question_3_2():
     t0 = time.perf_counter()
     A, b = oq3(SRN)
     t1 = time.perf_counter()
@@ -653,6 +659,47 @@ def question_3():
 
     ls = LinearSystem(A, b)
     oracle = ls.make_oracle()
+
+
+def question_3_5():
+    MU = 0
+    SIGMA = 1
+
+    m_values = [2**i for i in range(1, 13)]
+    for m in m_values:
+        try:
+            console.print(f"[cyan]Generating LinearSystem [italic]for {m=}[/]")
+            t0 = time.perf_counter()
+            A: floatVec = SIGMA * np.random.randn(m, m) + MU
+            b: floatVec = SIGMA * np.random.randn(m) + MU
+            t1 = time.perf_counter()
+            console.print(
+                f"[bright_black]Time taken to generate A, b: {t1 - t0:.6f} seconds[/]"
+            )
+            ls = LinearSystem(A, b)
+
+            t0 = time.perf_counter()
+            _sol = -np.linalg.inv(A) * b
+            t1 = time.perf_counter()
+            console.print(
+                f"[bright_black]Time taken to solve system using matrix inversion: {t1 - t0:.6f} seconds[/]"
+            )
+
+            t0 = time.perf_counter()
+            ls.solve()
+            t1 = time.perf_counter()
+            console.print(
+                f"[bright_black]Time taken to solve system using numpy.linalg: {t1 - t0:.6f} seconds[/]"
+            )
+
+        except MemoryError as e:
+            console.print(
+                f"[yellow][bold]MemoryError:[/bold] Unable to allocate [italic]for {m=}:[/italic][/yellow] {e}"
+            )
+        except Exception as e:
+            console.print(
+                f"[red][bold]Error[/bold] [italic]for {m=}:[/italic][/red] {e}"
+            )
 
 
 # ---------- Main ----------
