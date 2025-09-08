@@ -596,7 +596,11 @@ def question_1():
             lambda _, x: (0.5 * x.T @ Q @ x + b.T @ x, Q @ x + b), dim=2
         )
         optim = SteepestGradientDescentExactLineSearch(Q=Q)
-        x0s = [np.array([1.0, 1.0]), np.array([-1.0, -1.0])]
+
+        x0s = [np.array([0.0, 0.0])]
+        # Any starting point should work, since a local minima for the
+        # quadratic function with Q >> 0 will be the global minima
+
         optim.run(oracle, x0s=x0s, maxiter=1_000, tol=1e-13)
 
         x_star_analytical = -np.linalg.solve(Q, b)
@@ -635,8 +639,13 @@ def question_2():
         SteepestGradientDescentBacktracking(alpha=0.3, beta=0.8, initial_step_size=1.0),
     ]
     x0s = [
+        np.array([0.0, 0.0, 0.0, 0.0, 0.0]),
         np.array([1.0, 1.0, 1.0, 1.0, 1.0]),
-        np.array([-1.0, -1.0, -1.0, -1.0, -1.0]),
+        np.array([-1.0, 1.0, 1.0, 1.0, 1.0]),
+        np.array([1.0, -1.0, 1.0, 1.0, 1.0]),
+        np.array([1.0, 1.0, -1.0, 1.0, 1.0]),
+        np.array([1.0, 1.0, 1.0, -1.0, 1.0]),
+        np.array([1.0, 1.0, 1.0, 1.0, -1.0]),
     ]
     plt.figure()
     for optim in optimisers:
