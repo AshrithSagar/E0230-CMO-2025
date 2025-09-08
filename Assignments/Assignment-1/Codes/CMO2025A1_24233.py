@@ -192,9 +192,6 @@ class IterativeOptimiser:
         oracle_fn.cache_digits = int(-np.log10(tol)) + 1
 
         # Summary table for multiple starting points
-        def format_array(arr, precision=6):
-            return "[" + ", ".join(f"{x:.{precision}f}" for x in arr) + "]"
-
         console = Console()
         table = Table(title=f"{self.name}", show_lines=True)
         cols = ["Run", "x0", "x*", "f(x*)", "f'(x*)", "Iterations", "Oracle calls"]
@@ -235,10 +232,10 @@ class IterativeOptimiser:
                 if LOG_RUNS:
                     table.add_row(
                         str(idx),
-                        format_array(x0),
-                        format_array(x),
-                        f"{fx:2.16f}",
-                        format_array(dfx),
+                        format_float(x0),
+                        format_float(x),
+                        format_float(fx),
+                        format_float(dfx),
                         str(len(history) - 1),
                         str(oracle_fn.call_count),
                     )
@@ -272,10 +269,10 @@ class IterativeOptimiser:
 
         table.add_row(
             str(run_idx),
-            format_array(x0),
-            format_array(self.x_star),
-            f"{self.fx_star:2.16f}",
-            format_array(self.dfx_star),
+            format_float(x0),
+            format_float(self.x_star),
+            format_float(self.fx_star),
+            format_float(self.dfx_star),
             str(n_iters),
             str(n_oracle),
             style="bold magenta",
@@ -576,6 +573,15 @@ class LinearSystem:
         return getattr(self, "_solution_method", "unsolved")
 
 
+def format_float(
+    obj: float | floatVec, dprec: int = 2, fprec: int = 16, delim: str = ",\n"
+):
+    if isinstance(obj, float):
+        return f"{obj:{dprec}.{fprec}f}"
+    elif isinstance(obj, np.ndarray):
+        return "[" + delim.join(f"{x:{dprec}.{fprec}f}" for x in obj) + "]"
+
+
 # ---------- Questions ----------
 def question_1():
     console.rule("[bold green]Question 1")
@@ -601,14 +607,14 @@ def question_1():
         # Any starting point should work, since a local minima for the
         # quadratic function with Q >> 0 will be the global minima
 
-        optim.run(oracle, x0s=x0s, maxiter=1_000, tol=1e-13)
+        optim.run(oracle, x0s=x0s, maxiter=10_000, tol=1e-13)
 
         x_star_analytical = -np.linalg.solve(Q, b)
         fx_star_analytical, dfx_star_analytical = oracle(x_star_analytical)
         console.print("[bold green]Analytical solution:[/]")
-        print(f"x* = {x_star_analytical}")
-        print(f"f(x*) = {fx_star_analytical:2.16f}")
-        print(f"f'(x*) = {dfx_star_analytical}")
+        print(f"x* = {format_float(x_star_analytical, delim=', ')}")
+        print(f"f(x*) = {format_float(fx_star_analytical)}")
+        print(f"f'(x*) = {format_float(dfx_star_analytical, delim=', ')}")
 
         # Plot ||x^(k) - x^*|| for the best run
         xk_history = np.array(optim.history)
