@@ -21,10 +21,14 @@
 
 \usepackage[preprint]{jmlr2e}
 
+\usepackage{amsmath}
+
 % Definitions of handy macros can go here
 
 \newcommand{\dataset}{{\cal D}}
 \newcommand{\fracpartial}[2]{\frac{\partial #1}{\partial  #2}}
+
+\newcommand{\argmin}{\mathop{\mathrm{argmin}}}
 
 % Heading arguments are {volume}{year}{pages}{date submitted}{date published}{paper id}{author-full-names}
 
@@ -35,18 +39,14 @@
 
 \title{CMO Assignment 0}
 
-\author{\name Your Name \email name@iisc.ac.in \\
-       \addr 5 digit SR number}
+\author{\name Ashrith Sagar Yedlapalli \email ashrithy@iisc.ac.in \\
+\addr 24233}
 
 \maketitle
 
-\section*{Question 1}
-
-Citing in text: in \citet{Fletcher2000,Luenberger1984}.
-
-\section*{Question 2}
-
-Citing in parenthesis: \citep{Nesterov2004,Nocedal2006}.
+\input{q1.tex}
+\input{q2.tex}
+\input{q3.tex}
 
 \vskip 0.2in
 \bibliography{refs}
