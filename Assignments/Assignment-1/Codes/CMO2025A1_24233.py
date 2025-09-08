@@ -351,6 +351,7 @@ class ExactLineSearchMixin(LineSearchOptimiser):
     """
 
     def _initialise_state(self):
+        super()._initialise_state()
         Q = self.config.get("Q", None)
         if Q is None:
             raise ValueError("Q matrix is required for exact line search.")
