@@ -647,7 +647,8 @@ def question_3():
 
 def question_3_2():
     t0 = time.perf_counter()
-    A, b = oq3(SRN)
+    with console.status("Loading A, b from oracle..."):
+        A, b = oq3(SRN)
     t1 = time.perf_counter()
     console.print(
         f"[bright_black]Time taken to load A, b from oracle: {t1 - t0:.6f} seconds[/]"
@@ -668,10 +669,11 @@ def question_3_5():
     m_values = [2**i for i in range(1, 13)]
     for m in m_values:
         try:
-            console.print(f"[cyan]Generating LinearSystem [italic]for {m=}[/]")
+            console.print(f"[cyan]LinearSystem [italic]with {m=}[/]")
             t0 = time.perf_counter()
-            A: floatVec = SIGMA * np.random.randn(m, m) + MU
-            b: floatVec = SIGMA * np.random.randn(m) + MU
+            with console.status("Generating A and b..."):
+                A: floatVec = SIGMA * np.random.randn(m, m) + MU
+                b: floatVec = SIGMA * np.random.randn(m) + MU
             t1 = time.perf_counter()
             console.print(
                 f"[bright_black]Time taken to generate A, b: {t1 - t0:.6f} seconds[/]"
@@ -679,17 +681,19 @@ def question_3_5():
             ls = LinearSystem(A, b)
 
             t0 = time.perf_counter()
-            _sol = -np.linalg.inv(A) * b
+            with console.status("Solving system using matrix inversion..."):
+                _x = -np.linalg.inv(A) * b
             t1 = time.perf_counter()
             console.print(
                 f"[bright_black]Time taken to solve system using matrix inversion: {t1 - t0:.6f} seconds[/]"
             )
 
             t0 = time.perf_counter()
-            ls.solve()
+            with console.status("Solving system using numpy.linalg.solve..."):
+                ls.solve()
             t1 = time.perf_counter()
             console.print(
-                f"[bright_black]Time taken to solve system using numpy.linalg: {t1 - t0:.6f} seconds[/]"
+                f"[bright_black]Time taken to solve system using numpy.linalg.solve: {t1 - t0:.6f} seconds[/]"
             )
 
         except MemoryError as e:
