@@ -13,8 +13,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import numpy.typing as npt
 from rich.console import Console
-from rich.live import Live
-from rich.table import Table
+from rich.progress import BarColumn, Progress, TextColumn, TimeElapsedColumn
 from rich.traceback import install
 
 sys.path.insert(0, os.path.abspath("oracle_2025A1"))
@@ -37,11 +36,8 @@ assert isinstance(SRN, int) and len(str(SRN)) == 5, "SRN must be a 5-digit integ
 ORACLE_CACHE: bool = False
 """Cache the results of the oracle calls."""
 
-LOG_RUNS: bool = True
+LOG_RUNS: bool = False
 """Log all the runs of the optimisation algorithms in the summary table, not just the best one."""
-
-PLOT_CONVERGENCE: bool = True
-"""Plot the convergence of the optimisation algorithms over iterations."""
 
 np.random.seed(SRN)
 
@@ -175,6 +171,7 @@ class IterativeOptimiser:
         x0s: list[floatVec],
         maxiter: int = 1_000_000,
         tol: float = 1e-9,
+        show_params: bool = True,
     ):
         """
         Runs the iterative algorithm.
@@ -184,6 +181,7 @@ class IterativeOptimiser:
             x0s: Initial guesses for the minimum point.
             maxiter: Maximum number of iterations to perform.
             tol: Tolerance for stopping criterion based on the gradient.
+            show_params: Whether to display the configuration parameters of the algorithm.
         """
         self.maxiter = maxiter
         self.tol = tol
@@ -191,55 +189,77 @@ class IterativeOptimiser:
         # Set oracle_fn's cache_digits in order of tol
         oracle_fn.cache_digits = int(-np.log10(tol)) + 1
 
-        # Summary table for multiple starting points
         console = Console()
-        table = Table(title=f"{self.name}", show_lines=True)
-        cols = ["Run", "x0", "x*", "f(x*)", "f'(x*)", "Iterations", "Oracle calls"]
-        for col in cols:
-            table.add_column(col, justify="center")
+        console.print(f"[bold blue]{self.name}[/]")
+        if show_params:
+            console.print(f"params: {self.config}")
+        has_multiple_x0 = len(x0s) > 1
 
         self.runs = []
-        with Live(table, console=console, transient=True) as live:
-            for idx, x0 in enumerate(x0s, start=1):
-                oracle_fn.reset()
-                history = [x0]
-                x = x0
-                self._initialise_state()
+        for idx, x0 in enumerate(x0s, start=1):
+            oracle_fn.reset()
+            history = [x0]
+            x = x0
+            self._initialise_state()
 
-                try:
-                    for k in range(1, maxiter + 1):
-                        fx, dfx = oracle_fn(x)  # Query the oracle function
-                        if np.linalg.norm(dfx) < tol:
-                            # Early exit, ||f'(x)|| is small enough
-                            break
-                        x = self._step(x, k, fx, dfx, oracle_fn)
-                        history.append(x)
-                    fx, dfx = oracle_fn(x)
-                except OverflowError:  # Fallback
-                    x = np.full(oracle_fn.dim, np.nan)
-                    fx, dfx = float("nan"), np.full(oracle_fn.dim, np.nan)
-
-                self.runs.append(
-                    {
-                        "x0": x0,
-                        "x_star": x,
-                        "fx_star": fx,
-                        "dfx_star": dfx,
-                        "history": history,
-                        "oracle_call_count": oracle_fn.call_count,
-                    }
+            progress = Progress(
+                TextColumn("[progress.description]{task.description}"),
+                TextColumn("iter:{task.completed:04},"),
+                TextColumn("f(x):{task.fields[fx]:.4e},"),
+                TextColumn("||f'(x)||: {task.fields[grad_norm]:.2e},"),
+                TextColumn("Oracle calls: {task.fields[oracle_calls]:04}"),
+                TimeElapsedColumn(),
+                console=console,
+                transient=True,
+            )
+            progress.start()
+            try:
+                task = progress.add_task(
+                    "Run" + f" {idx}" if has_multiple_x0 else "" + ":",
+                    total=maxiter,
+                    fx=float("nan"),
+                    grad_norm=float("nan"),
+                    oracle_calls=0,
                 )
-                if LOG_RUNS:
-                    table.add_row(
-                        str(idx),
-                        format_float(x0),
-                        format_float(x),
-                        format_float(fx),
-                        format_float(dfx),
-                        str(len(history) - 1),
-                        str(oracle_fn.call_count),
+                for k in range(1, maxiter + 1):
+                    fx, dfx = oracle_fn(x)  # Query the oracle function
+                    grad_norm = np.linalg.norm(dfx)
+                    progress.update(
+                        task,
+                        advance=1,
+                        fx=fx,
+                        grad_norm=grad_norm,
+                        oracle_calls=oracle_fn.call_count,
                     )
-                    live.refresh()
+                    if grad_norm < tol:  # Early exit, if ||f'(x)|| is small enough
+                        break
+                    x = self._step(x, k, fx, dfx, oracle_fn)
+                    history.append(x)
+                fx, dfx = oracle_fn(x)
+            except OverflowError:  # Fallback, in case of non-convergence
+                x = np.full(oracle_fn.dim, np.nan)
+                fx, dfx = float("nan"), np.full(oracle_fn.dim, np.nan)
+            finally:
+                progress.stop()
+
+            self.runs.append(
+                {
+                    "x0": x0,
+                    "x_star": x,
+                    "fx_star": fx,
+                    "dfx_star": dfx,
+                    "history": history,
+                    "oracle_call_count": oracle_fn.call_count,
+                }
+            )
+            if LOG_RUNS and has_multiple_x0:
+                console.print(f"\n[bold yellow]Run {idx}:[/]")
+                print(f"x0 = {format_float(x0, sep=', ')}")
+                print(f"Iterations = {len(history) - 1}")
+                print(f"Oracle calls = {oracle_fn.call_count}")
+                print(f"x* = {format_float(x, sep=', ')}")
+                print(f"f(x*) = {format_float(fx)}")
+                print(f"f'(x*) = {format_float(dfx, sep=', ')}")
 
         # Pick best run by lowest ||f'(x^*)||, if tied then prefer lower oracle call count
         if valid_runs := [
@@ -267,18 +287,15 @@ class IterativeOptimiser:
             n_iters = ""
             n_oracle = ""
 
-        table.add_row(
-            str(run_idx),
-            format_float(x0),
-            format_float(self.x_star),
-            format_float(self.fx_star),
-            format_float(self.dfx_star),
-            str(n_iters),
-            str(n_oracle),
-            style="bold magenta",
-        )
-        if LOG_RUNS:
-            console.print(table)
+        if has_multiple_x0:
+            console.print("\n[bold green]Best run:[/]")
+        print(f"x0 = {format_float(x0, sep=', ')}", end="")
+        print(f", at index {run_idx}" if has_multiple_x0 else "")
+        print(f"Iterations = {n_iters}")
+        print(f"Oracle calls = {n_oracle}")
+        print(f"x* = {format_float(self.x_star, sep=', ')}")
+        print(f"f(x*) = {format_float(self.fx_star)}")
+        print(f"f'(x*) = {format_float(self.dfx_star, sep=', ')}")
 
     def plot(self):
         """Plots the history of `x` values during the optimisation."""
@@ -581,7 +598,7 @@ def format_float(
     obj: float | floatVec,
     dprec: int = 2,
     fprec: int = 16,
-    ffmt: str = "e",
+    ffmt: str = "f",
     sep: str = ",\n",
     lim: int = 5,
 ):
@@ -603,7 +620,7 @@ def format_float(
 
 # ---------- Questions ----------
 def question_1():
-    console.rule("[bold green]Question 1")
+    console.rule("[bold magenta]Question 1", style="magenta")
 
     b = np.array([1, 1], dtype=float)
     for i, Q in enumerate(oq1(SRN)):
@@ -626,11 +643,11 @@ def question_1():
         # Any starting point should work, since a local minima for the
         # quadratic function with Q >> 0 will be the global minima
 
-        optim.run(oracle, x0s=x0s, maxiter=10_000, tol=1e-13)
+        optim.run(oracle, x0s=x0s, maxiter=10_000, tol=1e-13, show_params=False)
 
         x_star_analytical = -np.linalg.solve(Q, b)
         fx_star_analytical, dfx_star_analytical = oracle(x_star_analytical)
-        console.print("[bold green]Analytical solution:[/]")
+        console.print("\n[bold green]Analytical solution:[/]")
         print(f"x* = {format_float(x_star_analytical, sep=', ')}")
         print(f"f(x*) = {format_float(fx_star_analytical)}")
         print(f"f'(x*) = {format_float(dfx_star_analytical, sep=', ')}")
@@ -647,7 +664,7 @@ def question_1():
 
 
 def question_2():
-    console.rule("[bold green]Question 2")
+    console.rule("[bold magenta]Question 2", style="magenta")
 
     def grad_fn(srn: int, x: floatVec) -> floatVec:
         g: floatVec = oq2g(srn, x)
@@ -671,9 +688,12 @@ def question_2():
         np.array([1.0, 1.0, -1.0, 1.0, 1.0]),
         np.array([1.0, 1.0, 1.0, -1.0, 1.0]),
         np.array([1.0, 1.0, 1.0, 1.0, -1.0]),
+        np.array([-1.0, -1.0, -1.0, -1.0, -1.0]),
     ]
     plt.figure()
-    for optim in optimisers:
+    for i, optim in enumerate(optimisers):
+        if i != 0:
+            console.rule(style="default")
         optim.run(oracle, x0s=x0s, maxiter=1_000, tol=1e-7)
         optim.plot_step_sizes()
     plt.title(r"Step Size vs Iteration for different (Inexact) Line Search methods")
@@ -684,7 +704,7 @@ def question_2():
 
 
 def question_3():
-    console.rule("[bold green]Question 3")
+    console.rule("[bold magenta]Question 3", style="magenta")
 
     question_3_2()
     question_3_5()
