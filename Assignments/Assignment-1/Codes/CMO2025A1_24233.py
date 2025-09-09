@@ -402,8 +402,9 @@ class SteepestGradientDescentArmijo(SteepestDescentDirectionMixin, LineSearchOpt
         alpha = float(self.config.get("alpha", 0.3))
         beta = float(self.config.get("beta", 0.8))
         eta = float(self.config.get("initial_step_size", 1.0))
+        maxiter = int(self.config.get("maxiter", 100))
 
-        while True:
+        for _ in range(maxiter):
             new_x = x + eta * direction
             new_f, _ = oracle_fn(new_x)
             if new_f <= f + alpha * eta * (grad.T @ direction):
@@ -438,8 +439,9 @@ class SteepestGradientDescentArmijoGoldstein(
         alpha = float(self.config.get("alpha", 0.3))
         beta = float(self.config.get("beta", 0.8))
         eta = float(self.config.get("initial_step_size", 1.0))
+        maxiter = int(self.config.get("maxiter", 100))
 
-        while True:
+        for _ in range(maxiter):
             new_x = x + eta * direction
             new_f, _ = oracle_fn(new_x)
             if new_f <= f + alpha * eta * (grad.T @ direction) and new_f >= f + (
@@ -474,8 +476,9 @@ class SteepestGradientDescentWolfe(SteepestDescentDirectionMixin, LineSearchOpti
         alpha = float(self.config.get("alpha", 0.3))
         beta = float(self.config.get("beta", 0.8))
         eta = float(self.config.get("initial_step_size", 1.0))
+        maxiter = int(self.config.get("maxiter", 100))
 
-        while True:
+        for _ in range(maxiter):
             new_x = x + eta * direction
             new_f, new_grad = oracle_fn(new_x)
             if new_f <= f + alpha * eta * (grad.T @ direction) and (
@@ -511,8 +514,9 @@ class SteepestGradientDescentBacktracking(
         alpha = float(self.config.get("alpha", 0.3))
         beta = float(self.config.get("beta", 0.8))
         eta = float(self.config.get("initial_step_size", 1.0))
+        maxiter = int(self.config.get("maxiter", 100))
 
-        while True:
+        for _ in range(maxiter):
             new_x = x + eta * direction
             new_f, _ = oracle_fn(new_x)
             if new_f <= f + alpha * eta * (grad.T @ direction):
@@ -574,12 +578,27 @@ class LinearSystem:
 
 
 def format_float(
-    obj: float | floatVec, dprec: int = 2, fprec: int = 16, delim: str = ",\n"
+    obj: float | floatVec,
+    dprec: int = 2,
+    fprec: int = 16,
+    ffmt: str = "e",
+    sep: str = ",\n",
+    lim: int = 5,
 ):
+    _fmt = f"{{:{dprec}.{fprec}{ffmt}}}"
     if isinstance(obj, float):
-        return f"{obj:{dprec}.{fprec}f}"
+        return f"{_fmt.format(obj)}"
     elif isinstance(obj, np.ndarray):
-        return "[" + delim.join(f"{x:{dprec}.{fprec}f}" for x in obj) + "]"
+        if obj.size <= lim:
+            formatted = [f"{_fmt.format(x)}" for x in obj]
+        else:
+            # Show first three and last three items
+            formatted = (
+                [f"{_fmt.format(x)}" for x in obj[:3]]
+                + ["..."]
+                + [f"{_fmt.format(x)}" for x in obj[-3:]]
+            )
+        return "[" + sep.join(formatted) + "]"
 
 
 # ---------- Questions ----------
@@ -612,9 +631,9 @@ def question_1():
         x_star_analytical = -np.linalg.solve(Q, b)
         fx_star_analytical, dfx_star_analytical = oracle(x_star_analytical)
         console.print("[bold green]Analytical solution:[/]")
-        print(f"x* = {format_float(x_star_analytical, delim=', ')}")
+        print(f"x* = {format_float(x_star_analytical, sep=', ')}")
         print(f"f(x*) = {format_float(fx_star_analytical)}")
-        print(f"f'(x*) = {format_float(dfx_star_analytical, delim=', ')}")
+        print(f"f'(x*) = {format_float(dfx_star_analytical, sep=', ')}")
 
         # Plot ||x^(k) - x^*|| for the best run
         xk_history = np.array(optim.history)
