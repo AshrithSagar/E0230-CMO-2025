@@ -328,7 +328,7 @@ Given \( \mathbf{x} \in \mathbb{R}^d \), returns a tuple \( \big( f(\mathbf{x}),
             \mathcal{DS} \left( \mathbf{x}^{(k)} \right) = \left\{ \mathbf{p} \in \mathbb{R}^d \;\big|\; {\nabla f(\mathbf{x}^{(k)})}^{\top} \mathbf{p} < 0 \right\}
         \end{equation*}
 
-        Choose a step size \( \alpha_k \geq 0 \)\;
+        Choose a step length \( \alpha_k \geq 0 \)\;
 
         Update the current point: \( \mathbf{x}^{(k+1)} = \mathbf{x}^{(k)} + \alpha_k \mathbf{p}^{(k)} \)\;
 
@@ -350,7 +350,7 @@ Choose the descent direction as
 
 \subsection{Exact line search}
 
-Choose the step size \( \alpha_k \) by solving the one-dimensional optimisation problem
+Choose the step length \( \alpha_k \) by solving the one-dimensional optimisation problem
 \begin{equation*}
     \alpha_k = \argmin_{\alpha \geq 0} g_k(\alpha),
     \qquad \text{where } \;
@@ -389,7 +389,7 @@ Matrix-vector products with \( \mathbf{Q} \) are allowed.
 
 \paragraph{Algorithm design:}
 
-To find the optimal step size \( \alpha_k \), consider
+To find the optimal step length \( \alpha_k \), consider
 \begin{align*}
     g_k(\alpha)
     & \triangleq
@@ -581,31 +581,68 @@ where \( \rho \in \rinterval{0}{1} \) since \( \mathbf{Q} \succ \mathbf{0} \impl
 
 \subsection{Inexact line search}
 
-\paragraph{Sufficient decrease condition (Armijo rule):}
+\subsubsection*{Sufficient decrease condition (Armijo condition)}
+
 \begin{equation*}
     f \left( \mathbf{x}^{(k)} + \alpha_k \mathbf{p}^{(k)} \right)
     \leq
-    f(\mathbf{x}^{(k)}) + c_1 \alpha_k {\nabla f(\mathbf{x}^{(k)})}^{\top} \mathbf{p}^{(k)},
-    \quad c_1 \in (0, 1)
+    f(\mathbf{x}^{(k)}) + c \alpha_k {\nabla f(\mathbf{x}^{(k)})}^{\top} \mathbf{p}^{(k)},
+    \quad 0 < c < 1
 \end{equation*}
 
-\paragraph{Curvature condition (Wolfe condition):}
-\begin{equation*}
+\subsubsection*{Goldstein conditions / Armijo-Goldstein conditions}
+
+\vspace*{-1em}
+\begin{align*}
+    f(\mathbf{x}^{(k)}) + (1 - c) \alpha_k {\nabla f(\mathbf{x}^{(k)})}^{\top} \mathbf{p}^{(k)}
+    & \leq
+    \overbrace{
+        f \left( \mathbf{x}^{(k)} + \alpha_k \mathbf{p}^{(k)} \right)
+        \leq
+        f(\mathbf{x}^{(k)}) + c \alpha_k {\nabla f(\mathbf{x}^{(k)})}^{\top} \mathbf{p}^{(k)}
+    }^{\text{sufficient decrease}}
+    \\
+    \text{where } \;&
+    0 < c < \frac{1}{2}
+\end{align*}
+
+\subsubsection*{Wolfe conditions}
+
+The step length \( \alpha_k \) satisfies both the \textit{sufficient decrease condition} and the \textit{curvature condition}.
+\begin{align*}
+    f \left( \mathbf{x}^{(k)} + \alpha_k \mathbf{p}^{(k)} \right)
+    & \leq
+    f(\mathbf{x}^{(k)}) + c_1 \alpha_k {\nabla f(\mathbf{x}^{(k)})}^{\top} \mathbf{p}^{(k)}
+    \tag{sufficient decrease}
+    \\
     {\nabla f \left( \mathbf{x}^{(k)} + \alpha_k \mathbf{p}^{(k)} \right)}^{\top} \mathbf{p}^{(k)}
-    \geq
-    c_2 {\nabla f(\mathbf{x}^{(k)})}^{\top} \mathbf{p}^{(k)},
-    \quad c_2 \in (c_1, 1)
-\end{equation*}
+    & \geq
+    c_2 {\nabla f(\mathbf{x}^{(k)})}^{\top} \mathbf{p}^{(k)}
+    \tag{curvature}
+    \\
+    \text{where } \;&
+    0 < c_1 < c_2 < 1
+\end{align*}
 
-\paragraph{Strong curvature condition (Strong Wolfe condition):}
-\begin{equation*}
+\subsubsection*{Strong Wolfe conditions}
+
+The step length \( \alpha_k \) satisfies both the \textit{sufficient decrease condition} and the \textit{strong curvature condition}.
+\begin{align*}
+    f \left( \mathbf{x}^{(k)} + \alpha_k \mathbf{p}^{(k)} \right)
+    & \leq
+    f(\mathbf{x}^{(k)}) + c_1 \alpha_k {\nabla f(\mathbf{x}^{(k)})}^{\top} \mathbf{p}^{(k)}
+    \tag{sufficient decrease}
+    \\
     \left| {\nabla f \left( \mathbf{x}^{(k)} + \alpha_k \mathbf{p}^{(k)} \right)}^{\top} \mathbf{p}^{(k)} \right|
-    \leq
-    c_2 \left| {\nabla f(\mathbf{x}^{(k)})}^{\top} \mathbf{p}^{(k)} \right|,
-    \quad c_2 \in (c_1, 1)
-\end{equation*}
+    & \leq
+    c_2 \left| {\nabla f(\mathbf{x}^{(k)})}^{\top} \mathbf{p}^{(k)} \right|
+    \tag{strong curvature}
+    \\
+    \text{where } \;&
+    0 < c_1 < c_2 < 1
+\end{align*}
 
-\begin{lemma}{Sufficient decrease lemma (Armijo condition)}{}
+\begin{lemma}{Sufficient decrease lemma (Armijo)}{}
     Suppose \( f \in \mathcal{C}^{1}_{L} \) is bounded below, then \( \forall \mathbf{x} \in \mathbb{R}^n, \; \alpha \in \linterval[scaled]{0}{\frac{1}{L}} \), the gradient descent update \( \mathbf{x}^+ = \mathbf{x} - \alpha \nabla f(\mathbf{x}) \) yields a sufficient decrease in the function value:
     \begin{equation*}
         f(\mathbf{x}^+) \leq f(\mathbf{x}) - \frac{\alpha}{2} {\Vert \nabla f(\mathbf{x}) \Vert}^2
