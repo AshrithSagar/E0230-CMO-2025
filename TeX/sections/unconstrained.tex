@@ -590,6 +590,10 @@ where \( \rho \in \rinterval{0}{1} \) since \( \mathbf{Q} \succ \mathbf{0} \impl
     \quad 0 < c < 1
 \end{equation*}
 
+\subsubsection*{Armijo rule}
+
+Determine the largest number \( \alpha_k \) in the sequence \( {\{ \beta^m \bar{\alpha} \}}_{m=0}^{\infty} \) that satisfies the \textit{sufficient decrease condition}, where \( \bar{\alpha} > 0 \) is an initial step length and \( 0 < \beta < 1 \) is a scaling factor.
+
 \subsubsection*{Goldstein conditions / Armijo-Goldstein conditions}
 
 \vspace*{-1em}
@@ -642,9 +646,14 @@ The step length \( \alpha_k \) satisfies both the \textit{sufficient decrease co
     0 < c_1 < c_2 < 1
 \end{align*}
 
-\begin{lemma}{Sufficient decrease lemma (Armijo)}{}
+\begin{lemma}{Sufficient decrease lemma}{}
     Suppose \( f \in \mathcal{C}^{1}_{L} \) is bounded below, then \( \forall \mathbf{x} \in \mathbb{R}^n, \; \alpha \in \linterval[scaled]{0}{\frac{1}{L}} \), the gradient descent update \( \mathbf{x}^+ = \mathbf{x} - \alpha \nabla f(\mathbf{x}) \) yields a sufficient decrease in the function value:
     \begin{equation*}
         f(\mathbf{x}^+) \leq f(\mathbf{x}) - \frac{\alpha}{2} {\Vert \nabla f(\mathbf{x}) \Vert}^2
     \end{equation*}
 \end{lemma}
+
+\begin{equation*}
+    \frac{f(\mathbf{x}^{(k)}) - f(\mathbf{x}^{(k+1)})}{{\Vert \nabla f(\mathbf{x}^{(k)}) \Vert}^2}
+    \geq R_k \geq R > 0
+\end{equation*}
