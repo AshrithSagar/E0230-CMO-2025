@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import numpy.typing as npt
 from rich.console import Console
-from rich.progress import BarColumn, Progress, TextColumn, TimeElapsedColumn
+from rich.progress import Progress, TextColumn, TimeElapsedColumn
 from rich.traceback import install
 
 sys.path.insert(0, os.path.abspath("oracle_2025A1"))
@@ -136,14 +136,14 @@ class IterativeOptimiser:
         self.maxiter: int
         self.tol: float
 
-    def _initialise_state(self) -> None:
+    def initialise_state(self) -> None:
         """
         Initialises the state of the algorithm.\\
         [Optional]: This method can be overridden by subclasses to set up any necessary state if needed.
         """
         pass
 
-    def _step(
+    def step(
         self,
         x: floatVec,
         k: int,
@@ -200,7 +200,7 @@ class IterativeOptimiser:
             oracle_fn.reset()
             history = [x0]
             x = x0
-            self._initialise_state()
+            self.initialise_state()
 
             progress = Progress(
                 TextColumn("[progress.description]{task.description}"),
@@ -233,7 +233,7 @@ class IterativeOptimiser:
                     )
                     if grad_norm < tol:  # Early exit, if ||f'(x)|| is small enough
                         break
-                    x = self._step(x, k, fx, dfx, oracle_fn)
+                    x = self.step(x, k, fx, dfx, oracle_fn)
                     history.append(x)
                 fx, dfx = oracle_fn(x)
             except OverflowError:  # Fallback, in case of non-convergence
@@ -307,21 +307,21 @@ class LineSearchOptimiser(IterativeOptimiser):
     A base template class for line search-based iterative optimisation algorithms.
 
     `x_{k+1} = x_k + eta_k * d_k`\\
-    where `eta_k` is the step size along the descent direction `d_k`.
+    where `eta_k` is the step length along the descent direction `d_k`.
     """
 
-    def _initialise_state(self):
-        super()._initialise_state()
-        self.step_sizes: list[float] = []
+    def initialise_state(self):
+        super().initialise_state()
+        self.step_lengths: list[float] = []
 
-    def _direction(self, x: floatVec, grad: floatVec) -> floatVec:
+    def direction(self, x: floatVec, grad: floatVec) -> floatVec:
         """
         Returns the descent direction `d_k` to move towards from `x_k`.\\
         [Required]: This method should be implemented by subclasses to define the specific direction strategy.
         """
         raise NotImplementedError
 
-    def _step_size(
+    def step_length(
         self,
         x: floatVec,
         k: int,
@@ -330,49 +330,50 @@ class LineSearchOptimiser(IterativeOptimiser):
         direction: floatVec,
         oracle_fn: FirstOrderOracle,
     ) -> float:
-        """Returns step size `eta_k` to take along the descent direction `d_k`.\\
-        [Required]: This method should be implemented by subclasses to define the specific step size strategy.
+        """Returns step length `eta_k` to take along the descent direction `d_k`.\\
+        [Required]: This method should be implemented by subclasses to define the specific step length strategy.
         """
         raise NotImplementedError
 
-    def _step(self, x, k, f, grad, oracle_fn):
-        d_k = self._direction(x, grad)
-        eta_k = self._step_size(x, k, f, grad, d_k, oracle_fn)
-        self.step_sizes.append(eta_k)
+    def step(self, x, k, f, grad, oracle_fn):
+        d_k = self.direction(x, grad)
+        eta_k = self.step_length(x, k, f, grad, d_k, oracle_fn)
+        self.step_lengths.append(eta_k)
         return x + eta_k * d_k
 
-    def plot_step_sizes(self):
-        """Plot step sizes vs iterations for the best run."""
-        plt.plot(self.step_sizes, marker="o", label=self.name)
+    def plot_step_lengths(self):
+        """Plot step lengths vs iterations for the best run."""
+        plt.plot(self.step_lengths, marker="o", label=self.name)
 
 
 class SteepestDescentDirectionMixin(LineSearchOptimiser):
     """
-    A mixin class that provides the steepest descent direction strategy.
+    A mixin class that provides the steepest descent direction strategy,
+    i.e., the Cauchy direction, which is the negative gradient direction.
 
     `d_k = -f'(x_k)`
     """
 
-    def _direction(self, x: floatVec, grad: floatVec) -> floatVec:
+    def direction(self, x: floatVec, grad: floatVec) -> floatVec:
         return -grad
 
 
 class ExactLineSearchMixin(LineSearchOptimiser):
     """
-    A mixin class that provides the exact line search step size strategy for quadratic functions.
+    A mixin class that provides the exact line search step length strategy for quadratic functions.
 
     `eta_k = - (f'(x_k)^T d_k) / (d_k^T Q d_k)`\\
     where `Q` is the Hessian matrix of the quadratic function.
     """
 
-    def _initialise_state(self):
-        super()._initialise_state()
+    def initialise_state(self):
+        super().initialise_state()
         Q = self.config.get("Q", None)
         if Q is None:
             raise ValueError("Q matrix is required for exact line search.")
         self.Q: floatVec = np.array(Q, dtype=float)
 
-    def _step_size(
+    def step_length(
         self,
         x: floatVec,
         k: int,
@@ -399,6 +400,8 @@ class SteepestGradientDescentExactLineSearch(
     where `eta_k = (f'(x_k)^T f'(x_k)) / (f'(x_k)^T Q f'(x_k))`
     """
 
+    pass  # All methods are provided by the mixins
+
 
 class SteepestGradientDescentArmijo(SteepestDescentDirectionMixin, LineSearchOptimiser):
     """
@@ -407,7 +410,7 @@ class SteepestGradientDescentArmijo(SteepestDescentDirectionMixin, LineSearchOpt
     `f(x_k + eta_k * d_k) <= f(x_k) + alpha * eta_k * f'(x_k)^T d_k`
     """
 
-    def _step_size(
+    def step_length(
         self,
         x: floatVec,
         k: int,
@@ -418,7 +421,7 @@ class SteepestGradientDescentArmijo(SteepestDescentDirectionMixin, LineSearchOpt
     ) -> float:
         alpha = float(self.config.get("alpha", 0.3))
         beta = float(self.config.get("beta", 0.8))
-        eta = float(self.config.get("initial_step_size", 1.0))
+        eta = float(self.config.get("initial_step_length", 1.0))
         maxiter = int(self.config.get("maxiter", 100))
 
         for _ in range(maxiter):
@@ -444,7 +447,7 @@ class SteepestGradientDescentArmijoGoldstein(
     where `0 < alpha < 0.5`.
     """
 
-    def _step_size(
+    def step_length(
         self,
         x: floatVec,
         k: int,
@@ -455,7 +458,7 @@ class SteepestGradientDescentArmijoGoldstein(
     ) -> float:
         alpha = float(self.config.get("alpha", 0.3))
         beta = float(self.config.get("beta", 0.8))
-        eta = float(self.config.get("initial_step_size", 1.0))
+        eta = float(self.config.get("initial_step_length", 1.0))
         maxiter = int(self.config.get("maxiter", 100))
 
         for _ in range(maxiter):
@@ -481,7 +484,7 @@ class SteepestGradientDescentWolfe(SteepestDescentDirectionMixin, LineSearchOpti
     where `0 < alpha < beta < 1`.
     """
 
-    def _step_size(
+    def step_length(
         self,
         x: floatVec,
         k: int,
@@ -492,7 +495,7 @@ class SteepestGradientDescentWolfe(SteepestDescentDirectionMixin, LineSearchOpti
     ) -> float:
         alpha = float(self.config.get("alpha", 0.3))
         beta = float(self.config.get("beta", 0.8))
-        eta = float(self.config.get("initial_step_size", 1.0))
+        eta = float(self.config.get("initial_step_length", 1.0))
         maxiter = int(self.config.get("maxiter", 100))
 
         for _ in range(maxiter):
@@ -519,7 +522,7 @@ class SteepestGradientDescentBacktracking(
     where `0 < alpha < 0.5`.
     """
 
-    def _step_size(
+    def step_length(
         self,
         x: floatVec,
         k: int,
@@ -530,7 +533,7 @@ class SteepestGradientDescentBacktracking(
     ) -> float:
         alpha = float(self.config.get("alpha", 0.3))
         beta = float(self.config.get("beta", 0.8))
-        eta = float(self.config.get("initial_step_size", 1.0))
+        eta = float(self.config.get("initial_step_length", 1.0))
         maxiter = int(self.config.get("maxiter", 100))
 
         for _ in range(maxiter):
@@ -673,12 +676,14 @@ def question_2():
     oracle = FirstOrderOracle.from_separate(oq2f, grad_fn, dim=5)
 
     optimisers: list[LineSearchOptimiser] = [
-        SteepestGradientDescentArmijo(alpha=0.3, beta=0.8, initial_step_size=1.0),
+        SteepestGradientDescentArmijo(alpha=0.3, beta=0.8, initial_step_length=1.0),
         SteepestGradientDescentArmijoGoldstein(
-            alpha=0.3, beta=0.8, initial_step_size=1.0
+            alpha=0.3, beta=0.8, initial_step_length=1.0
         ),
-        SteepestGradientDescentWolfe(alpha=0.3, beta=0.8, initial_step_size=1.0),
-        SteepestGradientDescentBacktracking(alpha=0.3, beta=0.8, initial_step_size=1.0),
+        SteepestGradientDescentWolfe(alpha=0.3, beta=0.8, initial_step_length=1.0),
+        SteepestGradientDescentBacktracking(
+            alpha=0.3, beta=0.8, initial_step_length=1.0
+        ),
     ]
     x0s = [
         np.array([0.0, 0.0, 0.0, 0.0, 0.0]),
@@ -695,10 +700,10 @@ def question_2():
         if i != 0:
             console.rule(style="default")
         optim.run(oracle, x0s=x0s, maxiter=1_000, tol=1e-7)
-        optim.plot_step_sizes()
-    plt.title(r"Step Size vs Iteration for different (Inexact) Line Search methods")
+        optim.plot_step_lengths()
+    plt.title(r"Step length vs Iteration for different (Inexact) Line Search methods")
     plt.xlabel(r"Iteration $k$")
-    plt.ylabel(r"Step Size $\eta_k$")
+    plt.ylabel(r"Step length $\alpha_k$")
     plt.legend()
     plt.grid(True)
 
@@ -707,6 +712,7 @@ def question_3():
     console.rule("[bold magenta]Question 3", style="magenta")
 
     question_3_2()
+    console.rule(style="default")
     question_3_5()
 
 
