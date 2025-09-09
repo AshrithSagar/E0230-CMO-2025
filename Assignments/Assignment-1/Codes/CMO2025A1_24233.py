@@ -14,6 +14,7 @@ import numpy as np
 import numpy.typing as npt
 from rich.console import Console
 from rich.progress import Progress, TextColumn, TimeElapsedColumn
+from rich.table import Table
 from rich.traceback import install
 
 sys.path.insert(0, os.path.abspath("oracle_2025A1"))
@@ -720,7 +721,7 @@ def format_float(
     ffmt: str = "f",
     sep: str = ",\n",
     lim: int = 5,
-):
+) -> str | None:
     _fmt = f"{{:{dprec}.{fprec}{ffmt}}}"
     if isinstance(obj, float):
         return f"{_fmt.format(obj)}"
@@ -735,6 +736,21 @@ def format_float(
                 + [f"{_fmt.format(x)}" for x in obj[-3:]]
             )
         return "[" + sep.join(formatted) + "]"
+
+
+def format_time(t: float | None) -> str:
+    """Format time in seconds to an appropriate unit"""
+    if t is None:
+        return "N/A"
+    abs_t = abs(t)
+    units: list[tuple[str, float]] = [("s", 1), ("ms", 1e-3), ("\u03bcs", 1e-6)]
+    for unit, thresh in units:
+        if abs_t >= thresh:
+            val = t / thresh
+            if unit == "\u03bcs":
+                return f"{int(round(val))} {unit}"
+            return f"{val:.3f} {unit}"
+    return f"{int(round(t / 1e-6))} \u03bcs"  # Fallback for very small values
 
 
 # ---------- Questions ----------
@@ -856,10 +872,14 @@ def question_3_2():
 
 
 def question_3_5():
-    MU = 0
-    SIGMA = 1
+    MU: float = 0
+    SIGMA: float = 1
 
-    m_values = [2**i for i in range(1, 13)]
+    gen_times: list[float | None] = []
+    inv_times: list[float | None] = []
+    sol_times: list[float | None] = []
+
+    m_values: list[int] = [2**i for i in range(1, 13)]
     for m in m_values:
         try:
             console.print(f"[cyan]LinearSystem [italic]with {m=}[/]")
@@ -868,35 +888,61 @@ def question_3_5():
                 A: floatVec = SIGMA * np.random.randn(m, m) + MU
                 b: floatVec = SIGMA * np.random.randn(m) + MU
             t1 = time.perf_counter()
+            t = t1 - t0
+            gen_times.append(t)
             console.print(
-                f"[bright_black]Time taken to generate A, b: {t1 - t0:.6f} seconds[/]"
+                f"[bright_black]Time taken to generate A, b: {t:.6f} seconds[/]"
             )
             ls = LinearSystem(A, b)
 
             t0 = time.perf_counter()
             with console.status("Solving system using matrix inversion..."):
-                _x = -np.linalg.inv(A) * b
+                _x = -np.linalg.inv(A) @ b
             t1 = time.perf_counter()
+            t = t1 - t0
+            inv_times.append(t)
             console.print(
-                f"[bright_black]Time taken to solve system using matrix inversion: {t1 - t0:.6f} seconds[/]"
+                f"[bright_black]Time taken to solve system using matrix inversion: {t:.6f} seconds[/]"
             )
 
             t0 = time.perf_counter()
             with console.status("Solving system using numpy.linalg.solve..."):
                 ls.solve()
             t1 = time.perf_counter()
+            t = t1 - t0
+            sol_times.append(t)
             console.print(
-                f"[bright_black]Time taken to solve system using numpy.linalg.solve: {t1 - t0:.6f} seconds[/]"
+                f"[bright_black]Time taken to solve system using numpy.linalg.solve: {t:.6f} seconds[/]"
             )
 
         except MemoryError as e:
             console.print(
                 f"[yellow][bold]MemoryError:[/bold] Unable to allocate [italic]for {m=}:[/italic][/yellow] {e}"
             )
+            gen_times.append(None)
+            inv_times.append(None)
+            sol_times.append(None)
         except Exception as e:
             console.print(
                 f"[red][bold]Error[/bold] [italic]for {m=}:[/italic][/red] {e}"
             )
+            gen_times.append(None)
+            inv_times.append(None)
+            sol_times.append(None)
+
+    table = Table(title="Timing results for solving linear systems")
+    table.add_column("Dimensions (m\u00d7m)", justify="center")
+    table.add_column("Generation", justify="center")
+    table.add_column("Matrix inversion", justify="center")
+    table.add_column("numpy.linalg.solve", justify="center")
+    for i, m in enumerate(m_values):
+        table.add_row(
+            f"{m}\u00d7{m}",
+            format_time(gen_times[i]),
+            format_time(inv_times[i]),
+            format_time(sol_times[i]),
+        )
+    console.print(table)
 
 
 # ---------- Main ----------
