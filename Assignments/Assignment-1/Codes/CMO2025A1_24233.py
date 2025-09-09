@@ -743,12 +743,20 @@ def format_time(t: float | None) -> str:
     if t is None:
         return "N/A"
     abs_t = abs(t)
+    if abs_t >= 60:
+        minutes = int(t // 60)
+        seconds = t % 60
+        if seconds < 1e-3:
+            return f"{minutes} min"
+        return f"{minutes} min {round(seconds)} s"
     units: list[tuple[str, float]] = [("s", 1), ("ms", 1e-3), ("\u03bcs", 1e-6)]
     for unit, thresh in units:
         if abs_t >= thresh:
             val = t / thresh
             if unit == "\u03bcs":
                 return f"{int(round(val))} {unit}"
+            if unit == "min":
+                return f"{val:.2f} {unit}"
             return f"{val:.3f} {unit}"
     return f"{int(round(t / 1e-6))} \u03bcs"  # Fallback for very small values
 
@@ -877,9 +885,10 @@ def question_3_5():
 
     gen_times: list[float | None] = []
     inv_times: list[float | None] = []
-    sol_times: list[float | None] = []
+    opt_times: list[float | None] = []
+    npy_times: list[float | None] = []
 
-    m_values: list[int] = [2**i for i in range(1, 13)]
+    m_values: list[int] = [2**i for i in range(1, 10)]
     for m in m_values:
         try:
             console.print(f"[cyan]LinearSystem [italic]with {m=}[/]")
@@ -906,11 +915,26 @@ def question_3_5():
             )
 
             t0 = time.perf_counter()
+            oracle = ls.make_oracle()
+            optim = SteepestGradientDescentWolfe(
+                alpha=0.01, beta=0.9, initial_step_length=1.0, maxiter=2 * m
+            )
+            x0s = [np.zeros(ls.n)]
+            optim.run(oracle, x0s=x0s, maxiter=2 * m, tol=1e-3, show_params=False)
+            t1 = time.perf_counter()
+            t = t1 - t0
+            t *= 1000
+            opt_times.append(t)
+            console.print(
+                f"[bright_black]Time taken to solve system using optimisation techniques: {t:.6f} seconds[/]"
+            )
+
+            t0 = time.perf_counter()
             with console.status("Solving system using numpy.linalg.solve..."):
                 ls.solve()
             t1 = time.perf_counter()
             t = t1 - t0
-            sol_times.append(t)
+            npy_times.append(t)
             console.print(
                 f"[bright_black]Time taken to solve system using numpy.linalg.solve: {t:.6f} seconds[/]"
             )
@@ -921,26 +945,30 @@ def question_3_5():
             )
             gen_times.append(None)
             inv_times.append(None)
-            sol_times.append(None)
+            opt_times.append(None)
+            npy_times.append(None)
         except Exception as e:
             console.print(
                 f"[red][bold]Error[/bold] [italic]for {m=}:[/italic][/red] {e}"
             )
             gen_times.append(None)
             inv_times.append(None)
-            sol_times.append(None)
+            opt_times.append(None)
+            npy_times.append(None)
 
     table = Table(title="Timing results for solving linear systems")
     table.add_column("Dimensions (m\u00d7m)", justify="center")
     table.add_column("Generation", justify="center")
     table.add_column("Matrix inversion", justify="center")
+    table.add_column("Optimisation", justify="center")
     table.add_column("numpy.linalg.solve", justify="center")
     for i, m in enumerate(m_values):
         table.add_row(
             f"{m}\u00d7{m}",
             format_time(gen_times[i]),
             format_time(inv_times[i]),
-            format_time(sol_times[i]),
+            format_time(opt_times[i]),
+            format_time(npy_times[i]),
         )
     console.print(table)
 
