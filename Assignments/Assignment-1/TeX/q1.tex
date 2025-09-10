@@ -15,8 +15,54 @@ We're given the following unconstrained optimisation problem:
     \end{bmatrix}
 \end{equation*}
 
-\paragraph{(1). Exact line search:}
+\subsection*{(1). Exact line search:}
 
+The exact line search method for convex quadratic functions is summarised in Algorithm 1.
+
+\begin{algorithm}[H]
+    \caption{
+        Exact line search for convex quadratic functions
+    }
+    \SetAlgoLined{}
+    \KwIn{
+        First-order oracle for the objective function \( f(\mathbf{x}) \);
+        Initial point \( \mathbf{x}^{(0)} \in \mathbb{R}^d \);
+    }
+    \KwOut{
+        Approximate solution to the minimisation problem \( \displaystyle \argmin_{\mathbf{x} \in \mathbb{R}^d} f(\mathbf{x}) \)\;
+    }
+
+    \( k \leftarrow 0 \)\;
+
+    \While{\( \mathbf{x}^{(k)} \) is not optimal}{
+        Choose a descent direction \( \mathbf{p}^{(k)} \) from the set of descent directions
+        \begin{equation*}
+            \mathcal{DS} \left( \mathbf{x}^{(k)} \right) = \left\{ \mathbf{p} \in \mathbb{R}^d \;\big|\; {\nabla f(\mathbf{x}^{(k)})}^{\top} \mathbf{p} < 0 \right\}
+        \end{equation*}
+        One such choice is the steepest descent direction (Cauchy direction):
+        \begin{equation*}
+            \mathbf{p}^{(k)} = -\nabla f(\mathbf{x}^{k})
+        \end{equation*}
+
+        Choose the step length \( \alpha_k \geq 0 \) by solving the one-dimensional optimisation problem
+        \begin{equation*}
+            \alpha_k = \argmin_{\alpha \geq 0} g_k(\alpha),
+            \qquad \text{where } \;
+            g_k(\alpha) \triangleq f\left( \mathbf{x}^{(k)} + \alpha \mathbf{p}^{(k)} \right)
+        \end{equation*}
+        For convex quadratic functions, the exact line search has a closed-form solution:
+        \begin{equation*}
+            \alpha_k = -\frac{{\nabla f(\mathbf{x}^{(k)})}^{\top} \mathbf{p}^{(k)}}{{\mathbf{p}^{(k)}}^{\top} \mathbf{Q} \mathbf{p}^{(k)}}
+        \end{equation*}
+
+        Update the current point: \( \mathbf{x}^{(k+1)} = \mathbf{x}^{(k)} + \alpha_k \mathbf{p}^{(k)} \)\;
+
+        \( k \leftarrow k + 1 \)\;
+    }
+    \Return{\( \mathbf{x}^{(k)} \)\;}
+\end{algorithm}
+
+\newpage
 The optimal values obtained from the steepest gradient descent with exact line search are tabulated below.
 
 % chktex-file 44
@@ -80,7 +126,6 @@ The optimal values obtained from the steepest gradient descent with exact line s
     \end{tabular}
 \end{table}
 
-\newpage
 \paragraph{(2). Analytical solution:}
 
 The analytical solution for the minimum point \( \mathbf{x}^* \) can be derived from the first-order necessary condition of a local minimum, i.e., by setting the gradient of \( f(\mathbf{x}) \) to zero and solving for \( \mathbf{x} \):
@@ -98,6 +143,7 @@ The plot of the norm \( \|\mathbf{x}^{(k)} - \mathbf{x}^*\|_2 \) versus iteratio
     \includegraphics[width=\textwidth]{figures/q1.png}
 \end{figure}
 
+\newpage
 \paragraph{(3). Convergence behaviour:}
 
 The convergence of steepest descent with exact line search depends on the condition number, which is defined as
