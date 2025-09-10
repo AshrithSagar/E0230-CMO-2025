@@ -497,11 +497,10 @@ class SteepestGradientDescentArmijo(SteepestDescentDirectionMixin, LineSearchOpt
         super().initialise_state()
 
         self.c = float(self.config.get("c", 1e-4))  # Armijo parameter
-        self.beta = float(self.config.get("beta", 0.5))
-        self.alpha_init = float(self.config.get("alpha_init", 1.0))
         self.alpha_min = float(self.config.get("alpha_min", 1e-14))
-        self.alpha_max = float(self.config.get("alpha_max", 1e6))
-        self.maxiter = int(self.config.get("maxiter", 10))
+        self.alpha_start = float(self.config.get("alpha_start", 0.0))
+        self.alpha_step = float(self.config.get("alpha_step", 1e-1))
+        self.alpha_stop = float(self.config.get("alpha_stop", 1.0))
 
         assert 0 < self.c < 1, "c must be in (0, 1)"
 
@@ -520,15 +519,19 @@ class SteepestGradientDescentArmijo(SteepestDescentDirectionMixin, LineSearchOpt
             return self.alpha_min
 
         # Forward expansion
-        alpha = self.alpha_init
-        for _ in range(self.maxiter):
-            f_new, _ = self._phi_and_derphi(x, alpha, direction, oracle_fn)
+        alpha_prev: float | None = None
+        for alpha in np.arange(
+            self.alpha_start, self.alpha_stop + self.alpha_step, self.alpha_step
+        ):
+            f_new, _ = self._phi_and_derphi(x, float(alpha), direction, oracle_fn)
             if f_new <= f + self.c * alpha * derphi0:
-                return alpha
-            alpha *= self.beta
-            if alpha < self.alpha_min or alpha > self.alpha_max:
+                alpha_prev = float(alpha)
+            else:
                 break
-        return alpha
+        if alpha_prev is not None:
+            return alpha_prev
+        else:
+            return self.alpha_min
 
 
 class SteepestGradientDescentArmijoGoldstein(
@@ -931,14 +934,10 @@ def question_2():
     oracle = FirstOrderOracle.from_separate(oq2f, grad_fn, dim=5)
 
     optimisers: list[LineSearchOptimiser] = [
-        SteepestGradientDescentArmijo(alpha=0.3, beta=0.8, initial_step_length=1.0),
-        SteepestGradientDescentArmijoGoldstein(
-            alpha=0.3, beta=0.8, initial_step_length=1.0
-        ),
-        SteepestGradientDescentWolfe(alpha=0.3, beta=0.8, initial_step_length=1.0),
-        SteepestGradientDescentBacktracking(
-            alpha=0.3, beta=0.8, initial_step_length=1.0
-        ),
+        SteepestGradientDescentArmijo(c=1e-4, alpha_step=1e-1),
+        SteepestGradientDescentArmijoGoldstein(c=0.25),
+        SteepestGradientDescentWolfe(c1=1e-4, c2=0.9),
+        SteepestGradientDescentBacktracking(c=1e-4, beta=0.5),
     ]
     x0s = [
         np.array([0.0, 0.0, 0.0, 0.0, 0.0]),
@@ -954,7 +953,7 @@ def question_2():
     for i, optim in enumerate(optimisers):
         if i != 0:
             console.rule(style="default")
-        optim.run(oracle, x0s=x0s, maxiter=1_000, tol=1e-7)
+        optim.run(oracle, x0s=x0s, maxiter=1_000, tol=1e-6)
         optim.plot_step_lengths()
     plt.title(r"Step length vs Iteration for different (Inexact) Line Search methods")
     plt.xlabel(r"Iteration $k$")
@@ -987,9 +986,7 @@ def question_3_2():
     ls = LinearSystem(A, b)
     oracle = ls.make_oracle()
 
-    optim = SteepestGradientDescentWolfe(
-        alpha=0.01, beta=0.9, initial_step_size=1.0, maxiter=10
-    )
+    optim = SteepestGradientDescentWolfe(c1=1e-4, c2=0.9)
     x0s = [np.zeros(ls.n)]
     optim.run(oracle, x0s=x0s, maxiter=500, tol=1e-6)
 
@@ -1030,9 +1027,7 @@ def question_3_5():
             )
 
             oracle = ls.make_oracle()
-            optim = SteepestGradientDescentWolfe(
-                alpha=0.01, beta=0.9, initial_step_length=1.0
-            )
+            optim = SteepestGradientDescentWolfe(c1=1e-4, c2=0.9)
             x0s = [np.zeros(ls.n)]
             t0 = time.perf_counter()
             optim.run(oracle, x0s=x0s, maxiter=1_000, tol=1e-6, show_params=False)
