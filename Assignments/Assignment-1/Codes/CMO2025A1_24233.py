@@ -901,8 +901,8 @@ def question_2():
     console.rule("[bold magenta]Question 2", style="magenta")
 
     def grad_fn(srn: int, x: floatVec) -> floatVec:
-        g: floatVec = oq2g(srn, x)
-        return g.reshape(-1)
+        g: floatVec = oq2g(srn, x)  # Shape: (5, 1)
+        return g.reshape(-1)  # Shape: (5,)
 
     oracle = FirstOrderOracle.from_separate(oq2f, grad_fn, dim=5)
 
@@ -953,7 +953,7 @@ def question_3_2():
         A, b = oq3(SRN)
     t1 = time.perf_counter()
     console.print(
-        f"[bright_black]Time taken to load A, b from oracle: {t1 - t0:.6f} seconds[/]"
+        f"[bright_black]Time taken to load A, b from oracle: {format_time(t1 - t0)}[/]"
     )
     A: floatVec = np.array(A, dtype=np.float64)
     b: floatVec = np.array(b.reshape(-1), dtype=np.float64)
@@ -976,11 +976,11 @@ def question_3_5():
     opt_times: list[float | None] = []
     npy_times: list[float | None] = []
 
-    m_values: list[int] = [2**i for i in range(1, 13)]
+    m_values: list[int] = [2**i for i in range(1, 15)]
     for m in m_values:
         try:
             # Generate a random well-conditioned A, cond(A) ~ 1 + 1e3
-            console.print(f"[cyan]LinearSystem [italic]with {m=}[/]")
+            console.print(f"[cyan]LinearSystem [italic]with {m=}[/]:")
             t0 = time.perf_counter()
             with console.status("Generating A and b..."):
                 A: floatVec = np.eye(m) + 1e-3 * np.random.randn(m, m)
@@ -989,7 +989,7 @@ def question_3_5():
             t = t1 - t0
             gen_times.append(t)
             console.print(
-                f"[bright_black]Time taken to generate A, b: {t:.6f} seconds[/]"
+                f"[bright_black]Time taken to generate A, b: {format_time(t)}[/]"
             )
             ls = LinearSystem(A, b)
 
@@ -1000,7 +1000,7 @@ def question_3_5():
             t = t1 - t0
             inv_times.append(t)
             console.print(
-                f"[bright_black]Time taken to solve system using matrix inversion: {t:.6f} seconds[/]"
+                f"[bright_black]Time taken to solve system using matrix inversion: {format_time(t)}[/]"
             )
 
             oracle = ls.make_oracle()
@@ -1014,7 +1014,7 @@ def question_3_5():
             t = t1 - t0
             opt_times.append(t)
             console.print(
-                f"[bright_black]Time taken to solve system using optimisation techniques: {t:.6f} seconds[/]"
+                f"[bright_black]Time taken to solve system using optimisation techniques: {format_time(t)}[/]"
             )
 
             t0 = time.perf_counter()
@@ -1024,7 +1024,7 @@ def question_3_5():
             t = t1 - t0
             npy_times.append(t)
             console.print(
-                f"[bright_black]Time taken to solve system using numpy.linalg.solve: {t:.6f} seconds[/]"
+                f"[bright_black]Time taken to solve system using numpy.linalg.solve: {format_time(t)}[/]"
             )
 
             print()
