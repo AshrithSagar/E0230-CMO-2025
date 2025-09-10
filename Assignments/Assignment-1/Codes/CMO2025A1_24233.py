@@ -238,6 +238,7 @@ class IterativeOptimiser:
         has_multiple_x0 = len(x0s) > 1
 
         self.runs = []
+        t00 = time.perf_counter()
         for idx, x0 in enumerate(x0s, start=1):
             oracle_fn.reset()
             history = [x0]
@@ -255,6 +256,7 @@ class IterativeOptimiser:
                 transient=True,
             )
             progress.start()
+            t0 = time.perf_counter()
             try:
                 task = progress.add_task(
                     "Run" + f" {idx}" if has_multiple_x0 else "" + ":",
@@ -283,6 +285,8 @@ class IterativeOptimiser:
                 fx, dfx = float("nan"), np.full(oracle_fn.dim, np.nan)
             finally:
                 progress.stop()
+            t1 = time.perf_counter()
+            t = t1 - t0
 
             self.runs.append(
                 {
@@ -292,6 +296,7 @@ class IterativeOptimiser:
                     "dfx_star": dfx,
                     "history": history,
                     "oracle_call_count": oracle_fn.call_count,
+                    "time_taken": t,
                 }
             )
             if LOG_RUNS and has_multiple_x0:
@@ -299,6 +304,8 @@ class IterativeOptimiser:
                 self._show_run_result(
                     x, fx, dfx, x0, len(history) - 1, oracle_fn.call_count, title
                 )
+                console.print(f"[bright_black]Time taken: {format_time(t)}[/]")
+        t10 = time.perf_counter()
 
         # Pick best run by lowest ||f'(x^*)||, if tied then prefer lower oracle call count
         if valid_runs := [
@@ -334,6 +341,7 @@ class IterativeOptimiser:
         self._show_run_result(
             self.x_star, self.fx_star, self.dfx_star, x0, n_iters, n_oracle, title
         )
+        console.print(f"[bright_black]Time taken: {format_time(t10 - t00)}[/]")
 
     def plot_history(self):
         """Plots the history of `x` values during the optimisation."""
@@ -988,7 +996,7 @@ def question_3_2():
 
     optim = SteepestGradientDescentWolfe(c1=1e-4, c2=0.9)
     x0s = [np.zeros(ls.n)]
-    optim.run(oracle, x0s=x0s, maxiter=500, tol=1e-6)
+    optim.run(oracle, x0s=x0s, maxiter=500, tol=1e-3)
 
     np.savetxt("CMO2025A1_24233.csv", optim.x_star)
 
