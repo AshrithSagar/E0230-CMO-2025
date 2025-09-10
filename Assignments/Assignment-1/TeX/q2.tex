@@ -12,3 +12,64 @@ We're given the following unconstrained optimisation problem: \( \min_{\mathbf{x
 \paragraph{(4). Number of oracle calls:}
 
 \paragraph{(5). (Inexact) Line search methods comparision:}
+
+\subsubsection*{Sufficient decrease condition (Armijo condition)}
+
+\begin{equation*}
+    f \left( \mathbf{x}^{(k)} + \alpha_k \mathbf{p}^{(k)} \right)
+    \leq
+    f(\mathbf{x}^{(k)}) + c \alpha_k {\nabla f(\mathbf{x}^{(k)})}^{\top} \mathbf{p}^{(k)},
+    \quad 0 < c < 1
+\end{equation*}
+
+\subsubsection*{Goldstein conditions / Armijo-Goldstein conditions}
+
+\vspace*{-1em}
+\begin{align*}
+    f(\mathbf{x}^{(k)}) + (1 - c) \alpha_k {\nabla f(\mathbf{x}^{(k)})}^{\top} \mathbf{p}^{(k)}
+    & \leq
+    \overbrace{
+        f \left( \mathbf{x}^{(k)} + \alpha_k \mathbf{p}^{(k)} \right)
+        \leq
+        f(\mathbf{x}^{(k)}) + c \alpha_k {\nabla f(\mathbf{x}^{(k)})}^{\top} \mathbf{p}^{(k)}
+    }^{\text{sufficient decrease}}
+    \\
+    \text{where } \;&
+    0 < c < \frac{1}{2}
+\end{align*}
+
+\subsubsection*{Wolfe conditions}
+
+The step length \( \alpha_k \) satisfies both the \textit{sufficient decrease condition} and the \textit{curvature condition}.
+\begin{align*}
+    f \left( \mathbf{x}^{(k)} + \alpha_k \mathbf{p}^{(k)} \right)
+    & \leq
+    f(\mathbf{x}^{(k)}) + c_1 \alpha_k {\nabla f(\mathbf{x}^{(k)})}^{\top} \mathbf{p}^{(k)}
+    \tag{sufficient decrease}
+    \\
+    {\nabla f \left( \mathbf{x}^{(k)} + \alpha_k \mathbf{p}^{(k)} \right)}^{\top} \mathbf{p}^{(k)}
+    & \geq
+    c_2 {\nabla f(\mathbf{x}^{(k)})}^{\top} \mathbf{p}^{(k)}
+    \tag{curvature}
+    \\
+    \text{where } \;&
+    0 < c_1 < c_2 < 1
+\end{align*}
+
+\subsubsection*{Strong Wolfe conditions}
+
+The step length \( \alpha_k \) satisfies both the \textit{sufficient decrease condition} and the \textit{strong curvature condition}.
+\begin{align*}
+    f \left( \mathbf{x}^{(k)} + \alpha_k \mathbf{p}^{(k)} \right)
+    & \leq
+    f(\mathbf{x}^{(k)}) + c_1 \alpha_k {\nabla f(\mathbf{x}^{(k)})}^{\top} \mathbf{p}^{(k)}
+    \tag{sufficient decrease}
+    \\
+    \left| {\nabla f \left( \mathbf{x}^{(k)} + \alpha_k \mathbf{p}^{(k)} \right)}^{\top} \mathbf{p}^{(k)} \right|
+    & \leq
+    c_2 \left| {\nabla f(\mathbf{x}^{(k)})}^{\top} \mathbf{p}^{(k)} \right|
+    \tag{strong curvature}
+    \\
+    \text{where } \;&
+    0 < c_1 < c_2 < 1
+\end{align*}
