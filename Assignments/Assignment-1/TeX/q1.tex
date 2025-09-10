@@ -83,3 +83,16 @@ The optimal values obtained from the steepest gradient descent with exact line s
 \paragraph{(2). Analytical solution:}
 
 \paragraph{(3). Convergence behaviour:}
+
+The convergence of steepest descent with exact line search depends on the condition number, which is defined as
+\begin{equation*}
+    \kappa(Q) = \frac{\lambda_{\max}(Q)}{\lambda_{\min}(Q)}
+\end{equation*}
+where \( \lambda_{\max}(Q) \) and \( \lambda_{\min}(Q) \) are the largest and smallest eigenvalues of \( Q \), respectively.
+If \( \kappa(Q) \approx 1 \) (i.e., well-conditioned), the method converges very quickly, while large \( \kappa(Q) \) (i.e., ill-conditioned) leads to slow convergence due to zig-zagging along narrow valleys.
+The theoretical contraction factor is
+\begin{equation*}
+    \|x^{(k+1)} - x^*\|_Q \;\leq\; \rho \, \|x^{(k)} - x^*\|_Q,
+    \quad \text{where } \rho = \frac{\kappa - 1}{\kappa + 1},
+    \quad \|z\|_Q = \sqrt{z^T Q z}
+\end{equation*}
