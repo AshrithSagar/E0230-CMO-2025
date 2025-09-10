@@ -82,11 +82,24 @@ by non-negativity of the squared Euclidean norm.
 
 \paragraph{(4). Complexity comparisions:}
 We're further given that \( \mathbf{A} \) is full rank and square.
+Thereby, we can see that the inverse \( \mathbf{A}^{-1} \) exists, and the system has a unique solution.
 
 \begin{enumerate}[label= (\alph*).]
-    \item Matrix inversion
+    \item Matrix inversion:
+        The method involves explicitly computing the inverse \( \mathbf{A}^{-1} \) and then multiplying it with \( \mathbf{b} \) to obtain the solution \( \mathbf{x}^* = \mathbf{A}^{-1} \mathbf{b} \).
+        Computing the inverse of an \( n \times n \) matrix typically has a time complexity of \( \mathcal{O}(n^3) \), and the matrix-vector multiplication has a time complexity of \( \mathcal{O}(n^2) \).
+        Therefore, the overall time complexity of this method is dominated by the matrix inversion step, resulting in a total time complexity of \( \boxed{ \mathcal{O}(n^3) } \).
 
-    \item Optimisation techniques
+    \item Optimisation techniques:
+        The formulated convex optimisation problem can be solved using iterative methods, typically taking about \( \boxed{ \mathcal{O}(k n^2) } \) time complexity, where \( k \) is the number of iterations required for convergence, and since each iteration involves matrix-vector multiplications with a time complexity of \( \mathcal{O}(n^2) \).
+        Typically, \( k \) depends on the condition number \( \kappa(\mathbf{A}) \) and the desired accuracy \( \epsilon \), as
+        \begin{equation*}
+            k = \mathcal{O} \left( \kappa(\mathbf{A}) \log \left( \frac{1}{\epsilon} \right) \right),
+            \quad
+            \text{where } \;
+            \kappa(\mathbf{A}) = \frac{\lambda_{\max}(\mathbf{A})}{\lambda_{\min}(\mathbf{A})}
+        \end{equation*}
+        For well-conditioned matrices (i.e., \( \kappa(\mathbf{A}) \approx 1 \)), the method converges quickly, while ill-conditioned matrices (i.e., large \( \kappa(\mathbf{A}) \)) lead to slower convergence.
 \end{enumerate}
 
 \paragraph{(5). Table of times taken to solve the system:}
