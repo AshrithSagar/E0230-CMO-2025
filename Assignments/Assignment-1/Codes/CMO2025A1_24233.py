@@ -12,6 +12,7 @@ import time
 import matplotlib.pyplot as plt
 import numpy as np
 import numpy.typing as npt
+from matplotlib.axes import Axes
 from rich.console import Console
 from rich.progress import Progress, TextColumn, TimeElapsedColumn
 from rich.table import Table
@@ -210,8 +211,8 @@ class IterativeOptimiser:
         self,
         oracle_fn: FirstOrderOracle,
         x0s: list[floatVec],
-        maxiter: int = 1_000_000,
-        tol: float = 1e-9,
+        maxiter: int = 1_000,
+        tol: float = 1e-6,
         show_params: bool = True,
     ):
         """
@@ -294,18 +295,10 @@ class IterativeOptimiser:
                 }
             )
             if LOG_RUNS and has_multiple_x0:
-                table = Table(
-                    title=f"[not italic][bold yellow]Run {idx}:[/]",
-                    title_justify="left",
-                    show_header=False,
+                title = f"[not italic][bold yellow]Run {idx}:[/]"
+                self._show_run_result(
+                    x, fx, dfx, x0, len(history) - 1, oracle_fn.call_count, title
                 )
-                table.add_column(style="bold", justify="right")
-                table.add_column()
-                table.add_row("x0", format_float(x0, sep=", "))
-                table.add_row("Iterations", str(len(history) - 1))
-                table.add_row("Oracle calls", str(oracle_fn.call_count))
-                table.add_section()
-                show_solution(x, fx, dfx, table=table)
 
         # Pick best run by lowest ||f'(x^*)||, if tied then prefer lower oracle call count
         if valid_runs := [
@@ -333,24 +326,38 @@ class IterativeOptimiser:
             n_iters = ""
             n_oracle = ""
 
-        table = Table(
-            title=f"[not italic][bold green]Best run (Run {run_idx}):[/]"
+        title = (
+            f"[not italic][bold green]Best run (Run {run_idx}):[/]"
             if has_multiple_x0
-            else "",
-            title_justify="left",
-            show_header=False,
+            else ""
         )
+        self._show_run_result(
+            self.x_star, self.fx_star, self.dfx_star, x0, n_iters, n_oracle, title
+        )
+
+    def plot_history(self):
+        """Plots the history of `x` values during the optimisation."""
+        plt.plot(self.history, label=self.name)
+
+    def _show_run_result(
+        self,
+        x: floatVec,
+        fx: float,
+        dfx: floatVec,
+        x0: floatVec,
+        n_iters: int | str,
+        n_oracle: int | str,
+        title: TextType | None = None,
+    ) -> None:
+        """Helper to format and display the values"""
+        table = Table(title=title, title_justify="left", show_header=False)
         table.add_column(style="bold", justify="right")
         table.add_column()
         table.add_row("x0", format_float(x0, sep=", "))
         table.add_row("Iterations", str(n_iters))
         table.add_row("Oracle calls", str(n_oracle))
         table.add_section()
-        show_solution(self.x_star, self.fx_star, self.dfx_star, table=table)
-
-    def plot_history(self):
-        """Plots the history of `x` values during the optimisation."""
-        plt.plot(self.history, label=self.name)
+        show_solution(x, fx, dfx, table=table)
 
 
 class LineSearchOptimiser(IterativeOptimiser):
@@ -848,7 +855,7 @@ def show_solution(
     table: Table | None = None,
     title: TextType | None = None,
 ) -> None:
-    """Helper to format and print the solution values."""
+    """Helper to format and display the solution."""
     if table is None:
         table = Table(title=title, title_justify="left", show_header=False)
         table.add_column(style="bold", justify="right")
@@ -865,6 +872,12 @@ def question_1():
     console.rule("[bold magenta]Question 1", style="magenta")
 
     b = np.array([1, 1], dtype=float)
+
+    rows, cols = 2, 3
+    fig, axes = plt.subplots(rows, cols, figsize=(5 * cols, 4 * rows))
+    axes: np.ndarray = axes.flatten()
+
+    i: int = -1
     for i, Q in enumerate(oq1(SRN)):
         if i != 0:
             console.rule(style="default")
@@ -883,18 +896,26 @@ def question_1():
         # Any starting point should work, since a local minima for the
         # convex quadratic function with Q >> 0 will be the global minima
 
-        optim.run(oracle, x0s=x0s, maxiter=100_000, tol=1e-13, show_params=False)
+        optim.run(oracle, x0s=x0s, maxiter=10_000, tol=1e-6, show_params=False)
         oracle.solve_analytical()
 
         # Plot ||x^(k) - x^*|| vs iteration k
         xk_history: floatVec = np.array(optim.history)
         norm_diff = np.linalg.norm(xk_history - oracle.x_star, axis=1)
-        plt.figure()
-        plt.plot(norm_diff, marker="o")
-        plt.title(r"$\|x^{(k)} - x^*\|$ vs Iteration $k$" + f" for {Q_name}")
-        plt.xlabel(r"Iteration $k$")
-        plt.ylabel(r"$\|x^{(k)} - x^*\|$")
-        plt.grid(True)
+        ax: Axes = axes[i]
+        ax.plot(norm_diff, marker="o")
+        ax.set_title(f"{Q_name}")
+        ax.set_xlabel(r"Iteration $k$")
+        ax.set_ylabel(r"$\|x^{(k)} - x^*\|$")
+        ax.grid(True)
+        plt.plot(norm_diff, marker="o", label=Q_name)
+
+    # Hide any unused subplots
+    for j in range(i + 1, len(axes)):
+        fig.delaxes(axes[j])
+
+    fig.suptitle(r"$\|x^{(k)} - x^*\|$ vs Iteration $k$ for different $Q$")
+    fig.tight_layout()
 
 
 def question_2():
@@ -1027,7 +1048,6 @@ def question_3_5():
                 f"[bright_black]Time taken to solve system using numpy.linalg.solve: {format_time(t)}[/]"
             )
 
-            print()
         except MemoryError as e:
             console.print(
                 f"[yellow][bold]MemoryError:[/bold] Unable to allocate [italic]for {m=}:[/italic][/yellow] {e}"
@@ -1044,6 +1064,8 @@ def question_3_5():
             inv_times.append(None)
             opt_times.append(None)
             npy_times.append(None)
+        finally:
+            console.print()
 
     table = Table(title="Timing results for solving linear systems")
     table.add_column("Dimensions (m\u00d7m)", justify="center")
