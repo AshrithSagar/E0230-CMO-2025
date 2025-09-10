@@ -80,7 +80,23 @@ The optimal values obtained from the steepest gradient descent with exact line s
     \end{tabular}
 \end{table}
 
+\newpage
 \paragraph{(2). Analytical solution:}
+
+The analytical solution for the minimum point \( \mathbf{x}^* \) can be derived from the first-order necessary condition of a local minimum, i.e., by setting the gradient of \( f(\mathbf{x}) \) to zero and solving for \( \mathbf{x} \):
+\begin{equation*}
+    \nabla f(\mathbf{x})
+    = \mathbf{Q} \mathbf{x} + \mathbf{b} = \mathbf{0}
+    \quad \implies \quad
+    \mathbf{x}^* = -\mathbf{Q}^{-1} \mathbf{b}
+\end{equation*}
+
+The plot of the norm \( \|\mathbf{x}^{(k)} - \mathbf{x}^*\|_2 \) versus iteration \( k \) for each matrix \( \mathbf{Q} \) is shown below.
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width=\textwidth]{figures/q1.png}
+\end{figure}
 
 \paragraph{(3). Convergence behaviour:}
 
