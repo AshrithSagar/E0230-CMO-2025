@@ -15,6 +15,7 @@ import numpy.typing as npt
 from rich.console import Console
 from rich.progress import Progress, TextColumn, TimeElapsedColumn
 from rich.table import Table
+from rich.text import TextType
 from rich.traceback import install
 
 sys.path.insert(0, os.path.abspath("oracle_2025A1"))
@@ -142,8 +143,12 @@ class ConvexQuadraticOracle(FirstOrderOracle):
         """Solves for the analytical minimum `x*`, `f(x*)`, and `f'(x*)`."""
         self.x_star: floatVec = np.array(-np.linalg.solve(self.Q, self.b), dtype=float)
         self.fx_star, self.dfx_star = self._oracle_fn(SRN, self.x_star)
-        console.print("\n[bold green]Analytical solution:[/]")
-        show_solution(self.x_star, self.fx_star, self.dfx_star)
+        show_solution(
+            self.x_star,
+            self.fx_star,
+            self.dfx_star,
+            title="[not italic][bold green]Analytical solution:[/]",
+        )
 
 
 # ---------- Algorithm Templates ----------
@@ -289,11 +294,18 @@ class IterativeOptimiser:
                 }
             )
             if LOG_RUNS and has_multiple_x0:
-                console.print(f"\n[bold yellow]Run {idx}:[/]")
-                print(f"x0 = {format_float(x0, sep=', ')}")
-                print(f"Iterations = {len(history) - 1}")
-                print(f"Oracle calls = {oracle_fn.call_count}")
-                show_solution(x, fx, dfx)
+                table = Table(
+                    title=f"[not italic][bold yellow]Run {idx}:[/]",
+                    title_justify="left",
+                    show_header=False,
+                )
+                table.add_column(style="bold", justify="right")
+                table.add_column()
+                table.add_row("x0", format_float(x0, sep=", "))
+                table.add_row("Iterations", str(len(history) - 1))
+                table.add_row("Oracle calls", str(oracle_fn.call_count))
+                table.add_section()
+                show_solution(x, fx, dfx, table=table)
 
         # Pick best run by lowest ||f'(x^*)||, if tied then prefer lower oracle call count
         if valid_runs := [
@@ -321,13 +333,20 @@ class IterativeOptimiser:
             n_iters = ""
             n_oracle = ""
 
-        if has_multiple_x0:
-            console.print("\n[bold green]Best run:[/]")
-        print(f"x0 = {format_float(x0, sep=', ')}", end="")
-        print(f", at index {run_idx}" if has_multiple_x0 else "")
-        print(f"Iterations = {n_iters}")
-        print(f"Oracle calls = {n_oracle}")
-        show_solution(self.x_star, self.fx_star, self.dfx_star)
+        table = Table(
+            title=f"[not italic][bold green]Best run (Run {run_idx}):[/]"
+            if has_multiple_x0
+            else "",
+            title_justify="left",
+            show_header=False,
+        )
+        table.add_column(style="bold", justify="right")
+        table.add_column()
+        table.add_row("x0", format_float(x0, sep=", "))
+        table.add_row("Iterations", str(n_iters))
+        table.add_row("Oracle calls", str(n_oracle))
+        table.add_section()
+        show_solution(self.x_star, self.fx_star, self.dfx_star, table=table)
 
     def plot_history(self):
         """Plots the history of `x` values during the optimisation."""
@@ -822,12 +841,23 @@ def format_time(t: float | None) -> str:
     return f"{int(round(t / 1e-6))} \u03bcs"  # Fallback for very small values
 
 
-def show_solution(x: floatVec, fx: float, dfx: floatVec) -> None:
+def show_solution(
+    x: floatVec,
+    fx: float,
+    dfx: floatVec,
+    table: Table | None = None,
+    title: TextType | None = None,
+) -> None:
     """Helper to format and print the solution values."""
-    print(f"x* = {format_float(x, sep=', ')}")
-    print(f"f(x*) = {format_float(fx)}")
-    print(f"f'(x*) = {format_float(dfx, sep=', ', fprec=6, ffmt='e')}")
-    print(f"||f'(x*)|| = {np.linalg.norm(dfx):e}")
+    if table is None:
+        table = Table(title=title, title_justify="left", show_header=False)
+        table.add_column(style="bold", justify="right")
+        table.add_column()
+    table.add_row("x*", format_float(x, sep=", "))
+    table.add_row("f(x*)", format_float(fx))
+    table.add_row("f'(x*)", format_float(dfx, sep=", ", fprec=6, ffmt="e"))
+    table.add_row("||f'(x*)||", f"{np.linalg.norm(dfx):.6e}")
+    console.print(table)
 
 
 # ---------- Questions ----------
