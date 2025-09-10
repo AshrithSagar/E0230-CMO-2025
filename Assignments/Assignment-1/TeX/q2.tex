@@ -5,6 +5,15 @@ We're given the following unconstrained optimisation problem: \( \min_{\mathbf{x
 
 \paragraph{(1). Gradient descent termination criterion:}
 
+A typical termination criterion for gradient descent is based on the norm of the gradient, i.e., we terminate when
+\begin{equation*}
+    \|\nabla f(\mathbf{x}_k)\| \leq \epsilon,
+    \quad
+    \text{ for some small tolerance }
+    \epsilon > 0
+\end{equation*}
+This indicates that we've (approximately) reached a stationary point, where the gradient is close to zero, suggesting a local minimum, maximum, or saddle point.
+
 \paragraph{(2).\ \( x^* \) and \( f(x^*) \) values:}
 
 \paragraph{(3). Step sizes vs.\ iterations plot:}
