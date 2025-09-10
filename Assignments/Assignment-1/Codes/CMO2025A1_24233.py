@@ -261,6 +261,7 @@ class IterativeOptimiser:
                 print(f"x* = {format_float(x, sep=', ')}")
                 print(f"f(x*) = {format_float(fx)}")
                 print(f"f'(x*) = {format_float(dfx, sep=', ')}")
+                print(f"||f'(x*)|| = {np.linalg.norm(dfx):g}")
 
         # Pick best run by lowest ||f'(x^*)||, if tied then prefer lower oracle call count
         if valid_runs := [
@@ -297,6 +298,7 @@ class IterativeOptimiser:
         print(f"x* = {format_float(self.x_star, sep=', ')}")
         print(f"f(x*) = {format_float(self.fx_star)}")
         print(f"f'(x*) = {format_float(self.dfx_star, sep=', ')}")
+        print(f"||f'(x*)|| = {np.linalg.norm(self.dfx_star):g}")
 
     def plot_history(self):
         """Plots the history of `x` values during the optimisation."""
@@ -880,22 +882,20 @@ def question_3_2():
 
 
 def question_3_5():
-    MU: float = 0
-    SIGMA: float = 1
-
     gen_times: list[float | None] = []
     inv_times: list[float | None] = []
     opt_times: list[float | None] = []
     npy_times: list[float | None] = []
 
-    m_values: list[int] = [2**i for i in range(1, 10)]
+    m_values: list[int] = [2**i for i in range(1, 13)]
     for m in m_values:
         try:
+            # Generate a random well-conditioned A, cond(A) ~ 1 + 1e3
             console.print(f"[cyan]LinearSystem [italic]with {m=}[/]")
             t0 = time.perf_counter()
             with console.status("Generating A and b..."):
-                A: floatVec = SIGMA * np.random.randn(m, m) + MU
-                b: floatVec = SIGMA * np.random.randn(m) + MU
+                A: floatVec = np.eye(m) + 1e-3 * np.random.randn(m, m)
+                b: floatVec = np.random.randn(m)
             t1 = time.perf_counter()
             t = t1 - t0
             gen_times.append(t)
@@ -914,16 +914,15 @@ def question_3_5():
                 f"[bright_black]Time taken to solve system using matrix inversion: {t:.6f} seconds[/]"
             )
 
-            t0 = time.perf_counter()
             oracle = ls.make_oracle()
             optim = SteepestGradientDescentWolfe(
-                alpha=0.01, beta=0.9, initial_step_length=1.0, maxiter=2 * m
+                alpha=0.01, beta=0.9, initial_step_length=1.0
             )
             x0s = [np.zeros(ls.n)]
-            optim.run(oracle, x0s=x0s, maxiter=2 * m, tol=1e-3, show_params=False)
+            t0 = time.perf_counter()
+            optim.run(oracle, x0s=x0s, maxiter=1_000, tol=1e-6, show_params=False)
             t1 = time.perf_counter()
             t = t1 - t0
-            t *= 1000
             opt_times.append(t)
             console.print(
                 f"[bright_black]Time taken to solve system using optimisation techniques: {t:.6f} seconds[/]"
@@ -939,6 +938,7 @@ def question_3_5():
                 f"[bright_black]Time taken to solve system using numpy.linalg.solve: {t:.6f} seconds[/]"
             )
 
+            print()
         except MemoryError as e:
             console.print(
                 f"[yellow][bold]MemoryError:[/bold] Unable to allocate [italic]for {m=}:[/italic][/yellow] {e}"
