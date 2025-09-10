@@ -7,6 +7,48 @@ To solve the linear system \( \mathbf{A} \mathbf{x} = \mathbf{b}, \quad \mathbf{
 
 \paragraph{(1). Posed as a convex optimisation problem:}
 
+The linear system can be posed as the following convex optimisation problem, a.k.a.\ the \textit{least squares problem}:
+\begin{equation*}
+    \min_{\mathbf{x} \in \mathbb{R}^n} \; \frac{1}{2} \| \mathbf{A} \mathbf{x} - \mathbf{b} \|_2^2
+    =
+    \min_{\mathbf{x} \in \mathbb{R}^n} \; \frac{1}{2} {(\mathbf{A} \mathbf{x} - \mathbf{b})}^\top (\mathbf{A} \mathbf{x} - \mathbf{b})
+    =
+    \min_{\mathbf{x} \in \mathbb{R}^n} \; \left( \frac{1}{2} \mathbf{x}^\top \mathbf{A}^\top \mathbf{A} \mathbf{x} - \mathbf{b}^\top \mathbf{A} \mathbf{x} + \frac{1}{2} \mathbf{b}^\top \mathbf{b} \right)
+\end{equation*}
+
+Convex quadratic functions \( f : \mathbb{R}^n \to \mathbb{R} \) are of the form
+\begin{equation*}
+    f(\mathbf{x}) = \frac{1}{2} \mathbf{x}^T \mathbf{Q} \mathbf{x} + \mathbf{h}^\top \mathbf{x} + c,
+    \qquad
+    \text{where } \;
+    \mathbf{Q} \in \mathbb{R}^{n \times n},
+    \mathbf{Q} \succeq 0,
+    \quad
+    \mathbf{h} \in \mathbb{R}^n,
+    \quad
+    c \in \mathbb{R}
+\end{equation*}
+and we can see that the least squares problem is a convex quadratic function with
+\begin{equation*}
+    \mathbf{Q} = \mathbf{A}^\top \mathbf{A},
+    \quad
+    \mathbf{h} = -\mathbf{A}^\top \mathbf{b},
+    \quad
+    c = \frac{1}{2} \mathbf{b}^\top \mathbf{b}
+\end{equation*}
+We can verify that \( \mathbf{Q} \succeq 0 \), since for any \( \mathbf{z} \in \mathbb{R}^n \),
+\begin{equation*}
+    \mathbf{z}^\top \mathbf{Q} \mathbf{z}
+    =
+    \mathbf{z}^\top \mathbf{A}^\top \mathbf{A} \mathbf{z}
+    =
+    {(\mathbf{A} \mathbf{z})}^\top (\mathbf{A} \mathbf{z})
+    =
+    \| \mathbf{A} \mathbf{z} \|_2^2
+    \geq 0
+\end{equation*}
+by non-negativity of the squared Euclidean norm.
+
 \paragraph{(2). Solution using optimisation techniques:}
 
 \paragraph{(3). Solution for the optimisation problem:}
