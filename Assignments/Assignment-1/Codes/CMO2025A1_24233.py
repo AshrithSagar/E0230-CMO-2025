@@ -111,6 +111,44 @@ class FirstOrderOracle:
         return cls(oracle, dim=dim, cache_digits=cache_digits)
 
 
+class ConvexQuadraticOracle(FirstOrderOracle):
+    """
+    A wrapper oracle for convex quadratic functions of the form:
+
+    `f(x) = 0.5 * x^T Q x + b^T x`\\
+    `f'(x) = Q x + b`\\
+    where `Q` is a symmetric positive definite matrix and `b` is a vector.
+    """
+
+    def __init__(self, Q: floatVec, b: floatVec):
+        assert Q.shape[0] == Q.shape[1], "Q must be a square matrix."
+        assert Q.shape[0] == b.shape[0], "Dimensions of Q and b must match."
+
+        # Check for symmetric positive definite
+        if not np.allclose(Q, Q.T) or np.any(np.linalg.eigvals(Q) <= 0):
+            raise ValueError("Q must be a symmetric positive definite matrix.")
+
+        self.Q: floatVec = Q
+        self.b: floatVec = b
+        super().__init__(self._oracle_fn, dim=Q.shape[1])
+
+    def _oracle_fn(self, _: int, x: floatVec) -> tuple[float, floatVec]:
+        """The oracle function for the convex quadratic."""
+        fx = float(0.5 * x.T @ self.Q @ x + self.b.T @ x)
+        dfx: floatVec = self.Q @ x + self.b
+        return fx, dfx
+
+    def solve_analytical(self):
+        """Solves for the analytical minimum `x*`, `f(x*)`, and `f'(x*)`."""
+        self.x_star: floatVec = np.array(-np.linalg.solve(self.Q, self.b), dtype=float)
+        self.fx_star, self.dfx_star = self._oracle_fn(SRN, self.x_star)
+        console.print("\n[bold green]Analytical solution:[/]")
+        print(f"x* = {format_float(self.x_star, sep=', ')}")
+        print(f"f(x*) = {format_float(self.fx_star)}")
+        print(f"f'(x*) = {format_float(self.dfx_star, sep=', ', fprec=6, ffmt='e')}")
+        print(f"||f'(x*)|| = {np.linalg.norm(self.dfx_star):e}")
+
+
 # ---------- Algorithm Templates ----------
 class IterativeOptimiser:
     """
@@ -389,7 +427,7 @@ class ExactLineSearchMixin(LineSearchOptimiser):
             raise ValueError("Q matrix is required for exact line search.")
         self.Q: floatVec = np.array(Q, dtype=float)
 
-        self.alpha_thresh = float(self.config.get("alpha_thresh", 1e-14))
+        self.denom_thresh = float(self.config.get("denom_thresh", 1e-14))
         self.alpha_min = float(self.config.get("alpha_min", 1e-8))
 
     def step_length(
@@ -401,11 +439,16 @@ class ExactLineSearchMixin(LineSearchOptimiser):
         direction: floatVec,
         oracle_fn: FirstOrderOracle,
     ) -> float:
+        if not isinstance(oracle_fn, ConvexQuadraticOracle):
+            raise NotImplementedError(
+                "This implementation of exact line search requires a ConvexQuadraticOracle."
+            )
+
         numer = float(grad.T @ direction)
         denom = float(direction.T @ self.Q @ direction)
 
         # Fallback if denominator is too small
-        if abs(denom) < self.alpha_thresh:
+        if abs(denom) < self.denom_thresh:
             return self.alpha_min
 
         return -numer / denom
@@ -804,30 +847,19 @@ def question_1():
         print(" ".join(f"{val:13.8f}" for val in Q[1]) + " \u2502")
         print(" " * 7 + "\u2514" + " " * 28 + "\u2518")
 
-        oracle = FirstOrderOracle(
-            lambda _, x: (0.5 * x.T @ Q @ x + b.T @ x, Q @ x + b), dim=2
-        )
+        oracle = ConvexQuadraticOracle(Q, b)
         optim = SteepestGradientDescentExactLineSearch(Q=Q)
 
-        x0s = [np.array([0.0, 0.0])]
+        x0s = [np.zeros(oracle.dim)]
         # Any starting point should work, since a local minima for the
         # convex quadratic function with Q >> 0 will be the global minima
 
         optim.run(oracle, x0s=x0s, maxiter=100_000, tol=1e-13, show_params=False)
+        oracle.solve_analytical()
 
-        x_star_analytical = -np.linalg.solve(Q, b)
-        fx_star_analytical, dfx_star_analytical = oracle(x_star_analytical)
-        console.print("\n[bold green]Analytical solution:[/]")
-        print(f"x* = {format_float(x_star_analytical, sep=', ')}")
-        print(f"f(x*) = {format_float(fx_star_analytical)}")
-        print(
-            f"f'(x*) = {format_float(dfx_star_analytical, sep=', ', fprec=6, ffmt='e')}"
-        )
-        print(f"||f'(x*)|| = {np.linalg.norm(dfx_star_analytical):e}")
-
-        # Plot ||x^(k) - x^*|| for the best run
-        xk_history = np.array(optim.history)
-        norm_diff = np.linalg.norm(xk_history - x_star_analytical, axis=1)
+        # Plot ||x^(k) - x^*|| vs iteration k
+        xk_history: floatVec = np.array(optim.history)
+        norm_diff = np.linalg.norm(xk_history - oracle.x_star, axis=1)
         plt.figure()
         plt.plot(norm_diff, marker="o")
         plt.title(r"$\|x^{(k)} - x^*\|$ vs Iteration $k$" + f" for {Q_name}")
