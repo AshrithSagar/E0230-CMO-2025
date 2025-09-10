@@ -991,7 +991,9 @@ def question_3_2():
         alpha=0.01, beta=0.9, initial_step_size=1.0, maxiter=10
     )
     x0s = [np.zeros(ls.n)]
-    optim.run(oracle, x0s=x0s, maxiter=10, tol=1e-3)
+    optim.run(oracle, x0s=x0s, maxiter=500, tol=1e-6)
+
+    np.savetxt("CMO2025A1_24233.csv", optim.x_star)
 
 
 def question_3_5():
