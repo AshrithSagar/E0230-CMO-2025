@@ -143,10 +143,7 @@ class ConvexQuadraticOracle(FirstOrderOracle):
         self.x_star: floatVec = np.array(-np.linalg.solve(self.Q, self.b), dtype=float)
         self.fx_star, self.dfx_star = self._oracle_fn(SRN, self.x_star)
         console.print("\n[bold green]Analytical solution:[/]")
-        print(f"x* = {format_float(self.x_star, sep=', ')}")
-        print(f"f(x*) = {format_float(self.fx_star)}")
-        print(f"f'(x*) = {format_float(self.dfx_star, sep=', ', fprec=6, ffmt='e')}")
-        print(f"||f'(x*)|| = {np.linalg.norm(self.dfx_star):e}")
+        show_solution(self.x_star, self.fx_star, self.dfx_star)
 
 
 # ---------- Algorithm Templates ----------
@@ -296,10 +293,7 @@ class IterativeOptimiser:
                 print(f"x0 = {format_float(x0, sep=', ')}")
                 print(f"Iterations = {len(history) - 1}")
                 print(f"Oracle calls = {oracle_fn.call_count}")
-                print(f"x* = {format_float(x, sep=', ')}")
-                print(f"f(x*) = {format_float(fx)}")
-                print(f"f'(x*) = {format_float(dfx, sep=', ', fprec=6, ffmt='e')}")
-                print(f"||f'(x*)|| = {np.linalg.norm(dfx):e}")
+                show_solution(x, fx, dfx)
 
         # Pick best run by lowest ||f'(x^*)||, if tied then prefer lower oracle call count
         if valid_runs := [
@@ -333,10 +327,7 @@ class IterativeOptimiser:
         print(f", at index {run_idx}" if has_multiple_x0 else "")
         print(f"Iterations = {n_iters}")
         print(f"Oracle calls = {n_oracle}")
-        print(f"x* = {format_float(self.x_star, sep=', ')}")
-        print(f"f(x*) = {format_float(self.fx_star)}")
-        print(f"f'(x*) = {format_float(self.dfx_star, sep=', ', fprec=6, ffmt='e')}")
-        print(f"||f'(x*)|| = {np.linalg.norm(self.dfx_star):e}")
+        show_solution(self.x_star, self.fx_star, self.dfx_star)
 
     def plot_history(self):
         """Plots the history of `x` values during the optimisation."""
@@ -829,6 +820,14 @@ def format_time(t: float | None) -> str:
                 return f"{val:.2f} {unit}"
             return f"{val:.3f} {unit}"
     return f"{int(round(t / 1e-6))} \u03bcs"  # Fallback for very small values
+
+
+def show_solution(x: floatVec, fx: float, dfx: floatVec) -> None:
+    """Helper to format and print the solution values."""
+    print(f"x* = {format_float(x, sep=', ')}")
+    print(f"f(x*) = {format_float(fx)}")
+    print(f"f'(x*) = {format_float(dfx, sep=', ', fprec=6, ffmt='e')}")
+    print(f"||f'(x*)|| = {np.linalg.norm(dfx):e}")
 
 
 # ---------- Questions ----------
