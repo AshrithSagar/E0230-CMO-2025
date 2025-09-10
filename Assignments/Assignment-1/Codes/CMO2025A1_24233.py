@@ -260,8 +260,8 @@ class IterativeOptimiser:
                 print(f"Oracle calls = {oracle_fn.call_count}")
                 print(f"x* = {format_float(x, sep=', ')}")
                 print(f"f(x*) = {format_float(fx)}")
-                print(f"f'(x*) = {format_float(dfx, sep=', ')}")
-                print(f"||f'(x*)|| = {np.linalg.norm(dfx):g}")
+                print(f"f'(x*) = {format_float(dfx, sep=', ', fprec=6, ffmt='e')}")
+                print(f"||f'(x*)|| = {np.linalg.norm(dfx):e}")
 
         # Pick best run by lowest ||f'(x^*)||, if tied then prefer lower oracle call count
         if valid_runs := [
@@ -297,8 +297,8 @@ class IterativeOptimiser:
         print(f"Oracle calls = {n_oracle}")
         print(f"x* = {format_float(self.x_star, sep=', ')}")
         print(f"f(x*) = {format_float(self.fx_star)}")
-        print(f"f'(x*) = {format_float(self.dfx_star, sep=', ')}")
-        print(f"||f'(x*)|| = {np.linalg.norm(self.dfx_star):g}")
+        print(f"f'(x*) = {format_float(self.dfx_star, sep=', ', fprec=6, ffmt='e')}")
+        print(f"||f'(x*)|| = {np.linalg.norm(self.dfx_star):e}")
 
     def plot_history(self):
         """Plots the history of `x` values during the optimisation."""
@@ -813,14 +813,17 @@ def question_1():
         # Any starting point should work, since a local minima for the
         # convex quadratic function with Q >> 0 will be the global minima
 
-        optim.run(oracle, x0s=x0s, maxiter=10_000, tol=1e-13, show_params=False)
+        optim.run(oracle, x0s=x0s, maxiter=100_000, tol=1e-13, show_params=False)
 
         x_star_analytical = -np.linalg.solve(Q, b)
         fx_star_analytical, dfx_star_analytical = oracle(x_star_analytical)
         console.print("\n[bold green]Analytical solution:[/]")
         print(f"x* = {format_float(x_star_analytical, sep=', ')}")
         print(f"f(x*) = {format_float(fx_star_analytical)}")
-        print(f"f'(x*) = {format_float(dfx_star_analytical, sep=', ')}")
+        print(
+            f"f'(x*) = {format_float(dfx_star_analytical, sep=', ', fprec=6, ffmt='e')}"
+        )
+        print(f"||f'(x*)|| = {np.linalg.norm(dfx_star_analytical):e}")
 
         # Plot ||x^(k) - x^*|| for the best run
         xk_history = np.array(optim.history)
