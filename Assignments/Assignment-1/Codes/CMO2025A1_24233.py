@@ -309,8 +309,8 @@ class LineSearchOptimiser(IterativeOptimiser):
     """
     A base template class for line search-based iterative optimisation algorithms.
 
-    `x_{k+1} = x_k + eta_k * d_k`\\
-    where `eta_k` is the step length along the descent direction `d_k`.
+    `x_{k+1} = x_k + alpha_k * p_k`\\
+    where `alpha_k` is the step length along the descent direction `p_k`.
     """
 
     def initialise_state(self):
@@ -319,7 +319,7 @@ class LineSearchOptimiser(IterativeOptimiser):
 
     def direction(self, x: floatVec, grad: floatVec) -> floatVec:
         """
-        Returns the descent direction `d_k` to move towards from `x_k`.\\
+        Returns the descent direction `p_k` to move towards from `x_k`.\\
         [Required]: This method should be implemented by subclasses to define the specific direction strategy.
         """
         raise NotImplementedError
@@ -334,25 +334,28 @@ class LineSearchOptimiser(IterativeOptimiser):
         oracle_fn: FirstOrderOracle,
     ) -> float:
         """
-        Returns step length `eta_k` to take along the descent direction `d_k`.\\
+        Returns step length `alpha_k` to take along the descent direction `p_k`.\\
         [Required]: This method should be implemented by subclasses to define the specific step length strategy.
         """
         raise NotImplementedError
 
     def step(self, x, k, f, grad, oracle_fn):
-        d_k = self.direction(x, grad)
-        eta_k = self.step_length(x, k, f, grad, d_k, oracle_fn)
-        self.step_lengths.append(eta_k)
-        return x + eta_k * d_k
+        p_k = self.direction(x, grad)
+        alpha_k = self.step_length(x, k, f, grad, p_k, oracle_fn)
+        self.step_lengths.append(alpha_k)
+        return x + alpha_k * p_k
 
     def plot_step_lengths(self):
         """Plot step lengths vs iterations for the best run."""
         plt.plot(self.step_lengths, marker="o", label=self.name)
 
-    def _phi_and_deriv_at(
-        self, oracle_fn: FirstOrderOracle, x: floatVec, d: floatVec, alpha: float
+    def _phi_and_derphi(
+        self, x: floatVec, alpha: float, d: floatVec, oracle_fn: FirstOrderOracle
     ):
-        """Return phi(alpha) = f(x+alpha d) and phi'(alpha) = f'(x+alpha d)^T d."""
+        """Computes\\
+        `phi(alpha) = f(x + alpha * d)`\\
+        `phi'(alpha) = f'(x + alpha * d)^T d`
+        """
         xa = x + alpha * d
         fa, g_a = oracle_fn(xa)
         return fa, float(g_a.T @ d)
@@ -363,7 +366,7 @@ class SteepestDescentDirectionMixin(LineSearchOptimiser):
     A mixin class that provides the steepest descent direction strategy,
     i.e., the Cauchy direction, which is the negative gradient direction.
 
-    `d_k = -f'(x_k)`
+    `p_k = -f'(x_k)`
     """
 
     def direction(self, x: floatVec, grad: floatVec) -> floatVec:
@@ -372,18 +375,22 @@ class SteepestDescentDirectionMixin(LineSearchOptimiser):
 
 class ExactLineSearchMixin(LineSearchOptimiser):
     """
-    A mixin class that provides the exact line search step length strategy for quadratic functions.
+    A mixin class that provides the exact line search step length strategy for convex quadratic functions.
 
-    `eta_k = - (f'(x_k)^T d_k) / (d_k^T Q d_k)`\\
-    where `Q` is the Hessian matrix of the quadratic function.
+    `alpha_k = - (f'(x_k)^T p_k) / (p_k^T Q p_k)`\\
+    where `Q` is the symmetric positive definite Hessian matrix of the convex quadratic function.
     """
 
     def initialise_state(self):
         super().initialise_state()
+
         Q = self.config.get("Q", None)
         if Q is None:
             raise ValueError("Q matrix is required for exact line search.")
         self.Q: floatVec = np.array(Q, dtype=float)
+
+        self.alpha_thresh = float(self.config.get("alpha_thresh", 1e-14))
+        self.alpha_min = float(self.config.get("alpha_min", 1e-8))
 
     def step_length(
         self,
@@ -396,8 +403,11 @@ class ExactLineSearchMixin(LineSearchOptimiser):
     ) -> float:
         numer = float(grad.T @ direction)
         denom = float(direction.T @ self.Q @ direction)
-        if abs(denom) < 1e-14:
-            return 1e-8
+
+        # Fallback if denominator is too small
+        if abs(denom) < self.alpha_thresh:
+            return self.alpha_min
+
         return -numer / denom
 
 
@@ -406,10 +416,10 @@ class SteepestGradientDescentExactLineSearch(
     SteepestDescentDirectionMixin, ExactLineSearchMixin, LineSearchOptimiser
 ):
     """
-    Steepest Gradient Descent with Exact Line Search for Quadratic Functions.
+    Steepest gradient descent with exact line search for convex quadratic functions.
 
-    `x_{k+1} = x_k - eta_k * f'(x_k)`\\
-    where `eta_k = (f'(x_k)^T f'(x_k)) / (f'(x_k)^T Q f'(x_k))`
+    `x_{k+1} = x_k - alpha_k * f'(x_k)`\\
+    where `alpha_k = (f'(x_k)^T f'(x_k)) / (f'(x_k)^T Q f'(x_k))`
     """
 
     pass  # All methods are provided by the mixins
@@ -417,10 +427,23 @@ class SteepestGradientDescentExactLineSearch(
 
 class SteepestGradientDescentArmijo(SteepestDescentDirectionMixin, LineSearchOptimiser):
     """
-    Forward-expansion Armijo line search:
-    increase alpha until Armijo condition holds (or until safe cap),
-    otherwise fallback to conservative backtracking.
+    Forward-expansion Armijo line search:\\
+    Increase alpha until Armijo condition holds (or until safe cap).
+
+    `f(x_k + alpha_k * p_k) <= f(x_k) + c * alpha_k * f'(x_k)^T p_k`
     """
+
+    def initialise_state(self):
+        super().initialise_state()
+
+        self.c = float(self.config.get("c", 1e-4))  # Armijo parameter
+        self.beta = float(self.config.get("beta", 0.5))
+        self.alpha_init = float(self.config.get("alpha_init", 1.0))
+        self.alpha_min = float(self.config.get("alpha_min", 1e-14))
+        self.alpha_max = float(self.config.get("alpha_max", 1e6))
+        self.maxiter = int(self.config.get("maxiter", 10))
+
+        assert 0 < self.c < 1, "c must be in (0, 1)"
 
     def step_length(
         self,
@@ -431,50 +454,43 @@ class SteepestGradientDescentArmijo(SteepestDescentDirectionMixin, LineSearchOpt
         direction: floatVec,
         oracle_fn: FirstOrderOracle,
     ) -> float:
-        c1 = float(self.config.get("alpha", 0.3))  # Armijo parameter
-        expand = float(self.config.get("expand", 2.0))
-        max_alpha = float(self.config.get("alpha_max", 1e6))
-        eta = float(self.config.get("initial_step_length", 1.0))
-        maxiter = int(self.config.get("maxiter", 100))
-
         derphi0 = float(grad.T @ direction)
-        # If directional derivative is non-negative, return tiny step
+        # Fallback if directional derivative is non-negative
         if derphi0 >= 0:
-            return 1e-14
+            return self.alpha_min
 
         # Forward expansion
-        for _ in range(maxiter):
-            new_x = x + eta * direction
-            new_f, _ = oracle_fn(new_x)
-            if new_f <= f + c1 * eta * derphi0:
-                return eta
-            eta *= expand
-            if eta > max_alpha:
+        alpha = self.alpha_init
+        for _ in range(self.maxiter):
+            f_new, _ = self._phi_and_derphi(x, alpha, direction, oracle_fn)
+            if f_new <= f + self.c * alpha * derphi0:
+                return alpha
+            alpha *= self.beta
+            if alpha < self.alpha_min or alpha > self.alpha_max:
                 break
-
-        # Fallback: conservative backtracking from initial eta
-        eta = float(self.config.get("initial_step_length", 1.0))
-        beta = float(self.config.get("beta", 0.5))
-        for _ in range(maxiter):
-            new_x = x + eta * direction
-            new_f, _ = oracle_fn(new_x)
-            if new_f <= f + c1 * eta * derphi0:
-                return eta
-            eta *= beta
-            if eta < 1e-14:
-                return 1e-14
-        return eta
+        return alpha
 
 
 class SteepestGradientDescentArmijoGoldstein(
     SteepestDescentDirectionMixin, LineSearchOptimiser
 ):
     """
-    Armijo-Goldstein via expansion to bracket and then bisection.
-    Seeks alpha satisfying:
-      f(x+alpha d) <= f(x) + c1 alpha derphi0    (Armijo lower)
-      f(x+alpha d) >= f(x) + (1-c1) alpha derphi0 (Goldstein upper)
+    Armijo-Goldstein via expansion to bracket and then bisection.\\
+    `f(x_k + alpha_k * p_k) <= f(x_k) + c * alpha_k * f'(x_k)^T p_k` (Armijo)\\
+    `f(x_k + alpha_k * p_k) >= f(x_k) + (1 - c) * alpha_k * f'(x_k)^T p_k` (Goldstein)
     """
+
+    def initialise_state(self):
+        super().initialise_state()
+
+        self.c = float(self.config.get("c", 1e-4))  # Armijo-Goldstein parameter
+        self.beta = float(self.config.get("beta", 0.5))
+        self.alpha_init = float(self.config.get("alpha_init", 1.0))
+        self.alpha_min = float(self.config.get("alpha_min", 1e-14))
+        self.alpha_max = float(self.config.get("alpha_max", 1e6))
+        self.maxiter = int(self.config.get("maxiter", 10))
+
+        assert 0 < self.c < 0.5, "c must be in (0, 0.5)"
 
     def step_length(
         self,
@@ -485,60 +501,69 @@ class SteepestGradientDescentArmijoGoldstein(
         direction: floatVec,
         oracle_fn: FirstOrderOracle,
     ) -> float:
-        c1 = float(self.config.get("alpha", 0.3))  # use same param; must be in (0,0.5)
-        expand = float(self.config.get("expand", 2.0))
-        eta = float(self.config.get("initial_step_length", 1.0))
-        max_alpha = float(self.config.get("alpha_max", 1e6))
-        maxiter = int(self.config.get("maxiter", 100))
-
         derphi0 = float(grad.T @ direction)
+        # Fallback if directional derivative is non-negative
         if derphi0 >= 0:
-            return 1e-14
+            return self.alpha_min
 
-        # If initial eta already satisfies both, return it
-        new_f, _ = oracle_fn(x + eta * direction)
-        if (new_f <= f + c1 * eta * derphi0) and (
-            new_f >= f + (1 - c1) * eta * derphi0
+        # If initial alpha already satisfies both, return it
+        alpha = self.alpha_init
+        f_new, _ = self._phi_and_derphi(x, alpha, direction, oracle_fn)
+        if (f_new <= f + self.c * alpha * derphi0) and (
+            f_new >= f + (1 - self.c) * alpha * derphi0
         ):
-            return eta
+            return alpha
 
-        # Expand to find an interval [alpha_lo, alpha_hi] where Armijo lower is satisfied at hi
+        # Expand to find an interval [alpha_lo, alpha_hi] where Armijo condition is satisfied at alpha_hi
         alpha_lo = 0.0
-        alpha_hi = eta
-        for _ in range(maxiter):
-            phi_hi, _ = self._phi_and_deriv_at(oracle_fn, x, direction, alpha_hi)
-            if phi_hi <= f + c1 * alpha_hi * derphi0:
+        alpha_hi = alpha
+        for _ in range(self.maxiter):
+            phi_hi, _ = self._phi_and_derphi(x, alpha_hi, direction, oracle_fn)
+            if phi_hi <= f + self.c * alpha_hi * derphi0:
                 break
-            alpha_hi *= expand
-            if alpha_hi > max_alpha:
+            alpha_hi *= self.beta
+            if alpha_hi > self.alpha_max:
                 break
 
-        # Now bisect between alpha_lo and alpha_hi until Goldstein inequalities hold
-        for _ in range(maxiter):
+        # Bisect between alpha_lo and alpha_hi until Goldstein condition hold
+        for _ in range(self.maxiter):
             alpha_mid = 0.5 * (alpha_lo + alpha_hi)
-            phi_mid, _ = self._phi_and_deriv_at(oracle_fn, x, direction, alpha_mid)
-            if (phi_mid <= f + c1 * alpha_mid * derphi0) and (
-                phi_mid >= f + (1 - c1) * alpha_mid * derphi0
+            phi_mid, _ = self._phi_and_derphi(x, alpha_mid, direction, oracle_fn)
+            if (phi_mid <= f + self.c * alpha_mid * derphi0) and (
+                phi_mid >= f + (1 - self.c) * alpha_mid * derphi0
             ):
                 return alpha_mid
             # If phi_mid is too large -> need smaller step (move hi)
-            if phi_mid > f + c1 * alpha_mid * derphi0:
+            if phi_mid > f + self.c * alpha_mid * derphi0:
                 alpha_hi = alpha_mid
             else:
                 # phi_mid < lower bound, it may violate upper bound -> move lo
                 alpha_lo = alpha_mid
-            if abs(alpha_hi - alpha_lo) < 1e-14:
+            if abs(alpha_hi - alpha_lo) < self.alpha_min:
                 break
         return 0.5 * (alpha_lo + alpha_hi)
 
 
 class SteepestGradientDescentWolfe(SteepestDescentDirectionMixin, LineSearchOptimiser):
     """
-    Strong Wolfe line search using bracket + zoom (Nocedal & Wright).
-    Conditions:
-      phi(alpha) <= phi(0) + c1 * alpha * phi'(0)
-      |phi'(alpha)| <= c2 * |phi'(0)|
+    Strong Wolfe line search using bracket + zoom (Nocedal & Wright).\\
+    `phi(alpha_k) <= phi(0) + c1 * alpha_k * phi'(0)` (Armijo)\\
+    `|phi'(alpha_k)| <= c2 * |phi'(0)|` (Strong curvature)\\
+    where `phi(alpha_k) = f(x_k + alpha_k * p_k)`, `phi'(alpha_k) = f'(x_k + alpha_k * p_k)^T p_k`.
     """
+
+    def initialise_state(self):
+        super().initialise_state()
+
+        self.c1 = float(self.config.get("c1", 1e-4))
+        self.c2 = float(self.config.get("c2", 0.9))
+        self.beta = float(self.config.get("beta", 0.5))
+        self.alpha_init = float(self.config.get("alpha_init", 1.0))
+        self.alpha_min = float(self.config.get("alpha_min", 1e-14))
+        self.alpha_max = float(self.config.get("alpha_max", 1e6))
+        self.maxiter = int(self.config.get("maxiter", 10))
+
+        assert 0 < self.c1 < self.c2 < 1, "0 < c1 < c2 < 1 must be satisfied"
 
     def step_length(
         self,
@@ -549,46 +574,40 @@ class SteepestGradientDescentWolfe(SteepestDescentDirectionMixin, LineSearchOpti
         direction: floatVec,
         oracle_fn: FirstOrderOracle,
     ) -> float:
-        c1 = float(self.config.get("alpha", 1e-4))  # often small like 1e-4
-        c2 = float(
-            self.config.get("beta", 0.9)
-        )  # typically 0.9 for strong Wolfe, but user config may vary
-        alpha = float(self.config.get("initial_step_length", 1.0))
-        expand = float(self.config.get("expand", 2.0))
-        maxiter = int(self.config.get("maxiter", 100))
+        derphi0 = float(grad.T @ direction)
+        # Fallback if directional derivative is non-negative
+        if derphi0 >= 0:
+            return self.alpha_min
 
         phi0 = f
-        derphi0 = float(grad.T @ direction)
-
-        if derphi0 >= 0:
-            return 1e-14
-
-        alpha_prev = 0.0
+        alpha = self.alpha_init
         phi_prev = phi0
+        alpha_prev = 0.0
 
-        for i in range(maxiter):
-            phi_a, derphi_a = self._phi_and_deriv_at(oracle_fn, x, direction, alpha)
+        for i in range(self.maxiter):
+            phi_a, derphi_a = self._phi_and_derphi(x, alpha, direction, oracle_fn)
 
             # Check Armijo
-            if (phi_a > phi0 + c1 * alpha * derphi0) or (i > 0 and phi_a >= phi_prev):
+            if (phi_a > phi0 + self.c1 * alpha * derphi0) or (
+                i > 0 and phi_a >= phi_prev
+            ):
                 # bracket found between alpha_prev and alpha
                 return self._zoom(
-                    oracle_fn, x, direction, alpha_prev, alpha, phi0, derphi0, c1, c2
+                    oracle_fn, x, direction, alpha_prev, alpha, phi0, derphi0
                 )
-            # Check strong Wolfe (absolute derivative)
-            if abs(derphi_a) <= c2 * abs(derphi0):
+            # Check strong Wolfe
+            if abs(derphi_a) <= self.c2 * abs(derphi0):
                 return alpha
             # If derivative is positive, bracket and zoom
             if derphi_a >= 0:
                 return self._zoom(
-                    oracle_fn, x, direction, alpha, alpha_prev, phi0, derphi0, c1, c2
+                    oracle_fn, x, direction, alpha, alpha_prev, phi0, derphi0
                 )
             # Otherwise increase alpha (extrapolate)
             alpha_prev = alpha
             phi_prev = phi_a
-            alpha = alpha * expand
-        # fallback
-        return alpha
+            alpha = alpha * self.beta
+        return alpha  # Fallback
 
     def _zoom(
         self,
@@ -599,25 +618,23 @@ class SteepestGradientDescentWolfe(SteepestDescentDirectionMixin, LineSearchOpti
         alpha_hi: float,
         phi0: float,
         derphi0: float,
-        c1: float,
-        c2: float,
         maxiter: int = 50,
     ):
         """
         Zoom procedure as in Nocedal & Wright (uses safe bisection interpolation).
         Returns an alpha that satisfies strong Wolfe (if found), otherwise the best found.
         """
-        phi_lo, _derphi_lo = self._phi_and_deriv_at(oracle_fn, x, d, alpha_lo)
+        phi_lo, _derphi_lo = self._phi_and_derphi(x, alpha_lo, d, oracle_fn)
         for _ in range(maxiter):
             alpha_j = 0.5 * (alpha_lo + alpha_hi)  # safe midpoint
-            phi_j, derphi_j = self._phi_and_deriv_at(oracle_fn, x, d, alpha_j)
+            phi_j, derphi_j = self._phi_and_derphi(x, alpha_j, d, oracle_fn)
 
             # Armijo condition
-            if (phi_j > phi0 + c1 * alpha_j * derphi0) or (phi_j >= phi_lo):
+            if (phi_j > phi0 + self.c1 * alpha_j * derphi0) or (phi_j >= phi_lo):
                 alpha_hi = alpha_j
             else:
                 # Check strong Wolfe condition (absolute derivative)
-                if abs(derphi_j) <= c2 * abs(derphi0):
+                if abs(derphi_j) <= self.c2 * abs(derphi0):
                     return alpha_j
                 # If derivative has same sign as _derphi_lo, shrink interval
                 if derphi_j * (alpha_hi - alpha_lo) >= 0:
@@ -638,6 +655,18 @@ class SteepestGradientDescentBacktracking(
     Standard backtracking Armijo (decreasing alpha).
     """
 
+    def initialise_state(self):
+        super().initialise_state()
+
+        self.c = float(self.config.get("c", 1e-4))  # Armijo parameter
+        self.beta = float(self.config.get("beta", 0.5))
+        self.alpha_init = float(self.config.get("alpha_init", 1.0))
+        self.alpha_min = float(self.config.get("alpha_min", 1e-14))
+        self.alpha_max = float(self.config.get("alpha_max", 1e6))
+        self.maxiter = int(self.config.get("maxiter", 10))
+
+        assert 0 < self.c < 1, "c must be in (0, 1)"
+
     def step_length(
         self,
         x: floatVec,
@@ -647,24 +676,20 @@ class SteepestGradientDescentBacktracking(
         direction: floatVec,
         oracle_fn: FirstOrderOracle,
     ) -> float:
-        c1 = float(self.config.get("alpha", 0.3))
-        beta = float(self.config.get("beta", 0.5))
-        eta = float(self.config.get("initial_step_length", 1.0))
-        maxiter = int(self.config.get("maxiter", 100))
-
         derphi0 = float(grad.T @ direction)
+        # Fallback if directional derivative is non-negative
         if derphi0 >= 0:
-            return 1e-14
+            return self.alpha_min
 
-        for _ in range(maxiter):
-            new_x = x + eta * direction
-            new_f, _ = oracle_fn(new_x)
-            if new_f <= f + c1 * eta * derphi0:
-                return eta
-            eta *= beta
-            if eta < 1e-14:
-                return 1e-14
-        return eta
+        alpha = self.alpha_init
+        for _ in range(self.maxiter):
+            new_f, _ = self._phi_and_derphi(x, alpha, direction, oracle_fn)
+            if new_f <= f + self.c * alpha * derphi0:
+                return alpha
+            alpha *= self.beta
+            if alpha < self.alpha_min:
+                return self.alpha_min
+        return alpha
 
 
 # ---------- Utils ----------
@@ -731,11 +756,11 @@ def format_float(
         if obj.size <= lim:
             formatted = [f"{_fmt.format(x)}" for x in obj]
         else:
-            # Show first three and last three items
+            # Show first two and last two items
             formatted = (
-                [f"{_fmt.format(x)}" for x in obj[:3]]
+                [f"{_fmt.format(x)}" for x in obj[:2]]
                 + ["..."]
-                + [f"{_fmt.format(x)}" for x in obj[-3:]]
+                + [f"{_fmt.format(x)}" for x in obj[-2:]]
             )
         return "[" + sep.join(formatted) + "]"
 
@@ -786,7 +811,7 @@ def question_1():
 
         x0s = [np.array([0.0, 0.0])]
         # Any starting point should work, since a local minima for the
-        # quadratic function with Q >> 0 will be the global minima
+        # convex quadratic function with Q >> 0 will be the global minima
 
         optim.run(oracle, x0s=x0s, maxiter=10_000, tol=1e-13, show_params=False)
 
