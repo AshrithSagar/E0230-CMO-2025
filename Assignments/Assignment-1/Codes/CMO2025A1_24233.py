@@ -889,6 +889,9 @@ def question_1():
         print(" ".join(f"{val:13.8f}" for val in Q[1]) + " \u2502")
         print(" " * 7 + "\u2514" + " " * 28 + "\u2518")
 
+        print(f"Eigenvalues: {np.linalg.eigvalsh(Q)}")
+        print(f"Condition number: {np.linalg.cond(Q)}")
+
         oracle = ConvexQuadraticOracle(Q, b)
         optim = SteepestGradientDescentExactLineSearch(Q=Q)
 
