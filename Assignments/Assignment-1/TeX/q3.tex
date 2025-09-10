@@ -54,10 +54,30 @@ by non-negativity of the squared Euclidean norm.
 \paragraph{(3). Solution for the optimisation problem:}
 \begin{enumerate}[label= (\alph*).]
     \item \( m < n \):
+        This is an underdetermined system, i.e., there are more variables than equations.
+        The system may either have infinitely many solutions (if consistent) or no solution at all (if inconsistent).
+        We can find the minimum-norm solution using the least squares approach, given by
+        \begin{equation*}
+            \mathbf{x}^* = \mathbf{A}^\top {(\mathbf{A} \mathbf{A}^\top)}^{-1} \mathbf{b}
+        \end{equation*}
+        provided \( \mathbf{A} \) has full row rank, i.e., \( \operatorname{rank}(\mathbf{A}) = m \).
 
     \item \( m = n \):
+        This is a square system, i.e., the number of variables equals the number of equations.
+        If \( \mathbf{A} \) is non-singular (invertible), i.e., \( \operatorname{rank}(\mathbf{A}) = n \), then there exists a unique solution given by
+        \begin{equation*}
+            \mathbf{x}^* = \mathbf{A}^{-1} \mathbf{b}
+        \end{equation*}
+        If \( \mathbf{A} \) is singular (non-invertible), then the system may either have infinitely many solutions (if consistent) or no solution at all (if inconsistent).
 
     \item \( m > n \):
+        This is an overdetermined system, i.e., there are more equations than variables.
+        The system may either have a unique solution (if consistent) or no solution at all (if inconsistent).
+        We can find the least squares solution using the normal equations, given by
+        \begin{equation*}
+            \mathbf{x}^* = {(\mathbf{A}^\top \mathbf{A})}^{-1} \mathbf{A}^\top \mathbf{b}
+        \end{equation*}
+        provided \( \mathbf{A} \) has full column rank, i.e., \( \operatorname{rank}(\mathbf{A}) = n \).
 \end{enumerate}
 
 \paragraph{(4). Complexity comparisions:}
