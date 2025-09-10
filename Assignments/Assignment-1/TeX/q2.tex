@@ -16,6 +16,48 @@ This indicates that we've (approximately) reached a stationary point, where the 
 
 \paragraph{(2).\ \( x^* \) and \( f(x^*) \) values:}
 
+Different initial points were tried, and the best ones were used for each line search method, as below.
+
+\begin{table}[h!]
+    \centering
+    \footnotesize
+    \begin{tabular}{@{}lcccccc@{}}
+        \toprule
+        \textbf{Method} & \textbf{Initial Point ($x_0$)} & \textbf{Iterations} & \textbf{Oracle Calls} & \textbf{$f(x^*)$} & \textbf{$\|\nabla f(x^*)\|$} \\ \midrule
+
+        Armijo &
+        $[1, 1, 1, 1, -1]$ &
+        233 &
+        2563 &
+        $-0.3506678284$ &
+        $5.674059 \times 10^{-8}$ \\
+
+        ArmijoGoldstein &
+        $[-1, -1, -1, -1, -1]$ &
+        28 &
+        268 &
+        $-0.3506678284$ &
+        $5.398465 \times 10^{-8}$ \\
+
+        Wolfe &
+        $[-1, 1, 1, 1, 1]$ &
+        100 &
+        598 &
+        $-0.3506678284$ &
+        $8.295463 \times 10^{-8}$ \\
+
+        Backtracking &
+        $[1, 1, 1, 1, -1]$ &
+        233 &
+        2563 &
+        $-0.3506678284$ &
+        $5.674059 \times 10^{-8}$ \\
+
+        \bottomrule
+    \end{tabular}
+    \caption{Performance comparison of different Steepest Gradient Descent methods}
+\end{table}
+
 \paragraph{(3). Step sizes vs.\ iterations plot:}
 
 The plot is shown below.
@@ -29,6 +71,8 @@ The plot is shown below.
 \end{figure}
 
 \paragraph{(4). Number of oracle calls:}
+
+As in the table above.
 
 \newpage
 \paragraph{(5). (Inexact) Line search methods comparision:}
