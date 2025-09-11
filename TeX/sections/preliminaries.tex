@@ -288,26 +288,16 @@ Here, we denote \( f \in \mathcal{C}^{1}_L \) to mean that \( f \) is \( L \)-sm
 \subsection{Kantorovich inequality}\label{sec:kantorovich-inequality}
 
 \begin{theorem}{Kantorovich inequality}{}
-    Let \( A_n = \{1, 2, \ldots, n\} \), \( n \in \mathbb{N} \), and let \( p_i \geq 0, \;\; 0 < x_{\min} \leq x_i \leq x_{\max}, \; \forall i \in A_n \), then we have
-    \begin{align*}
+    Let \( p_i \geq 0, \ 0 < x_{\min} \leq x_i \leq x_{\max}, \ \forall i \in \{1, 2, \ldots, n\} \), then we have
+    \begin{equation*}
         \left( \sum_{i = 1}^{n} p_i x_i \right) \left( \sum_{i = 1}^{n} \frac{p_i}{x_i} \right)
-        & \leq
-        \frac{{(x_{\max} + x_{\min})}^2}{4 x_{\max} x_{\min}} {\left( \sum_{i = 1}^{n} p_i \right)}^2
-        \\ & \qquad -
-        \frac{{(x_{\max} - x_{\min})}^2}{4 x_{\max} x_{\min}}
-        \cdot
-        \min \Biggl\{
-            {\left( \sum_{i \in X} p_i - \sum_{j \in Y} p_j \right)}^2
-            \;\Bigg|\;
-            \begin{aligned}
-                X \cup Y & = A_n \\
-                X \cap Y & = \emptyset
-            \end{aligned}
-        \Biggr\}
-    \end{align*}
+        \leq
+        \frac{{(x_{\max} + x_{\min})}^2}{4 x_{\max} x_{\min}}
+        {\left( \sum_{i = 1}^{n} p_i \right)}^2
+    \end{equation*}
 \end{theorem}
 
-\begin{corollary}{}{}
+\begin{corollary}{Kantorovich inequality for positive definite matrices~\citep{Luenberger1984}}{}
     For any \( \mathbf{Q} \in \mathbf{S}_{d}^{++} \), with smallest eigenvalue \( \lambda_{\min} \) and largest eigenvalue \( \lambda_{\max} \), and for any \( \mathbf{x} \in \mathbb{R}^d \setminus \{ \mathbf{0} \} \),
     \begin{equation*}
         \frac{{(\mathbf{x}^{\top} \mathbf{x})}^2}{(\mathbf{x}^{\top} \mathbf{Q} \mathbf{x})(\mathbf{x}^{\top} \mathbf{Q}^{-1} \mathbf{x})}
@@ -321,7 +311,6 @@ Here, we denote \( f \in \mathcal{C}^{1}_L \) to mean that \( f \) is \( L \)-sm
     Since the eigenvectors form an orthonormal basis for \( \mathbb{R}^d \), any vector \( \mathbf{x} \in \mathbb{R}^d \) can be expressed as a linear combination of these eigenvectors as \( \mathbf{x} = \sum_{i=1}^{d} c_i \mathbf{v}_i \), where each coefficient \( c_i \) is the projection of \( \mathbf{x} \) onto the eigenvector \( \mathbf{v}_i \), given by \( c_i = \mathbf{v}_i^\top \mathbf{x} \).
     Now,
     \begin{align*}
-        \implies
         \mathbf{x}^{\top} \mathbf{Q} \mathbf{x}
         & =
         {\left( \sum_{i=1}^{d} c_i \mathbf{v}_i \right)}^{\top} \mathbf{Q} \left( \sum_{j=1}^{d} c_j \mathbf{v}_j \right)
