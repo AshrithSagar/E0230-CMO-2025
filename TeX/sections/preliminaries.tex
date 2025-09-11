@@ -287,6 +287,26 @@ Here, we denote \( f \in \mathcal{C}^{1}_L \) to mean that \( f \) is \( L \)-sm
 
 \subsection{Kantorovich inequality}\label{sec:kantorovich-inequality}
 
+\begin{theorem}{Kantorovich inequality}{}
+    Let \( A_n = \{1, 2, \ldots, n\} \), \( n \in \mathbb{N} \), and let \( p_i \geq 0, \;\; 0 < x_{\min} \leq x_i \leq x_{\max}, \; \forall i \in A_n \), then we have
+    \begin{align*}
+        \left( \sum_{i = 1}^{n} p_i x_i \right) \left( \sum_{i = 1}^{n} \frac{p_i}{x_i} \right)
+        & \leq
+        \frac{{(x_{\max} + x_{\min})}^2}{4 x_{\max} x_{\min}} {\left( \sum_{i = 1}^{n} p_i \right)}^2
+        \\ & \qquad -
+        \frac{{(x_{\max} - x_{\min})}^2}{4 x_{\max} x_{\min}}
+        \cdot
+        \min \Biggl\{
+            {\left( \sum_{i \in X} p_i - \sum_{j \in Y} p_j \right)}^2
+            \;\Bigg|\;
+            \begin{aligned}
+                X \cup Y & = A_n \\
+                X \cap Y & = \emptyset
+            \end{aligned}
+        \Biggr\}
+    \end{align*}
+\end{theorem}
+
 \begin{corollary}{}{}
     For any \( \mathbf{Q} \in \mathbf{S}_{d}^{++} \), with smallest eigenvalue \( \lambda_{\min} \) and largest eigenvalue \( \lambda_{\max} \), and for any \( \mathbf{x} \in \mathbb{R}^d \setminus \{ \mathbf{0} \} \),
     \begin{equation*}
