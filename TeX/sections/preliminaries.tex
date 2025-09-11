@@ -290,9 +290,9 @@ Here, we denote \( f \in \mathcal{C}^{1}_L \) to mean that \( f \) is \( L \)-sm
 \begin{corollary}{}{}
     For any \( \mathbf{Q} \in \mathbf{S}_{d}^{++} \), with smallest eigenvalue \( \lambda_{\min} \) and largest eigenvalue \( \lambda_{\max} \), and for any \( \mathbf{x} \in \mathbb{R}^d \setminus \{ \mathbf{0} \} \),
     \begin{equation*}
-        \frac{{\Vert \mathbf{x} \Vert}^2 \; {\Vert \mathbf{Q} \mathbf{x} \Vert}^2}{{(\mathbf{x}^{\top} \mathbf{Q} \mathbf{x})}^2}
-        \leq
-        \frac{{(\lambda_{\max} + \lambda_{\min})}^2}{4 \lambda_{\max} \lambda_{\min}}
+        \frac{{(\mathbf{x}^{\top} \mathbf{x})}^2}{(\mathbf{x}^{\top} \mathbf{Q} \mathbf{x})(\mathbf{x}^{\top} \mathbf{Q}^{-1} \mathbf{x})}
+        \geq
+        \frac{4 \lambda_{\max} \lambda_{\min}}{{(\lambda_{\max} + \lambda_{\min})}^2}
     \end{equation*}
 \end{corollary}
 
