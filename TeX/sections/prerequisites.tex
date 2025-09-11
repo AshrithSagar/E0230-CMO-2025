@@ -75,3 +75,13 @@ The \textbf{condition number} of a matrix \( \mathbf{A} \in \mathbf{S}_{d} \) is
     \kappa(\mathbf{A}) = \frac{\lambda_{\max}(\mathbf{A})}{\lambda_{\min}(\mathbf{A})}
 \end{equation*}
 where \( \lambda_{\max}(\mathbf{A}) \) and \( \lambda_{\min}(\mathbf{A}) \) are the largest and smallest eigenvalues of \( \mathbf{A} \) respectively.
+
+\subsection{Cauchy sequence}
+
+A sequence of real numbers \( {\{ a_k \}}_{k=1}^{\infty} \) is a \textbf{Cauchy sequence} if
+\begin{equation*}
+    \forall \epsilon > 0, \
+    \exists N \in \mathbb{N}, \
+    \text{s.t.} \
+    m, n > N \implies \vert a_n - a_m \vert < \epsilon
+\end{equation*}
