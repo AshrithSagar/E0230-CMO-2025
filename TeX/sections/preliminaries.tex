@@ -316,6 +316,43 @@ Here, we denote \( f \in \mathcal{C}^{1}_L \) to mean that \( f \) is \( L \)-sm
     \end{equation*}
 \end{corollary}
 
+\begin{proof}
+    Let the matrix \( \mathbf{Q} \) have eigenvalues \( \lambda_1, \lambda_2, \ldots, \lambda_d \), with corresponding orthonormal eigenvectors \( \mathbf{v}_1, \mathbf{v}_2, \ldots, \mathbf{v}_d \).
+    Since the eigenvectors form an orthonormal basis for \( \mathbb{R}^d \), any vector \( \mathbf{x} \in \mathbb{R}^d \) can be expressed as a linear combination of these eigenvectors as \( \mathbf{x} = \sum_{i=1}^{d} c_i \mathbf{v}_i \), where each coefficient \( c_i \) is the projection of \( \mathbf{x} \) onto the eigenvector \( \mathbf{v}_i \), given by \( c_i = \mathbf{v}_i^\top \mathbf{x} \).
+    Now,
+    \begin{align*}
+        \implies
+        \mathbf{x}^{\top} \mathbf{Q} \mathbf{x}
+        & =
+        {\left( \sum_{i=1}^{d} c_i \mathbf{v}_i \right)}^{\top} \mathbf{Q} \left( \sum_{j=1}^{d} c_j \mathbf{v}_j \right)
+        =
+        \sum_{i=1}^{d} \sum_{j=1}^{d} c_i c_j \mathbf{v}_i^{\top} \mathbf{Q} \mathbf{v}_j
+        =
+        \sum_{i=1}^{d} c_i^2 \lambda_i
+        \\ &
+        \text{Similarly, }
+        \quad
+        \mathbf{x}^{\top} \mathbf{Q}^{-1} \mathbf{x}
+        =
+        \sum_{i=1}^{d} c_i^2 \frac{1}{\lambda_i},
+        \qquad
+        \mathbf{x}^{\top} \mathbf{x}
+        =
+        \sum_{i=1}^{d} c_i^2
+    \end{align*}
+    Now, let \( p_i = c_i^2 \) and \( x_i = \lambda_i \) in Kantorovich inequality, we have
+    \begin{equation*}
+        \left( \sum_{i=1}^{d} c_i^2 \lambda_i \right)
+        \left( \sum_{i=1}^{d} \frac{c_i^2}{\lambda_i} \right)
+        \leq
+        \frac{{(\lambda_{\max} + \lambda_{\min})}^2}{4 \lambda_{\max} \lambda_{\min}} {\left( \sum_{i=1}^{d} c_i^2 \right)}^2
+        \implies
+        \frac{{(\mathbf{x}^{\top} \mathbf{x})}^2}{(\mathbf{x}^{\top} \mathbf{Q} \mathbf{x})(\mathbf{x}^{\top} \mathbf{Q}^{-1} \mathbf{x})}
+        \geq
+        \frac{4 \lambda_{\max} \lambda_{\min}}{{(\lambda_{\max} + \lambda_{\min})}^2}
+    \end{equation*}
+\end{proof}
+
 \subsection{AM-GM inequality}
 
 For any non-negative real numbers \( a_1, a_2, \ldots, a_n \geq 0 \),
