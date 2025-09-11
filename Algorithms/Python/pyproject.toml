@@ -1,0 +1,18 @@
+[project]
+name = "E0230-CMO-2025"
+version = "0.1.0"
+description = "Algorithms"
+authors = [{ name = "Ashrith Sagar", email = "ashrithy@iisc.ac.in" }]
+readme = "../README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "matplotlib>=3.10.5",
+    "numpy>=2.2.6",
+    "rich>=14.1.0",
+    "scipy>=1.15.3",
+]
+
+[dependency-groups]
+dev = [
+    "jupyter>=1.1.1",
+]
