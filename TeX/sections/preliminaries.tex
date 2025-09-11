@@ -351,3 +351,13 @@ For any non-negative real numbers \( a_1, a_2, \ldots, a_n \geq 0 \),
     \sqrt[n]{a_1 a_2 \ldots a_n}
 \end{equation*}
 with equality iff \( a_1 = a_2 = \cdots = a_n \).
+
+\subsection{Polyak-\L{}ojasiewicz (PL) inequality}
+
+A function \( f: D \subseteq \mathbb{R}^n \to \mathbb{R} \) on a convex domain \( D \) satisfies the \textbf{Polyak-\L{}ojasiewicz (PL) inequality} with parameter \( \mu > 0 \) if
+\begin{equation*}
+    \frac{1}{2} {\Vert \nabla f(\mathbf{x}) \Vert}^2 \geq \mu \left( f(\mathbf{x}) - f^* \right)
+    , \quad \forall \mathbf{x} \in D
+\end{equation*}
+where \( f^* = \inf_{\mathbf{x} \in D} f(\mathbf{x}) \).
+Such an \( f \) is said to be \( \mu \)-\textbf{PL} on \( D \).
