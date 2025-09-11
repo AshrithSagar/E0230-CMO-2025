@@ -660,3 +660,11 @@ Determine the largest number \( \alpha_k \) in the sequence \( {\{ \beta^m \bar{
     \frac{f(\mathbf{x}^{(k)}) - f(\mathbf{x}^{(k+1)})}{{\Vert \nabla f(\mathbf{x}^{(k)}) \Vert}^2}
     \geq R_k \geq R > 0
 \end{equation*}
+
+\subsection{Global convergence criterion}
+
+If a scheme generates a sequence \( {\{ \mathbf{x}^{(k)} \}}_{k=0}^{\infty} \) such that
+\begin{equation*}
+    \lim_{k \to \infty} {\Vert \nabla f(\mathbf{x}^{(k)}) \Vert} = 0
+\end{equation*}
+then it is said to exhibit \textbf{global convergence}.
