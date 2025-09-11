@@ -1,4 +1,4 @@
-\documentclass[12pt]{book}
+\documentclass[12pt,openany]{book}
 
 \usepackage[utf8]{inputenc}
 \usepackage{amsfonts, amsmath, amssymb, amsthm, cancel, interval, latexsym, mathtools}
@@ -22,10 +22,21 @@
     citecolor=red,
 }
 
+\makeatletter
+\renewcommand{\part}[1]{
+    \clearpage
+    \refstepcounter{part}
+    \addcontentsline{toc}{part}{\thepart\hspace{1em}#1}
+    {\normalfont\huge\bfseries \thepart. #1}
+}
+\patchcmd{\chapter}{\cleardoublepage}{}{}{}
+\patchcmd{\chapter}{\clearpage}{}{}{}
+\makeatother
+
 \setlength{\cftbeforetoctitleskip}{2em}
 \setlength{\cftaftertoctitleskip}{0pt}
 \setlength{\cftbeforesecskip}{0pt}
-\titleformat{\chapter}[hang]{\normalfont\huge\bfseries}{\thechapter.}{0.5em}{}
+\titleformat{\chapter}[hang]{\normalfont\LARGE\bfseries}{\thechapter.}{0.5em}{}
 \titlespacing*{\chapter}{0pt}{1em}{0.2em}
 \titlespacing*{\section}{0pt}{0.7em}{0.2em}
 \titlespacing*{\subsection}{0pt}{0.5em}{0.2em}
@@ -77,7 +88,6 @@
 \mainmatter{
     \input{sections/introduction.tex}
     \input{sections/notation.tex}
-    \input{sections/prerequisites.tex}
     \input{sections/preliminaries.tex}
     \input{sections/unconstrained.tex}
 }
