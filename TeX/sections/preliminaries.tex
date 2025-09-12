@@ -1,5 +1,5 @@
 
-\chapter{Set theory}
+\chapter{Mathematical preliminaries}
 
 \section{Metric space}
 
@@ -197,43 +197,6 @@ If a function \( f: S \to \mathbb{R} \) is continuous on a set \( S \subseteq \m
 \begin{equation*}
     f(\mathbf{x}_{\min}) \leq f(\mathbf{x}) \leq f(\mathbf{x}_{\max}), \quad \forall \mathbf{x} \in S
 \end{equation*}
-
-\section{Little-o notation}
-
-(Landau's notation~\cite{apostol1991calculus})
-A function \( f: \mathbb{R}^d \to \mathbb{R} \) is said to be in \( o(g(\mathbf{x})) \) as \( \mathbf{x} \to \mathbf{x}_0 \), for some function \( g: \mathbb{R}^d \to \mathbb{R} \), \( g(\mathbf{x}) \neq 0 \) in a neighborhood of \( \mathbf{x}_0 \), if
-\begin{equation*}
-    \lim_{\mathbf{x} \to \mathbf{x}_0} \frac{f(\mathbf{x})}{g(\mathbf{x})} = 0
-\end{equation*}
-
-i.e.,
-\begin{equation*}
-    \forall \epsilon > 0,
-    \exists \delta > 0,
-    \text{ s.t. }
-    \left\vert \frac{f(\mathbf{x})}{g(\mathbf{x})} \right\vert < \epsilon,
-    \quad \forall \mathbf{x} \in B_{\delta}(\mathbf{x}_0) \setminus \{ \mathbf{x}_0 \}
-\end{equation*}
-
-\subsubsection{Properties}
-
-\begin{itemize}
-    \item If \( f \in o(g) \), then \( c \cdot f \in o(g) \), for any non-zero constant \( c \in \mathbb{R} \).
-
-    \item If \( f \in o(F) \) and \( g \in o(G) \), then \( f \cdot g \in o(F \cdot G) \).
-
-    \item If \( f \in o(h) \) and \( g \in o(h) \), then \( f + g \in o(h) \).
-
-    \item If \( f \in o(g) \) and \( g \in o(h) \), then \( f \in o(h) \).
-
-    \item If \( f(\mathbf{x}) \in o(1) \) as \( \mathbf{x} \to \mathbf{x}_0 \), then \( f(\mathbf{x}) \to 0 \) as \( \mathbf{x} \to \mathbf{x}_0 \).
-
-    \item If \( |f(\mathbf{x})| \leq |h(\mathbf{x})| \) near \( \mathbf{x}_0 \), and \( h \in o(g) \), then \( f \in o(g) \).
-
-    \item If \( f \in o(g) \), and \( \phi: \mathbb{R} \to \mathbb{R} \) is continuous at 0 with \( \phi(0) = 0 \), then \( \phi(f(\mathbf{x})) \in o(\phi(g(\mathbf{x}))) \).
-
-    \item If \( \alpha > \beta > 0 \), then \( \|\mathbf{x} - \mathbf{x}_0\|^\alpha \in o(\|\mathbf{x} - \mathbf{x}_0\|^\beta) \) as \( \mathbf{x} \to \mathbf{x}_0 \).
-\end{itemize}
 
 \section{Taylor's theorem}
 

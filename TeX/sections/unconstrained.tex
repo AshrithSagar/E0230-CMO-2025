@@ -260,7 +260,7 @@ Assume \( f \in \mathcal{C}^{2} \), and use \( f(\mathbf{x} + \mathbf{p}) = f(\m
     which is the first-order condition for convexity, and thereby \( f \) is convex.
 \end{proof}
 
-\subsection{Strong convexity}
+\section{Strong convexity}
 
 \begin{definition}{Strong convexity}{}
     A function \( f: D \subseteq \mathbb{R}^n \to \mathbb{R} \) on a convex domain \( D \) is \textbf{strongly convex} with parameter \( \mu > 0 \) if
@@ -277,6 +277,8 @@ Assume \( f \in \mathcal{C}^{2} \), and use \( f(\mathbf{x} + \mathbf{p}) = f(\m
     A function \( f: D \subseteq \mathbb{R}^n \to \mathbb{R} \) on a convex domain \( D \) is strongly convex with parameter \( \mu > 0 \) iff the function \( g(\mathbf{x}) := \left( f(\mathbf{x}) - \frac{\mu}{2} {\Vert \mathbf{x} \Vert}^2 \right) \) is convex on \( D \).
 \end{corollary}
 
+\subsection{First-order condition for strong convexity}
+
 \begin{corollary}{First-order condition for strong convexity}{}
     For a function \( f \in \mathcal{C}^1 \) with a convex domain \( D \), \( f \) is strongly convex on \( D \) with parameter \( \mu > 0 \) iff
     \begin{equation*}
@@ -286,6 +288,8 @@ Assume \( f \in \mathcal{C}^{2} \), and use \( f(\mathbf{x} + \mathbf{p}) = f(\m
         \quad \forall \mathbf{x}, \mathbf{y} \in D
     \end{equation*}
 \end{corollary}
+
+\subsection{Second-order condition for strong convexity}
 
 \begin{corollary}{Second-order condition for strong convexity}{}
     For a function \( f \in \mathcal{C}^2 \) with a convex domain \( D \), \( f \) is strongly convex on \( D \) with parameter \( \mu > 0 \) iff
