@@ -114,7 +114,7 @@ Assume \( f \in \mathcal{C}^{2} \), and use \( f(\mathbf{x} + \mathbf{p}) = f(\m
         f(\mathbf{y})
         \geq
         f(\mathbf{x}) + {\nabla f(\mathbf{x})}^\top (\mathbf{y} - \mathbf{x}),
-        \quad \forall \mathbf{x}, \mathbf{y} \in \mathbb{R}^n
+        \quad \forall \mathbf{x}, \mathbf{y} \in D
     \end{equation*}
 \end{theorem}
 
@@ -274,7 +274,29 @@ Assume \( f \in \mathcal{C}^{2} \), and use \( f(\mathbf{x} + \mathbf{p}) = f(\m
 \end{definition}
 
 \begin{corollary}{}{}
-    A function \( f: D \subseteq \mathbb{R}^n \to \mathbb{R} \) on a convex domain \( D \) is \textbf{strongly convex} with parameter \( \mu > 0 \) iff the function \( g(\mathbf{x}) := \left( f(\mathbf{x}) - \frac{\mu}{2} {\Vert \mathbf{x} \Vert}^2 \right) \) is convex on \( D \).
+    A function \( f: D \subseteq \mathbb{R}^n \to \mathbb{R} \) on a convex domain \( D \) is strongly convex with parameter \( \mu > 0 \) iff the function \( g(\mathbf{x}) := \left( f(\mathbf{x}) - \frac{\mu}{2} {\Vert \mathbf{x} \Vert}^2 \right) \) is convex on \( D \).
+\end{corollary}
+
+\begin{corollary}{First-order condition for strong convexity}{}
+    For a function \( f \in \mathcal{C}^1 \) with a convex domain \( D \), \( f \) is strongly convex on \( D \) with parameter \( \mu > 0 \) iff
+    \begin{equation*}
+        f(\mathbf{y})
+        \geq
+        f(\mathbf{x}) + {\nabla f(\mathbf{x})}^\top (\mathbf{y} - \mathbf{x}) + \frac{\mu}{2} \Vert \mathbf{y} - \mathbf{x} \Vert^2,
+        \quad \forall \mathbf{x}, \mathbf{y} \in D
+    \end{equation*}
+\end{corollary}
+
+\begin{corollary}{Second-order condition for strong convexity}{}
+    For a function \( f \in \mathcal{C}^2 \) with a convex domain \( D \), \( f \) is strongly convex on \( D \) with parameter \( \mu > 0 \) iff
+    \begin{equation*}
+        \nabla^2 f(\mathbf{x})
+        \succeq
+        \mu \mathbf{I}
+        , \quad
+        \forall \mathbf{x} \in D
+    \end{equation*}
+    i.e., the Hessian \( \nabla^2 f(\mathbf{x}) \) is positive definite with all eigenvalues at least \( \mu \), for all \( \mathbf{x} \in D \).
 \end{corollary}
 
 \chapter{Algorithmic design}
