@@ -278,6 +278,23 @@ Assume \( f \in \mathcal{C}^{2} \), and use \( f(\mathbf{x} + \mathbf{p}) = f(\m
     A function \( f: D \subseteq \mathbb{R}^n \to \mathbb{R} \) on a convex domain \( D \) is strongly convex with parameter \( \mu > 0 \) iff the function \( g(\mathbf{x}) := \left( f(\mathbf{x}) - \frac{\mu}{2} {\Vert \mathbf{x} \Vert}^2 \right) \) is convex on \( D \).
 \end{corollary}
 
+\begin{proof}
+    Follows from the identity:
+    \begin{align*}
+        \lambda (1 - \lambda) \Vert \mathbf{x} - \mathbf{y} \Vert^2
+        & =
+        \lambda (1 - \lambda) \Big( {\Vert \mathbf{y} \Vert}^2 + {\Vert \mathbf{x} \Vert}^2 - 2 \mathbf{x}^{\top} \mathbf{y} \Big)
+        \\ & =
+        \lambda {\Vert \mathbf{y} \Vert}^2 + \lambda {\Vert \mathbf{x} \Vert}^2 - \lambda^2 {\Vert \mathbf{y} \Vert}^2 - {\Vert \lambda \mathbf{x} \Vert}^2 - 2 {(\lambda \mathbf{x})}^{\top} \big( (1 - \lambda) \mathbf{y} \big)
+        \\ & =
+        \lambda {\Vert \mathbf{y} \Vert}^2 + \lambda {\Vert \mathbf{x} \Vert}^2 - \lambda^2 {\Vert \mathbf{y} \Vert}^2 - {\Vert \lambda \mathbf{x} + (1 - \lambda) \mathbf{y} \Vert}^2 + {(1 - \lambda)}^2 {\Vert \mathbf{y} \Vert}^2
+        \\ & =
+        \cancel{ \lambda {\Vert \mathbf{y} \Vert}^2 } + \lambda {\Vert \mathbf{x} \Vert}^2 - \cancel{ \lambda^2 {\Vert \mathbf{y} \Vert}^2 } - {\Vert \lambda \mathbf{x} + (1 - \lambda) \mathbf{y} \Vert}^2 + {\Vert \mathbf{y} \Vert}^2 - \cancel{ 2 } \lambda {\Vert \mathbf{y} \Vert}^2 + \cancel{ \lambda^2 {\Vert \mathbf{y} \Vert}^2 }
+        \\ & =
+        \lambda {\Vert \mathbf{x} \Vert}^2 + (1 - \lambda) {\Vert \mathbf{y} \Vert}^2 - {\Vert \lambda \mathbf{x} + (1 - \lambda) \mathbf{y} \Vert}^2
+    \end{align*}
+\end{proof}
+
 \subsection{First-order condition for strong convexity}
 
 \begin{corollary}{First-order condition for strong convexity}{}
@@ -308,8 +325,6 @@ Assume \( f \in \mathcal{C}^{2} \), and use \( f(\mathbf{x} + \mathbf{p}) = f(\m
         \implies
         f(\mathbf{y})
         & \geq
-        f(\mathbf{x}) + {\nabla f(\mathbf{x})}^\top (\mathbf{y} - \mathbf{x}) + \frac{\mu}{2} \Big( {\Vert \mathbf{y} \Vert}^2 - {\Vert \mathbf{x} \Vert}^2 \Big) - \mu \mathbf{x}^\top (\mathbf{y} - \mathbf{x})
-        \\ & =
         f(\mathbf{x}) + {\nabla f(\mathbf{x})}^\top (\mathbf{y} - \mathbf{x}) + \frac{\mu}{2} \Big( {\Vert \mathbf{y} \Vert}^2 - {\Vert \mathbf{x} \Vert}^2 - 2 \mathbf{x}^\top (\mathbf{y} - \mathbf{x}) \Big)
         \\ & =
         f(\mathbf{x}) + {\nabla f(\mathbf{x})}^\top (\mathbf{y} - \mathbf{x}) + \frac{\mu}{2} \Big( {\Vert \mathbf{y} \Vert}^2 - \cancel{ {\Vert \mathbf{x} \Vert}^2 } - 2 \mathbf{x}^\top \mathbf{y} + \cancel{2} {\Vert \mathbf{x} \Vert}^2 \Big)
