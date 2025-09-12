@@ -1,5 +1,5 @@
 
-\chapter{Mathematical preliminaries}
+\chapter{Real analysis}
 
 \section{Metric space}
 
@@ -28,7 +28,7 @@ Norm \( \eta: \mathbb{R}^d \to \mathbb{R} \), satisfies
     \item \( \eta(\mathbf{x} + \mathbf{y}) \leq \eta(\mathbf{x}) + \eta(\mathbf{y}) \)
 \end{itemize}
 
-\subsubsection{\texorpdfstring{\( L_p \) norm}{Lp norm}}
+\subsection{\texorpdfstring{\( L_p \) norm}{Lp norm}}
 \begin{equation*}
     {\Vert \mathbf{x} \Vert}_p = {\left( \sum_{i=1}^{d} {\vert x_i \vert}^p \right)}^{\frac{1}{p}},
     \quad p \geq 1
@@ -108,6 +108,16 @@ The \textbf{supremum} (least upper bound) of a set \( S \subseteq \mathbb{R} \) 
 The \textbf{closure} of a set \( S \subseteq \mathbb{R}^d \) is the smallest closed set containing \( S \), which can be obtained by adding all limit points of \( S \) to \( S \) itself.
 \begin{equation*}
     \operatorname{closure}{(S)} = S \cup \{ \text{all limit points of } S \}
+\end{equation*}
+
+\section{Cauchy sequence}
+
+A sequence of real numbers \( {\{ a_k \}}_{k=1}^{\infty} \) is a \textbf{Cauchy sequence} if
+\begin{equation*}
+    \forall \epsilon > 0, \
+    \exists N \in \mathbb{N}, \
+    \text{s.t.} \
+    m, n > N \implies \vert a_n - a_m \vert < \epsilon
 \end{equation*}
 
 \chapter{Calculus}
@@ -200,7 +210,7 @@ If a function \( f: S \to \mathbb{R} \) is continuous on a set \( S \subseteq \m
 
 \section{Taylor's theorem}
 
-\subsubsection{Univariate Taylor's theorem}
+\subsection{Univariate Taylor's theorem}
 
 Let \( f: \mathbb{R} \to \mathbb{R} \) be \( (n+1) \) times continuously differentiable on an interval containing \( a \) and \( x \).
 Then, for some \( \xi \) between \( a \) and \( x \),
@@ -216,7 +226,7 @@ where the remainder term \( R_{n+1}(x) \) is given by the Lagrange form:
     R_{n+1}(x) = \frac{f^{(n+1)}(\xi)}{(n+1)!} {(x - a)}^{n+1}
 \end{equation*}
 
-\subsubsection{Multivariate Taylor's theorem}
+\subsection{Multivariate Taylor's theorem}
 
 \section{Levels of smoothness}
 
@@ -224,7 +234,7 @@ A function \( f: \mathbb{R}^d \to \mathbb{R} \) is said to be of \textbf{class} 
 
 If a function is of class \( \mathcal{C}^k \ \forall k \in \mathbb{N} \), it is said to be of class \( \mathcal{C}^{\infty} \) or \textbf{smooth}.
 
-\subsubsection{Properties}
+\subsection{Properties}
 
 \begin{itemize}
     \item If \( f \in \mathcal{C}^0 \), then \( f \) is continuous.
@@ -258,7 +268,7 @@ The constant \( L \) is called the \textbf{Lipschitz constant} of the gradient \
 
 Here, we denote \( f \in \mathcal{C}^{1}_L \) to mean that \( f \) is \( L \)-smooth and of class \( \mathcal{C}^1 \).
 
-\subsubsection{Properties}
+\subsection{Properties}
 
 \begin{itemize}
     \item If \( f \in \mathcal{C}^{2} \), then \( f \in \mathcal{C}^{1}_L \) iff \( \nabla^2 f(\mathbf{x}) \preceq L \mathbf{I}, \ \forall \mathbf{x} \in \mathbb{R}^d \).
@@ -271,16 +281,6 @@ Here, we denote \( f \in \mathcal{C}^{1}_L \) to mean that \( f \) is \( L \)-sm
             \quad \forall \mathbf{x}, \mathbf{y} \in \mathbb{R}^d
         \end{equation*}
 \end{itemize}
-
-\section{Cauchy sequence}
-
-A sequence of real numbers \( {\{ a_k \}}_{k=1}^{\infty} \) is a \textbf{Cauchy sequence} if
-\begin{equation*}
-    \forall \epsilon > 0, \
-    \exists N \in \mathbb{N}, \
-    \text{s.t.} \
-    m, n > N \implies \vert a_n - a_m \vert < \epsilon
-\end{equation*}
 
 \chapter{Linear Algebra}
 
