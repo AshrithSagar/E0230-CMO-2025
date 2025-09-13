@@ -12,6 +12,8 @@ We have
     \sum_{n = 0}^{\infty} \frac{x^{n}}{n!} = 1 + x + \sum_{n=2}^{\infty} \frac{x^{n}}{n!}
 \end{align*}
 
+For \( x > 0 \), we have that \( \sum_{n=2}^{\infty} \frac{x^{n}}{n!} > 0 \), which implies that \( e^{x} > 1 + x \).
+
 \paragraph{Alternate solution:}
 
 Define
@@ -23,8 +25,9 @@ Then we have
     g'(x) = e^{x} - 1, \quad g''(x) = e^{x}.
 \end{equation*}
 
-Note that \( g''(x) > 0 \) for all \( x \in \mathbb{R} \), which implies that \( g'(x) \) is strictly increasing.
-
+Note that \( g''(x) > 0 \) for all \( x \in \mathbb{R} \), which implies that \( g'(x) \) is strictly increasing, for all \( x \in \mathbb{R} \).
 Also, \( g'(0) = 0 \).
 Thus, \( g'(x) < 0 \) for all \( x < 0 \) and \( g'(x) > 0 \) for all \( x > 0 \).
-This implies that \( g(x) \) is strictly decreasing for all \( x < 0 \) and strictly increasing for all \( x > 0 \).
+Thus the point \( x = 0 \) is a global minimum of \( g(x) \).
+Also, \( g(0) = 0 \).
+Thus, \( g(x) \geq g(0) = 0 \) for all \( x \in \mathbb{R} \), which implies that \( e^{x} \geq 1 + x \) for all \( x \in \mathbb{R} \).
