@@ -3,17 +3,194 @@
 Suppose \( x, y \in \mathbb{R}^{n} \).
 Prove the following statements.
 Note that \( \Vert \cdot \Vert \) refers to the Euclidean norm if not otherwise specified.
-\begin{enumerate}[label=(\alph*), noitemsep]
+\begin{enumerate}[label= (\alph*), noitemsep]
     \item \( \big\vert \Vert x \Vert - \Vert y \Vert \big\vert \leq \Vert x - y \Vert \leq \Vert x \Vert + \Vert y \Vert \)
     \item \( 2 x^{\top} y = {\Vert x \Vert}^{2} + {\Vert y \Vert}^{2} - {\Vert x - y \Vert}^{2} \)
     \item Suppose \( B \in \mathbb{R}^{m \times n} \).
-        Show that the function \( d(B) = \sqrt{\operatorname{Tr}\left( B^{\top} B \right)} \) is a norm (this is the Frobenius norm of a matrix, denoted by \( \Vert \cdot \Vert_{F} \) ).
+        Show that the function \( d(B) = \sqrt{\operatorname{Tr}\left( B^{\top} B \right)} \) is a norm (this is the Frobenius norm of a matrix, denoted by \( \Vert \cdot \Vert_{F} \)).
 \end{enumerate}
 
 \subsection*{Solution}
 
 \subsubsection*{(a) \( \big\vert \Vert \mathbf{x} \Vert - \Vert \mathbf{y} \Vert \big\vert \leq \Vert \mathbf{x} - \mathbf{y} \Vert \leq \Vert \mathbf{x} \Vert + \Vert \mathbf{y} \Vert \)}
 
+\begin{align*}
+    {\Vert \mathbf{x} - \mathbf{y} \Vert}^{2}
+    & =
+    {(\mathbf{x} - \mathbf{y})}^{\top} (\mathbf{x} - \mathbf{y})
+    =
+    \mathbf{x}^{\top} \mathbf{x} - \mathbf{x}^{\top} \mathbf{y} - \mathbf{y}^{\top} \mathbf{x} + \mathbf{y}^{\top} \mathbf{y}
+    =
+    {\Vert \mathbf{x} \Vert}^{2} - 2 \, \mathbf{x}^{\top} \mathbf{y} + {\Vert \mathbf{y} \Vert}^{2}
+    \\ & \geq
+    {\Vert \mathbf{x} \Vert}^{2} - 2 \, \vert \mathbf{x}^{\top} \mathbf{y} \vert + {\Vert \mathbf{y} \Vert}^{2}
+    \geq
+    {\Vert \mathbf{x} \Vert}^{2} - 2 \, \Vert \mathbf{x} \Vert \Vert \mathbf{y} \Vert + {\Vert \mathbf{y} \Vert}^{2}
+    =
+    {(\Vert \mathbf{x} \Vert - \Vert \mathbf{y} \Vert)}^{2}
+    \\
+    \because
+    x & \leq \vert x \vert,
+    \; \forall x \in \mathbb{R}
+    \qquad \text{and} \quad
+    \vert \mathbf{x}^{\top} \mathbf{y} \vert
+    \leq
+    \Vert \mathbf{x} \Vert \Vert \mathbf{y} \Vert
+    \qquad \text{(Cauchy-Schwarz)}
+    \\
+    \implies
+    \Vert \mathbf{x} - \mathbf{y} \Vert
+    & \geq
+    \big\vert \Vert \mathbf{x} \Vert - \Vert \mathbf{y} \Vert \big\vert
+    \qquad (\because \; \Vert \cdot \Vert \geq 0)
+    \\
+    \text{Now, }
+    {\Vert \mathbf{x} - \mathbf{y} \Vert}^{2}
+    & =
+    {\Vert \mathbf{x} \Vert}^{2} - 2 \, \mathbf{x}^{\top} \mathbf{y} + {\Vert \mathbf{y} \Vert}^{2}
+    \leq
+    {\Vert \mathbf{x} \Vert}^{2} + 2 \, \vert \mathbf{x}^{\top} \mathbf{y} \vert + {\Vert \mathbf{y} \Vert}^{2}
+    \\ & \leq
+    {\Vert \mathbf{x} \Vert}^{2} + 2 \, \Vert \mathbf{x} \Vert \Vert \mathbf{y} \Vert + {\Vert \mathbf{y} \Vert}^{2}
+    =
+    {(\Vert \mathbf{x} \Vert + \Vert \mathbf{y} \Vert)}^{2}
+    \\
+    \because
+    -x & \leq \vert x \vert,
+    \; \forall x \in \mathbb{R}
+    \qquad \text{and} \quad
+    \vert \mathbf{x}^{\top} \mathbf{y} \vert
+    \leq
+    \Vert \mathbf{x} \Vert \Vert \mathbf{y} \Vert
+    \qquad \text{(Cauchy-Schwarz)}
+    \\
+    \implies
+    \Vert \mathbf{x} - \mathbf{y} \Vert
+    & \leq
+    \Vert \mathbf{x} \Vert + \Vert \mathbf{y} \Vert
+    \qquad (\because \; \Vert \cdot \Vert \geq 0)
+\end{align*}
+
 \subsubsection*{(b) \( 2 \, \mathbf{x}^{\top} \mathbf{y} = {\Vert \mathbf{x} \Vert}^{2} + {\Vert \mathbf{y} \Vert}^{2} - {\Vert \mathbf{x} - \mathbf{y} \Vert}^{2} \)}
 
+\begin{align*}
+    {\Vert \mathbf{x} - \mathbf{y} \Vert}^{2}
+    & =
+    {(\mathbf{x} - \mathbf{y})}^{\top} (\mathbf{x} - \mathbf{y})
+    =
+    \mathbf{x}^{\top} \mathbf{x} - \mathbf{x}^{\top} \mathbf{y} - \mathbf{y}^{\top} \mathbf{x} + \mathbf{y}^{\top} \mathbf{y}
+    =
+    {\Vert \mathbf{x} \Vert}^{2} - 2 \, \mathbf{x}^{\top} \mathbf{y} + {\Vert \mathbf{y} \Vert}^{2}
+    \\
+    \because
+    \mathbf{x}^{\top} \mathbf{y}
+    & =
+    {\big( \mathbf{x}^{\top} \mathbf{y} \big)}^{\top}
+    =
+    \mathbf{y}^{\top} \mathbf{x}
+    \in \mathbb{R}
+    \\
+    \implies
+    2 \, \mathbf{x}^{\top} \mathbf{y}
+    & =
+    {\Vert \mathbf{x} \Vert}^{2} + {\Vert \mathbf{y} \Vert}^{2} - {\Vert \mathbf{x} - \mathbf{y} \Vert}^{2}
+\end{align*}
+
 \subsubsection*{(c) \( d(\mathbf{B}) = \sqrt{\operatorname{Tr}\left( \mathbf{B}^{\top} \mathbf{B} \right)} \) is a norm}
+
+A norm \( \eta: \mathbb{R}^d \to \mathbb{R} \) satisfies the following properties:
+\begin{enumerate}[noitemsep]
+    \item \( \eta(\mathbf{x}) \geq 0, \;\; \forall \mathbf{x} \in \mathbb{R}^d \)
+    \item \( \eta(\mathbf{x}) = 0 \iff \mathbf{x} = \mathbf{0} \)
+    \item \( \eta(s\mathbf{x}) = |s| \; \eta(\mathbf{x}), \;\; \forall \mathbf{x} \in \mathbb{R}^d, \; s \in \mathbb{R} \)
+    \item \( \eta(\mathbf{x} + \mathbf{y}) \leq \eta(\mathbf{x}) + \eta(\mathbf{y}), \;\; \forall \mathbf{x}, \mathbf{y} \in \mathbb{R}^d \)
+\end{enumerate}
+
+Note that, for \( c \in \mathbb{R}, \; \mathbf{X}, \mathbf{Y} \in \mathbb{R}^{m \times m} \), we know that
+\begin{align*}
+    \operatorname{Tr}(\mathbf{X})
+    & =
+    \sum_{i=1}^{m} X_{ii}
+    \\
+    \operatorname{Tr}(\mathbf{X} + \mathbf{Y})
+    & =
+    \operatorname{Tr}(\mathbf{X}) + \operatorname{Tr}(\mathbf{Y})
+    \\
+    \operatorname{Tr}(c\mathbf{X})
+    & =
+    c \; \operatorname{Tr}(\mathbf{X})
+    \\
+    \operatorname{Tr}(\mathbf{X}^{\top})
+    & =
+    \operatorname{Tr}(\mathbf{X})
+    \\
+    \operatorname{Tr}(\mathbf{X}\mathbf{Y})
+    & =
+    \operatorname{Tr}(\mathbf{Y}\mathbf{X})
+\end{align*}
+
+Now, we will show that \( d(\mathbf{B}) \) satisfies all the properties of a norm.
+\begin{enumerate}[noitemsep]
+    \item \( d(\mathbf{B}) = \sqrt{\operatorname{Tr}\left( \mathbf{B}^{\top} \mathbf{B} \right)} \geq 0 \) since \( \operatorname{Tr}\left( \mathbf{B}^{\top} \mathbf{B} \right) = \sum_{i=1}^{m} \sum_{j=1}^{n} B_{ij}^{2} \geq 0 \)
+
+    \item \( d(\mathbf{B}) = 0 \iff \operatorname{Tr}\left( \mathbf{B}^{\top} \mathbf{B} \right) = 0 \iff B_{ij} = 0, \forall i, j \iff \mathbf{B} = \mathbf{0} \)
+
+    \item Scalar multiplication:
+        \begin{align*}
+            d(s\mathbf{B})
+            & =
+            \sqrt{\operatorname{Tr}\big( {(s\mathbf{B})}^{\top} (s\mathbf{B}) \big)}
+            =
+            \sqrt{\operatorname{Tr}\big( s^2 \; \mathbf{B}^{\top} \mathbf{B} \big)}
+            \\ & =
+            \sqrt{s^2 \, \operatorname{Tr}\big( \mathbf{B}^{\top} \mathbf{B} \big)}
+            =
+            |s| \, \sqrt{\operatorname{Tr}\big( \mathbf{B}^{\top} \mathbf{B} \big)}
+            =
+            |s| \; d(\mathbf{B})
+        \end{align*}
+
+    \item Triangle inequality:
+        \begin{align*}
+            {(d(\mathbf{A} + \mathbf{B}))}^{2}
+            & =
+            \operatorname{Tr}\big( {(\mathbf{A} + \mathbf{B})}^{\top} (\mathbf{A} + \mathbf{B}) \big)
+            =
+            \operatorname{Tr}\big( \mathbf{A}^{\top} \mathbf{A} + \mathbf{A}^{\top} \mathbf{B} + \mathbf{B}^{\top} \mathbf{A} + \mathbf{B}^{\top} \mathbf{B} \big)
+            \\ & =
+            \operatorname{Tr}\left( \mathbf{A}^{\top} \mathbf{A} \right) + \operatorname{Tr}\left( \mathbf{A}^{\top} \mathbf{B} \right) + \operatorname{Tr}\left( \mathbf{B}^{\top} \mathbf{A} \right) + \operatorname{Tr}\left( \mathbf{B}^{\top} \mathbf{B} \right)
+            \\ & =
+            {(d(\mathbf{A}))}^{2} + {(d(\mathbf{B}))}^{2} + 2 \; \operatorname{Tr}\left( \mathbf{A}^{\top} \mathbf{B} \right)
+            \\ & \leq
+            {(d(\mathbf{A}))}^{2} + {(d(\mathbf{B}))}^{2} + 2 \; d(\mathbf{A}) \; d(\mathbf{B})
+            =
+            {(d(\mathbf{A}) + d(\mathbf{B}))}^{2}
+            \\
+            \because
+            \operatorname{Tr}\left( \mathbf{A}^{\top} \mathbf{B} \right)
+            & =
+            \operatorname{Tr}\left( {\big( \mathbf{A}^{\top} \mathbf{B} \big)}^\top \right)
+            =
+            \operatorname{Tr}\left( \mathbf{B}^{\top} \mathbf{A} \right),
+            \qquad
+            \because
+            \operatorname{Tr}\left( \mathbf{X}^{\top} \right)
+            =
+            \operatorname{Tr}\left( \mathbf{X} \right)
+            \\
+            \because
+            \operatorname{Tr}\left( \mathbf{A}^{\top} \mathbf{B} \right)
+            & \leq
+            \sqrt{\operatorname{Tr}\left( \mathbf{A}^{\top} \mathbf{A} \right)} \sqrt{\operatorname{Tr}\left( \mathbf{B}^{\top} \mathbf{B} \right)}
+            =
+            d(\mathbf{A})\,d(\mathbf{B})
+            \qquad \text{(Cauchy-Schwarz)}
+            \\
+            \implies
+            d(\mathbf{A} + \mathbf{B})
+            & \leq
+            d(\mathbf{A}) + d(\mathbf{B})
+        \end{align*}
+\end{enumerate}
+
+Thus, \( d(\mathbf{B}) \) is a norm.
