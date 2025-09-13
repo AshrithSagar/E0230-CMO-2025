@@ -3,7 +3,63 @@
 Suppose \( f: \mathbb{R}^{n} \rightarrow \mathbb{R} \) is twice differentiable, such that \( 0<m \leq \lambda_{i}\left(H_{f}(x)\right) \) for all \( i, x \), where \( \lambda_{i}\left(H_{f}(x)\right) \) is the \( i \)--th largest eigenvalue of \( H_{f}(x) \).
 Show that there exists a constant \( l \) such that, for each \( x, y \), we have
 \begin{equation*}
-    \frac{l}{2}\Vert y-x \Vert^{2}+f(y)-f(x)-\nabla f(x)^{\top}(y-x) \geq 0
+    \frac{l}{2}\Vert y-x \Vert^{2}+f(y)-f(x)-{\nabla f(x)}^{\top}(y-x) \geq 0
 \end{equation*}
 
 \subsection*{Solution}
+
+Since \( f \) is twice differentiable, by Taylor's theorem, we have
+\begin{equation*}
+    f(\mathbf{y})
+    =
+    f(\mathbf{x}) + {\nabla f(\mathbf{x})}^{\top}(\mathbf{y}-\mathbf{x}) + \frac{1}{2}{(\mathbf{y}-\mathbf{x})}^{\top} H_{f}(\mathbf{z})(\mathbf{y}-\mathbf{x}),
+    \quad \forall \mathbf{x}, \mathbf{y} \in \mathbb{R}^{n}
+\end{equation*}
+for some \( \mathbf{z} = \mathbf{x} + \theta(\mathbf{y}-\mathbf{x}) \) where \( \theta \in (0,1) \).
+Rearranging the above equation, we get
+\begin{equation*}
+    f(\mathbf{y}) - f(\mathbf{x}) - {\nabla f(\mathbf{x})}^{\top}(\mathbf{y}-\mathbf{x})
+    =
+    \frac{1}{2}{(\mathbf{y}-\mathbf{x})}^{\top} H_{f}(\mathbf{z})(\mathbf{y}-\mathbf{x}),
+    \quad \forall \mathbf{x}, \mathbf{y} \in \mathbb{R}^{n}
+\end{equation*}
+Now, since \( H_{f}(\mathbf{x}) \) is symmetric and \( \lambda_{i}(H_{f}(\mathbf{x})) \geq m > 0, \; \forall i \in \{1, 2, \ldots, n\}, \; \forall \mathbf{x} \in \mathbb{R}^{n} \), we have that \( H_{f}(\mathbf{x}) \succeq m \mathbf{I} \), which gives
+\begin{equation*}
+    {\mathbf{x}}^{\top} \big( H_{f}(\mathbf{x}) - m \mathbf{I} \big) \mathbf{x}
+    \geq
+    0,
+    \quad \forall \mathbf{x} \in \mathbb{R}^{n}
+    \qquad \implies
+    {\mathbf{x}}^{\top} \; H_{f}(\mathbf{x}) \; \mathbf{x}
+    \geq
+    m \Vert \mathbf{x} \Vert^{2},
+    \quad \forall \mathbf{x} \in \mathbb{R}^{n}
+\end{equation*}
+\begin{equation*}
+    \implies
+    {(\mathbf{y}-\mathbf{x})}^{\top} H_{f}(\mathbf{z})(\mathbf{y}-\mathbf{x})
+    \geq
+    m \Vert \mathbf{y}-\mathbf{x} \Vert^{2},
+    \quad \forall \mathbf{x}, \mathbf{y} \in \mathbb{R}^{n}
+\end{equation*}
+\begin{align*}
+    \implies
+    f(\mathbf{y}) - f(\mathbf{x}) - {\nabla f(\mathbf{x})}^{\top}(\mathbf{y}-\mathbf{x})
+    & \geq
+    \frac{m}{2} \Vert \mathbf{y}-\mathbf{x} \Vert^{2},
+    \quad \forall \mathbf{x}, \mathbf{y} \in \mathbb{R}^{n}
+    \\
+    \implies
+    \frac{l}{2} \Vert \mathbf{y}-\mathbf{x} \Vert^{2} + f(\mathbf{y}) - f(\mathbf{x}) - {\nabla f(\mathbf{x})}^{\top}(\mathbf{y}-\mathbf{x})
+    & \geq
+    \frac{l + m}{2} \Vert \mathbf{y}-\mathbf{x} \Vert^{2},
+    \quad \forall \mathbf{x}, \mathbf{y} \in \mathbb{R}^{n}
+\end{align*}
+Thus, it suffices to choose \( l + m \geq 0 \) to satisfy the required condition, i.e., \( \boxed{ l \geq -m } \).
+
+Therefore, there exists \( l \in \mathbb{R} \), specifically any \( l \geq -m \), such that
+\begin{equation*}
+    \frac{l}{2} \Vert \mathbf{y}-\mathbf{x} \Vert^{2} + f(\mathbf{y}) - f(\mathbf{x}) - {\nabla f(\mathbf{x})}^{\top}(\mathbf{y}-\mathbf{x}) \geq 0,
+    \quad \forall \mathbf{x}, \mathbf{y} \in \mathbb{R}^{n}
+\end{equation*}
+as required.
