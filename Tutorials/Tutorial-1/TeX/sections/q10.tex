@@ -34,70 +34,33 @@ Now, consider the problem
     =
     \argmin_{\mathbf{x} \in \mathbb{R}^n} \mathbf{x}^{\top} \mathbf{A} \mathbf{B} \mathbf{x}
 \end{equation*}
-From the first-order necessary condition for optimality, we have that \( \mathbf{x}^*_{\mathbf{A} \mathbf{B}} \) satisfies
+Let \( \mathbf{B}^{1/2} \) be the unique positive definite square root of \( \mathbf{B} \), which exists since \( \mathbf{B} \) is symmetric positive definite, and let \( \mathbf{y} = \mathbf{B}^{1/2} \mathbf{x} \implies \mathbf{x} = \mathbf{B}^{-1/2} \mathbf{y} \), then we have
 \begin{equation*}
-    \nabla_{\mathbf{x}} (\mathbf{x}^{\top} \mathbf{A} \mathbf{B} \mathbf{x}) \big|_{\mathbf{x} = \mathbf{x}^*_{\mathbf{A} \mathbf{B}}} = \mathbf{0}
-    \implies
-    2 \mathbf{A} \mathbf{B} \mathbf{x} \big|_{\mathbf{x} = \mathbf{x}^*_{\mathbf{A} \mathbf{B}}} = \mathbf{0}
-    \implies
-    \mathbf{A} \mathbf{B} \;\mathbf{x}^*_{\mathbf{A} \mathbf{B}} = \mathbf{0}
+    \mathbf{x}^{\top} \mathbf{A} \mathbf{B} \mathbf{x}
+    =
+    {\left( \mathbf{B}^{-1/2} \mathbf{y} \right)}^{\top} \mathbf{A} \mathbf{B} \left( \mathbf{B}^{-1/2} \mathbf{y} \right)
+    =
+    \mathbf{y}^{\top} {\left( \mathbf{B}^{-1/2} \right)}^{\top} \mathbf{A} \mathbf{B} \mathbf{B}^{-1/2} \mathbf{y}
+    =
+    \mathbf{y}^{\top} \mathbf{B}^{-1/2} \mathbf{A} \mathbf{B}^{1/2} \mathbf{y}
 \end{equation*}
-Since both \( \mathbf{A} \) and \( \mathbf{B} \) are PD, their product \( \mathbf{A} \mathbf{B} \) is also PD.\@
-This implies that \( \mathbf{A} \mathbf{B} \neq \mathbf{0}_{n \times n} \) since \( \mathbf{0}_{n \times n} \) is not PD, from which it follows that \( \mathbf{x}^*_{\mathbf{A} \mathbf{B}} = \mathbf{0} \).
-Since \( \mathbf{A} \mathbf{B} \) is PD, we have that \( \mathbf{x}^{\top} \mathbf{A} \mathbf{B} \mathbf{x} > 0 = {\mathbf{x}^*_{\mathbf{A} \mathbf{B}}}^{\top} \mathbf{A} \mathbf{B} \mathbf{x}^*_{\mathbf{A} \mathbf{B}} \) for all \( \mathbf{x} \neq \mathbf{0} \), which means that \( \mathbf{x}^*_{\mathbf{A} \mathbf{B}} = \mathbf{0} \) is the unique minimiser of the problem.
 
-Thus, the solution to the problem \( \argmin_{\mathbf{x}} \mathbf{x}^{\top} \mathbf{A} \mathbf{B} \mathbf{x} \) is \( \mathbf{x}^*_{\mathbf{A} \mathbf{B}} = \mathbf{0} \) and it is unique.
-
-\begin{lemma*}
-    The product of two symmetric positive definite matrices is positive definite.
-\end{lemma*}
-
-\begin{proof}
-    Let \( \mathbf{A}, \mathbf{B} \in \mathbb{R}^{n \times n} \) be symmetric positive definite matrices.
-    Since \( \mathbf{A} \) is positive definite, it has a unique positive definite square root \( \mathbf{A}^{1/2} \) such that \( \mathbf{A} = \mathbf{A}^{1/2} \mathbf{A}^{1/2} \).
-    Now, consider the product \( \mathbf{A} \mathbf{B} \).
-    We can write this as
-    \begin{equation*}
-        \mathbf{A} \mathbf{B}
-        =
-        \mathbf{A}^{1/2} \mathbf{A}^{1/2} \mathbf{B}
-        =
-        \mathbf{A}^{1/2} (\mathbf{A}^{1/2} \mathbf{B} \mathbf{A}^{1/2}) \mathbf{A}^{-1/2}
-    \end{equation*}
-    Let \( \mathbf{C} = \mathbf{A}^{1/2} \mathbf{B} \mathbf{A}^{1/2} \).
-    Since \( \mathbf{B} \) is positive definite, we have that \( \mathbf{C} \) is also positive definite, since for any non-zero vector \( \mathbf{y} \in \mathbb{R}^n \),
-    \begin{equation*}
-        \mathbf{y}^{\top} \mathbf{C} \mathbf{y}
-        =
-        \mathbf{y}^{\top} \mathbf{A}^{1/2} \mathbf{B} \mathbf{A}^{1/2} \mathbf{y}
-        =
-        {(\mathbf{A}^{1/2} \mathbf{y})}^{\top} \mathbf{B} (\mathbf{A}^{1/2} \mathbf{y})
-        > 0
-    \end{equation*}
-    since \( \mathbf{A}^{1/2} \mathbf{y} \) is a non-zero vector, and that \( \mathbf{A}^{1/2} \) is symmetric.
-
-    Now, for any non-zero vector \( \mathbf{y} \in \mathbb{R}^n \), we have
-    \begin{equation*}
-        \mathbf{y}^{\top} \mathbf{A} \mathbf{B} \mathbf{y}
-        =
-        \mathbf{y}^{\top} \mathbf{A}^{1/2} \mathbf{C} \mathbf{A}^{-1/2} \mathbf{y}
-        =
-        {(\mathbf{A}^{-1/2} \mathbf{y})}^{\top} \mathbf{C} (\mathbf{A}^{-1/2} \mathbf{y})
-    \end{equation*}
-    since \( \mathbf{A}^{-1/2} = {(\mathbf{A}^{1/2})}^{-1} = {(\mathbf{A}^{1/2})}^\top \) from \( \mathbf{A}^{1/2} \) being PD.\@
-    Since \( \mathbf{C} \) is positive definite, we have
-    \begin{equation*}
-        {(\mathbf{A}^{-1/2} \mathbf{y})}^{\top} \mathbf{C} (\mathbf{A}^{-1/2} \mathbf{y}) > 0,
-        \quad \forall \mathbf{y} \neq \mathbf{0}
-    \end{equation*}
-    Now since \( \mathbf{A}^{1/2} \) is invertible, \( \mathbf{A}^{-1/2} \mathbf{y} \) is a non-zero vector for any non-zero vector \( \mathbf{y} \).
-    \begin{equation*}
-        \implies
-        \mathbf{x}^{\top} \mathbf{A} \mathbf{B} \mathbf{x} > 0
-        \quad \forall \mathbf{x} \neq \mathbf{0}
-    \end{equation*}
-    Thus, \( \mathbf{A} \mathbf{B} \) is symmetric positive definite, for any symmetric positive definite matrices \( \mathbf{A}, \mathbf{B} \).
-\end{proof}
+Since \( \mathbf{B}^{-1/2} \mathbf{A} \mathbf{B}^{1/2} \sim \mathbf{A} \) (similar matrices have the same eigenvalues), we have that \( \mathbf{B}^{-1/2} \mathbf{A} \mathbf{B}^{1/2} \) is also positive definite, and hence the problem
+\begin{equation*}
+    \argmin_{\mathbf{y} \in \mathbb{R}^n} \mathbf{y}^{\top} \mathbf{B}^{-1/2} \mathbf{A} \mathbf{B}^{1/2} \mathbf{y}
+\end{equation*}
+has a unique solution \( \mathbf{y}^* = \mathbf{0} \).
+Thus, the solution to the original problem is
+\begin{equation*}
+    \mathbf{x}^*_{\mathbf{A} \mathbf{B}}
+    =
+    \mathbf{B}^{-1/2} \mathbf{y}^*
+    =
+    \mathbf{B}^{-1/2} \mathbf{0}
+    =
+    \mathbf{0}
+\end{equation*}
+and it is unique.
 
 \begin{lemma*}
     Every symmetric positive definite matrix has a unique positive definite square root.
