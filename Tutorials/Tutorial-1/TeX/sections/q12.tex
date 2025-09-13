@@ -1,6 +1,37 @@
 \section*{Question 12}
 
 Let \( S \) be a convex set.
-Show that \( x^{*}=\arg \max _{S} f(x) \), where \( f(x) \) is a convex function, lies on the boundary of \( S \).
+Show that \( x^*=\argmax_{S} f(x) \), where \( f(x) \) is a convex function, lies on the boundary of \( S \).
 
 \subsection*{Solution}
+
+Let \( S \) be a convex set and \( f(\mathbf{x}): S \subseteq \mathbb{R}^d \to \mathbb{R} \) be a non-constant convex function (implicitly continuous).
+We want to show that the point \( \mathbf{x}^* = \argmax_{\mathbf{x} \in S} f(\mathbf{x}) \) lies on the boundary of \( S \).
+Assume, for the sake of contradiction, that \( \mathbf{x}^* \) lies in the interior of \( S \).
+Since \( \mathbf{x}^* \) is in the interior of \( S \), there exists a radius \( r > 0 \) such that the open ball \( B_r(\mathbf{x}^*) = \{ \mathbf{z} \in S \;\big|\; \|\mathbf{z} - \mathbf{x}^*\| < r \} \ \subseteq S \), from the definition of interior points.
+Now, consider any point \( \mathbf{y} \in B_r(\mathbf{x}^*) \) such that \( \mathbf{y} \neq \mathbf{x}^* \).
+Since \( f \) is convex, we have, for any \( \theta \in (0, 1) \), that,
+\begin{equation*}
+    f \big( \theta \mathbf{x}^* + (1 - \theta) \mathbf{y} \big)
+    \leq
+    \theta f(\mathbf{x}^*) + (1 - \theta) f(\mathbf{y})
+\end{equation*}
+Rearranging the above inequality, we get,
+\begin{equation*}
+    f(\mathbf{y}) \geq \frac{f \big( \theta \mathbf{x}^* + (1 - \theta) \mathbf{y} \big) - \theta f(\mathbf{x}^*)}{1 - \theta}
+\end{equation*}
+Now, as \( \theta \to 1 \), the point \( \theta \mathbf{x}^* + (1 - \theta) \mathbf{y} \to \mathbf{x}^* \).
+Since \( f \) is continuous (as all convex functions are continuous), we have,
+\begin{equation*}
+    \lim_{\theta \to 1} f \big( \theta \mathbf{x}^* + (1 - \theta) \mathbf{y} \big) = f(\mathbf{x}^*)
+\end{equation*}
+Thus, taking the limit as \( \theta \to 1 \) in the rearranged inequality, we get,
+\begin{equation*}
+    f(\mathbf{y}) \geq f(\mathbf{x}^*),
+    \quad \forall \mathbf{y} \in B_r(\mathbf{x}^*)
+\end{equation*}
+But this contradicts the assumption that \( \mathbf{x}^* \) is the point where \( f \) attains its maximum over \( S \), since we have found points \( \mathbf{y} \) in \( S \) (specifically in the ball \( B_r(\mathbf{x}^*) \)) where \( f(\mathbf{y}) \geq f(\mathbf{x}^*) \).
+Either \( f(\mathbf{y}) > f(\mathbf{x}^*) \), contradicting the maximality of \( \mathbf{x}^* \), or \( f(\mathbf{y}) = f(\mathbf{x}^*) \) for all \( \mathbf{y} \) in the ball, which would imply that \( f \) is constant in a neighborhood around \( \mathbf{x}^* \).
+Either way, we reach a contradiction.
+Therefore, our initial assumption that \( \mathbf{x}^* \) lies in the interior of \( S \) must be false.
+Hence, \( \mathbf{x}^* \) must lie on the boundary of \( S \).
