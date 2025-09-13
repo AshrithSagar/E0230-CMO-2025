@@ -6,12 +6,60 @@ Why or why not?
 \subsection*{Solution}
 
 No, this is not necessarily true.
+(Also, see question 10 that deals with the quadtratic form involving the product of two symmetric positive definite matrices).
 
-We know that \( \mathbf{x}^\top \mathbf{A} \mathbf{x} > 0 \) and \( \mathbf{x}^\top \mathbf{B} \mathbf{x} > 0 \) for all non-zero vectors \( \mathbf{x} \in \mathbb{R}^n \) if \( \mathbf{A} \) and \( \mathbf{B} \) are positive definite matrices.
-This does not imply that \( \mathbf{x}^\top (\mathbf{A} \mathbf{B}) \mathbf{x} > 0, \; \forall \mathbf{x} \in \mathbb{R}^n \setminus \{ \mathbf{0} \} \).
+\paragraph{Counter examples}
+\begin{equation*}
+    \mathbf{A} =
+    \begin{bmatrix}
+        2 & 0 \\
+        0 & 1
+    \end{bmatrix}
+    , \quad
+    \mathbf{B} =
+    \begin{bmatrix}
+        1 & 1 \\
+        1 & 2
+    \end{bmatrix}
+    , \quad
+    \mathbf{A} \mathbf{B} =
+    \begin{bmatrix}
+        2 & 2 \\
+        1 & 2
+    \end{bmatrix}
+\end{equation*}
 
-The product \( \mathbf{A} \mathbf{B} \) is not even guaranteed to be symmetric, which is a requirement for positive definiteness.
+Both \( \mathbf{A} \) and \( \mathbf{B} \) are symmetric positive definite, but \( \mathbf{A} \mathbf{B} \) is not symmetric, and hence not positive definite.
+
+\subsubsection*{Product of symmetric matrices}
+
+Note that in general, the product \( \mathbf{A} \mathbf{B} \) is not even guaranteed to be symmetric.
 \( \mathbf{A} \mathbf{B} \) is symmetric, given that \( \mathbf{A} \) and \( \mathbf{B} \) are symmetric, iff \( \mathbf{A} \) and \( \mathbf{B} \) commute, i.e., \( \mathbf{A} \mathbf{B} = \mathbf{B} \mathbf{A} \).
+\begin{align*}
+    \mathbf{A}
+    & =
+    \mathbf{A}^\top,
+    \qquad
+    \mathbf{B}
+    =
+    \mathbf{B}^\top
+    \\
+    \implies
+    {(\mathbf{A} \mathbf{B})}^\top
+    & =
+    \mathbf{B}^\top \mathbf{A}^\top
+    =
+    \mathbf{B} \mathbf{A}
+    \\
+    \therefore
+    {(\mathbf{A} \mathbf{B})}^\top
+    & =
+    \mathbf{A} \mathbf{B}
+    \iff
+    \mathbf{A} \mathbf{B}
+    =
+    \mathbf{B} \mathbf{A}
+\end{align*}
 
 \paragraph{Counter examples}
 \begin{equation*}
@@ -34,7 +82,4 @@ The product \( \mathbf{A} \mathbf{B} \) is not even guaranteed to be symmetric, 
     \end{bmatrix}
 \end{equation*}
 
-\( \mathbf{A} \mathbf{B} \) is not symmetric to begin with.
-
-Eigenvalues of \( \mathbf{A} \) are \( 1, -1 \) and eigenvalues of \( \mathbf{B} \) are \( 2, 0 \).
-Eigenvalues of \( \mathbf{A} \mathbf{B} \) are \( 0, 0 \).
+\( \mathbf{A} \) and \( \mathbf{B} \) are symmetric, but \( \mathbf{A} \mathbf{B} \) is not.

@@ -2,14 +2,163 @@
 
 Suppose \( A, B \) are symmetric and that the problems
 \begin{equation*}
-    \text{(P1)} \quad \underset{x}{\arg \min } x^{\top} A x \quad \text { and } \quad (\text{P2}) \quad \underset{x}{\arg \min } x^{\top} B x
+    \text{(P1)} \quad \argmin_{x} x^{\top} A x \quad \text { and } \quad (\text{P2}) \quad \argmin_{x} x^{\top} B x
 \end{equation*}
-have unique solutions \( x_{P 1}=x_{P 2}=0 \).
+have unique solutions \( x_{P1} = x_{P2} = 0 \).
 What is the solution to
 \begin{equation*}
-    \underset{x}{\arg \min } x^{\top} A B x,
+    \argmin_{x} x^{\top} A B x,
 \end{equation*}
 and is it unique?
-(hint: every symmetric PD matrix has a unique, positive definite square root -- can you prove this?)
+(hint: every symmetric PD matrix has a unique, positive definite square root --- can you prove this?)
 
 \subsection*{Solution}
+
+Let \( \mathbf{A}, \mathbf{B} \in \mathbb{R}^{n \times n} \) be symmetric matrices such that
+\begin{equation*}
+    \mathbf{x}^*_{\mathbf{A}}
+    =
+    \argmin_{\mathbf{x} \in \mathbb{R}^n} \mathbf{x}^{\top} \mathbf{A} \mathbf{x}
+    =
+    \mathbf{0}
+    =
+    \mathbf{x}^*_{\mathbf{B}}
+    =
+    \argmin_{\mathbf{x} \in \mathbb{R}^n} \mathbf{x}^{\top} \mathbf{B} \mathbf{x}
+\end{equation*}
+and that \( \mathbf{x}^*_{\mathbf{A}} \) and \( \mathbf{x}^*_{\mathbf{B}} \) are unique.
+Since \( \mathbf{x}^*_{\mathbf{A}} \) and \( \mathbf{x}^*_{\mathbf{B}} \) minimise the quadratic forms \( \mathbf{x}^{\top} \mathbf{A} \mathbf{x} \) and \( \mathbf{x}^{\top} \mathbf{B} \mathbf{x} \) respectively, we have that \( \mathbf{x}^{\top} \mathbf{A} \mathbf{x} > {\mathbf{x}^*_{\mathbf{A}}}^{\top} \mathbf{A} \mathbf{x}^*_{\mathbf{A}} = 0 \) and \( \mathbf{x}^{\top} \mathbf{B} \mathbf{x} > {\mathbf{x}^*_{\mathbf{B}}}^{\top} \mathbf{B} \mathbf{x}^*_{\mathbf{B}} = 0 \) for all \( \mathbf{x} \neq \mathbf{0} \), which means that both \( \mathbf{A} \) and \( \mathbf{B} \) are positive definite (PD) matrices.
+Now, consider the problem
+\begin{equation*}
+    \mathbf{x}^*_{\mathbf{A} \mathbf{B}}
+    =
+    \argmin_{\mathbf{x} \in \mathbb{R}^n} \mathbf{x}^{\top} \mathbf{A} \mathbf{B} \mathbf{x}
+\end{equation*}
+From the first-order necessary condition for optimality, we have that \( \mathbf{x}^*_{\mathbf{A} \mathbf{B}} \) satisfies
+\begin{equation*}
+    \nabla_{\mathbf{x}} (\mathbf{x}^{\top} \mathbf{A} \mathbf{B} \mathbf{x}) \big|_{\mathbf{x} = \mathbf{x}^*_{\mathbf{A} \mathbf{B}}} = \mathbf{0}
+    \implies
+    2 \mathbf{A} \mathbf{B} \mathbf{x} \big|_{\mathbf{x} = \mathbf{x}^*_{\mathbf{A} \mathbf{B}}} = \mathbf{0}
+    \implies
+    \mathbf{A} \mathbf{B} \;\mathbf{x}^*_{\mathbf{A} \mathbf{B}} = \mathbf{0}
+\end{equation*}
+Since both \( \mathbf{A} \) and \( \mathbf{B} \) are PD, their product \( \mathbf{A} \mathbf{B} \) is also PD.\@
+This implies that \( \mathbf{A} \mathbf{B} \neq \mathbf{0}_{n \times n} \) since \( \mathbf{0}_{n \times n} \) is not PD, from which it follows that \( \mathbf{x}^*_{\mathbf{A} \mathbf{B}} = \mathbf{0} \).
+Since \( \mathbf{A} \mathbf{B} \) is PD, we have that \( \mathbf{x}^{\top} \mathbf{A} \mathbf{B} \mathbf{x} > 0 = {\mathbf{x}^*_{\mathbf{A} \mathbf{B}}}^{\top} \mathbf{A} \mathbf{B} \mathbf{x}^*_{\mathbf{A} \mathbf{B}} \) for all \( \mathbf{x} \neq \mathbf{0} \), which means that \( \mathbf{x}^*_{\mathbf{A} \mathbf{B}} = \mathbf{0} \) is the unique minimiser of the problem.
+
+Thus, the solution to the problem \( \argmin_{\mathbf{x}} \mathbf{x}^{\top} \mathbf{A} \mathbf{B} \mathbf{x} \) is \( \mathbf{x}^*_{\mathbf{A} \mathbf{B}} = \mathbf{0} \) and it is unique.
+
+\begin{lemma*}
+    The product of two symmetric positive definite matrices is positive definite.
+\end{lemma*}
+
+\begin{proof}
+    Let \( \mathbf{A}, \mathbf{B} \in \mathbb{R}^{n \times n} \) be symmetric positive definite matrices.
+    Since \( \mathbf{A} \) is positive definite, it has a unique positive definite square root \( \mathbf{A}^{1/2} \) such that \( \mathbf{A} = \mathbf{A}^{1/2} \mathbf{A}^{1/2} \).
+    Now, consider the product \( \mathbf{A} \mathbf{B} \).
+    We can write this as
+    \begin{equation*}
+        \mathbf{A} \mathbf{B}
+        =
+        \mathbf{A}^{1/2} \mathbf{A}^{1/2} \mathbf{B}
+        =
+        \mathbf{A}^{1/2} (\mathbf{A}^{1/2} \mathbf{B} \mathbf{A}^{1/2}) \mathbf{A}^{-1/2}
+    \end{equation*}
+    Let \( \mathbf{C} = \mathbf{A}^{1/2} \mathbf{B} \mathbf{A}^{1/2} \).
+    Since \( \mathbf{B} \) is positive definite, we have that \( \mathbf{C} \) is also positive definite, since for any non-zero vector \( \mathbf{y} \in \mathbb{R}^n \),
+    \begin{equation*}
+        \mathbf{y}^{\top} \mathbf{C} \mathbf{y}
+        =
+        \mathbf{y}^{\top} \mathbf{A}^{1/2} \mathbf{B} \mathbf{A}^{1/2} \mathbf{y}
+        =
+        {(\mathbf{A}^{1/2} \mathbf{y})}^{\top} \mathbf{B} (\mathbf{A}^{1/2} \mathbf{y})
+        > 0
+    \end{equation*}
+    since \( \mathbf{A}^{1/2} \mathbf{y} \) is a non-zero vector, and that \( \mathbf{A}^{1/2} \) is symmetric.
+
+    Now, for any non-zero vector \( \mathbf{y} \in \mathbb{R}^n \), we have
+    \begin{equation*}
+        \mathbf{y}^{\top} \mathbf{A} \mathbf{B} \mathbf{y}
+        =
+        \mathbf{y}^{\top} \mathbf{A}^{1/2} \mathbf{C} \mathbf{A}^{-1/2} \mathbf{y}
+        =
+        {(\mathbf{A}^{-1/2} \mathbf{y})}^{\top} \mathbf{C} (\mathbf{A}^{-1/2} \mathbf{y})
+    \end{equation*}
+    since \( \mathbf{A}^{-1/2} = {(\mathbf{A}^{1/2})}^{-1} = {(\mathbf{A}^{1/2})}^\top \) from \( \mathbf{A}^{1/2} \) being PD.\@
+    Since \( \mathbf{C} \) is positive definite, we have
+    \begin{equation*}
+        {(\mathbf{A}^{-1/2} \mathbf{y})}^{\top} \mathbf{C} (\mathbf{A}^{-1/2} \mathbf{y}) > 0,
+        \quad \forall \mathbf{y} \neq \mathbf{0}
+    \end{equation*}
+    Now since \( \mathbf{A}^{1/2} \) is invertible, \( \mathbf{A}^{-1/2} \mathbf{y} \) is a non-zero vector for any non-zero vector \( \mathbf{y} \).
+    \begin{equation*}
+        \implies
+        \mathbf{x}^{\top} \mathbf{A} \mathbf{B} \mathbf{x} > 0
+        \quad \forall \mathbf{x} \neq \mathbf{0}
+    \end{equation*}
+    Thus, \( \mathbf{A} \mathbf{B} \) is symmetric positive definite, for any symmetric positive definite matrices \( \mathbf{A}, \mathbf{B} \).
+\end{proof}
+
+\begin{lemma*}
+    Every symmetric positive definite matrix has a unique positive definite square root.
+\end{lemma*}
+
+\begin{proof}
+    Let \( \mathbf{M} \in \mathbb{R}^{n \times n} \) be a symmetric positive definite matrix.
+    Since \( \mathbf{M} \) is symmetric, we have that \( \mathbf{M} \) is diagonalizable from the spectral decomposition theorem, i.e., there exists an orthogonal matrix \( \mathbf{Q} \) and a diagonal matrix \( \mathbf{D} \) such that
+    \begin{equation*}
+        \mathbf{M} = \mathbf{Q} \mathbf{D} \mathbf{Q}^{\top}
+    \end{equation*}
+    where the diagonal entries of \( \mathbf{D} \) are the eigenvalues of \( \mathbf{M} \).
+    Since \( \mathbf{M} \) is positive definite, all its eigenvalues are positive, i.e., \( \lambda_i > 0 \) for all \( i = 1, 2, \ldots, n \).
+    Now, we can define the square root of \( \mathbf{M} \) as
+    \begin{equation*}
+        \mathbf{M}^{1/2} = \mathbf{Q} \mathbf{D}^{1/2} \mathbf{Q}^{\top}
+    \end{equation*}
+    where \( \mathbf{D}^{1/2} \) is the diagonal matrix with diagonal entries \( \sqrt{\lambda_i} \) for all \( i = 1, 2, \ldots, n \).
+    It is easy to verify that \( {(\mathbf{M}^{1/2})}^2 = \mathbf{M} \) since
+    \begin{equation*}
+        \left( \mathbf{Q} \mathbf{D}^{1/2} \mathbf{Q}^{\top} \right) \left( \mathbf{Q} \mathbf{D}^{1/2} \mathbf{Q}^{\top} \right)
+        =
+        \mathbf{Q} \mathbf{D}^{1/2} \left( \cancelto{\mathbf{I}}{ \mathbf{Q}^{\top} \mathbf{Q} } \right) \mathbf{D}^{1/2} \mathbf{Q}^{\top}
+        =
+        \mathbf{Q} \left( \mathbf{D}^{1/2} \mathbf{D}^{1/2} \right) \mathbf{Q}^{\top}
+        =
+        \mathbf{Q} \mathbf{D} \mathbf{Q}^{\top}
+        =
+        \mathbf{M}
+    \end{equation*}
+    It is easy to verify that \( \mathbf{M}^{1/2} \) is symmetric and positive definite, since \( \sqrt{\lambda_i} > 0 \) for all \( i = 1, 2, \ldots, n \).
+
+    To show the uniqueness of the positive definite square root, suppose there exists another symmetric positive definite matrix \( \mathbf{N} \) such that \( \mathbf{N}^2 = \mathbf{M} \).
+    Then, we have
+    \begin{equation*}
+        \mathbf{N}^2 = \mathbf{M} = \mathbf{Q} \mathbf{D} \mathbf{Q}^{\top}
+    \end{equation*}
+    Since \( \mathbf{N} \) is symmetric, it is also diagonalizable, i.e., there exists an orthogonal matrix \( \mathbf{P} \) and a diagonal matrix \( \mathbf{E} \) such that
+    \begin{equation*}
+        \mathbf{N} = \mathbf{P} \mathbf{E} \mathbf{P}^{\top}
+    \end{equation*}
+    where the diagonal entries of \( \mathbf{E} \) are the eigenvalues of \( \mathbf{N} \).
+    Since \( \mathbf{N} \) is positive definite, all its eigenvalues are positive, i.e., \( \mu_i > 0 \) for all \( i = 1, 2, \ldots, n \).
+    Now, we have
+    \begin{equation*}
+        \mathbf{N}^2 = \mathbf{P} \mathbf{E}^2 \mathbf{P}^{\top} = \mathbf{Q} \mathbf{D} \mathbf{Q}^{\top}
+    \end{equation*}
+    This implies that \( \mathbf{E}^2 = \mathbf{D} \), since both sides are diagonal matrices with the same eigenvalues.
+    Thus, we have \( \mu_i^2 = \lambda_i \) for all \( i = 1, 2, \ldots, n \).
+    Since \( \mu_i > 0 \) and \( \lambda_i > 0 \), we have \( \mu_i = \sqrt{\lambda_i} \) for all \( i = 1, 2, \ldots, n \).
+    Thus, we have \( \mathbf{E} = \mathbf{D}^{1/2} \) and hence \( \mathbf{N} = \mathbf{P} \mathbf{D}^{1/2} \mathbf{P}^{\top} \).
+    Now, since \( \mathbf{N}^2 = \mathbf{M} \), we have
+    \begin{equation*}
+        \mathbf{P} \mathbf{D}^{1/2} \mathbf{P}^{\top} \mathbf{P} \mathbf{D}^{1/2} \mathbf{P}^{\top}
+        =
+        \mathbf{Q} \mathbf{D} \mathbf{Q}^{\top}
+        \implies
+        \mathbf{P} \mathbf{D} \mathbf{P}^{\top}
+        =
+        \mathbf{Q} \mathbf{D} \mathbf{Q}^{\top}
+    \end{equation*}
+    This implies that \( \mathbf{P} = \mathbf{Q} \) and hence \( \mathbf{N} = \mathbf{M}^{1/2} \).
+    Thus, the positive definite square root of a symmetric positive definite matrix is unique.
+\end{proof}
