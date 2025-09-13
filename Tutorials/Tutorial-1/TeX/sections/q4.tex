@@ -7,22 +7,95 @@ Then, show that \( -\frac{L}{2}\|y-x\|^{2} \leq f(y)-f(x)-\langle\nabla f(x), y-
 \subsection*{Solution}
 
 Since \( f \in C_{L}^{1} \), we have that \( \nabla f \) is Lipschitz continuous with constant \( L \), i.e.,
-\begin{equation*}
-    {\Vert \nabla f(\mathbf{x}) - \nabla f(\mathbf{y}) \Vert}_{2} \leq L {\Vert \mathbf{x} - \mathbf{y} \Vert}_{2}, \quad \forall \mathbf{x}, \mathbf{y} \in \mathbb{R}^{n}
-\end{equation*}
+\begin{align*}
+    {\Vert \nabla f(\mathbf{x}) - \nabla f(\mathbf{y}) \Vert}_{2}
+    & \leq
+    L {\Vert \mathbf{x} - \mathbf{y} \Vert}_{2}, \quad \forall \mathbf{x}, \mathbf{y} \in \mathbb{R}^{n}
+    \\
+    \implies
+    \Big\vert f(\mathbf{y}) - f(\mathbf{x}) - {\nabla f(\mathbf{x})}^{\top} (\mathbf{y} - \mathbf{x}) \Big\vert
+    & \leq
+    \frac{L}{2} {\Vert \mathbf{y} - \mathbf{x} \Vert}^{2}, \quad \forall \mathbf{x}, \mathbf{y} \in \mathbb{R}^{n}
+\end{align*}
+
 Since \( C_{L}^{1} \subseteq C^{1} \), we only need to show that \( g \) and \( h \) satisfy the first order condition for convexity to prove that \( g \) and \( h \) are convex, i.e.,
 \begin{align*}
-    g(\mathbf{y}) & \geq g(\mathbf{x}) + {\nabla g(\mathbf{x})}^{\top} (\mathbf{y} - \mathbf{x}), \quad \forall \mathbf{x}, \mathbf{y} \in \mathbb{R}^{n},
+    g(\mathbf{y})
+    - \left( g(\mathbf{x}) + {\nabla g(\mathbf{x})}^{\top} (\mathbf{y} - \mathbf{x}) \right)
+    & \geq 0
+    , \quad \forall \mathbf{x}, \mathbf{y} \in \mathbb{R}^{n},
     \\
-    h(\mathbf{y}) & \geq h(\mathbf{x}) + {\nabla h(\mathbf{x})}^{\top} (\mathbf{y} - \mathbf{x}), \quad \forall \mathbf{x}, \mathbf{y} \in \mathbb{R}^{n}.
+    h(\mathbf{y})
+    - \left( h(\mathbf{x}) + {\nabla h(\mathbf{x})}^{\top} (\mathbf{y} - \mathbf{x}) \right)
+    & \geq 0
+    , \quad \forall \mathbf{x}, \mathbf{y} \in \mathbb{R}^{n}
 \end{align*}
-Now, we have
-\begin{align*}
+
+Now, with
+\begin{equation*}
     \nabla g(\mathbf{x})
-    & =
+    =
     L \mathbf{x} - \nabla f(\mathbf{x})
-    \\
+    , \qquad
     \nabla h(\mathbf{x})
-    & =
+    =
     L \mathbf{x} + \nabla f(\mathbf{x})
+\end{equation*}
+\begin{align*}
+    \implies
+    &
+    g(\mathbf{y})
+    - \left( g(\mathbf{x}) + {\nabla g(\mathbf{x})}^{\top} (\mathbf{y} - \mathbf{x}) \right)
+    \\ & =
+    \frac{L}{2} \mathbf{y}^{\top} \mathbf{y} - f(\mathbf{y})
+    - \left( \frac{L}{2} \mathbf{x}^{\top} \mathbf{x} - f(\mathbf{x}) + {\big( L \mathbf{x} - \nabla f(\mathbf{x}) \big)}^{\top} (\mathbf{y} - \mathbf{x}) \right)
+    \\ & =
+    \frac{L}{2} \Big( \Vert \mathbf{y} \Vert^{2} - \Vert \mathbf{x} \Vert^{2} - 2 \mathbf{x}^{\top} (\mathbf{y} - \mathbf{x}) \Big)
+    - \left( f(\mathbf{y}) - f(\mathbf{x}) - {\nabla f(\mathbf{x})}^{\top} (\mathbf{y} - \mathbf{x}) \right)
+    \\ & =
+    \frac{L}{2} \Big( \Vert \mathbf{y} \Vert^{2} - \cancel{ \Vert \mathbf{x} \Vert^{2} } - 2 \mathbf{x}^{\top} \mathbf{y} + \cancel{2} \Vert \mathbf{x} \Vert^{2} \Big)
+    - \left( f(\mathbf{y}) - f(\mathbf{x}) - {\nabla f(\mathbf{x})}^{\top} (\mathbf{y} - \mathbf{x}) \right)
+    \\ & =
+    \frac{L}{2} {\Vert \mathbf{y} - \mathbf{x} \Vert}^{2}
+    - \left( f(\mathbf{y}) - f(\mathbf{x}) - {\nabla f(\mathbf{x})}^{\top} (\mathbf{y} - \mathbf{x}) \right)
+    \\ & \geq
+    \frac{L}{2} {\Vert \mathbf{y} - \mathbf{x} \Vert}^{2}
+    - \left\vert f(\mathbf{y}) - f(\mathbf{x}) - {\nabla f(\mathbf{x})}^{\top} (\mathbf{y} - \mathbf{x}) \right\vert
+    \quad (\because x \leq \vert x \vert \Rightarrow -x \geq -\vert x \vert, \; \forall x \in \mathbb{R})
+    \\ & \geq
+    \frac{L}{2} {\Vert \mathbf{y} - \mathbf{x} \Vert}^{2}
+    - \frac{L}{2} {\Vert \mathbf{y} - \mathbf{x} \Vert}^{2}
+    = 0
+    , \quad \forall \mathbf{x}, \mathbf{y} \in \mathbb{R}^{n}
 \end{align*}
+
+Similarly,
+\begin{align*}
+    \implies
+    &
+    h(\mathbf{y})
+    - \left( h(\mathbf{x}) + {\nabla h(\mathbf{x})}^{\top} (\mathbf{y} - \mathbf{x}) \right)
+    \\ & =
+    \frac{L}{2} \mathbf{y}^{\top} \mathbf{y} + f(\mathbf{y})
+    - \left( \frac{L}{2} \mathbf{x}^{\top} \mathbf{x} + f(\mathbf{x}) + {\big( L \mathbf{x} + \nabla f(\mathbf{x}) \big)}^{\top} (\mathbf{y} - \mathbf{x}) \right)
+    \\ & =
+    \frac{L}{2} \Big( \Vert \mathbf{y} \Vert^{2} - \Vert \mathbf{x} \Vert^{2} - 2 \mathbf{x}^{\top} (\mathbf{y} - \mathbf{x}) \Big)
+    + \left( f(\mathbf{y}) - f(\mathbf{x}) - {\nabla f(\mathbf{x})}^{\top} (\mathbf{y} - \mathbf{x}) \right)
+    \\ & =
+    \frac{L}{2} \Big( \Vert \mathbf{y} \Vert^{2} - \cancel{ \Vert \mathbf{x} \Vert^{2} } - 2 \mathbf{x}^{\top} \mathbf{y} + \cancel{2} \Vert \mathbf{x} \Vert^{2} \Big)
+    + \left( f(\mathbf{y}) - f(\mathbf{x}) - {\nabla f(\mathbf{x})}^{\top} (\mathbf{y} - \mathbf{x}) \right)
+    \\ & =
+    \frac{L}{2} {\Vert \mathbf{y} - \mathbf{x} \Vert}^{2}
+    + \left( f(\mathbf{y}) - f(\mathbf{x}) - {\nabla f(\mathbf{x})}^{\top} (\mathbf{y} - \mathbf{x}) \right)
+    \\ & \geq
+    \frac{L}{2} {\Vert \mathbf{y} - \mathbf{x} \Vert}^{2}
+    - \left\vert f(\mathbf{y}) - f(\mathbf{x}) - {\nabla f(\mathbf{x})}^{\top} (\mathbf{y} - \mathbf{x}) \right\vert
+    \quad (\because -x \leq \vert x \vert \Rightarrow x \geq -\vert x \vert, \; \forall x \in \mathbb{R})
+    \\ & \geq
+    \frac{L}{2} {\Vert \mathbf{y} - \mathbf{x} \Vert}^{2}
+    - \frac{L}{2} {\Vert \mathbf{y} - \mathbf{x} \Vert}^{2}
+    = 0
+    , \quad \forall \mathbf{x}, \mathbf{y} \in \mathbb{R}^{n}
+\end{align*}
+
+Hence, \( g \) and \( h \) are convex.
