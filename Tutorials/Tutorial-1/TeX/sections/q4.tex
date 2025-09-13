@@ -5,3 +5,24 @@ If \( f \in C_{L}^{1} \), show that the functions \( g(x)=\frac{L}{2} x^{\top} x
 Then, show that \( -\frac{L}{2}\|y-x\|^{2} \leq f(y)-f(x)-\langle\nabla f(x), y-x\rangle \leq \frac{L}{2}\|y-x \Vert^{2} \).
 
 \subsection*{Solution}
+
+Since \( f \in C_{L}^{1} \), we have that \( \nabla f \) is Lipschitz continuous with constant \( L \), i.e.,
+\begin{equation*}
+    {\Vert \nabla f(\mathbf{x}) - \nabla f(\mathbf{y}) \Vert}_{2} \leq L {\Vert \mathbf{x} - \mathbf{y} \Vert}_{2}, \quad \forall \mathbf{x}, \mathbf{y} \in \mathbb{R}^{n}
+\end{equation*}
+Since \( C_{L}^{1} \subseteq C^{1} \), we only need to show that \( g \) and \( h \) satisfy the first order condition for convexity to prove that \( g \) and \( h \) are convex, i.e.,
+\begin{align*}
+    g(\mathbf{y}) & \geq g(\mathbf{x}) + {\nabla g(\mathbf{x})}^{\top} (\mathbf{y} - \mathbf{x}), \quad \forall \mathbf{x}, \mathbf{y} \in \mathbb{R}^{n},
+    \\
+    h(\mathbf{y}) & \geq h(\mathbf{x}) + {\nabla h(\mathbf{x})}^{\top} (\mathbf{y} - \mathbf{x}), \quad \forall \mathbf{x}, \mathbf{y} \in \mathbb{R}^{n}.
+\end{align*}
+Now, we have
+\begin{align*}
+    \nabla g(\mathbf{x})
+    & =
+    L \mathbf{x} - \nabla f(\mathbf{x})
+    \\
+    \nabla h(\mathbf{x})
+    & =
+    L \mathbf{x} + \nabla f(\mathbf{x})
+\end{align*}
