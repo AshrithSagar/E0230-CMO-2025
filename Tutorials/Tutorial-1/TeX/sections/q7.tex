@@ -6,3 +6,50 @@ Can you provide an exact expression for \( f(A x)-f(x) \)?
 Can you provide an upper bound for \( f(A x)-f(x) \)?
 
 \subsection*{Solution}
+
+Given that \( f: \mathbb{R}^{n} \rightarrow \mathbb{R} \) is a twice differentiable function, we can use Taylor's theorem to express \( f(\mathbf{A} \mathbf{x}) \) in terms of \( f(\mathbf{x}) \), its gradient \( \nabla f(\mathbf{x}) \), and its Hessian \( H_{f}(\mathbf{x}) \), i.e.,
+\begin{equation*}
+    f(\mathbf{A} \mathbf{x})
+    =
+    f(\mathbf{x}) + {\nabla f(\mathbf{x})}^{\top} (\mathbf{A} \mathbf{x} - \mathbf{x}) + \frac{1}{2} {(\mathbf{A} \mathbf{x} - \mathbf{x})}^{\top} H_{f}(c) (\mathbf{A} \mathbf{x} - \mathbf{x})
+\end{equation*}
+for some \( c \) on the line segment between \( \mathbf{x} \) and \( \mathbf{A} \mathbf{x} \), i.e., \( c = \theta \mathbf{x} + (1-\theta) \mathbf{A} \mathbf{x} \) for some \( \theta \in [0, 1] \).
+Rearranging, we get
+\begin{equation*}
+    \boxed{
+        f(\mathbf{A} \mathbf{x}) - f(\mathbf{x})
+        =
+        {\nabla f(\mathbf{x})}^{\top} (\mathbf{A} \mathbf{x} - \mathbf{x}) + \frac{1}{2} {(\mathbf{A} \mathbf{x} - \mathbf{x})}^{\top} H_{f}(c) (\mathbf{A} \mathbf{x} - \mathbf{x})
+    }
+\end{equation*}
+which is the exact expression for \( f(\mathbf{A} \mathbf{x}) - f(\mathbf{x}) \).
+
+Now, to provide an upper bound for \( f(\mathbf{A} \mathbf{x}) - f(\mathbf{x}) \), we can use the fact that the maximum eigenvalue of the Hessian is bounded by \( L \).
+Using the Rayleigh quotient, we know that
+\begin{equation*}
+    \lambda_{\max}(\mathbf{M})
+    =
+    \max_{\mathbf{y} \neq 0} \frac{\mathbf{y}^{\top} \mathbf{M} \mathbf{y}}{\mathbf{y}^{\top} \mathbf{y}}
+    \implies
+    \mathbf{y}^{\top} \mathbf{M} \mathbf{y}
+    \leq
+    \lambda_{\max}(\mathbf{M}) \; \mathbf{y}^{\top} \mathbf{y}
+\end{equation*}
+for any symmetric matrix \( \mathbf{M} \) and any non-zero vector \( \mathbf{y} \).
+Applying this to our case, we have
+\begin{equation*}
+    {(\mathbf{A} \mathbf{x} - \mathbf{x})}^{\top} H_{f}(c) (\mathbf{A} \mathbf{x} - \mathbf{x})
+    \leq
+    \lambda_{\max}(H_{f}(c)) \| \mathbf{A} \mathbf{x} - \mathbf{x} \|^{2}
+    \leq
+    L \| \mathbf{A} \mathbf{x} - \mathbf{x} \|^{2}
+\end{equation*}
+\begin{equation*}
+    \implies
+    \boxed{
+        f(\mathbf{A} \mathbf{x}) - f(\mathbf{x})
+        \leq
+        {\nabla f(\mathbf{x})}^{\top} (\mathbf{A} \mathbf{x} - \mathbf{x}) + \frac{L}{2} \| \mathbf{A} \mathbf{x} - \mathbf{x} \|^{2}
+    }
+\end{equation*}
+which provides an upper bound for \( f(\mathbf{A} \mathbf{x}) - f(\mathbf{x}) \).
