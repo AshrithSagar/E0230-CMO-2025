@@ -33,10 +33,7 @@
 A function \( f: \mathbb{R}^d \to \mathbb{R} \) is said to be in \( o(g(\mathbf{x})) \) as \( \mathbf{x} \to \mathbf{x}_0 \), for some function \( g: \mathbb{R}^d \to \mathbb{R} \), \( g(\mathbf{x}) \neq 0 \) in a neighborhood of \( \mathbf{x}_0 \), if
 \begin{equation*}
     \lim_{\mathbf{x} \to \mathbf{x}_0} \frac{f(\mathbf{x})}{g(\mathbf{x})} = 0
-\end{equation*}
-
-i.e.,
-\begin{equation*}
+    \quad \iff \quad
     \forall \epsilon > 0,
     \exists \delta > 0,
     \text{ s.t. }
@@ -47,19 +44,19 @@ i.e.,
 \subsection{Properties}
 
 \begin{itemize}
-    \item If \( f \in o(g) \), then \( c \cdot f \in o(g) \), for any non-zero constant \( c \in \mathbb{R} \).
+    \item \( f \in o(g) \implies c \cdot f \in o(g), \; \forall c \in \mathbb{R} \).
 
-    \item If \( f \in o(F) \) and \( g \in o(G) \), then \( f \cdot g \in o(F \cdot G) \).
+    \item \( f \in o(F), \;  g \in o(G) \implies f \cdot g \in o(F \cdot G) \).
 
-    \item If \( f \in o(h) \) and \( g \in o(h) \), then \( f + g \in o(h) \).
+    \item \( f \in o(h), \; g \in o(h) \implies f + g \in o(h) \).
 
-    \item If \( f \in o(g) \) and \( g \in o(h) \), then \( f \in o(h) \).
+    \item \( f \in o(g), \; g \in o(h) \implies f \in o(h) \).
 
-    \item If \( f(\mathbf{x}) \in o(1) \) as \( \mathbf{x} \to \mathbf{x}_0 \), then \( f(\mathbf{x}) \to 0 \) as \( \mathbf{x} \to \mathbf{x}_0 \).
+    \item \( f(\mathbf{x}) \in o(1) \text{ as } \mathbf{x} \to \mathbf{x}_0 \implies f(\mathbf{x}) \to 0 \text{ as } \mathbf{x} \to \mathbf{x}_0 \).
 
-    \item If \( |f(\mathbf{x})| \leq |h(\mathbf{x})| \) near \( \mathbf{x}_0 \), and \( h \in o(g) \), then \( f \in o(g) \).
+    \item \( |f(\mathbf{x})| \leq |h(\mathbf{x})| \text{ near } \mathbf{x}_0, \; h \in o(g) \implies f \in o(g) \).
 
-    \item If \( f \in o(g) \), and \( \phi: \mathbb{R} \to \mathbb{R} \) is continuous at 0 with \( \phi(0) = 0 \), then \( \phi(f(\mathbf{x})) \in o(\phi(g(\mathbf{x}))) \).
+    \item \( f \in o(g), \; \phi: \mathbb{R} \to \mathbb{R} \text{ is continuous at } 0 \text{ with } \phi(0) = 0 \implies \phi(f(\mathbf{x})) \in o(\phi(g(\mathbf{x}))) \).
 
-    \item If \( \alpha > \beta > 0 \), then \( \|\mathbf{x} - \mathbf{x}_0\|^\alpha \in o(\|\mathbf{x} - \mathbf{x}_0\|^\beta) \) as \( \mathbf{x} \to \mathbf{x}_0 \).
+    \item \( \alpha > \beta > 0 \implies \|\mathbf{x} - \mathbf{x}_0\|^\alpha \in o(\|\mathbf{x} - \mathbf{x}_0\|^\beta) \text{ as } \mathbf{x} \to \mathbf{x}_0 \).
 \end{itemize}
