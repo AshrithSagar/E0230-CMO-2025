@@ -110,6 +110,20 @@ The \textbf{closure} of a set \( S \subseteq \mathbb{R}^d \) is the smallest clo
     \operatorname{closure}{(S)} = S \cup \{ \text{all limit points of } S \}
 \end{equation*}
 
+\section{Convergent sequence}
+
+A sequence of real numbers \( {\{ a_n \}}_{n=1}^{\infty} \) is said to \textbf{converge} to a limit \( L \in \mathbb{R} \) if
+\begin{equation*}
+    a_n \to L
+    \quad \iff \quad
+    \lim_{n \to \infty} a_n = L
+    \quad \iff \quad
+    \forall \epsilon > 0, \
+    \exists N \in \mathbb{N}, \
+    \text{s.t.} \
+    \forall n > N \implies \vert a_n - L \vert < \epsilon
+\end{equation*}
+
 \section{Cauchy sequence}
 
 A sequence of real numbers \( {\{ a_k \}}_{k=1}^{\infty} \) is a \textbf{Cauchy sequence} if
@@ -117,21 +131,24 @@ A sequence of real numbers \( {\{ a_k \}}_{k=1}^{\infty} \) is a \textbf{Cauchy 
     \forall \epsilon > 0, \
     \exists N \in \mathbb{N}, \
     \text{s.t.} \
-    m, n > N \implies \vert a_n - a_m \vert < \epsilon
+    \forall m, n > N \implies \vert a_n - a_m \vert < \epsilon
 \end{equation*}
+
+In \( \mathbb{R} \), every Cauchy sequence is convergent, and every convergent sequence is Cauchy, since \( \mathbb{R} \) is complete.
 
 \chapter{Calculus}
 
 \section{Limits}
 
-(\( \epsilon \)--\( \delta \)) definition of \textbf{limit} of a function \( f: \mathbb{R}^d \to \mathbb{R} \) at point \( \mathbf{x}_0 \):
+(\( \epsilon \)--\( \delta \)) definition of \textbf{limit} of a function \( f: D \subseteq \mathbb{R}^d \to \mathbb{R} \) at a limit point \( \mathbf{x}_0 \) of \( D \):
 \begin{equation*}
     \lim_{\mathbf{x} \to \mathbf{x}_0} f(\mathbf{x}) = L
     \quad \iff \quad
     \forall \epsilon > 0, \
     \exists \delta > 0, \
     \text{s.t.} \
-    0 < \Vert \mathbf{x} - \mathbf{x}_0 \Vert < \delta
+    0 < \Vert \mathbf{x} - \mathbf{x}_0 \Vert < \delta, \,
+    \mathbf{x} \in D
     \implies
     \vert f(\mathbf{x}) - L \vert < \epsilon
 \end{equation*}
@@ -144,9 +161,21 @@ Alternate notation~\psecref{sec:neighborhood}:
     \forall \epsilon > 0, \
     \exists \delta > 0, \
     \text{s.t.} \
-    \mathbf{x} \in B_{\delta}(\mathbf{x}_0) \setminus \{ \mathbf{x}_0 \}
+    \mathbf{x} \in D \cap B_{\delta}(\mathbf{x}_0) \setminus \{ \mathbf{x}_0 \}
     \implies
     f(\mathbf{x}) \in B_{\epsilon}(L)
+\end{equation*}
+
+Sequence definition of \textbf{limit} of a function \( f: D \subseteq \mathbb{R}^d \to \mathbb{R} \) at a limit point \( \mathbf{x}_0 \) of \( D \):
+\begin{equation*}
+    \lim_{\mathbf{x} \to \mathbf{x}_0} f(\mathbf{x}) = L
+    \; \iff \;
+    \lim_{n \to \infty} \vert f(\mathbf{x}_n) - L \vert = 0
+    \; \iff \;
+    \forall {\{ \mathbf{x}_n \}}_{n=1}^{\infty} \subseteq D \setminus \{ \mathbf{x}_0 \},
+    \ \mathbf{x}_n \to \mathbf{x}_0
+    \implies
+    f(\mathbf{x}_n) \to L
 \end{equation*}
 
 \section{Continuity}
