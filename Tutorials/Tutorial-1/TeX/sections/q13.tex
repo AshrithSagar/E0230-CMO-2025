@@ -9,10 +9,10 @@ Define
         \phi(x, y), & \text { if } x^{2}+y^{2}=1
     \end{cases}
 \end{equation*}
-\begin{enumerate}[label=(\alph*), noitemsep]
+\begin{enumerate}[label= (\alph*), noitemsep]
     \item Show that \( f \) is convex.
 
-    \item Determine the range of \( f \), i.e. the set \( \left\{f(x, y): x^{2}+y^{2} \leq 1\right\} \)
+    \item Determine the range of \( f \), i.e., the set \( \left\{f(x, y): x^{2}+y^{2} \leq 1\right\} \)
 
     \item Under what conditions is the range of \( f \)
         (i) closed,
@@ -20,3 +20,68 @@ Define
 \end{enumerate}
 
 \subsection*{Solution}
+
+\subsubsection*{(a) \( f \) is convex}
+
+To show that \( f \) is convex, we need to verify that for any two points \( (x_1, y_1) \) and \( (x_2, y_2) \) in the domain of \( f \), and for any \( \theta \in [0, 1] \), the following inequality holds:
+\begin{equation*}
+    f(\theta (x_1, y_1) + (1 - \theta) (x_2, y_2)) \leq \theta f(x_1, y_1) + (1 - \theta) f(x_2, y_2)
+\end{equation*}
+
+We consider three cases based on the locations of the points \( (x_1, y_1) \) and \( (x_2, y_2) \):
+\begin{itemize}
+    \item \textbf{Case 1: Both points are inside the unit circle.}
+
+        If both \( (x_1, y_1) \) and \( (x_2, y_2) \) are inside the unit circle, then \( f(x_1, y_1) = 0 \) and \( f(x_2, y_2) = 0 \).
+        The convex combination \( \theta (x_1, y_1) + (1 - \theta) (x_2, y_2) \) will also lie inside the unit circle.
+        Therefore,
+        \begin{equation*}
+            f(\theta (x_1, y_1) + (1 - \theta) (x_2, y_2)) = 0
+        \end{equation*}
+        and
+        \begin{equation*}
+            \theta f(x_1, y_1) + (1 - \theta) f(x_2, y_2) = 0
+        \end{equation*}
+        Thus, the inequality holds.
+
+    \item \textbf{Case 2: One point is on the boundary and the other is inside the unit circle.}
+
+        Without loss of generality, let \( (x_1, y_1) \) be on the boundary and \( (x_2, y_2) \) be inside the unit circle.
+        Then \( f(x_1, y_1) = \phi(x_1, y_1) \geq 0 \) and \( f(x_2, y_2) = 0 \).
+        The convex combination \( \theta (x_1, y_1) + (1 - \theta) (x_2, y_2) \) will lie inside or on the boundary of the unit circle.
+        If it lies inside, then
+        \begin{equation*}
+            f(\theta (x_1, y_1) + (1 - \theta) (x_2, y_2)) = 0
+        \end{equation*}
+        and
+        \begin{equation*}
+            \theta f(x_1, y_1) + (1 - \theta) f(x_2, y_2) = \theta \phi(x_1, y_1) \geq 0
+        \end{equation*}
+        Thus, the inequality holds.
+        If it lies on the boundary, then
+        \begin{equation*}
+            f(\theta (x_1, y_1) + (1 - \theta) (x_2, y_2)) = \phi(\theta (x_1, y_1) + (1 - \theta) (x_2, y_2))
+        \end{equation*}
+        and since \( \phi \) is non-negative, the inequality still holds.
+
+    \item \textbf{Case 3: Both points are on the boundary of the unit circle.}
+
+        If both \( (x_1, y_1) \) and \( (x_2, y_2) \) are on the boundary, then \( f(x_1, y_1) = \phi(x_1, y_1) \geq 0 \) and \( f(x_2, y_2) = \phi(x_2, y_2) \geq 0 \).
+        The convex combination \( \theta (x_1, y_1) + (1 - \theta) (x_2, y_2) \) will lie inside or on the boundary of the unit circle.
+        If it lies inside, then
+        \begin{equation*}
+            f(\theta (x_1, y_1) + (1 - \theta) (x_2, y_2)) = 0
+        \end{equation*}
+        and
+        \begin{equation*}
+            \theta f(x_1, y_1) + (1 - \theta) f(x_2, y_2) = \theta \phi(x_1, y_1) + (1 - \theta) \phi(x_2, y_2) \geq 0
+        \end{equation*}
+        Thus, the inequality holds.
+        If it lies on the boundary, then
+        \begin{equation*}
+            f(\theta (x_1, y_1) + (1 - \theta) (x_2, y_2)) = \phi(\theta (x_1, y_1) + (1 - \theta) (x_2, y_2))
+        \end{equation*}
+        and since \( \phi \) is non-negative and convex on the boundary of the unit circle, the inequality still holds.
+\end{itemize}
+
+In all cases, the convexity condition is satisfied, hence \( f \) is convex.
