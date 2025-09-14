@@ -1,12 +1,55 @@
 \section*{Question 9}
 
-Suppose we have positive definite \( A \in \mathbb{R}^{n \times n} \), and linearly independent vectors \( \left\{v_{i}\right\}_{i=1}^{m} \), where \( m<n \).
+Suppose we have positive definite \( A \in \mathbb{R}^{n \times n} \), and linearly independent vectors \( {\left\{ v_{i} \right\}}_{i=1}^{m} \), where \( m<n \).
 How would you convert the problem
 \begin{equation*}
-    \underset{x}{\argmin} x^{\top} A x \text { such that } x \in \operatorname{span}\left(v_{1}, \ldots, v_{m}\right)
+    \argmin_{x} x^{\top} A x \text { such that } x \in \operatorname{span}\left(v_{1}, \ldots, v_{m}\right)
 \end{equation*}
 into an unconstrained problem?
 Does this problem have a unique solution?
 If so, under what conditions would this problem not have a unique solution?
 
 \subsection*{Solution}
+
+Condsider the matrix \( \mathbf{V} \in \mathbb{R}^{n \times m} \) with \( m < n \) whose columns are the vectors \( \mathbf{v}_1, \mathbf{v}_2, \ldots, \mathbf{v}_m \), i.e.,
+\begin{equation*}
+    \mathbf{V} =
+    \begin{bmatrix}
+        | & | & & | \\
+        \mathbf{v}_1 & \mathbf{v}_2 & \cdots & \mathbf{v}_m \\
+        | & | & & |
+    \end{bmatrix}_{n \times m},
+    \qquad \mathbf{v}_i \in \mathbb{R}^n, \quad \forall i \in \{ 1, 2, \ldots, m \}
+\end{equation*}
+Since the vectors \( \mathbf{v}_1, \mathbf{v}_2, \ldots, \mathbf{v}_m \) are linearly independent, the matrix \( \mathbf{V} \) has full column rank, i.e., \( \operatorname{rank}(\mathbf{V}) = m \).
+
+Any vector \( \mathbf{x} \in \operatorname{span}(\mathbf{v}_1, \mathbf{v}_2, \ldots, \mathbf{v}_m) \) can be expressed as a linear combination of the columns of \( \mathbf{V} \), i.e., there exists a vector \( \mathbf{y} \in \mathbb{R}^m \) such that
+\begin{equation*}
+    \mathbf{x} = \mathbf{V} \mathbf{y}
+\end{equation*}
+Substituting this into the original optimisation problem, we have
+\begin{equation*}
+    \argmin_{\mathbf{x} \in \operatorname{span}(\mathbf{v}_1, \ldots, \mathbf{v}_m)} \mathbf{x}^\top \mathbf{A} \mathbf{x}
+    =
+    \argmin_{\mathbf{y} \in \mathbb{R}^m} {(\mathbf{V} \mathbf{y})}^\top \mathbf{A} (\mathbf{V} \mathbf{y})
+    =
+    \argmin_{\mathbf{y} \in \mathbb{R}^m} \mathbf{y}^\top (\mathbf{V}^\top \mathbf{A} \mathbf{V}) \mathbf{y}
+\end{equation*}
+
+With \( \mathbf{B} = \mathbf{V}^\top \mathbf{A} \mathbf{V} \in \mathbb{R}^{m \times m} \), the problem reduces to
+\begin{equation*}
+    \argmin_{\mathbf{y} \in \mathbb{R}^m} \mathbf{y}^\top \mathbf{B} \mathbf{y}
+\end{equation*}
+This is now an unconstrained optimisation problem in \( \mathbf{y} \).
+Since \( \mathbf{A} \) is positive definite and \( \mathbf{V} \) has full column rank, the matrix \( \mathbf{B} = \mathbf{V}^\top \mathbf{A} \mathbf{V} \) is also positive definite.
+This implies that the quadratic form \( \mathbf{y}^\top \mathbf{B} \mathbf{y} \) is strictly convex, and hence the optimisation problem has a unique solution.
+
+The unique solution \( \mathbf{y}^* \) can be found by setting the gradient of the objective function to zero:
+\begin{equation*}
+    \nabla_{\mathbf{y}} (\mathbf{y}^\top \mathbf{B} \mathbf{y}) = 2 \mathbf{B} \mathbf{y} = \mathbf{0}
+\end{equation*}
+Since \( \mathbf{B} \) is positive definite, the only solution to this equation is \( \mathbf{y}^* = \mathbf{0} \).
+Thus, the unique solution to the original problem is
+\begin{equation*}
+    \mathbf{x}^* = \mathbf{V} \mathbf{y}^* = \mathbf{V} \cdot \mathbf{0} = \mathbf{0}
+\end{equation*}
