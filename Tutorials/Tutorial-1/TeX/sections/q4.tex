@@ -87,3 +87,69 @@ Similarly, we get
 \end{align*}
 
 Hence, \( g \) and \( h \) are convex.
+
+Now, since \( g \) and \( h \) are convex, we have that
+\begin{align*}
+    g(\mathbf{y})
+    & \geq
+    g(\mathbf{x})
+    + {\nabla g(\mathbf{x})}^{\top} (\mathbf{y} - \mathbf{x})
+    , \quad \forall \mathbf{x}, \mathbf{y} \in \mathbb{R}^{n}
+    \\
+    h(\mathbf{y})
+    & \geq
+    h(\mathbf{x})
+    + {\nabla h(\mathbf{x})}^{\top} (\mathbf{y} - \mathbf{x})
+    , \quad \forall \mathbf{x}, \mathbf{y} \in \mathbb{R}^{n}
+\end{align*}
+
+\begin{equation*}
+    \implies
+    \frac{L}{2} {\Vert \mathbf{y} \Vert}^{2} - f(\mathbf{y})
+    \geq
+    \frac{L}{2} {\Vert \mathbf{x} \Vert}^{2} - f(\mathbf{x})
+    + {\Big( L \mathbf{x} - \nabla f(\mathbf{x}) \Big)}^{\top} (\mathbf{y} - \mathbf{x})
+    , \quad \forall \mathbf{x}, \mathbf{y} \in \mathbb{R}^{n}
+\end{equation*}
+\begin{align*}
+    \implies
+    f(\mathbf{y}) - f(\mathbf{x}) - {\nabla f(\mathbf{x})}^{\top} (\mathbf{y} - \mathbf{x})
+    & \leq
+    \frac{L}{2} {\Big( {\Vert \mathbf{y} \Vert}^{2} - {\Vert \mathbf{x} \Vert}^{2} - 2 \mathbf{x}^{\top} (\mathbf{y} - \mathbf{x}) \Big)}
+    \\ & =
+    \frac{L}{2} \Big( \Vert \mathbf{y} \Vert^{2} - \cancel{ \Vert \mathbf{x} \Vert^{2} } - 2 \mathbf{x}^{\top} \mathbf{y} + \cancel{2} \Vert \mathbf{x} \Vert^{2} \Big)
+    \\ & =
+    \frac{L}{2} {\Vert \mathbf{y} - \mathbf{x} \Vert}^{2}
+    , \quad \forall \mathbf{x}, \mathbf{y} \in \mathbb{R}^{n}
+\end{align*}
+
+Similarly, we get
+\begin{equation*}
+    \implies
+    \frac{L}{2} {\Vert \mathbf{y} \Vert}^{2} + f(\mathbf{y})
+    \geq
+    \frac{L}{2} {\Vert \mathbf{x} \Vert}^{2} + f(\mathbf{x})
+    + {\Big( L \mathbf{x} + \nabla f(\mathbf{x}) \Big)}^{\top} (\mathbf{y} - \mathbf{x})
+    , \quad \forall \mathbf{x}, \mathbf{y} \in \mathbb{R}^{n}
+\end{equation*}
+\begin{align*}
+    \implies
+    f(\mathbf{y}) - f(\mathbf{x}) - {\nabla f(\mathbf{x})}^{\top} (\mathbf{y} - \mathbf{x})
+    & \geq
+    -\frac{L}{2} {\Big( {\Vert \mathbf{y} \Vert}^{2} - {\Vert \mathbf{x} \Vert}^{2} - 2 \mathbf{x}^{\top} (\mathbf{y} - \mathbf{x}) \Big)}
+    \\ & =
+    -\frac{L}{2} \Big( \Vert \mathbf{y} \Vert^{2} - \cancel{ \Vert \mathbf{x} \Vert^{2} } - 2 \mathbf{x}^{\top} \mathbf{y} + \cancel{2} \Vert \mathbf{x} \Vert^{2} \Big)
+    \\ & =
+    -\frac{L}{2} {\Vert \mathbf{y} - \mathbf{x} \Vert}^{2}
+    , \quad \forall \mathbf{x}, \mathbf{y} \in \mathbb{R}^{n}
+\end{align*}
+
+Hence, we have
+\begin{equation*}
+    \boxed{
+        \Big\vert f(\mathbf{y}) - f(\mathbf{x}) - {\nabla f(\mathbf{x})}^{\top} (\mathbf{y} - \mathbf{x}) \Big\vert
+        \leq
+        \frac{L}{2} {\big\Vert \mathbf{y} - \mathbf{x} \big\Vert}^{2}
+        , \quad \forall \mathbf{x}, \mathbf{y} \in \mathbb{R}^{n}
+    }
+\end{equation*}
