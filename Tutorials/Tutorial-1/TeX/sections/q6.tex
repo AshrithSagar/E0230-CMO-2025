@@ -4,3 +4,51 @@ Show that the function \( h(x, y)=x^{4}-4 x y+y^{4} \) has a global minimum.
 What is that global minimum?
 
 \subsection*{Solution}
+
+Given the function \( h: \mathbb{R} \times \mathbb{R} \rightarrow \mathbb{R} \) defined as
+\begin{equation*}
+    h(x, y) = x^4 - 4xy + y^4
+\end{equation*}
+we can compute its gradient \( \nabla h(x, y) \) and Hessian \( \nabla^2 h(x, y) \) as follows
+\begin{align*}
+    &
+    \nabla h(x, y)
+    =
+    \begin{bmatrix}
+        \rfrac{\partial h}{\partial x} \\
+        \rfrac{\partial h}{\partial y}
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+        4 x^3 - 4y \\
+        -4x + 4 y^3
+    \end{bmatrix}
+    \\ &
+    \nabla^2 h(x, y)
+    =
+    \begin{bmatrix}
+        \rfrac{\partial^2 h}{\partial x^2} & \rfrac{\partial^2 h}{\partial x \partial y} \\
+        \rfrac{\partial^2 h}{\partial y \partial x} & \rfrac{\partial^2 h}{\partial y^2}
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+        12 x^2 & -4 \\
+        -4 & 12 y^2
+    \end{bmatrix}
+\end{align*}
+
+The quadratic form associated with the Hessian is given by
+\begin{equation*}
+    \mathbf{z}^\top \; \nabla^2 h(x, y) \; \mathbf{z}
+    =
+    12 x^2 z_1^2 + 12 y^2 z_2^2 - 8 z_1 z_2
+\end{equation*}
+for any \(
+    \mathbf{z} =
+    {
+        \begin{bmatrix}
+            z_1 & z_2
+        \end{bmatrix}
+    }^\top
+    \in \mathbb{R}^{2}
+\).
