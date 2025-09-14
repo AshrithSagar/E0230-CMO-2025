@@ -280,9 +280,41 @@ Here, we denote \( f \in \mathcal{C}^{1}_L \) to mean that \( f \) is \( L \)-sm
             \frac{L}{2} {\Vert \mathbf{y} - \mathbf{x} \Vert}^2,
             \quad \forall \mathbf{x}, \mathbf{y} \in \mathbb{R}^d
         \end{equation*}
+
+        \begin{proof}
+            Follows from \( f(\mathbf{x}) \pm \frac{L}{2} {\Vert \mathbf{x} \Vert}^2 \) being convex functions, given \( f \in \mathcal{C}^{1}_L \).
+        \end{proof}
 \end{itemize}
 
 \chapter{Linear Algebra}
+
+\section{Outer product}
+
+The \textbf{outer product} of two vectors \( \mathbf{x} \in \mathbb{R}^m \) and \( \mathbf{y} \in \mathbb{R}^n \) is defined as
+\begin{equation*}
+    \mathbf{x} \mathbf{y}^\top =
+    \begin{bmatrix}
+        x_1 y_1 & x_1 y_2 & \cdots & x_1 y_n \\
+        x_2 y_1 & x_2 y_2 & \cdots & x_2 y_n \\
+        \vdots & \vdots & \ddots & \vdots \\
+        x_m y_1 & x_m y_2 & \cdots & x_m y_n
+    \end{bmatrix}
+    \in \mathbb{R}^{m \times n}
+\end{equation*}
+
+\subsection{Properties}
+
+\begin{itemize}
+    \item \( \operatorname{rank} (\mathbf{x} \mathbf{y}^\top) = 1 \), provided \( \mathbf{x} \neq \mathbf{0}, \; \mathbf{y} \neq \mathbf{0} \).
+
+    \item \( \mathbf{x} \mathbf{x}^\top \in \mathbf{S}_d^+, \; \forall \mathbf{x} \in \mathbb{R}^d \).
+
+    \item \( \operatorname{spec}(\mathbf{x} \mathbf{x}^\top) = \{ {\Vert \mathbf{x} \Vert}_2^2, 0^{(d-1)} \} \).
+        Eigenvectors: \( \{ \mathbf{x} \} \cup \underbrace{ \{ \mathbf{v} \mid \mathbf{v}^\top \mathbf{x} = 0 \} }_{\mathbf{x}^\perp} \).
+
+        Eigenvalues of \( \mathbf{x} \mathbf{x}^\top \) are \( \|\mathbf{x}\|_2^2 \) and \( 0 \) (with multiplicity \( d-1 \)).
+        The eigenvector corresponding to \( \|\mathbf{x}\|_2^2 \) is \( \mathbf{x} \); the eigenspace corresponding to \( 0 \) is the orthogonal complement \( \mathbf{x}^\perp \).
+\end{itemize}
 
 \section{Matrices}
 
@@ -317,6 +349,18 @@ where
 \( \mathbf{v} \in \mathbb{R}^d \setminus \{ \mathbf{0} \} \longrightarrow \) corresponding Eigenvector.
 
 The set of all eigenvalues of \( \mathbf{A} \) is called the \textbf{spectrum} of \( \mathbf{A} \).
+
+\subsection{Properties}
+
+\begin{itemize}
+    \item \( \operatorname{spec}(\mathbf{A}) \subseteq \mathbb{R}^d \), for \( \mathbf{A} \in \mathbf{S}_{d} \).
+
+    \item \( \mathbf{v}_i^\top \mathbf{v}_j = 0, \; \text{if } \lambda_i \neq \lambda_j \), for \( \mathbf{A} \in \mathbf{S}_{d} \).
+
+    \item \( \operatorname{trace}(\mathbf{A}) = \sum_{i=1}^{d} a_{ii} = \sum_{i=1}^{d} \lambda_i \).
+
+    \item \( \det(\mathbf{A}) = \prod_{i=1}^{d} \lambda_i \).
+\end{itemize}
 
 \section{Spectral Decomposition Theorem}
 
