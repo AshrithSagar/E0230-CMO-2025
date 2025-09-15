@@ -32,9 +32,11 @@
 \patchcmd{\chapter}{\cleardoublepage}{}{}{}
 \patchcmd{\chapter}{\clearpage}{}{}{}
 \makeatother
-
+\renewcommand{\cfttoctitlefont}{\normalfont\LARGE\bfseries}
 \setlength{\cftbeforetoctitleskip}{2em}
 \setlength{\cftaftertoctitleskip}{0pt}
+\setlength{\cftbeforepartskip}{1em}
+\setlength{\cftbeforechapskip}{0.5em}
 \setlength{\cftbeforesecskip}{0pt}
 \titleformat{\chapter}[hang]{\normalfont\LARGE\bfseries}{\thechapter.}{0.5em}{}
 \titlespacing*{\chapter}{0pt}{1em}{0.2em}

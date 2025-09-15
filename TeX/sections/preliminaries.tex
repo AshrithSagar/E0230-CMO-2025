@@ -334,7 +334,7 @@ The \textbf{outer product} of two vectors \( \mathbf{x} \in \R^m \) and \( \math
 \subsection{Properties}
 
 \begin{itemize}
-    \item \( \operatorname{rank} (\mathbf{x} \mathbf{y}^\top) = 1 \), provided \( \mathbf{x} \neq \zero, \; \mathbf{y} \neq \zero \).
+    \item \( \operatorname{rank} (\mathbf{x} \mathbf{y}^\top) = 1, \; \forall \mathbf{x} \in \R^m \setminus \{ \zero \}, \; \forall \mathbf{y} \in \R^n \setminus \{ \zero \} \).
 
     \item \( \mathbf{x} \mathbf{x}^\top \in \mathbf{S}_d^+, \; \forall \mathbf{x} \in \R^d \).
 
@@ -382,16 +382,18 @@ The set of all eigenvalues of \( \mathbf{A} \) is called the \textbf{spectrum} o
 \subsection{Properties}
 
 \begin{itemize}
-    \item \( \operatorname{spec}(\mathbf{A}) \subseteq \R^d \), for \( \mathbf{A} \in \SD \).
-
-    \item \( \mathbf{v}_i^\top \mathbf{v}_j = 0, \; \text{if } \lambda_i \neq \lambda_j \), for \( \mathbf{A} \in \SD \).
-
     \item \( \operatorname{trace}(\mathbf{A}) = \sum_{i=1}^{d} a_{ii} = \sum_{i=1}^{d} \lambda_i \).
 
     \item \( \det(\mathbf{A}) = \prod_{i=1}^{d} \lambda_i \).
+
+    \item \( \mathbf{A} \in \SD \implies \mathbf{A} \) has an orthonormal basis of eigenvectors in \( \R^d \) \, \psecref{sec:spectral-decomposition-theorem}
+
+    \item \( \mathbf{A} \in \SD \implies \operatorname{spec}(\mathbf{A}) \subseteq \R^d \) \, \psecref{sec:spectral-decomposition-theorem}
+
+    \item \( \mathbf{A} \in \SD \implies \mathbf{v}_i^\top \mathbf{v}_j = 0, \; \text{if } \lambda_i \neq \lambda_j \) \, \psecref{sec:spectral-decomposition-theorem}
 \end{itemize}
 
-\section{Spectral Decomposition Theorem}
+\section{Spectral Decomposition Theorem}\label{sec:spectral-decomposition-theorem}
 
 \begin{theorem}{Spectral Decomposition Theorem}{}
     For any \( \mathbf{A} \in \SD \), there exists an orthonormal basis of eigenvectors \( \{ \mathbf{v}_1, \mathbf{v}_2, \ldots, \mathbf{v}_d \} \), \; \( \mathbf{v}_i \in \R^d \setminus \{ \zero \} \), with corresponding eigenvalues \( \lambda_1 \geq \lambda_2 \geq \cdots \geq \lambda_d, \; \lambda_i \in \R \), such that
