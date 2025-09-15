@@ -2,7 +2,7 @@
 
 \usepackage[utf8]{inputenc}
 \usepackage{amsfonts, amsmath, amssymb, amsthm, cancel, interval, latexsym, mathtools}
-\usepackage{enumitem, geometry, graphicx, hyperref, microtype, titlesec, tocloft}
+\usepackage{enumitem, geometry, graphicx, hyperref, microtype, titlesec, tocloft, xparse}
 \usepackage[linesnumbered,ruled,vlined]{algorithm2e}
 \usepackage[most]{tcolorbox}
 \usepackage[numbers,sort]{natbib}
@@ -78,7 +78,37 @@
 \newcommand{\peqref}[1]{(\hyperref[#1]{Eq.~\ref*{#1}})}
 \newcommand{\pdefref}[1]{(\hyperref[#1]{Def.~\ref*{#1}})}
 \newcommand{\pthmref}[1]{(\hyperref[#1]{Thm.~\ref*{#1}})}
-\newcommand{\argmin}{\mathop{\mathrm{argmin}}}
+
+\newcommand{\R}{{\mathbb{R}}}
+\newcommand{\N}{{\mathbb{N}}}
+\newcommand{\abs}[1]{{\left\lvert#1\right\rvert}}
+\newcommand{\norm}[1]{{\left\lVert#1\right\rVert}}
+\newcommand{\normbf}[1]{{\left\lVert\mathbf{#1}\right\rVert}}
+\newcommand{\dotp}[2]{{{#1}^\top#2}}
+\newcommand{\dotpbf}[2]{{{\mathbf{#1}}^\top\mathbf{#2}}}
+\NewDocumentCommand{\qf}{mmo}{{{#1}^\top#2\:\IfValueTF{#3}{#3}{#1}}}
+\NewDocumentCommand{\qfbf}{mmo}{{{\mathbf{#1}}^\top\mathbf{#2}\:\mathbf{\IfValueTF{#3}{#3}{#1}}}}
+\newcommand{\argmin}{{\mathop{\mathrm{argmin}}}}
+\newcommand{\func}[2]{{#1\!\left(#2\right)}}
+\newcommand{\grad}[2]{{\nabla\!\func{#1}{#2}}}
+\newcommand{\hess}[2]{{\nabla^2\!\func{#1}{#2}}}
+\newcommand{\SD}[1][d]{{\mathcal{S}_{#1}}}
+\newcommand{\PSD}[1][d]{{\mathcal{S}^{+}_{#1}}}
+\newcommand{\PD}[1][d]{{\mathcal{S}^{++}_{#1}}}
+\newcommand{\C}{{\mathcal{C}}}
+\newcommand{\x}{{\mathbf{x}}}
+\newcommand{\y}{{\mathbf{y}}}
+\newcommand{\z}{{\mathbf{z}}}
+\newcommand{\p}{{\mathbf{p}}}
+\newcommand{\Q}{{\mathbf{Q}}}
+\newcommand{\Qinv}{{\mathbf{Q}^{-1}}}
+\newcommand{\h}{{\mathbf{h}}}
+\newcommand{\I}{{\mathbf{I}}}
+\newcommand{\xstar}{{\x^\ast}}
+\newcommand{\xk}{{\x^{(k)}}}
+\newcommand{\xkp}{{\x^{(k+1)}}}
+\newcommand{\half}{{\frac{1}{2}}}
+\newcommand{\zero}{{\mathbf{0}}}
 
 \begin{document}
 

@@ -3,7 +3,7 @@
 
 \section{Metric space}
 
-A \textbf{metric space} \( (S, d) \) is a set \( S \) together with a \textit{metric/distance function} \( d: S \times S \to \mathbb{R} \) that satisfies the following axioms for all \( x, y, z \in S \):
+A \textbf{metric space} \( (S, d) \) is a set \( S \) together with a \textit{metric/distance function} \( d: S \times S \to \R \) that satisfies the following axioms for all \( x, y, z \in S \):
 \begin{itemize}
     \item \( d(x, y) = 0 \iff x = y \)
     \item \textit{Symmetry}: \( d(x, y) = d(y, x) \)
@@ -12,7 +12,7 @@ A \textbf{metric space} \( (S, d) \) is a set \( S \) together with a \textit{me
 
 \section{Norm}
 
-A \textbf{normed vector space} \( (V, \| \cdot \|) \) is a vector space \( V \) over a field \( \mathbb{F} \) (usually \( \mathbb{R} \) or \( \mathbb{C} \)) equipped with a function \( \| \cdot \|: V \to \mathbb{R} \) that satisfies the following properties for all \( u, v \in V \) and \( a \in \mathbb{F} \):
+A \textbf{normed vector space} \( (V, \| \cdot \|) \) is a vector space \( V \) over a field \( \mathbb{F} \) (usually \( \R \) or \( \mathbb{C} \)) equipped with a function \( \| \cdot \|: V \to \R \) that satisfies the following properties for all \( u, v \in V \) and \( a \in \mathbb{F} \):
 \begin{itemize}
     \item \textit{Non-negativity}: \( \| v \| \geq 0 \)
     \item \textit{Definiteness}: \( \| v \| = 0 \iff v = 0 \)
@@ -20,63 +20,63 @@ A \textbf{normed vector space} \( (V, \| \cdot \|) \) is a vector space \( V \) 
     \item \textit{Triangle inequality}: \( \| u + v \| \leq \| u \| + \| v \| \)
 \end{itemize}
 
-Norm \( \eta: \mathbb{R}^d \to \mathbb{R} \), satisfies
+Norm \( \eta: \R^d \to \R \), satisfies
 \begin{itemize}
     \item \( \eta(\mathbf{x}) \geq 0 \)
-    \item \( \eta(\mathbf{x}) = 0 \iff \mathbf{x} = \mathbf{0} \)
-    \item \( \eta(s\mathbf{x}) = |s| \; \eta(\mathbf{x}) \), \quad \( s \in \mathbb{R} \)
+    \item \( \eta(\mathbf{x}) = 0 \iff \mathbf{x} = \zero \)
+    \item \( \eta(s\mathbf{x}) = |s| \; \eta(\mathbf{x}) \), \quad \( s \in \R \)
     \item \( \eta(\mathbf{x} + \mathbf{y}) \leq \eta(\mathbf{x}) + \eta(\mathbf{y}) \)
 \end{itemize}
 
 \subsection{\texorpdfstring{\( L_p \) norm}{Lp norm}}
 \begin{equation*}
-    {\Vert \mathbf{x} \Vert}_p = {\left( \sum_{i=1}^{d} {\vert x_i \vert}^p \right)}^{\frac{1}{p}},
+    \normbf{x}_p = {\left( \sum_{i=1}^{d} {\vert x_i \vert}^p \right)}^{\frac{1}{p}},
     \quad p \geq 1
 \end{equation*}
 
 \paragraph{\( L_1 \) norm (Manhattan norm)}
 \begin{equation*}
-    {\Vert \mathbf{x} \Vert}_1
+    \normbf{x}_1
     =
-    \vert x_1 \vert + \vert x_2 \vert + \cdots + \vert x_d \vert
+    \abs{x_1} + \abs{x_2} + \cdots + \abs{x_d}
     =
-    \sum_{i=1}^{d} \vert x_i \vert
+    \sum_{i=1}^{d} \abs{x_i}
 \end{equation*}
 
 \paragraph{\( L_2 \) norm (Euclidean norm)}
 \begin{equation*}
-    {\Vert \mathbf{x} \Vert}_2
+    \normbf{x}_2
     =
     \sqrt{x_1^2 + x_2^2 + \cdots + x_d^2}
     =
-    \sqrt{\mathbf{x}^{\top} \mathbf{x}}
+    \sqrt{\dotp{\x}{\x}}
     \triangleq
-    \Vert \mathbf{x} \Vert
+    \normbf{x}
 \end{equation*}
 
 \paragraph{\( L_{\infty} \) norm (Maximum norm)}
 \begin{equation*}
-    {\Vert \mathbf{x} \Vert}_{\infty}
+    \normbf{x}_{\infty}
     =
-    \max \{ \vert x_1 \vert, \vert x_2 \vert, \ldots, \vert x_d \vert \}
+    \max \{ \abs{x_1}, \abs{x_2}, \ldots, \abs{x_d} \}
     =
-    \max_{1 \leq i \leq d} \vert x_i \vert
+    \max_{1 \leq i \leq d} \abs{x_i}
 \end{equation*}
 
 \section{Neighborhood}\label{sec:neighborhood}
 
-A \textbf{neighborhood} of a point \( \mathbf{x} \in \mathbb{R}^d \) is an open ball centered at \( \mathbf{x} \) with radius \( r > 0 \), defined as
+A \textbf{neighborhood} of a point \( \mathbf{x} \in \R^d \) is an open ball centered at \( \mathbf{x} \) with radius \( r > 0 \), defined as
 \begin{equation*}
-    B_{r}(\mathbf{x}) = \{ \mathbf{z} \in \mathbb{R}^d \mid \Vert \mathbf{z} - \mathbf{x} \Vert < r \}, \quad r > 0, \ \mathbf{x} \in \mathbb{R}^d
+    B_{r}(\mathbf{x}) = \left\{ \mathbf{z} \in \R^d \;\big|\; \normbf{z - x} < r \right\}, \quad r > 0, \ \mathbf{x} \in \R^d
 \end{equation*}
 
 \section{Interior point}
 
-A point \( \mathbf{x} \in S \) is an \textbf{interior point} of set \( S \subseteq \mathbb{R}^d \) if there exists a neighborhood of \( \mathbf{x} \) that is entirely contained within \( S \), i.e., there exists an \( r > 0 \) such that \( B_{r}(\mathbf{x}) \subseteq S \).
+A point \( \mathbf{x} \in S \) is an \textbf{interior point} of set \( S \subseteq \R^d \) if there exists a neighborhood of \( \mathbf{x} \) that is entirely contained within \( S \), i.e., there exists an \( r > 0 \) such that \( B_{r}(\mathbf{x}) \subseteq S \).
 
 \section{Limit point}
 
-A point \( \mathbf{x} \in \mathbb{R}^d \) is a \textbf{limit point} of set \( S \subseteq \mathbb{R}^d \) if every neighborhood of \( \mathbf{x} \) contains at least one point of \( S \) different from \( \mathbf{x} \) itself, i.e., for every \( r > 0 \), there exists a point \( \mathbf{y} \in S \setminus \{ \mathbf{x} \} \) such that \( \mathbf{y} \in B_{r}(\mathbf{x}) \).
+A point \( \mathbf{x} \in \R^d \) is a \textbf{limit point} of set \( S \subseteq \R^d \) if every neighborhood of \( \mathbf{x} \) contains at least one point of \( S \) different from \( \mathbf{x} \) itself, i.e., for every \( r > 0 \), there exists a point \( \mathbf{y} \in S \setminus \{ \mathbf{x} \} \) such that \( \mathbf{y} \in B_{r}(\mathbf{x}) \).
 \begin{equation*}
     \forall r > 0, \ B_{r}(\mathbf{x}) \cap (S \setminus \{ \mathbf{x} \}) \neq \emptyset
 \end{equation*}
@@ -85,43 +85,43 @@ Trivially, every interior point of \( S \) is also a limit point of \( S \).
 
 \section{Open set}
 
-A set \( S \subseteq \mathbb{R}^d \) is \textbf{open} if every point in \( S \) is an interior point of \( S \).
+A set \( S \subseteq \R^d \) is \textbf{open} if every point in \( S \) is an interior point of \( S \).
 
 \section{Closed set}
 
-A set \( S \subseteq \mathbb{R}^d \) is \textbf{closed} if it contains all its limit points, i.e., if \( \mathbf{x} \) is a limit point of \( S \), then \( \mathbf{x} \in S \).
+A set \( S \subseteq \R^d \) is \textbf{closed} if it contains all its limit points, i.e., if \( \mathbf{x} \) is a limit point of \( S \), then \( \mathbf{x} \in S \).
 
 \section{Bounded set}
 
-A set \( S \subseteq \mathbb{R}^d \) is \textbf{bounded} if there exists \( \mathbf{z} \in \mathbb{R}^d, M \in \mathbb{R} \) such that \( \Vert \mathbf{z} - \mathbf{x} \Vert < M, \ \forall \mathbf{x} \in S \).
+A set \( S \subseteq \R^d \) is \textbf{bounded} if there exists \( \mathbf{z} \in \R^d, M \in \R \) such that \( \normbf{z - x} < M, \ \forall \mathbf{x} \in S \).
 
 \section{Infimum}
 
-The \textbf{infimum} (greatest lower bound) of a set \( S \subseteq \mathbb{R} \) is the largest real number \( m \) such that \( m \leq x, \ \forall x \in S \).
+The \textbf{infimum} (greatest lower bound) of a set \( S \subseteq \R \) is the largest real number \( m \) such that \( m \leq x, \ \forall x \in S \).
 
 \section{Supremum}
 
-The \textbf{supremum} (least upper bound) of a set \( S \subseteq \mathbb{R} \) is the smallest real number \( M \) such that \( M \geq x, \ \forall x \in S \).
+The \textbf{supremum} (least upper bound) of a set \( S \subseteq \R \) is the smallest real number \( M \) such that \( M \geq x, \ \forall x \in S \).
 
 \section{Closure}
 
-The \textbf{closure} of a set \( S \subseteq \mathbb{R}^d \) is the smallest closed set containing \( S \), which can be obtained by adding all limit points of \( S \) to \( S \) itself.
+The \textbf{closure} of a set \( S \subseteq \R^d \) is the smallest closed set containing \( S \), which can be obtained by adding all limit points of \( S \) to \( S \) itself.
 \begin{equation*}
     \operatorname{closure}{(S)} = S \cup \{ \text{all limit points of } S \}
 \end{equation*}
 
 \section{Convergent sequence}
 
-A sequence of real numbers \( {\{ a_n \}}_{n=1}^{\infty} \) is said to \textbf{converge} to a limit \( L \in \mathbb{R} \) if
+A sequence of real numbers \( {\{ a_n \}}_{n=1}^{\infty} \) is said to \textbf{converge} to a limit \( L \in \R \) if
 \begin{equation*}
     a_n \to L
     \quad \iff \quad
     \lim_{n \to \infty} a_n = L
     \quad \iff \quad
     \forall \epsilon > 0, \
-    \exists N \in \mathbb{N}, \
+    \exists N \in \N, \
     \text{s.t.} \
-    \forall n > N \implies \vert a_n - L \vert < \epsilon
+    \forall n > N \implies \abs{a_n - L} < \epsilon
 \end{equation*}
 
 \section{Cauchy sequence}
@@ -129,28 +129,28 @@ A sequence of real numbers \( {\{ a_n \}}_{n=1}^{\infty} \) is said to \textbf{c
 A sequence of real numbers \( {\{ a_k \}}_{k=1}^{\infty} \) is a \textbf{Cauchy sequence} if
 \begin{equation*}
     \forall \epsilon > 0, \
-    \exists N \in \mathbb{N}, \
+    \exists N \in \N, \
     \text{s.t.} \
-    \forall m, n > N \implies \vert a_n - a_m \vert < \epsilon
+    \forall m, n > N \implies \abs{a_n - a_m} < \epsilon
 \end{equation*}
 
-In \( \mathbb{R} \), every Cauchy sequence is convergent, and every convergent sequence is Cauchy, since \( \mathbb{R} \) is complete.
+In \( \R \), every Cauchy sequence is convergent, and every convergent sequence is Cauchy, since \( \R \) is complete.
 
 \chapter{Calculus}
 
 \section{Limits}
 
-(\( \epsilon \)--\( \delta \)) definition of \textbf{limit} of a function \( f: D \subseteq \mathbb{R}^d \to \mathbb{R} \) at a limit point \( \mathbf{x}_0 \) of \( D \):
+(\( \epsilon \)--\( \delta \)) definition of \textbf{limit} of a function \( f: D \subseteq \R^d \to \R \) at a limit point \( \mathbf{x}_0 \) of \( D \):
 \begin{equation*}
     \lim_{\mathbf{x} \to \mathbf{x}_0} f(\mathbf{x}) = L
     \quad \iff \quad
     \forall \epsilon > 0, \
     \exists \delta > 0, \
     \text{s.t.} \
-    0 < \Vert \mathbf{x} - \mathbf{x}_0 \Vert < \delta, \,
+    0 < \norm{\mathbf{x} - \mathbf{x}_0} < \delta, \,
     \mathbf{x} \in D
     \implies
-    \vert f(\mathbf{x}) - L \vert < \epsilon
+    \abs{f(\mathbf{x}) - L} < \epsilon
 \end{equation*}
 i.e., \( f(\mathbf{x}) \) can be made arbitrarily close to \( L \) by making \( \mathbf{x} \) sufficiently close to \( \mathbf{x}_0 \).
 
@@ -166,11 +166,11 @@ Alternate notation~\psecref{sec:neighborhood}:
     f(\mathbf{x}) \in B_{\epsilon}(L)
 \end{equation*}
 
-Sequence definition of \textbf{limit} of a function \( f: D \subseteq \mathbb{R}^d \to \mathbb{R} \) at a limit point \( \mathbf{x}_0 \) of \( D \):
+Sequence definition of \textbf{limit} of a function \( f: D \subseteq \R^d \to \R \) at a limit point \( \mathbf{x}_0 \) of \( D \):
 \begin{equation*}
     \lim_{\mathbf{x} \to \mathbf{x}_0} f(\mathbf{x}) = L
     \; \iff \;
-    \lim_{n \to \infty} \vert f(\mathbf{x}_n) - L \vert = 0
+    \lim_{n \to \infty} \abs{f(\mathbf{x}_n) - L} = 0
     \; \iff \;
     \forall {\{ \mathbf{x}_n \}}_{n=1}^{\infty} \subseteq D \setminus \{ \mathbf{x}_0 \},
     \ \mathbf{x}_n \to \mathbf{x}_0
@@ -180,38 +180,38 @@ Sequence definition of \textbf{limit} of a function \( f: D \subseteq \mathbb{R}
 
 \section{Continuity}
 
-For a function \( f: D \subseteq \mathbb{R}^d \to \mathbb{R} \),
+For a function \( f: D \subseteq \R^d \to \R \),
 \begin{equation*}
     \lim_{\mathbf{x} \to \mathbf{c}} f(\mathbf{x}) = L
     \quad \iff \quad
     \forall \epsilon > 0, \
     \exists \delta > 0, \
     \text{s.t.} \
-    \vert f(\mathbf{x}) - L \vert < \epsilon, \
+    \abs{f(\mathbf{x}) - L} < \epsilon, \
     \forall \mathbf{x} \in D \cap B_{\delta}(\mathbf{c}) \setminus \{ \mathbf{c} \}
 \end{equation*}
 
 \section{Continuous functions}
 
-A function \( f: D \subseteq \mathbb{R}^d \to \mathbb{R} \) is \textbf{continuous} at a point \( \mathbf{x}_0 \in D \) iff
+A function \( f: D \subseteq \R^d \to \R \) is \textbf{continuous} at a point \( \mathbf{x}_0 \in D \) iff
 \begin{equation*}
     \lim_{\mathbf{x} \to \mathbf{x}_0} f(\mathbf{x}) = f(\mathbf{x}_0)
 \end{equation*}
 
 \section{Derivative}
 
-The \textbf{derivative} of a function \( f: \mathbb{R} \to \mathbb{R} \) at a point \( x \in \mathbb{R} \) is defined as
+The \textbf{derivative} of a function \( f: \R \to \R \) at a point \( x \in \R \) is defined as
 \begin{equation*}
     f'(x) = \lim_{h \to 0} \frac{f(x + h) - f(x)}{h}
 \end{equation*}
 
-The \textbf{gradient} of a function \( f: \mathbb{R}^d \to \mathbb{R} \) at a point \( \mathbf{x} = {\left(x_1, x_2, \ldots, x_d\right)}^{\top} \in \mathbb{R}^d \) is defined as
+The \textbf{gradient} of a function \( f: \R^d \to \R \) at a point \( \mathbf{x} = {\left(x_1, x_2, \ldots, x_d\right)}^{\top} \in \R^d \) is defined as
 \begin{equation*}
     \nabla f(\mathbf{x}) = {\left( \frac{\partial f}{\partial x_1}(\mathbf{x}), \frac{\partial f}{\partial x_2}(\mathbf{x}), \ldots, \frac{\partial f}{\partial x_d}(\mathbf{x}) \right)}^{\top}
-    \in \mathbb{R}^d
+    \in \R^d
 \end{equation*}
 
-The \textbf{Hessian} of a function \( f: \mathbb{R}^d \to \mathbb{R} \) at a point \( \mathbf{x} = {\left(x_1, x_2, \ldots, x_d\right)}^{\top} \in \mathbb{R}^d \) is defined as
+The \textbf{Hessian} of a function \( f: \R^d \to \R \) at a point \( \mathbf{x} = {\left(x_1, x_2, \ldots, x_d\right)}^{\top} \in \R^d \) is defined as
 \begin{equation*}
     \nabla^2 f(\mathbf{x}) =
     \begin{bmatrix}
@@ -220,19 +220,19 @@ The \textbf{Hessian} of a function \( f: \mathbb{R}^d \to \mathbb{R} \) at a poi
         \vdots & \vdots & \ddots & \vdots \\
         \cfrac{\partial^2 f}{\partial x_d \partial x_1}(\mathbf{x}) & \cfrac{\partial^2 f}{\partial x_d \partial x_2}(\mathbf{x}) & \cdots & \cfrac{\partial^2 f}{\partial x_d^2}(\mathbf{x})
     \end{bmatrix}
-    \in \mathbb{R}^{d \times d}
+    \in \R^{d \times d}
 \end{equation*}
 
 \section{Intermediate value theorem}
 
-For a function \( f: [a, b] \to \mathbb{R} \) that is continuous on the closed interval \( [a, b] \), then
+For a function \( f: [a, b] \to \R \) that is continuous on the closed interval \( [a, b] \), then
 \begin{equation*}
     \forall N \in (f(a), f(b)), \ \exists \; c \in (a, b) \text{ such that } f(c) = N
 \end{equation*}
 
 \section{Wierstrass extreme value theorem}
 
-If a function \( f: S \to \mathbb{R} \) is continuous on a set \( S \subseteq \mathbb{R}^d \) that is closed and bounded, then \( f \) attains its maximum and minimum values on \( S \), i.e., there exist points \( \mathbf{x}_{\min}, \mathbf{x}_{\max} \in S \) such that
+If a function \( f: S \to \R \) is continuous on a set \( S \subseteq \R^d \) that is closed and bounded, then \( f \) attains its maximum and minimum values on \( S \), i.e., there exist points \( \mathbf{x}_{\min}, \mathbf{x}_{\max} \in S \) such that
 \begin{equation*}
     f(\mathbf{x}_{\min}) \leq f(\mathbf{x}) \leq f(\mathbf{x}_{\max}), \quad \forall \mathbf{x} \in S
 \end{equation*}
@@ -241,7 +241,7 @@ If a function \( f: S \to \mathbb{R} \) is continuous on a set \( S \subseteq \m
 
 \subsection{Univariate Taylor's theorem}
 
-Let \( f: \mathbb{R} \to \mathbb{R} \) be \( (n+1) \) times continuously differentiable on an interval containing \( a \) and \( x \).
+Let \( f: \R \to \R \) be \( (n+1) \) times continuously differentiable on an interval containing \( a \) and \( x \).
 Then, for some \( \xi \) between \( a \) and \( x \),
 \begin{align*}
     f(x)
@@ -259,18 +259,18 @@ where the remainder term \( R_{n+1}(x) \) is given by the Lagrange form:
 
 \section{Levels of smoothness}
 
-A function \( f: \mathbb{R}^d \to \mathbb{R} \) is said to be of \textbf{class} \( \mathcal{C}^k \) if all partial derivatives of \( f \) up to and including order \( k \in \mathbb{N} \) exist and are continuous.
+A function \( f: \R^d \to \R \) is said to be of \textbf{class} \( \C^k \) if all partial derivatives of \( f \) up to and including order \( k \in \N \) exist and are continuous.
 
-If a function is of class \( \mathcal{C}^k \ \forall k \in \mathbb{N} \), it is said to be of class \( \mathcal{C}^{\infty} \) or \textbf{smooth}.
+If a function is of class \( \C^k \ \forall k \in \N \), it is said to be of class \( \C^{\infty} \) or \textbf{smooth}.
 
 \subsection{Properties}
 
 \begin{itemize}
-    \item If \( f \in \mathcal{C}^0 \), then \( f \) is continuous.
+    \item If \( f \in \C^0 \), then \( f \) is continuous.
 
-    \item If \( f \in \mathcal{C}^k \), then \( f \in \mathcal{C}^{k-1} \), for \( k \geq 1 \).
+    \item If \( f \in \C^k \), then \( f \in \C^{k-1} \), for \( k \geq 1 \).
 
-    \item (Schwarz's theorem) If \( f \in \mathcal{C}^2 \), then \( \nabla^2 f(\mathbf{x}) \in \mathbf{S}_d\), i.e., \( \nabla^2 f(\mathbf{x}) \) is symmetric.
+    \item (Schwarz's theorem) If \( f \in \C^2 \), then \( \nabla^2 f(\mathbf{x}) \in \mathbf{S}_d\), i.e., \( \nabla^2 f(\mathbf{x}) \) is symmetric.
         \begin{equation*}
             \frac{\partial^2 f}{\partial x_i \partial x_j}
             =
@@ -278,40 +278,40 @@ If a function is of class \( \mathcal{C}^k \ \forall k \in \mathbb{N} \), it is 
             \quad \forall i, j = 1, 2, \ldots, d
         \end{equation*}
 
-    \item If \( f, g \in \mathcal{C}^k \), then \( f + g, f \cdot g \in \mathcal{C}^k \).
+    \item If \( f, g \in \C^k \), then \( f + g, f \cdot g \in \C^k \).
 
-    \item If \( f \in \mathcal{C}^k \), then \( \frac{\partial f}{\partial x_i} \in \mathcal{C}^{k-1}, \ \forall i = 1, 2, \ldots, d \).
+    \item If \( f \in \C^k \), then \( \frac{\partial f}{\partial x_i} \in \C^{k-1}, \ \forall i = 1, 2, \ldots, d \).
 \end{itemize}
 
 \section{Lipschitz}
 
-A function \( f: \mathbb{R}^d \to \mathbb{R} \) is said to be \( L \)-\textbf{smooth} if it is differentiable and there exists a constant \( L > 0 \) such that
+A function \( f: \R^d \to \R \) is said to be \( L \)-\textbf{smooth} if it is differentiable and there exists a constant \( L > 0 \) such that
 \begin{equation*}
-    {\Vert \nabla f(\mathbf{x}) - \nabla f(\mathbf{y}) \Vert}_2
+    \norm{\nabla f(\mathbf{x}) - \nabla f(\mathbf{y})}_2
     \leq
-    L \; {\Vert \mathbf{x} - \mathbf{y} \Vert}_2,
-    \quad \forall \mathbf{x}, \mathbf{y} \in \mathbb{R}^d
+    L \; \normbf{x - y}_2,
+    \quad \forall \mathbf{x}, \mathbf{y} \in \R^d
 \end{equation*}
 
 The constant \( L \) is called the \textbf{Lipschitz constant} of the gradient \( \nabla f \).
 
-Here, we denote \( f \in \mathcal{C}^{1}_L \) to mean that \( f \) is \( L \)-smooth and of class \( \mathcal{C}^1 \).
+Here, we denote \( f \in \C^{1}_L \) to mean that \( f \) is \( L \)-smooth and of class \( \C^1 \).
 
 \subsection{Properties}
 
 \begin{itemize}
-    \item If \( f \in \mathcal{C}^{2} \), then \( f \in \mathcal{C}^{1}_L \) iff \( \nabla^2 f(\mathbf{x}) \preceq L \mathbf{I}, \ \forall \mathbf{x} \in \mathbb{R}^d \).
+    \item If \( f \in \C^{2} \), then \( f \in \C^{1}_L \) iff \( \nabla^2 f(\mathbf{x}) \preceq L \mathbf{I}, \ \forall \mathbf{x} \in \R^d \).
 
-    \item If \( f \in \mathcal{C}^{1}_L \), then
+    \item If \( f \in \C^{1}_L \), then
         \begin{equation*}
-            \left\vert f(\mathbf{y}) - f(\mathbf{x}) - {\nabla f(\mathbf{x})}^\top (\mathbf{y} - \mathbf{x}) \right\vert
+            \abs{ f(\mathbf{y}) - f(\mathbf{x}) - {\nabla f(\mathbf{x})}^\top (\mathbf{y} - \mathbf{x}) }
             \leq
-            \frac{L}{2} {\Vert \mathbf{y} - \mathbf{x} \Vert}^2,
-            \quad \forall \mathbf{x}, \mathbf{y} \in \mathbb{R}^d
+            \frac{L}{2} \normbf{y - x}^2,
+            \quad \forall \mathbf{x}, \mathbf{y} \in \R^d
         \end{equation*}
 
         \begin{proof}
-            Follows from \( f(\mathbf{x}) \pm \frac{L}{2} {\Vert \mathbf{x} \Vert}^2 \) being convex functions, given \( f \in \mathcal{C}^{1}_L \).
+            Follows from \( f(\mathbf{x}) \pm \frac{L}{2} \normbf{x}^2 \) being convex functions, given \( f \in \C^{1}_L \).
         \end{proof}
 \end{itemize}
 
@@ -319,7 +319,7 @@ Here, we denote \( f \in \mathcal{C}^{1}_L \) to mean that \( f \) is \( L \)-sm
 
 \section{Outer product}
 
-The \textbf{outer product} of two vectors \( \mathbf{x} \in \mathbb{R}^m \) and \( \mathbf{y} \in \mathbb{R}^n \) is defined as
+The \textbf{outer product} of two vectors \( \mathbf{x} \in \R^m \) and \( \mathbf{y} \in \R^n \) is defined as
 \begin{equation*}
     \mathbf{x} \mathbf{y}^\top =
     \begin{bmatrix}
@@ -328,43 +328,43 @@ The \textbf{outer product} of two vectors \( \mathbf{x} \in \mathbb{R}^m \) and 
         \vdots & \vdots & \ddots & \vdots \\
         x_m y_1 & x_m y_2 & \cdots & x_m y_n
     \end{bmatrix}
-    \in \mathbb{R}^{m \times n}
+    \in \R^{m \times n}
 \end{equation*}
 
 \subsection{Properties}
 
 \begin{itemize}
-    \item \( \operatorname{rank} (\mathbf{x} \mathbf{y}^\top) = 1 \), provided \( \mathbf{x} \neq \mathbf{0}, \; \mathbf{y} \neq \mathbf{0} \).
+    \item \( \operatorname{rank} (\mathbf{x} \mathbf{y}^\top) = 1 \), provided \( \mathbf{x} \neq \zero, \; \mathbf{y} \neq \zero \).
 
-    \item \( \mathbf{x} \mathbf{x}^\top \in \mathbf{S}_d^+, \; \forall \mathbf{x} \in \mathbb{R}^d \).
+    \item \( \mathbf{x} \mathbf{x}^\top \in \mathbf{S}_d^+, \; \forall \mathbf{x} \in \R^d \).
 
-    \item \( \operatorname{spec}(\mathbf{x} \mathbf{x}^\top) = \{ {\Vert \mathbf{x} \Vert}_2^2, 0^{(d-1)} \} \).
-        Eigenvectors: \( \{ \mathbf{x} \} \cup \underbrace{ \{ \mathbf{v} \mid \mathbf{v}^\top \mathbf{x} = 0 \} }_{\mathbf{x}^\perp} \).
+    \item \( \operatorname{spec}(\mathbf{x} \mathbf{x}^\top) = \{ \normbf{x}_2^2, 0^{(d-1)} \} \).
+        Eigenvectors: \( \{ \mathbf{x} \} \cup \underbrace{ \{ \mathbf{v} \mid \dotpbf{v}{x} = 0 \} }_{\mathbf{x}^\perp} \).
 
-        Eigenvalues of \( \mathbf{x} \mathbf{x}^\top \) are \( \|\mathbf{x}\|_2^2 \) and \( 0 \) (with multiplicity \( d-1 \)).
-        The eigenvector corresponding to \( \|\mathbf{x}\|_2^2 \) is \( \mathbf{x} \); the eigenspace corresponding to \( 0 \) is the orthogonal complement \( \mathbf{x}^\perp \).
+        Eigenvalues of \( \mathbf{x} \mathbf{x}^\top \) are \( \normbf{x}_2^2 \) and \( 0 \) (with multiplicity \( d-1 \)).
+        The eigenvector corresponding to \( \normbf{x}_2^2 \) is \( \mathbf{x} \); the eigenspace corresponding to \( 0 \) is the orthogonal complement \( \mathbf{x}^\perp \).
 \end{itemize}
 
 \section{Matrices}
 
 \subsection{Symmetric Matrices}
 
-A matrix \( \mathbf{A} \in \mathbb{R}^{d \times d} \) is symmetric if \( \mathbf{A} = \mathbf{A}^\top \), i.e., \( a_{ij} = a_{ji}, \ \forall i, j \).
+A matrix \( \mathbf{A} \in \R^{d \times d} \) is symmetric if \( \mathbf{A} = \mathbf{A}^\top \), i.e., \( a_{ij} = a_{ji}, \ \forall i, j \).
 
 \subsection{Symmetric Positive Semi-definite Matrices}
 
-A symmetric matrix \( \mathbf{A} \in \mathbf{S}_{d} \) is \textbf{positive semi-definite} (PSD), denoted as \( \mathbf{A} \succeq 0 \), if
+A symmetric matrix \( \mathbf{A} \in \SD \) is \textbf{positive semi-definite} (PSD), denoted as \( \mathbf{A} \succeq 0 \), if
 \begin{equation*}
     \mathbf{x}^\top \mathbf{A} \mathbf{x} \geq 0,
-    \quad \forall \mathbf{x} \in \mathbb{R}^d
+    \quad \forall \mathbf{x} \in \R^d
 \end{equation*}
 
 \subsection{Symmetric Positive Definite Matrices}
 
-A symmetric matrix \( \mathbf{A} \in \mathbf{S}_{d} \) is \textbf{positive definite} (PD), denoted as \( \mathbf{A} \succ 0 \), if
+A symmetric matrix \( \mathbf{A} \in \SD \) is \textbf{positive definite} (PD), denoted as \( \mathbf{A} \succ 0 \), if
 \begin{equation*}
     \mathbf{x}^\top \mathbf{A} \mathbf{x} > 0,
-    \quad \forall \mathbf{x} \in \mathbb{R}^d \setminus \{ \mathbf{0} \}
+    \quad \forall \mathbf{x} \in \R^d \setminus \{ \zero \}
 \end{equation*}
 
 \section{Eigenvalues and Eigenvectors}
@@ -373,18 +373,18 @@ A symmetric matrix \( \mathbf{A} \in \mathbf{S}_{d} \) is \textbf{positive defin
     \mathbf{A}\mathbf{v} = \lambda \mathbf{v}
 \end{equation*}
 where
-\( \mathbf{A} \in \mathbb{R}^{d \times d} \), \quad
-\( \lambda \in \mathbb{R} \longrightarrow \) Eigenvalue, \quad
-\( \mathbf{v} \in \mathbb{R}^d \setminus \{ \mathbf{0} \} \longrightarrow \) corresponding Eigenvector.
+\( \mathbf{A} \in \R^{d \times d} \), \quad
+\( \lambda \in \R \longrightarrow \) Eigenvalue, \quad
+\( \mathbf{v} \in \R^d \setminus \{ \zero \} \longrightarrow \) corresponding Eigenvector.
 
 The set of all eigenvalues of \( \mathbf{A} \) is called the \textbf{spectrum} of \( \mathbf{A} \).
 
 \subsection{Properties}
 
 \begin{itemize}
-    \item \( \operatorname{spec}(\mathbf{A}) \subseteq \mathbb{R}^d \), for \( \mathbf{A} \in \mathbf{S}_{d} \).
+    \item \( \operatorname{spec}(\mathbf{A}) \subseteq \R^d \), for \( \mathbf{A} \in \SD \).
 
-    \item \( \mathbf{v}_i^\top \mathbf{v}_j = 0, \; \text{if } \lambda_i \neq \lambda_j \), for \( \mathbf{A} \in \mathbf{S}_{d} \).
+    \item \( \mathbf{v}_i^\top \mathbf{v}_j = 0, \; \text{if } \lambda_i \neq \lambda_j \), for \( \mathbf{A} \in \SD \).
 
     \item \( \operatorname{trace}(\mathbf{A}) = \sum_{i=1}^{d} a_{ii} = \sum_{i=1}^{d} \lambda_i \).
 
@@ -394,12 +394,12 @@ The set of all eigenvalues of \( \mathbf{A} \) is called the \textbf{spectrum} o
 \section{Spectral Decomposition Theorem}
 
 \begin{theorem}{Spectral Decomposition Theorem}{}
-    For any \( \mathbf{A} \in \mathbf{S}_{d} \), there exists an orthonormal basis of eigenvectors \( \{ \mathbf{v}_1, \mathbf{v}_2, \ldots, \mathbf{v}_d \} \), \; \( \mathbf{v}_i \in \mathbb{R}^d \setminus \{ \mathbf{0} \} \), with corresponding eigenvalues \( \lambda_1 \geq \lambda_2 \geq \cdots \geq \lambda_d, \; \lambda_i \in \mathbb{R} \), such that
+    For any \( \mathbf{A} \in \SD \), there exists an orthonormal basis of eigenvectors \( \{ \mathbf{v}_1, \mathbf{v}_2, \ldots, \mathbf{v}_d \} \), \; \( \mathbf{v}_i \in \R^d \setminus \{ \zero \} \), with corresponding eigenvalues \( \lambda_1 \geq \lambda_2 \geq \cdots \geq \lambda_d, \; \lambda_i \in \R \), such that
     \begin{equation*}
         \mathbf{A} = \sum_{i=1}^{d} \lambda_i \mathbf{v}_i \mathbf{v}_i^\top
         = \mathbf{V} \boldsymbol{\Lambda} \mathbf{V}^\top
     \end{equation*}
-    where \( \mathbf{V} = [\mathbf{v}_1, \mathbf{v}_2, \ldots, \mathbf{v}_d] \in \mathbb{R}^{d \times d} \) is an orthogonal matrix (i.e., \( \mathbf{V}^\top \mathbf{V} = \mathbf{I} \)) and \( \boldsymbol{\Lambda} = \operatorname{diag}(\lambda_1, \lambda_2, \ldots, \lambda_d) \in \mathbb{R}^{d \times d} \) is a diagonal matrix containing the eigenvalues of \( \mathbf{A} \).
+    where \( \mathbf{V} = [\mathbf{v}_1, \mathbf{v}_2, \ldots, \mathbf{v}_d] \in \R^{d \times d} \) is an orthogonal matrix (i.e., \( \dotpbf{V}{V} = \mathbf{I} \)) and \( \boldsymbol{\Lambda} = \operatorname{diag}(\lambda_1, \lambda_2, \ldots, \lambda_d) \in \R^{d \times d} \) is a diagonal matrix containing the eigenvalues of \( \mathbf{A} \).
 \end{theorem}
 
 \begin{proof}
@@ -451,8 +451,8 @@ The set of all eigenvalues of \( \mathbf{A} \) is called the \textbf{spectrum} o
     \end{align*}
 
     For repeated eigenvalues, if any, we can always find a set of orthonormal eigenvectors using the Gram-Schmidt process.
-    Thereby, we can always find \( d \) orthonormal eigenvectors of \( \mathbf{A} \), thus forming an orthonormal basis for \( \mathbb{R}^d \).
-    This gives that \( \mathbf{V} \) is an orthogonal matrix \( \implies \mathbf{V}^\top \mathbf{V} = \mathbf{I} \implies \mathbf{V}^{-1} = \mathbf{V}^\top \).
+    Thereby, we can always find \( d \) orthonormal eigenvectors of \( \mathbf{A} \), thus forming an orthonormal basis for \( \R^d \).
+    This gives that \( \mathbf{V} \) is an orthogonal matrix \( \implies \dotpbf{V}{V} = \mathbf{I} \implies \mathbf{V}^{-1} = \mathbf{V}^\top \).
 
     Now, with \( \boldsymbol{\Lambda} = \operatorname{diag}(\lambda_1, \lambda_2, \ldots, \lambda_d) \) and \( \mathbf{V} = [\mathbf{v}_1, \mathbf{v}_2, \ldots, \mathbf{v}_d] \), we have
     \begin{equation*}
@@ -473,18 +473,18 @@ The set of all eigenvalues of \( \mathbf{A} \) is called the \textbf{spectrum} o
 \end{proof}
 
 \begin{itemize}
-    \item The identity matrix \( \mathbf{I} \in \mathbb{R}^{d \times d} \) has eigenvalues \( \lambda_i = 1, \; \forall i \) and the corresponding eigenvectors can be chosen as any orthonormal basis of \( \mathbb{R}^d \), commonly taken as the standard basis vectors \( \mathbf{e}_i \in \mathbb{R}^d \).
+    \item The identity matrix \( \mathbf{I} \in \R^{d \times d} \) has eigenvalues \( \lambda_i = 1, \; \forall i \) and the corresponding eigenvectors can be chosen as any orthonormal basis of \( \R^d \), commonly taken as the standard basis vectors \( \mathbf{e}_i \in \R^d \).
 
-    \item \( \mathbf{A} \in \mathbf{S}_{d}^{+} \iff \mathbf{A} \in \mathbf{S}_{d}, \text{ and } \lambda_i \geq 0, \; \forall i \).
+    \item \( \mathbf{A} \in \PSD \iff \mathbf{A} \in \SD, \text{ and } \lambda_i \geq 0, \; \forall i \).
 
-    \item \( \mathbf{A} \in \mathbf{S}_{d}^{++} \iff \mathbf{A} \in \mathbf{S}_{d}, \text{ and } \lambda_i > 0, \; \forall i \).
+    \item \( \mathbf{A} \in \PD \iff \mathbf{A} \in \SD, \text{ and } \lambda_i > 0, \; \forall i \).
 
-    \item \( \mathbf{A} \in \mathbf{S}_{d}^{++}, \; \kappa(\mathbf{A}) = 1 \iff \mathbf{A} = c \mathbf{I}, \; c > 0 \).
+    \item \( \mathbf{A} \in \PD, \; \kappa(\mathbf{A}) = 1 \iff \mathbf{A} = c \mathbf{I}, \; c > 0 \).
 \end{itemize}
 
 \section{Condition number}
 
-The \textbf{condition number} of a matrix \( \mathbf{A} \in \mathbf{S}_{d} \) is given by
+The \textbf{condition number} of a matrix \( \mathbf{A} \in \SD \) is given by
 \begin{equation*}
     \kappa(\mathbf{A}) = \frac{\lambda_{\max}(\mathbf{A})}{\lambda_{\min}(\mathbf{A})}
 \end{equation*}
@@ -495,7 +495,7 @@ where \( \lambda_{\max}(\mathbf{A}) \) and \( \lambda_{\min}(\mathbf{A}) \) are 
 \section{Cauchy-Schwarz inequality}\label{sec:cauchy-schwarz-inequality}
 
 \begin{equation*}
-    \vert \mathbf{x}^{\top} \mathbf{y} \vert \leq {\Vert \mathbf{x} \Vert}_2 \; {\Vert \mathbf{y} \Vert}_2, \quad \mathbf{x}, \mathbf{y} \in \mathbb{R}^d
+    \abs{\dotpbf{x}{y}} \leq \normbf{x}_2 \; \normbf{y}_2, \quad \mathbf{x}, \mathbf{y} \in \R^d
 \end{equation*}
 
 \section{Kantorovich inequality}\label{sec:kantorovich-inequality}
@@ -511,9 +511,9 @@ where \( \lambda_{\max}(\mathbf{A}) \) and \( \lambda_{\min}(\mathbf{A}) \) are 
 \end{theorem}
 
 \begin{corollary}{Kantorovich inequality for positive definite matrices~\citep{Luenberger1984}}{}
-    For any \( \mathbf{Q} \in \mathbf{S}_{d}^{++} \), with smallest eigenvalue \( \lambda_{\min} \) and largest eigenvalue \( \lambda_{\max} \), and for any \( \mathbf{x} \in \mathbb{R}^d \setminus \{ \mathbf{0} \} \),
+    For any \( \mathbf{Q} \in \PD \), with smallest eigenvalue \( \lambda_{\min} \) and largest eigenvalue \( \lambda_{\max} \), and for any \( \mathbf{x} \in \R^d \setminus \{ \zero \} \),
     \begin{equation*}
-        \frac{{(\mathbf{x}^{\top} \mathbf{x})}^2}{(\mathbf{x}^{\top} \mathbf{Q} \mathbf{x})(\mathbf{x}^{\top} \mathbf{Q}^{-1} \mathbf{x})}
+        \frac{{(\dotpbf{x}{x})}^2}{(\mathbf{x}^{\top} \mathbf{Q} \mathbf{x})(\mathbf{x}^{\top} \mathbf{Q}^{-1} \mathbf{x})}
         \geq
         \frac{4 \lambda_{\max} \lambda_{\min}}{{(\lambda_{\max} + \lambda_{\min})}^2}
     \end{equation*}
@@ -521,7 +521,7 @@ where \( \lambda_{\max}(\mathbf{A}) \) and \( \lambda_{\min}(\mathbf{A}) \) are 
 
 \begin{proof}
     Let the matrix \( \mathbf{Q} \) have eigenvalues \( \lambda_1, \lambda_2, \ldots, \lambda_d \), with corresponding orthonormal eigenvectors \( \mathbf{v}_1, \mathbf{v}_2, \ldots, \mathbf{v}_d \).
-    Since the eigenvectors form an orthonormal basis for \( \mathbb{R}^d \), any vector \( \mathbf{x} \in \mathbb{R}^d \) can be expressed as a linear combination of these eigenvectors as \( \mathbf{x} = \sum_{i=1}^{d} c_i \mathbf{v}_i \), where each coefficient \( c_i \) is the projection of \( \mathbf{x} \) onto the eigenvector \( \mathbf{v}_i \), given by \( c_i = \mathbf{v}_i^\top \mathbf{x} \).
+    Since the eigenvectors form an orthonormal basis for \( \R^d \), any vector \( \mathbf{x} \in \R^d \) can be expressed as a linear combination of these eigenvectors as \( \mathbf{x} = \sum_{i=1}^{d} c_i \mathbf{v}_i \), where each coefficient \( c_i \) is the projection of \( \mathbf{x} \) onto the eigenvector \( \mathbf{v}_i \), given by \( c_i = \mathbf{v}_i^\top \mathbf{x} \).
     Now,
     \begin{align*}
         \mathbf{x}^{\top} \mathbf{Q} \mathbf{x}
@@ -538,7 +538,7 @@ where \( \lambda_{\max}(\mathbf{A}) \) and \( \lambda_{\min}(\mathbf{A}) \) are 
         =
         \sum_{i=1}^{d} c_i^2 \frac{1}{\lambda_i},
         \qquad
-        \mathbf{x}^{\top} \mathbf{x}
+        \dotpbf{x}{x}
         =
         \sum_{i=1}^{d} c_i^2
     \end{align*}
@@ -549,7 +549,7 @@ where \( \lambda_{\max}(\mathbf{A}) \) and \( \lambda_{\min}(\mathbf{A}) \) are 
         \leq
         \frac{{(\lambda_{\max} + \lambda_{\min})}^2}{4 \lambda_{\max} \lambda_{\min}} {\left( \sum_{i=1}^{d} c_i^2 \right)}^2
         \implies
-        \frac{{(\mathbf{x}^{\top} \mathbf{x})}^2}{(\mathbf{x}^{\top} \mathbf{Q} \mathbf{x})(\mathbf{x}^{\top} \mathbf{Q}^{-1} \mathbf{x})}
+        \frac{{(\dotpbf{x}{x})}^2}{(\mathbf{x}^{\top} \mathbf{Q} \mathbf{x})(\mathbf{x}^{\top} \mathbf{Q}^{-1} \mathbf{x})}
         \geq
         \frac{4 \lambda_{\max} \lambda_{\min}}{{(\lambda_{\max} + \lambda_{\min})}^2}
     \end{equation*}
@@ -567,9 +567,9 @@ with equality iff \( a_1 = a_2 = \cdots = a_n \).
 
 \section{Polyak-\L{}ojasiewicz (PL) inequality}
 
-A function \( f: D \subseteq \mathbb{R}^n \to \mathbb{R} \) on a convex domain \( D \) satisfies the \textbf{Polyak-\L{}ojasiewicz (PL) inequality} with parameter \( \mu > 0 \) if
+A function \( f: D \subseteq \R^n \to \R \) on a convex domain \( D \) satisfies the \textbf{Polyak-\L{}ojasiewicz (PL) inequality} with parameter \( \mu > 0 \) if
 \begin{equation*}
-    \frac{1}{2} {\Vert \nabla f(\mathbf{x}) \Vert}^2 \geq \mu \left( f(\mathbf{x}) - f^* \right)
+    \half \norm{\nabla f(\mathbf{x})}^2 \geq \mu \left( f(\mathbf{x}) - f^* \right)
     , \quad \forall \mathbf{x} \in D
 \end{equation*}
 where \( f^* = \inf_{\mathbf{x} \in D} f(\mathbf{x}) \).
