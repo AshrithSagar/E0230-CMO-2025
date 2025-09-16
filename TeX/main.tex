@@ -83,7 +83,7 @@
 
 \newcommand{\R}{{\mathbb{R}}}
 \newcommand{\N}{{\mathbb{N}}}
-\newcommand{\abs}[1]{{\left\lvert#1\right\rvert}}
+\NewDocumentCommand{\abs}{om}{{\IfNoValueTF{#1}{\left\lvert#2\right\rvert}{#1\lvert#2#1\rvert}}}
 \NewDocumentCommand{\norm}{om}{{\IfNoValueTF{#1}{\left\lVert#2\right\rVert}{#1\lVert#2#1\rVert}}}
 \NewDocumentCommand{\normbf}{om}{{\IfNoValueTF{#1}{\left\lVert\mathbf{#2}\right\rVert}{#1\lVert\mathbf{#2}#1\rVert}}}
 \newcommand{\dotp}[2]{{{#1}^\top#2}}
@@ -108,6 +108,7 @@
 \newcommand{\I}{{\mathbf{I}}}
 \newcommand{\xstar}{{\x^\ast}}
 \newcommand{\xk}{{\x^{(k)}}}
+\newcommand{\pk}{{\p^{(k)}}}
 \newcommand{\xkp}{{\x^{(k+1)}}}
 \newcommand{\half}{{\frac{1}{2}}}
 \newcommand{\zero}{{\mathbf{0}}}

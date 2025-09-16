@@ -7,11 +7,11 @@
 
 \subsection{First-order methods}
 
-Assume \( f \in \C^{1} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + {\nabla \func{f}{\x}}^\top \p + o(\normbf{p}) \).
+Assume \( f \in \C^{1} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\grad{f}{\x}}{\p} + o(\normbf{p}) \).
 
 \subsection{Second-order methods}
 
-Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + {\nabla \func{f}{\x}}^\top \p + \half \p^\top \nabla^{2} \func{f}{\x} \p + o(\normbf{p}^2) \).
+Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\grad{f}{\x}}{\p} + \half \qf{\p}{\hess{f}{\x}} + o(\normbf{p}^2) \).
 
 \section{Types of minimum}
 
@@ -73,7 +73,7 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + {\nabla
     \begin{align*}
         \func{f}{\y}
         & \geq
-        \func{f}{\xstar} + \cancel{ {\grad{f}{\xstar}}^\top (\y - \xstar) }
+        \func{f}{\xstar} + \cancel{ \dotp{\grad{f}{\xstar}}{(\y - \xstar)} }
         , \quad \forall \y \in D
         \\
         \implies
@@ -114,7 +114,7 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + {\nabla
     \begin{equation*}
         \func{f}{\y}
         \geq
-        \func{f}{\x} + {\nabla \func{f}{\x}}^\top (\y - \x),
+        \func{f}{\x} + \dotp{\grad{f}{\x}}{(\y - \x)},
         \quad \forall \x, \y \in D
     \end{equation*}
 \end{theorem}
@@ -131,7 +131,7 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + {\nabla
     \end{equation*}
     Taking the limit as \( \lambda \to 0^+ \), we have
     \begin{equation*}
-        {\nabla \func{f}{\x}}^\top (\y - \x)
+        \dotp{\grad{f}{\x}}{(\y - \x)}
         =
         \lim_{\lambda \to 0^+} \frac{\func{f}{\lambda \x + (1 - \lambda) \y} - \func{f}{\x}}{\lambda}
         \leq
@@ -144,7 +144,7 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + {\nabla
 \begin{corollary}{Monotonicity of gradient \( \iff \) Convexity}{}
     For a function \( f \in \C^1 \) with a convex domain \( D \), \( f \) is convex on \( D \) iff
     \begin{equation*}
-        {\big( \nabla \func{f}{\x} - \nabla \func{f}{\y} \big)}^\top \big( \x - \y \big) \geq 0
+        \dotp{\big( \grad{f}{\x} - \grad{f}{\y} \big)}{\big( \x - \y \big)} \geq 0
         , \quad
         \forall \x, \y \in D
     \end{equation*}
@@ -156,19 +156,19 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + {\nabla
     \begin{align*}
         \func{f}{\y}
         & \geq
-        \func{f}{\x} + {\nabla \func{f}{\x}}^\top (\y - \x)
+        \func{f}{\x} + {\grad{f}{\x}}^\top (\y - \x)
         , \quad
         \forall \x, \y \in D
         \\
         \func{f}{\x}
         & \geq
-        \func{f}{\y} + {\nabla \func{f}{\y}}^\top (\x - \y)
+        \func{f}{\y} + {\grad{f}{\y}}^\top (\x - \y)
         , \quad
         \forall \x, \y \in D
     \end{align*}
     Adding the two inequalities, we get
     \begin{equation*}
-        0 \geq {\big( \nabla \func{f}{\x} - \nabla \func{f}{\y} \big)}^\top (\y - \x)
+        0 \geq {\big( \grad{f}{\x} - \grad{f}{\y} \big)}^\top (\y - \x)
         , \quad
         \forall \x, \y \in D
     \end{equation*}
@@ -177,17 +177,17 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + {\nabla
     \( (\Leftarrow) \)
     Define \( \func{g}{t} = f(\x + t (\y - \x)), \;\; t \in [0, 1], \;\; \x, \y \in D \).
 
-    Then, \( \func{g}{0} = \func{f}{\x}, \quad \func{g}{1} = \func{f}{\y}, \quad g'(t) = {(\nabla f(\x + t (\y - \x)))}^\top (\y - \x) \).
+    Then, \( \func{g}{0} = \func{f}{\x}, \quad \func{g}{1} = \func{f}{\y}, \quad \func{g'}{t} = \dotp{(\grad{f}{\x + t (\y - \x)})}{(\y - \x)} \).
 
     From the given condition, we have
     \begin{align*}
-        g'(t)
+        \func{g'}{t}
         & =
-        {\big( \nabla f(\x + t (\y - \x)) - \nabla \func{f}{\x} + \nabla \func{f}{\x} \big)}^\top (\y - \x)
+        {\big( \nabla f(\x + t (\y - \x)) - \grad{f}{\x} + \grad{f}{\x} \big)}^\top (\y - \x)
         \\ & =
-        {\big( \nabla f(\x + t (\y - \x)) - \nabla \func{f}{\x} \big)}^\top (\y - \x) + {\big( \nabla \func{f}{\x} \big)}^\top (\y - \x)
+        {\big( \nabla f(\x + t (\y - \x)) - \grad{f}{\x} \big)}^\top (\y - \x) + {\big( \grad{f}{\x} \big)}^\top (\y - \x)
         \geq
-        {\big( \nabla \func{f}{\x} \big)}^\top (\y - \x)
+        {\big( \grad{f}{\x} \big)}^\top (\y - \x)
     \end{align*}
     for all \( t \in [0, 1] \).
     Integrating from \( 0 \) to \( 1 \), we get
@@ -196,11 +196,11 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + {\nabla
         =
         \func{g}{1} - \func{g}{0}
         =
-        \int_0^1 g'(t) \, dt
+        \int_{0}^{1} \func{g'}{t} \, dt
         \geq
-        \int_0^1 {\big( \nabla \func{f}{\x} \big)}^\top (\y - \x) \, dt
+        \int_{0}^{1} {\big( \grad{f}{\x} \big)}^\top (\y - \x) \, dt
         =
-        {\big( \nabla \func{f}{\x} \big)}^\top (\y - \x)
+        {\big( \grad{f}{\x} \big)}^\top (\y - \x)
     \end{equation*}
     for all \( \x, \y \in D \), which is the first-order condition for convexity, and thereby \( f \) is convex.
 \end{proof}
@@ -220,13 +220,13 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + {\nabla
     \( (\Rightarrow) \)
     The first-order condition for convexity can be rewritten as
     \begin{equation*}
-        \func{f}{\y} - \func{f}{\x} - {\nabla \func{f}{\x}}^\top (\y - \x) \geq 0
+        \func{f}{\y} - \func{f}{\x} - {\grad{f}{\x}}^\top (\y - \x) \geq 0
         , \quad
         \forall \x, \y \in D
     \end{equation*}
     Using Taylor's theorem, we have
     \begin{equation*}
-        \func{f}{\y} - \func{f}{\x} - {\nabla \func{f}{\x}}^\top (\y - \x)
+        \func{f}{\y} - \func{f}{\x} - {\grad{f}{\x}}^\top (\y - \x)
         =
         \half {(\y - \x)}^\top \hess{f}{\boldsymbol{\xi}} (\y - \x)
         , \quad
@@ -245,7 +245,7 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + {\nabla
     \( (\Leftarrow) \)
     From Taylor's theorem, we have
     \begin{equation*}
-        \func{f}{\y} - \func{f}{\x} - {\nabla \func{f}{\x}}^\top (\y - \x)
+        \func{f}{\y} - \func{f}{\x} - {\grad{f}{\x}}^\top (\y - \x)
         =
         \half {(\y - \x)}^\top \hess{f}{\boldsymbol{\xi}} (\y - \x)
         , \quad
@@ -254,7 +254,7 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + {\nabla
     for some \( t \in (0, 1) \).
     Since \( \hess{f}{\x} \succeq 0, \; \forall \x \in D \), we have
     \begin{equation*}
-        \func{f}{\y} - \func{f}{\x} - {\nabla \func{f}{\x}}^\top (\y - \x) \geq 0
+        \func{f}{\y} - \func{f}{\x} - {\grad{f}{\x}}^\top (\y - \x) \geq 0
         , \quad
         \forall \x, \y \in D
     \end{equation*}
@@ -302,34 +302,34 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + {\nabla
     \begin{equation*}
         \func{f}{\y}
         \geq
-        \func{f}{\x} + {\nabla \func{f}{\x}}^\top (\y - \x) + \frac{\mu}{2} \normbf{y - x}^2,
+        \func{f}{\x} + {\grad{f}{\x}}^\top (\y - \x) + \frac{\mu}{2} \normbf{y - x}^2,
         \quad \forall \x, \y \in D
     \end{equation*}
 \end{corollary}
 
 \begin{proof}
     Define \( \func{g}{\x} = \func{f}{\x} - \frac{\mu}{2} \norm{\x}^2 \).
-    Then, \( \nabla \func{g}{\x} = \nabla \func{f}{\x} - \mu \x \).
+    Then, \( \grad{g}{\x} = \grad{f}{\x} - \mu \x \).
     From the first-order condition for convexity~\pthmref{thm:first-order-condition-for-convexity}, we have that \( g \) is convex iff
     \begin{align*}
         \func{g}{\y}
         & \geq
-        \func{g}{\x} + {\nabla \func{g}{\x}}^\top (\y - \x),
+        \func{g}{\x} + {\grad{g}{\x}}^\top (\y - \x),
         \quad \forall \x, \y \in D
         \\
         \implies
         \func{f}{\y} - \frac{\mu}{2} \norm{\y}^2
         & \geq
-        \func{f}{\x} - \frac{\mu}{2} \norm{\x}^2 + {\big( \nabla \func{f}{\x} - \mu \x \big)}^\top (\y - \x)
+        \func{f}{\x} - \frac{\mu}{2} \norm{\x}^2 + {\big( \grad{f}{\x} - \mu \x \big)}^\top (\y - \x)
         \\
         \implies
         \func{f}{\y}
         & \geq
-        \func{f}{\x} + {\nabla \func{f}{\x}}^\top (\y - \x) + \frac{\mu}{2} \Big( \norm{\y}^2 - \norm{\x}^2 - 2 \dotp{\x}{(\y - \x)} \Big)
+        \func{f}{\x} + {\grad{f}{\x}}^\top (\y - \x) + \frac{\mu}{2} \Big( \norm{\y}^2 - \norm{\x}^2 - 2 \dotp{\x}{(\y - \x)} \Big)
         \\ & =
-        \func{f}{\x} + {\nabla \func{f}{\x}}^\top (\y - \x) + \frac{\mu}{2} \Big( \norm{\y}^2 - \cancel{ \norm{\x}^2 } - 2 \dotp{\x}{\y} + \cancel{2} \norm{\x}^2 \Big)
+        \func{f}{\x} + {\grad{f}{\x}}^\top (\y - \x) + \frac{\mu}{2} \Big( \norm{\y}^2 - \cancel{ \norm{\x}^2 } - 2 \dotp{\x}{\y} + \cancel{2} \norm{\x}^2 \Big)
         \\ & =
-        \func{f}{\x} + {\nabla \func{f}{\x}}^\top (\y - \x) + \frac{\mu}{2} \normbf{y - x}^2
+        \func{f}{\x} + {\grad{f}{\x}}^\top (\y - \x) + \frac{\mu}{2} \normbf{y - x}^2
         , \quad
         \forall \x, \y \in D
     \end{align*}
@@ -364,9 +364,9 @@ An \( n \)-th order oracle provides information up to the \( n \)-th derivative 
 \begin{itemize}
     \item \textbf{Zero-order oracle:} Given \( \x \in \R^d \), returns the function value \( \func{f}{\x} \in \R \).
 
-    \item \textbf{First-order oracle:} Given \( \x \in \R^d \), returns a tuple \( \big( \func{f}{\x}, \nabla \func{f}{\x} \big) \in (\R, \R^d) \).
+    \item \textbf{First-order oracle:} Given \( \x \in \R^d \), returns a tuple \( \big( \func{f}{\x}, \grad{f}{\x} \big) \in (\R, \R^d) \).
 
-    \item \textbf{Second-order oracle:} Given \( \x \in \R^d \), returns a tuple \( \big( \func{f}{\x}, \nabla \func{f}{\x}, \hess{f}{\x} \big) \in (\R, \R^d, \R^{d \times d}) \).
+    \item \textbf{Second-order oracle:} Given \( \x \in \R^d \), returns a tuple \( \big( \func{f}{\x}, \grad{f}{\x}, \hess{f}{\x} \big) \in (\R, \R^d, \R^{d \times d}) \).
 \end{itemize}
 
 \section{Iterative algorithm template}
@@ -387,7 +387,7 @@ An \( n \)-th order oracle provides information up to the \( n \)-th derivative 
     \( k \leftarrow 0 \)\;
 
     \While{\( \xk \) is not optimal}{
-        Update the current point: \( \xkp = \operatorname{ALGO}(\mathbf{x^{(k)}}) \)\;
+        Update the current point: \( \xkp = \func{\operatorname{ALGO}}{\xk} \)\;
 
         \( k \leftarrow k + 1 \)\;
     }
@@ -412,14 +412,14 @@ An \( n \)-th order oracle provides information up to the \( n \)-th derivative 
     \( k \leftarrow 0 \)\;
 
     \While{\( \xk \) is not optimal}{
-        Choose a descent direction \( \p^{(k)} \) from the set of descent directions
+        Choose a descent direction \( \pk \) from the set of descent directions
         \begin{equation*}
-            \mathcal{DS} \left( \xk \right) = \left\{ \p \in \R^d \;\Big|\; {\grad{f}{\xk}}^\top \p < 0 \right\}
+            \func{\mathcal{DS}}{\xk} = \left\{ \p \in \R^d \;\Big|\; \dotp{\grad{f}{\xk}}{\p} < 0 \right\}
         \end{equation*}
 
         Choose a step length \( \alpha_k \geq 0 \)\;
 
-        Update the current point: \( \xkp = \xk + \alpha_k \p^{(k)} \)\;
+        Update the current point: \( \xkp = \xk + \alpha_k \pk \)\;
 
         \( k \leftarrow k + 1 \)\;
     }
@@ -427,14 +427,14 @@ An \( n \)-th order oracle provides information up to the \( n \)-th derivative 
 \end{algorithm}
 
 \paragraph{Gradient descent:}
-Algorithms that use the gradient \( \grad{f}{\xk} \) to compute the descent direction \( \p^{(k)} \).
+Algorithms that use the gradient \( \grad{f}{\xk} \) to compute the descent direction \( \pk \).
 
 \paragraph{Steepest descent method (Cauchy):}
 Choose the descent direction as
 \begin{equation*}
-    \p^{(k)} = -\grad{f}{\xk}
+    \pk = -\grad{f}{\xk}
     ,\qquad \text{or normalized} \quad
-    \p^{(k)} = - \frac{\grad{f}{\xk}}{\norm{\grad{f}{\xk}}}
+    \pk = - \frac{\grad{f}{\xk}}{\norm{\grad{f}{\xk}}}
 \end{equation*}
 
 \chapter{Exact line search}
@@ -443,7 +443,7 @@ Choose the step length \( \alpha_k \) in line search~\psecref{sec:line-search} b
 \begin{equation*}
     \alpha_k = \argmin_{\alpha \geq 0} g_k(\alpha),
     \qquad \text{where } \;
-    g_k(\alpha) \triangleq f\left( \xk + \alpha \p^{(k)} \right)
+    g_k(\alpha) \triangleq f\left( \xk + \alpha \pk \right)
 \end{equation*}
 
 \section{Convex quadratic minimisation problem}
@@ -460,7 +460,7 @@ Consider the unconstrained quadratic minimisation problem
 \end{align*}
 
 \paragraph{Solution:}
-The gradient of \( f \) can be computed as \( \nabla \func{f}{\x} = \Q \x + \mathbf{h} \), and thereby from the first-order necessary condition for local minimum, the local minimum \( \xstar \) must necessarily satisfy
+The gradient of \( f \) can be computed as \( \grad{f}{\x} = \Q \x + \mathbf{h} \), and thereby from the first-order necessary condition for local minimum, the local minimum \( \xstar \) must necessarily satisfy
 \begin{equation*}
     \grad{f}{\xstar} = \Q \xstar + \mathbf{h} = \zero
     \quad \iff \quad
@@ -479,28 +479,28 @@ To find the optimal step length \( \alpha_k \), consider
 \begin{align*}
     g_k(\alpha)
     & \triangleq
-    f \left( \xk + \alpha \p^{(k)} \right)
+    \func{f}{\xk + \alpha \pk}
     \\ & =
-    \half {\left( \xk + \alpha \p^{(k)} \right)}^\top \Q \left( \xk + \alpha \p^{(k)} \right)
-    + \mathbf{h}^\top \left( \xk + \alpha \p^{(k)} \right)
+    \half {\left( \xk + \alpha \pk \right)}^\top \Q \left( \xk + \alpha \pk \right)
+    + \mathbf{h}^\top \left( \xk + \alpha \pk \right)
     + c
     \\ & =
     \half {\xk}^\top \Q \xk
-    + \alpha {\xk}^\top \Q \p^{(k)}
-    + \frac{\alpha^2}{2} {\p^{(k)}}^\top \Q \p^{(k)}
+    + \alpha {\xk}^\top \Q \pk
+    + \frac{\alpha^2}{2} {\pk}^\top \Q \pk
     + \mathbf{h}^\top \xk
-    + \alpha \mathbf{h}^\top \p^{(k)}
+    + \alpha \mathbf{h}^\top \pk
     + c
     \\ & =
-    \alpha^2 \left( \half {\p^{(k)}}^\top \Q \p^{(k)} \right)
-    + \alpha \left( {\xk}^\top \Q \p^{(k)} + \mathbf{h}^\top \p^{(k)} \right)
+    \alpha^2 \left( \half {\pk}^\top \Q \pk \right)
+    + \alpha \left( {\xk}^\top \Q \pk + \mathbf{h}^\top \pk \right)
     + \left( \half {\xk}^\top \Q \xk + \mathbf{h}^\top \xk + c \right)
     \\ & =
-    \alpha^2 \underbrace{ \left( \half {\p^{(k)}}^\top \Q \p^{(k)} \right) }_{p_k}
-    + \alpha \underbrace{ \left( {\grad{f}{\xk}}^\top \p^{(k)} \right) }_{q_k}
+    \alpha^2 \underbrace{ \left( \half {\pk}^\top \Q \pk \right) }_{p_k}
+    + \alpha \underbrace{ \left( {\grad{f}{\xk}}^\top \pk \right) }_{q_k}
     + \underbrace{ \left( \func{f}{\xk} \right) }_{r_k}
 \end{align*}
-which is a quadratic function in \( \alpha \) with \( p_k > 0 \; \left( \because \Q \succ \zero \right) \) and \( q_k < 0 \; \left( \because \p^{(k)} \in \func{\mathcal{DS}}{\xk} \right) \).
+which is a quadratic function in \( \alpha \) with \( p_k > 0 \; \left( \because \Q \succ \zero \right) \) and \( q_k < 0 \; \left( \because \pk \in \func{\mathcal{DS}}{\xk} \right) \).
 
 For the \hyperlink{1D-quadratic}{one-dimensional quadratic} case, we can then compute the minimum point and minimum value as
 \begin{equation*}
@@ -509,12 +509,12 @@ For the \hyperlink{1D-quadratic}{one-dimensional quadratic} case, we can then co
     \implies
     \boxed{
         \alpha_k
-        = -\frac{{\grad{f}{\xk}}^\top \p^{(k)}}{{\p^{(k)}}^\top \Q \p^{(k)}}
+        = -\frac{{\grad{f}{\xk}}^\top \pk}{{\pk}^\top \Q \pk}
     }
     > 0
 \end{equation*}
 \begin{equation*}
-    f \left( \xkp \right)
+    \func{f}{\xkp}
     =
     g_k(\alpha_k)
     =
@@ -523,11 +523,11 @@ For the \hyperlink{1D-quadratic}{one-dimensional quadratic} case, we can then co
     \boxed{
         \func{f}{\xkp}
         =
-        \func{f}{\xk} - \frac{{\left( {\grad{f}{\xk}}^\top \p^{(k)} \right)}^2}{2 {\p^{(k)}}^\top \Q \p^{(k)}}
+        \func{f}{\xk} - \frac{{\left( {\grad{f}{\xk}}^\top \pk \right)}^2}{2 {\pk}^\top \Q \pk}
     }
 \end{equation*}
 
-For the choice \( \p^{(k)} = -\grad{f}{\xk} \), we have
+For the choice \( \pk = -\grad{f}{\xk} \), we have
 \begin{equation*}
     \alpha_k
     =
@@ -608,15 +608,15 @@ Now, the successive error reduction can be computed as
     & =
     \func{f}{\xk} - \func{f}{\xkp}
     =
-    \frac{{\left( {\grad{f}{\xk}}^\top \p^{(k)} \right)}^2}{2 {\p^{(k)}}^\top \Q \p^{(k)}}
+    \frac{{\left( {\grad{f}{\xk}}^\top \pk \right)}^2}{2 {\pk}^\top \Q \pk}
     \\
     \implies
     \frac{E_{k} - E_{k+1}}{E_k}
     & =
-    \frac{{\left( {\grad{f}{\xk}}^\top \p^{(k)} \right)}^2}{ {\left( \grad{f}{\xk} \right)}^\top \Qinv \, \grad{f}{\xk} \; {\p^{(k)}}^\top \Q \p^{(k)}}
+    \frac{{\left( {\grad{f}{\xk}}^\top \pk \right)}^2}{ {\left( \grad{f}{\xk} \right)}^\top \Qinv \, \grad{f}{\xk} \; {\pk}^\top \Q \pk}
 \end{align*}
 
-For the choice \( \p^{(k)} = -\grad{f}{\xk} \), we have
+For the choice \( \pk = -\grad{f}{\xk} \), we have
 \begin{align*}
     \frac{E_{k} - E_{k+1}}{E_k}
     & =
@@ -627,14 +627,14 @@ For the choice \( \p^{(k)} = -\grad{f}{\xk} \), we have
 
 From Kantorovich inequality~\psecref{sec:kantorovich-inequality}, we have
 \begin{equation*}
-    \frac{{\Vert \mathbf{z} \Vert}^4}{(\mathbf{z}^\top \Q \mathbf{z}) (\mathbf{z}^\top \Qinv \mathbf{z})}
+    \frac{\norm{\z}^4}{(\qf{\z}{\Q})(\qf{\z}{\Qinv})}
     \geq
     \frac{4 \func{\lambda_{\min}}{\Q} \func{\lambda_{\max}}{\Q}}{{\left( \func{\lambda_{\min}}{\Q} + \func{\lambda_{\max}}{\Q} \right)}^2},
-    \quad \forall \mathbf{z} \in \R^d \setminus \{ \zero \}
+    \quad \forall \z \in \R^d \setminus \{ \zero \}
 \end{equation*}
 where \( \func{\lambda_{\min}}{\Q} \) and \( \func{\lambda_{\max}}{\Q} \) are the minimum and maximum eigenvalues of \( \Q \), respectively.
 
-Applying this with \( \mathbf{z} = \grad{f}{\xk} \), we have
+Applying this with \( \z = \grad{f}{\xk} \), we have
 \begin{align*}
     \frac{E_k - E_{k+1}}{E_k}
     & \geq
@@ -653,9 +653,9 @@ Applying this with \( \mathbf{z} = \grad{f}{\xk} \), we have
     \implies
     \frac{E_k}{E_0}
     =
-    \prod_{i=0}^{k-1} \frac{E_{i+1}}{E_i}
+    \prod_{i = 0}^{k-1} \frac{E_{i+1}}{E_i}
     \leq
-    \prod_{i=0}^{k-1} \rho
+    \prod_{i = 0}^{k-1} \rho
     =
     \rho^k
     \implies
@@ -670,26 +670,26 @@ where \( \rho \in \rinterval{0}{1} \) since \( \Q \succ \zero \implies \func{\la
 \section{Sufficient decrease condition (Armijo condition)}
 
 \begin{equation*}
-    f \left( \xk + \alpha_k \p^{(k)} \right)
+    \func{f}{\xk + \alpha_k \pk}
     \leq
-    \func{f}{\xk} + c \alpha_k {\grad{f}{\xk}}^\top \p^{(k)},
+    \func{f}{\xk} + c \alpha_k \dotp{\grad{f}{\xk}}{\pk},
     \quad 0 < c < 1
 \end{equation*}
 
 \subsection{Backtracking line search}
 
-Determine the largest number \( \alpha_k \) in the sequence \( {\{ \beta^m \bar{\alpha} \}}_{m=0}^{\infty} \) that satisfies the \textit{sufficient decrease condition}, where \( \bar{\alpha} > 0 \) is an initial step length and \( 0 < \beta < 1 \) is a scaling factor.
+Determine the largest number \( \alpha_k \) in the sequence \( {\{ \beta^m \bar{\alpha} \}}_{m = 0}^{\infty} \) that satisfies the \textit{sufficient decrease condition}, where \( \bar{\alpha} > 0 \) is an initial step length and \( 0 < \beta < 1 \) is a scaling factor.
 
 \section{Goldstein conditions / Armijo-Goldstein conditions}
 
 \vspace*{-1em}
 \begin{align*}
-    \func{f}{\xk} + (1 - c) \alpha_k {\grad{f}{\xk}}^\top \p^{(k)}
+    \func{f}{\xk} + (1 - c) \alpha_k \dotp{\grad{f}{\xk}}{\pk}
     & \leq
     \overbrace{
-        f \left( \xk + \alpha_k \p^{(k)} \right)
+        \func{f}{\xk + \alpha_k \pk}
         \leq
-        \func{f}{\xk} + c \alpha_k {\grad{f}{\xk}}^\top \p^{(k)}
+        \func{f}{\xk} + c \alpha_k \dotp{\grad{f}{\xk}}{\pk}
     }^{\text{sufficient decrease}}
     \\
     \text{where } \;&
@@ -699,14 +699,14 @@ Determine the largest number \( \alpha_k \) in the sequence \( {\{ \beta^m \bar{
 \section{Wolfe conditions}
 
 \begin{align*}
-    f \left( \xk + \alpha_k \p^{(k)} \right)
+    \func{f}{\xk + \alpha_k \pk}
     & \leq
-    \func{f}{\xk} + c_1 \alpha_k {\grad{f}{\xk}}^\top \p^{(k)}
+    \func{f}{\xk} + c_1 \alpha_k \dotp{\grad{f}{\xk}}{\pk}
     \tag{sufficient decrease}
     \\
-    {\nabla f \left( \xk + \alpha_k \p^{(k)} \right)}^\top \p^{(k)}
+    \dotp{\grad{f}{\xk + \alpha_k \pk}}{\pk}
     & \geq
-    c_2 {\grad{f}{\xk}}^\top \p^{(k)}
+    c_2 \dotp{\grad{f}{\xk}}{\pk}
     \tag{curvature}
     \\
     \text{where } \;&
@@ -716,14 +716,14 @@ Determine the largest number \( \alpha_k \) in the sequence \( {\{ \beta^m \bar{
 \subsection{Strong Wolfe conditions}
 
 \begin{align*}
-    f \left( \xk + \alpha_k \p^{(k)} \right)
+    \func{f}{\xk + \alpha_k \pk}
     & \leq
-    \func{f}{\xk} + c_1 \alpha_k {\grad{f}{\xk}}^\top \p^{(k)}
+    \func{f}{\xk} + c_1 \alpha_k \dotp{\grad{f}{\xk}}{\pk}
     \tag{sufficient decrease}
     \\
-    \left| {\nabla f \left( \xk + \alpha_k \p^{(k)} \right)}^\top \p^{(k)} \right|
+    \abs{\dotp{\grad{f}{\xk + \alpha_k \pk}}{\pk}}
     & \leq
-    c_2 \left| {\grad{f}{\xk}}^\top \p^{(k)} \right|
+    c_2 \abs{\dotp{\grad{f}{\xk}}{\pk}}
     \tag{strong curvature}
     \\
     \text{where } \;&
@@ -733,7 +733,7 @@ Determine the largest number \( \alpha_k \) in the sequence \( {\{ \beta^m \bar{
 \section{Sufficient decrease lemma}
 
 \begin{lemma}{Sufficient decrease lemma}{}
-    Suppose \( f \in \C^{1}_{L} \) is bounded below, then \( \forall \x \in \R^n, \; \alpha \in \linterval[scaled]{0}{\frac{1}{L}} \), the gradient descent update \( \x^+ = \x - \alpha \nabla \func{f}{\x} \) yields a sufficient decrease in the function value:
+    Suppose \( f \in \C^{1}_{L} \) is bounded below, then \( \forall \x \in \R^n, \; \alpha \in \linterval[scaled]{0}{\frac{1}{L}} \), the gradient descent update \( \x^+ = \x - \alpha \grad{f}{\x} \) yields a sufficient decrease in the function value:
     \begin{equation*}
         \func{f}{\x^+} \leq \func{f}{\x} - \frac{\alpha}{2} \norm{\grad{f}{\x}}^2
     \end{equation*}
@@ -746,7 +746,7 @@ Determine the largest number \( \alpha_k \) in the sequence \( {\{ \beta^m \bar{
 
 \section{Global convergence criterion}
 
-If a scheme generates a sequence \( {\{ \xk \}}_{k=0}^{\infty} \) such that
+If a scheme generates a sequence \( {\{ \xk \}}_{k = 0}^{\infty} \) such that
 \begin{equation*}
     \lim_{k \to \infty} \norm{\grad{f}{\xk}} = 0
 \end{equation*}

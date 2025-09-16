@@ -30,15 +30,15 @@
 \section{Little-o notation}
 
 (Landau's notation~\cite{apostol1991calculus})
-A function \( f: \R^d \to \R \) is said to be in \( o(g(\mathbf{x})) \) as \( \mathbf{x} \to \mathbf{x}_0 \), for some function \( g: \R^d \to \R \), \( g(\mathbf{x}) \neq 0 \) in a neighborhood of \( \mathbf{x}_0 \), if
+A function \( f: \R^d \to \R \) is said to be in \( o(g(\x)) \) as \( \x \to \x_0 \), for some function \( g: \R^d \to \R \), \( g(\x) \neq 0 \) in a neighborhood of \( \x_0 \), if
 \begin{equation*}
-    \lim_{\mathbf{x} \to \mathbf{x}_0} \frac{f(\mathbf{x})}{g(\mathbf{x})} = 0
+    \lim_{\x \to \x_0} \frac{f(\x)}{g(\x)} = 0
     \quad \iff \quad
     \forall \epsilon > 0,
     \exists \delta > 0,
     \text{ s.t. }
-    \abs{\frac{f(\mathbf{x})}{g(\mathbf{x})}} < \epsilon,
-    \quad \forall \mathbf{x} \in B_{\delta}(\mathbf{x}_0) \setminus \{ \mathbf{x}_0 \}
+    \abs{\frac{f(\x)}{g(\x)}} < \epsilon,
+    \quad \forall \x \in B_{\delta}(\x_0) \setminus \{ \x_0 \}
 \end{equation*}
 
 \subsection{Properties}
@@ -52,11 +52,11 @@ A function \( f: \R^d \to \R \) is said to be in \( o(g(\mathbf{x})) \) as \( \m
 
     \item \( f \in o(g), \; g \in o(h) \implies f \in o(h) \).
 
-    \item \( f(\mathbf{x}) \in o(1) \text{ as } \mathbf{x} \to \mathbf{x}_0 \implies f(\mathbf{x}) \to 0 \text{ as } \mathbf{x} \to \mathbf{x}_0 \).
+    \item \( f(\x) \in o(1) \text{ as } \x \to \x_0 \implies f(\x) \to 0 \text{ as } \x \to \x_0 \).
 
-    \item \( |f(\mathbf{x})| \leq |h(\mathbf{x})| \text{ near } \mathbf{x}_0, \; h \in o(g) \implies f \in o(g) \).
+    \item \( |f(\x)| \leq |h(\x)| \text{ near } \x_0, \; h \in o(g) \implies f \in o(g) \).
 
-    \item \( f \in o(g), \; \phi: \R \to \R \text{ is continuous at } 0 \text{ with } \phi(0) = 0 \implies \phi(f(\mathbf{x})) \in o(\phi(g(\mathbf{x}))) \).
+    \item \( f \in o(g), \; \phi: \R \to \R \text{ is continuous at } 0 \text{ with } \phi(0) = 0 \implies \phi(f(\x)) \in o(\phi(g(\x))) \).
 
-    \item \( \alpha > \beta > 0 \implies \|\mathbf{x} - \mathbf{x}_0\|^\alpha \in o(\|\mathbf{x} - \mathbf{x}_0\|^\beta) \text{ as } \mathbf{x} \to \mathbf{x}_0 \).
+    \item \( \alpha > \beta > 0 \implies \|\x - \x_0\|^\alpha \in o(\|\x - \x_0\|^\beta) \text{ as } \x \to \x_0 \).
 \end{itemize}

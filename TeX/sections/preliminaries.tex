@@ -69,7 +69,7 @@ Norm \( \eta: \R^d \to \R \), satisfies
 
 A \textbf{neighborhood} of a point \( \x \in \R^d \) is an open ball centered at \( \x \) with radius \( r > 0 \), defined as
 \begin{equation*}
-    B_{r}(\x) = \left\{ \mathbf{z} \in \R^d \;\big|\; \normbf{z - x} < r \right\}, \quad r > 0, \ \x \in \R^d
+    B_{r}(\x) = \left\{ \z \in \R^d \;\big|\; \normbf{z - x} < r \right\}, \quad r > 0, \ \x \in \R^d
 \end{equation*}
 
 \section{Interior point}
@@ -95,7 +95,7 @@ A set \( S \subseteq \R^d \) is \textbf{closed} if it contains all its limit poi
 
 \section{Bounded set}
 
-A set \( S \subseteq \R^d \) is \textbf{bounded} if there exists \( \mathbf{z} \in \R^d, M \in \R \) such that \( \normbf{z - x} < M, \ \forall \x \in S \).
+A set \( S \subseteq \R^d \) is \textbf{bounded} if there exists \( \z \in \R^d, M \in \R \) such that \( \normbf{z - x} < M, \ \forall \x \in S \).
 
 \section{Infimum}
 
@@ -114,7 +114,7 @@ The \textbf{closure} of a set \( S \subseteq \R^d \) is the smallest closed set 
 
 \section{Convergent sequence}
 
-A sequence of real numbers \( {\{ a_n \}}_{n=1}^{\infty} \) is said to \textbf{converge} to a limit \( L \in \R \) if
+A sequence of real numbers \( {\{ a_n \}}_{n = 1}^{\infty} \) is said to \textbf{converge} to a limit \( L \in \R \) if
 \begin{equation*}
     a_n \to L
     \quad \iff \quad
@@ -128,7 +128,7 @@ A sequence of real numbers \( {\{ a_n \}}_{n=1}^{\infty} \) is said to \textbf{c
 
 \section{Cauchy sequence}
 
-A sequence of real numbers \( {\{ a_k \}}_{k=1}^{\infty} \) is a \textbf{Cauchy sequence} if
+A sequence of real numbers \( {\{ a_k \}}_{k = 1}^{\infty} \) is a \textbf{Cauchy sequence} if
 \begin{equation*}
     \forall \epsilon > 0, \
     \exists N \in \N, \
@@ -174,7 +174,7 @@ Sequence definition of \textbf{limit} of a function \( f: D \subseteq \R^d \to \
     \; \iff \;
     \lim_{n \to \infty} \abs{\func{f}{\x_n} - L} = 0
     \; \iff \;
-    \forall {\{ \x_n \}}_{n=1}^{\infty} \subseteq D \setminus \{ \x_0 \},
+    \forall {\{ \x_n \}}_{n = 1}^{\infty} \subseteq D \setminus \{ \x_0 \},
     \ \x_n \to \x_0
     \implies
     \func{f}{\x_n} \to L
@@ -250,7 +250,7 @@ Then, for some \( \xi \) between \( a \) and \( x \),
     & =
     \func{f}{a} + f'(a)(x - a) + \frac{f''(a)}{2!}{(x - a)}^2 + \cdots + \frac{f^{(n)}(a)}{n!}{(x - a)}^n + R_{n+1}(x)
     \\ & =
-    \sum_{k=0}^{n} \frac{f^{(k)}(a)}{k!} {(x - a)}^k + R_{n+1}(x)
+    \sum_{k = 0}^{n} \frac{f^{(k)}(a)}{k!} {(x - a)}^k + R_{n+1}(x)
 \end{align*}
 where the remainder term \( R_{n+1}(x) \) is given by the Lagrange form:
 \begin{equation*}
@@ -289,7 +289,7 @@ If a function is of class \( \C^k \ \forall k \in \N \), it is said to be of cla
 
 A function \( f: \R^d \to \R \) is said to be \( L \)-\textbf{smooth} if it is differentiable and there exists a constant \( L > 0 \) such that
 \begin{equation*}
-    \norm{\grad{f}{\x} - \nabla \func{f}{\y}}_2
+    \norm{\grad{f}{\x} - \grad{f}{\y}}_2
     \leq
     L \; \normbf{x - y}_2,
     \quad \forall \x, \y \in \R^d
@@ -308,7 +308,7 @@ Here, we denote \( f \in \C^{1}_L \) to mean that \( f \) is \( L \)-smooth and 
         \begin{equation*}
             \abs{ \func{f}{\y} - \func{f}{\x} - {\grad{f}{\x}}^\top (\y - \x) }
             \leq
-            \frac{L}{2} \normbf{y - x}^2,
+            \frac{L}{2} \normbf[\big]{y - x}^2,
             \quad \forall \x, \y \in \R^d
         \end{equation*}
 
@@ -573,8 +573,8 @@ with equality iff \( a_1 = a_2 = \cdots = a_n \).
 
 A function \( f: D \subseteq \R^n \to \R \) on a convex domain \( D \) satisfies the \textbf{Polyak-\L{}ojasiewicz (PL) inequality} with parameter \( \mu > 0 \) if
 \begin{equation*}
-    \half \norm[\Big]{\grad{f}{\x}}^2 \geq \mu \left( \func{f}{\x} - f^* \right)
+    \half \norm[\Big]{\grad{f}{\x}}^2 \geq \mu \left( \func{f}{\x} - f^\ast \right)
     , \quad \forall \x \in D
 \end{equation*}
-where \( f^* = \inf_{\x \in D} \func{f}{\x} \).
+where \( f^\ast = \inf_{\x \in D} \func{f}{\x} \).
 Such an \( f \) is said to be \( \mu \)-\textbf{PL} on \( D \).

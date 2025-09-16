@@ -23,7 +23,7 @@
 
         \paragraph{Solution:}
         Reflect one of the points, say \( A \), across line \( L \) to get point \( A' \).
-        The optimal point \( P^* \) is the intersection of line \( L \) and the line segment \( A'B \).
+        The optimal point \( P^\ast \) is the intersection of line \( L \) and the line segment \( A'B \).
         \begin{equation*}
             \min_{P \in L} \; AP + PB = \min_{P \in L} \; A'P + PB = A'B
         \end{equation*}
@@ -60,16 +60,16 @@
 
 \section{Optimisation problem}
 
-An \textbf{unconstrained optimisation problem} is the problem of finding a point \( \mathbf{x}^* \in \R^d \) that minimises a function \( f: \R^d \to \R \), i.e.,
+An \textbf{unconstrained optimisation problem} is the problem of finding a point \( \xstar \in \R^d \) that minimises a function \( f: \R^d \to \R \), i.e.,
 \begin{equation*}
-    f(\mathbf{x}^*) = \min_{\mathbf{x} \in \R^d} f(\mathbf{x})
+    f(\xstar) = \min_{\x \in \R^d} f(\x)
     \quad \iff \quad
-    \mathbf{x}^* = \argmin_{\mathbf{x} \in \R^d} f(\mathbf{x})
+    \xstar = \argmin_{\x \in \R^d} f(\x)
     \quad \iff \quad
-    f(\mathbf{x}^*) \leq f(\mathbf{x}), \quad \forall \mathbf{x} \in \R^d
+    f(\xstar) \leq f(\x), \quad \forall \x \in \R^d
 \end{equation*}
 
-The function \( f \) is called the \textbf{objective function}, the point \( \mathbf{x}^* \) is called the \textbf{minimum point}, and the value \( f(\mathbf{x}^*) \) is called the \textbf{minimum value}.
+The function \( f \) is called the \textbf{objective function}, the point \( \xstar \) is called the \textbf{minimum point}, and the value \( f(\xstar) \) is called the \textbf{minimum value}.
 
 \newpage
 \subsection{Examples}
@@ -81,39 +81,39 @@ The function \( f \) is called the \textbf{objective function}, the point \( \ma
     \begin{tabular}{|l|l|l|}
         \hline
         \textbf{Objective function \( f(x) \)}
-        & \textbf{Minimum point \( x^* \)}
-        & \textbf{Minimum value \( f(x^*) \)} \\
+        & \textbf{Minimum point \( x^\ast \)}
+        & \textbf{Minimum value \( f(x^\ast) \)} \\
         \hline
 
         \( f(x) = \half x^2, \quad x \in \R \)
-        & \( x^* = 0 \)
-        & \( f(x^*) = 0 \) \\
+        & \( x^\ast = 0 \)
+        & \( f(x^\ast) = 0 \) \\
         \hline
 
         \( f(x) = \half {(x - x_0)}^2, \quad x, x_0 \in \R \)
-        & \( x^* = x_0 \)
-        & \( f(x^*) = 0 \) \\
+        & \( x^\ast = x_0 \)
+        & \( f(x^\ast) = 0 \) \\
         \hline
 
         \( f(x) = \half {(x - x_0)}^2 + c, \quad x, x_0, c \in \R \)
-        & \( x^* = x_0 \)
-        & \( f(x^*) = c \) \\
+        & \( x^\ast = x_0 \)
+        & \( f(x^\ast) = c \) \\
         \hline
 
         \hypertarget{1D-quadratic}{
             \( f(x) = ax^2 + bx + c, \quad x, a, b, c \in \R, \; a > 0 \)
         }
-        & \( x^* = -\cfrac{b}{2a} \)
-        & \( f(x^*) = c - \cfrac{b^2}{4a} \)
+        & \( x^\ast = -\cfrac{b}{2a} \)
+        & \( f(x^\ast) = c - \cfrac{b^2}{4a} \)
         \rule[-13pt]{0pt}{36pt} \\
         \hline
 
         \( f(t) = \cfrac{1}{2} {\big\Vert \mathbf{u} - t \mathbf{v} \big\Vert}^2, \quad t \in \R, \; \mathbf{u}, \mathbf{v} \in \R^d, \; \mathbf{v} \neq \zero \)
-        & \( t^* = \cfrac{\dotpbf{u}{v}}{\dotpbf{v}{v}} \)
-        & \( f(t^*) = \cfrac{1}{2} \left( \normbf{u}^2 - \cfrac{{(\dotpbf{u}{v})}^2}{\dotpbf{v}{v}} \right) \)
+        & \( t^\ast = \cfrac{\dotpbf{u}{v}}{\dotpbf{v}{v}} \)
+        & \( f(t^\ast) = \cfrac{1}{2} \left( \normbf{u}^2 - \cfrac{{(\dotpbf{u}{v})}^2}{\dotpbf{v}{v}} \right) \)
         \rule[-20pt]{0pt}{48pt} \\
         \hline
     \end{tabular}
 \end{table}
 
-Note that \( \because f(t) \geq 0, \; \forall t \in \R \implies f(t^*) \geq 0 \), which gives the Cauchy-Schwarz inequality~\psecref{sec:cauchy-schwarz-inequality}.
+Note that \( \because f(t) \geq 0, \; \forall t \in \R \implies f(t^\ast) \geq 0 \), which gives the Cauchy-Schwarz inequality~\psecref{sec:cauchy-schwarz-inequality}.
