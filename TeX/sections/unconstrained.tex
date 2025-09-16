@@ -669,12 +669,14 @@ where \( \rho \in \rinterval{0}{1} \) since \( \Q \succ \zero \implies \func{\la
 
 \section{Sufficient decrease condition (Armijo condition)}
 
-\begin{equation*}
-    \func{f}{\xk + \alpha_k \pk}
-    \leq
-    \func{f}{\xk} + c \alpha_k \dotp{\grad{f}{\xk}}{\pk},
-    \quad 0 < c < 1
-\end{equation*}
+\begin{definition}{Sufficient decrease condition (Armijo condition)}{}
+    \begin{equation*}
+        \func{f}{\xk + \alpha_k \pk}
+        \leq
+        \func{f}{\xk} + c \alpha_k \dotp{\grad{f}{\xk}}{\pk},
+        \quad 0 < c < 1
+    \end{equation*}
+\end{definition}
 
 \subsection{Backtracking line search}
 
@@ -682,53 +684,61 @@ Determine the largest number \( \alpha_k \) in the sequence \( {\{ \beta^m \bar{
 
 \section{Goldstein conditions / Armijo-Goldstein conditions}
 
-\vspace*{-1em}
-\begin{align*}
-    \func{f}{\xk} + (1 - c) \alpha_k \dotp{\grad{f}{\xk}}{\pk}
-    & \leq
-    \overbrace{
-        \func{f}{\xk + \alpha_k \pk}
-        \leq
-        \func{f}{\xk} + c \alpha_k \dotp{\grad{f}{\xk}}{\pk}
-    }^{\text{sufficient decrease}}
-    \\
-    \text{where } \;&
-    0 < c < \half
-\end{align*}
+\begin{definition}{Goldstein conditions / Armijo-Goldstein conditions}{}
+    \vspace*{-1em}
+    \begin{align*}
+        \func{f}{\xk} + (1 - c) \alpha_k \dotp{\grad{f}{\xk}}{\pk}
+        & \leq
+        \overbrace{
+            \func{f}{\xk + \alpha_k \pk}
+            \leq
+            \func{f}{\xk} + c \alpha_k \dotp{\grad{f}{\xk}}{\pk}
+        }^{\text{sufficient decrease}}
+        \\
+        \text{where } \;&
+        0 < c < \half
+    \end{align*}
+\end{definition}
 
 \section{Wolfe conditions}
 
-\begin{align*}
-    \func{f}{\xk + \alpha_k \pk}
-    & \leq
-    \func{f}{\xk} + c_1 \alpha_k \dotp{\grad{f}{\xk}}{\pk}
-    \tag{sufficient decrease}
-    \\
-    \dotp{\grad{f}{\xk + \alpha_k \pk}}{\pk}
-    & \geq
-    c_2 \dotp{\grad{f}{\xk}}{\pk}
-    \tag{curvature}
-    \\
-    \text{where } \;&
-    0 < c_1 < c_2 < 1
-\end{align*}
+\begin{definition}{Wolfe conditions}{}
+    \vspace*{-1em}
+    \begin{align*}
+        \func{f}{\xk + \alpha_k \pk}
+        & \leq
+        \func{f}{\xk} + c_1 \alpha_k \dotp{\grad{f}{\xk}}{\pk}
+        \tag{sufficient decrease}
+        \\
+        \dotp{\grad{f}{\xk + \alpha_k \pk}}{\pk}
+        & \geq
+        c_2 \dotp{\grad{f}{\xk}}{\pk}
+        \tag{curvature}
+        \\
+        \text{where } \;&
+        0 < c_1 < c_2 < 1
+    \end{align*}
+\end{definition}
 
 \subsection{Strong Wolfe conditions}
 
-\begin{align*}
-    \func{f}{\xk + \alpha_k \pk}
-    & \leq
-    \func{f}{\xk} + c_1 \alpha_k \dotp{\grad{f}{\xk}}{\pk}
-    \tag{sufficient decrease}
-    \\
-    \abs{\dotp{\grad{f}{\xk + \alpha_k \pk}}{\pk}}
-    & \leq
-    c_2 \abs{\dotp{\grad{f}{\xk}}{\pk}}
-    \tag{strong curvature}
-    \\
-    \text{where } \;&
-    0 < c_1 < c_2 < 1
-\end{align*}
+\begin{definition}{Strong Wolfe conditions}{}
+    \vspace*{-1em}
+    \begin{align*}
+        \func{f}{\xk + \alpha_k \pk}
+        & \leq
+        \func{f}{\xk} + c_1 \alpha_k \dotp{\grad{f}{\xk}}{\pk}
+        \tag{sufficient decrease}
+        \\
+        \abs{\dotp{\grad{f}{\xk + \alpha_k \pk}}{\pk}}
+        & \leq
+        c_2 \abs{\dotp{\grad{f}{\xk}}{\pk}}
+        \tag{strong curvature}
+        \\
+        \text{where } \;&
+        0 < c_1 < c_2 < 1
+    \end{align*}
+\end{definition}
 
 \section{Sufficient decrease lemma}
 
