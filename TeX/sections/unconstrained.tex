@@ -454,7 +454,7 @@ Consider the unconstrained quadratic minimisation problem
     \min_{\x \in \R^d} \func{f}{\x},
     \quad \text{where }
     \func{f}{\x} = \left( \half \qfbf{x}{Q} + \dotp{\h}{\x} + c \right),
-    \quad \Q \succ \zero, \text{i.e.}, \Q \in \mathbf{S}_d^{++},
+    \quad \Q \succ 0, \text{i.e.}, \Q \in \mathbf{S}_d^{++},
     \quad \mathbf{h} \in \R^d,
     \quad c \in \R
 \end{align*}
@@ -500,7 +500,7 @@ To find the optimal step length \( \alpha_k \), consider
     + \alpha \underbrace{ \left( {\grad{f}{\xk}}^\top \pk \right) }_{q_k}
     + \underbrace{ \left( \func{f}{\xk} \right) }_{r_k}
 \end{align*}
-which is a quadratic function in \( \alpha \) with \( p_k > 0 \; \left( \because \Q \succ \zero \right) \) and \( q_k < 0 \; \left( \because \pk \in \func{\mathcal{DS}}{\xk} \right) \).
+which is a quadratic function in \( \alpha \) with \( p_k > 0 \; \left( \because \Q \succ 0 \right) \) and \( q_k < 0 \; \left( \because \pk \in \func{\mathcal{DS}}{\xk} \right) \).
 
 For the \hyperlink{1D-quadratic}{one-dimensional quadratic} case, we can then compute the minimum point and minimum value as
 \begin{equation*}
@@ -663,7 +663,7 @@ Applying this with \( \z = \grad{f}{\xk} \), we have
     \leq
     \rho^k E_0
 \end{equation*}
-where \( \rho \in \rinterval{0}{1} \) since \( \Q \succ \zero \implies \func{\lambda_{\max}}{\Q} \geq \func{\lambda_{\min}}{\Q} > 0 \), and \( 4ab \leq {(a+b)}^2, \; \forall a, b \).
+where \( \rho \in \rinterval{0}{1} \) since \( \Q \succ 0 \implies \func{\lambda_{\max}}{\Q} \geq \func{\lambda_{\min}}{\Q} > 0 \), and \( 4ab \leq {(a+b)}^2, \; \forall a, b \).
 
 \chapter{Inexact line search}
 
@@ -761,3 +761,34 @@ If a scheme generates a sequence \( {\{ \xk \}}_{k = 0}^{\infty} \) such that
     \lim_{k \to \infty} \norm{\grad{f}{\xk}} = 0
 \end{equation*}
 then it is said to exhibit \textbf{global convergence}.
+
+\chapter{Second-order methods}
+
+\begin{equation*}
+    \xkp
+    =
+    \xk - \hessinv{f}{\x} \grad{f}{\xk}
+\end{equation*}
+
+\paragraph{Newton direction:}
+Refers to the descent direction
+\begin{equation*}
+    \pk = -\hessinv{f}{\xk} \grad{f}{\xk},
+    \qquad \hess{f}{\xk} \succ 0
+\end{equation*}
+
+This satisfies the condition for descent direction since
+\begin{align*}
+    \hess{f}{\xk}
+    &
+    \succ 0
+    \implies
+    \hessinv{f}{\xk}
+    \succ 0
+    \\
+    \implies
+    \dotp{\grad{f}{\xk}}{\pk}
+    & =
+    - {\left( \grad{f}{\xk} \right)}^\top \hessinv{f}{\xk} \grad{f}{\xk}
+    < 0
+\end{align*}
