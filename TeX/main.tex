@@ -84,11 +84,11 @@
 \newcommand{\R}{{\mathbb{R}}}
 \newcommand{\N}{{\mathbb{N}}}
 \newcommand{\abs}[1]{{\left\lvert#1\right\rvert}}
-\newcommand{\norm}[1]{{\left\lVert#1\right\rVert}}
-\newcommand{\normbf}[1]{{\left\lVert\mathbf{#1}\right\rVert}}
+\NewDocumentCommand{\norm}{om}{{\IfNoValueTF{#1}{\left\lVert#2\right\rVert}{#1\lVert#2#1\rVert}}}
+\NewDocumentCommand{\normbf}{om}{{\IfNoValueTF{#1}{\left\lVert\mathbf{#2}\right\rVert}{#1\lVert\mathbf{#2}#1\rVert}}}
 \newcommand{\dotp}[2]{{{#1}^\top#2}}
 \newcommand{\dotpbf}[2]{{{\mathbf{#1}}^\top\mathbf{#2}}}
-\NewDocumentCommand{\qf}{mmo}{{{#1}^\top#2\:\IfValueTF{#3}{#3}{#1}}}
+\NewDocumentCommand{\qf}{mmo}{{{#1}^\top#2\,\IfValueTF{#3}{#3}{#1}}}
 \NewDocumentCommand{\qfbf}{mmo}{{{\mathbf{#1}}^\top\mathbf{#2}\:\mathbf{\IfValueTF{#3}{#3}{#1}}}}
 \newcommand{\argmin}{{\mathop{\mathrm{argmin}}}}
 \newcommand{\func}[2]{{#1\!\left(#2\right)}}

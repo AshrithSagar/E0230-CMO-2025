@@ -7,11 +7,11 @@
 
 \subsection{First-order methods}
 
-Assume \( f \in \C^{1} \), and use \( f(\x + \p) = f(\x) + {\nabla f(\x)}^\top \p + o(\normbf{p}) \).
+Assume \( f \in \C^{1} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + {\nabla \func{f}{\x}}^\top \p + o(\normbf{p}) \).
 
 \subsection{Second-order methods}
 
-Assume \( f \in \C^{2} \), and use \( f(\x + \p) = f(\x) + {\nabla f(\x)}^\top \p + \half \p^\top \nabla^{2} f(\x) \p + o(\normbf{p}^2) \).
+Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + {\nabla \func{f}{\x}}^\top \p + \half \p^\top \nabla^{2} \func{f}{\x} \p + o(\normbf{p}^2) \).
 
 \section{Types of minimum}
 
@@ -20,25 +20,25 @@ Assume \( f \in \C^{2} \), and use \( f(\x + \p) = f(\x) + {\nabla f(\x)}^\top \
 \begin{definition}{Global minimum}{global-minimum}
     The point \( \xstar \in \R^d \) is a \textbf{global minimum} of the function \( f: D \subseteq \R^d \to \R \) if
     \begin{equation*}
-        \func{f}{\xstar} \leq f(\x), \quad \forall \x \in D
+        \func{f}{\xstar} \leq \func{f}{\x}, \quad \forall \x \in D
     \end{equation*}
 \end{definition}
 
 \subsection{Local minimum}
 
 \begin{definition}{Local minimum}{}
-    The point \( \xstar \in \R^d \) is a \textbf{local minimum} of the function \( f: \R^d \to \R \) if there exists a \( \delta > 0 \) such that for all \( \x \) in the \( \delta \)-neighborhood of \( \xstar \), we have \( \func{f}{\xstar} \leq f(\x) \), i.e.,
+    The point \( \xstar \in \R^d \) is a \textbf{local minimum} of the function \( f: \R^d \to \R \) if there exists a \( \delta > 0 \) such that for all \( \x \) in the \( \delta \)-neighborhood of \( \xstar \), we have \( \func{f}{\xstar} \leq \func{f}{\x} \), i.e.,
     \begin{equation*}
-        \func{f}{\xstar} \leq f(\x), \quad \forall \x \in B_{\delta}(\xstar)
+        \func{f}{\xstar} \leq \func{f}{\x}, \quad \forall \x \in B_{\delta}(\xstar)
     \end{equation*}
 \end{definition}
 
 \subsection{Strict local minimum}
 
 \begin{definition}{Strict local minimum}{}
-    The point \( \xstar \in \R^d \) is a \textbf{strict local minimum} of the function \( f: \R^d \to \R \) if there exists a \( \delta > 0 \) such that for all \( \x \) in the \( \delta \)-neighborhood of \( \xstar \) except \( \xstar \) itself, we have \( \func{f}{\xstar} < f(\x) \), i.e.,
+    The point \( \xstar \in \R^d \) is a \textbf{strict local minimum} of the function \( f: \R^d \to \R \) if there exists a \( \delta > 0 \) such that for all \( \x \) in the \( \delta \)-neighborhood of \( \xstar \) except \( \xstar \) itself, we have \( \func{f}{\xstar} < \func{f}{\x} \), i.e.,
     \begin{equation*}
-        \func{f}{\xstar} < f(\x), \quad \forall \x \in B_{\delta}(\xstar) \setminus \{ \xstar \}
+        \func{f}{\xstar} < \func{f}{\x}, \quad \forall \x \in B_{\delta}(\xstar) \setminus \{ \xstar \}
     \end{equation*}
 \end{definition}
 
@@ -53,13 +53,13 @@ Assume \( f \in \C^{2} \), and use \( f(\x + \p) = f(\x) + {\nabla f(\x)}^\top \
 \subsection{Second-order necessary condition for a local minimum}
 
 \begin{theorem}{Second-order necessary condition for a local minimum}{}
-    For a function \( f \in \C^{2} \), if \( \xstar \) is a local minimum of \( f \), then \( \grad{f}{\xstar} = \zero, \; \nabla^2 \func{f}{\xstar} \succeq 0 \).
+    For a function \( f \in \C^{2} \), if \( \xstar \) is a local minimum of \( f \), then \( \grad{f}{\xstar} = \zero, \; \hess{f}{\xstar} \succeq 0 \).
 \end{theorem}
 
 \subsection{Second-order sufficient condition for a strict local minimum}
 
 \begin{theorem}{Second-order sufficient condition for a strict local minimum}{}
-    For a function \( f \in \C^{2} \) such that \( \grad{f}{\xstar} = \zero, \; \nabla^2 \func{f}{\xstar} \succ 0 \), then \( \xstar \) is a strict local minimum of \( f \).
+    For a function \( f \in \C^{2} \) such that \( \grad{f}{\xstar} = \zero, \; \hess{f}{\xstar} \succ 0 \), then \( \xstar \) is a strict local minimum of \( f \).
 \end{theorem}
 
 \subsection{First-order sufficient condition for a global minimum under convexity}
@@ -71,13 +71,13 @@ Assume \( f \in \C^{2} \), and use \( f(\x + \p) = f(\x) + {\nabla f(\x)}^\top \
 \begin{proof}
     From the first-order condition for convexity~\pthmref{thm:first-order-condition-for-convexity}, we have
     \begin{align*}
-        f(\y)
+        \func{f}{\y}
         & \geq
         \func{f}{\xstar} + \cancel{ {\grad{f}{\xstar}}^\top (\y - \xstar) }
         , \quad \forall \y \in D
         \\
         \implies
-        f(\y)
+        \func{f}{\y}
         & \geq
         \func{f}{\xstar}
         , \quad \forall \y \in D
@@ -99,9 +99,9 @@ Assume \( f \in \C^{2} \), and use \( f(\x + \p) = f(\x) + {\nabla f(\x)}^\top \
 \begin{definition}{Convex function}{}
     A function $f: D \subseteq \R^n \to \R$ is \textbf{convex} on a convex set \( D \) if
     \begin{equation*}
-        f(\lambda \x + (1 - \lambda) \y)
+        \func{f}{\lambda \x + (1 - \lambda) \y}
         \leq
-        \lambda f(\x) + (1 - \lambda) f(\y),
+        \lambda \func{f}{\x} + (1 - \lambda) \func{f}{\y},
         \quad \forall \x, \y \in D,
         \; \lambda \in [0, 1]
     \end{equation*}
@@ -112,9 +112,9 @@ Assume \( f \in \C^{2} \), and use \( f(\x + \p) = f(\x) + {\nabla f(\x)}^\top \
 \begin{theorem}{First-order condition for convexity}{first-order-condition-for-convexity}
     For a function \( f \in \C^1 \) with a convex domain \( D \), \( f \) is convex on \( D \) iff
     \begin{equation*}
-        f(\y)
+        \func{f}{\y}
         \geq
-        f(\x) + {\nabla f(\x)}^\top (\y - \x),
+        \func{f}{\x} + {\nabla \func{f}{\x}}^\top (\y - \x),
         \quad \forall \x, \y \in D
     \end{equation*}
 \end{theorem}
@@ -123,19 +123,19 @@ Assume \( f \in \C^{2} \), and use \( f(\x + \p) = f(\x) + {\nabla f(\x)}^\top \
     \( (\Rightarrow) \)
     Rearranging the definition of convexity, we get
     \begin{equation*}
-        \frac{f(\lambda \x + (1 - \lambda) \y) - f(\x)}{\lambda}
+        \frac{\func{f}{\lambda \x + (1 - \lambda) \y} - \func{f}{\x}}{\lambda}
         \leq
-        f(\y) - f(\x),
+        \func{f}{\y} - \func{f}{\x},
         \quad \forall \x, \y \in D,
         \; \lambda \in \linterval{0}{1}
     \end{equation*}
     Taking the limit as \( \lambda \to 0^+ \), we have
     \begin{equation*}
-        {\nabla f(\x)}^\top (\y - \x)
+        {\nabla \func{f}{\x}}^\top (\y - \x)
         =
-        \lim_{\lambda \to 0^+} \frac{f(\lambda \x + (1 - \lambda) \y) - f(\x)}{\lambda}
+        \lim_{\lambda \to 0^+} \frac{\func{f}{\lambda \x + (1 - \lambda) \y} - \func{f}{\x}}{\lambda}
         \leq
-        f(\y) - f(\x),
+        \func{f}{\y} - \func{f}{\x},
         \quad \forall \x, \y \in D
     \end{equation*}
     which is the desired result.
@@ -144,7 +144,7 @@ Assume \( f \in \C^{2} \), and use \( f(\x + \p) = f(\x) + {\nabla f(\x)}^\top \
 \begin{corollary}{Monotonicity of gradient \( \iff \) Convexity}{}
     For a function \( f \in \C^1 \) with a convex domain \( D \), \( f \) is convex on \( D \) iff
     \begin{equation*}
-        {\big( \nabla f(\x) - \nabla f(\y) \big)}^\top \big( \x - \y \big) \geq 0
+        {\big( \nabla \func{f}{\x} - \nabla \func{f}{\y} \big)}^\top \big( \x - \y \big) \geq 0
         , \quad
         \forall \x, \y \in D
     \end{equation*}
@@ -154,53 +154,53 @@ Assume \( f \in \C^{2} \), and use \( f(\x + \p) = f(\x) + {\nabla f(\x)}^\top \
     \( (\Rightarrow) \)
     From the first-order condition for convexity, we have
     \begin{align*}
-        f(\y)
+        \func{f}{\y}
         & \geq
-        f(\x) + {\nabla f(\x)}^\top (\y - \x)
+        \func{f}{\x} + {\nabla \func{f}{\x}}^\top (\y - \x)
         , \quad
         \forall \x, \y \in D
         \\
-        f(\x)
+        \func{f}{\x}
         & \geq
-        f(\y) + {\nabla f(\y)}^\top (\x - \y)
+        \func{f}{\y} + {\nabla \func{f}{\y}}^\top (\x - \y)
         , \quad
         \forall \x, \y \in D
     \end{align*}
     Adding the two inequalities, we get
     \begin{equation*}
-        0 \geq {\big( \nabla f(\x) - \nabla f(\y) \big)}^\top (\y - \x)
+        0 \geq {\big( \nabla \func{f}{\x} - \nabla \func{f}{\y} \big)}^\top (\y - \x)
         , \quad
         \forall \x, \y \in D
     \end{equation*}
     which is equivalent to the desired result.
 
     \( (\Leftarrow) \)
-    Define \( g(t) = f(\x + t (\y - \x)), \;\; t \in [0, 1], \;\; \x, \y \in D \).
+    Define \( \func{g}{t} = f(\x + t (\y - \x)), \;\; t \in [0, 1], \;\; \x, \y \in D \).
 
-    Then, \( g(0) = f(\x), \quad g(1) = f(\y), \quad g'(t) = {(\nabla f(\x + t (\y - \x)))}^\top (\y - \x) \).
+    Then, \( \func{g}{0} = \func{f}{\x}, \quad \func{g}{1} = \func{f}{\y}, \quad g'(t) = {(\nabla f(\x + t (\y - \x)))}^\top (\y - \x) \).
 
     From the given condition, we have
     \begin{align*}
         g'(t)
         & =
-        {\big( \nabla f(\x + t (\y - \x)) - \nabla f(\x) + \nabla f(\x) \big)}^\top (\y - \x)
+        {\big( \nabla f(\x + t (\y - \x)) - \nabla \func{f}{\x} + \nabla \func{f}{\x} \big)}^\top (\y - \x)
         \\ & =
-        {\big( \nabla f(\x + t (\y - \x)) - \nabla f(\x) \big)}^\top (\y - \x) + {\big( \nabla f(\x) \big)}^\top (\y - \x)
+        {\big( \nabla f(\x + t (\y - \x)) - \nabla \func{f}{\x} \big)}^\top (\y - \x) + {\big( \nabla \func{f}{\x} \big)}^\top (\y - \x)
         \geq
-        {\big( \nabla f(\x) \big)}^\top (\y - \x)
+        {\big( \nabla \func{f}{\x} \big)}^\top (\y - \x)
     \end{align*}
     for all \( t \in [0, 1] \).
     Integrating from \( 0 \) to \( 1 \), we get
     \begin{equation*}
-        f(\y) - f(\x)
+        \func{f}{\y} - \func{f}{\x}
         =
-        g(1) - g(0)
+        \func{g}{1} - \func{g}{0}
         =
         \int_0^1 g'(t) \, dt
         \geq
-        \int_0^1 {\big( \nabla f(\x) \big)}^\top (\y - \x) \, dt
+        \int_0^1 {\big( \nabla \func{f}{\x} \big)}^\top (\y - \x) \, dt
         =
-        {\big( \nabla f(\x) \big)}^\top (\y - \x)
+        {\big( \nabla \func{f}{\x} \big)}^\top (\y - \x)
     \end{equation*}
     for all \( \x, \y \in D \), which is the first-order condition for convexity, and thereby \( f \) is convex.
 \end{proof}
@@ -210,7 +210,7 @@ Assume \( f \in \C^{2} \), and use \( f(\x + \p) = f(\x) + {\nabla f(\x)}^\top \
 \begin{theorem}{Second-order condition for convexity}{second-order-condition-for-convexity}
     For a function \( f \in \C^2 \) with a convex domain \( D \), \( f \) is convex on \( D \) iff
     \begin{equation*}
-        \nabla^2 f(\x) \succeq 0
+        \hess{f}{\x} \succeq 0
         , \quad
         \forall \x \in D
     \end{equation*}
@@ -220,41 +220,41 @@ Assume \( f \in \C^{2} \), and use \( f(\x + \p) = f(\x) + {\nabla f(\x)}^\top \
     \( (\Rightarrow) \)
     The first-order condition for convexity can be rewritten as
     \begin{equation*}
-        f(\y) - f(\x) - {\nabla f(\x)}^\top (\y - \x) \geq 0
+        \func{f}{\y} - \func{f}{\x} - {\nabla \func{f}{\x}}^\top (\y - \x) \geq 0
         , \quad
         \forall \x, \y \in D
     \end{equation*}
     Using Taylor's theorem, we have
     \begin{equation*}
-        f(\y) - f(\x) - {\nabla f(\x)}^\top (\y - \x)
+        \func{f}{\y} - \func{f}{\x} - {\nabla \func{f}{\x}}^\top (\y - \x)
         =
-        \half {(\y - \x)}^\top \nabla^2 f(\boldsymbol{\xi}) (\y - \x)
+        \half {(\y - \x)}^\top \hess{f}{\boldsymbol{\xi}} (\y - \x)
         , \quad
         \boldsymbol{\xi} = (1 - t) \x + t \y, \; t \in (0, 1)
     \end{equation*}
     for some \( t \in (0, 1) \).
     Therefore, we have
     \begin{equation*}
-        {(\y - \x)}^\top \nabla^2 f(\boldsymbol{\xi}) (\y - \x) \geq 0
+        {(\y - \x)}^\top \hess{f}{\boldsymbol{\xi}} (\y - \x) \geq 0
         , \quad
         \forall \x, \y \in D
     \end{equation*}
-    which implies \( \nabla^2 f(\x) \succeq 0, \; \forall \x \in D \).
+    which implies \( \hess{f}{\x} \succeq 0, \; \forall \x \in D \).
     (Note: \( \boldsymbol{\xi} \in D \) since \( D \) is convex.)
 
     \( (\Leftarrow) \)
     From Taylor's theorem, we have
     \begin{equation*}
-        f(\y) - f(\x) - {\nabla f(\x)}^\top (\y - \x)
+        \func{f}{\y} - \func{f}{\x} - {\nabla \func{f}{\x}}^\top (\y - \x)
         =
-        \half {(\y - \x)}^\top \nabla^2 f(\boldsymbol{\xi}) (\y - \x)
+        \half {(\y - \x)}^\top \hess{f}{\boldsymbol{\xi}} (\y - \x)
         , \quad
         \boldsymbol{\xi} = (1 - t) \x + t \y, \; t \in (0, 1)
     \end{equation*}
     for some \( t \in (0, 1) \).
-    Since \( \nabla^2 f(\x) \succeq 0, \; \forall \x \in D \), we have
+    Since \( \hess{f}{\x} \succeq 0, \; \forall \x \in D \), we have
     \begin{equation*}
-        f(\y) - f(\x) - {\nabla f(\x)}^\top (\y - \x) \geq 0
+        \func{f}{\y} - \func{f}{\x} - {\nabla \func{f}{\x}}^\top (\y - \x) \geq 0
         , \quad
         \forall \x, \y \in D
     \end{equation*}
@@ -266,16 +266,16 @@ Assume \( f \in \C^{2} \), and use \( f(\x + \p) = f(\x) + {\nabla f(\x)}^\top \
 \begin{definition}{Strong convexity}{}
     A function \( f: D \subseteq \R^n \to \R \) on a convex domain \( D \) is \textbf{strongly convex} with parameter \( \mu > 0 \) if
     \begin{equation*}
-        f(\lambda \x + (1 - \lambda) \y)
+        \func{f}{\lambda \x + (1 - \lambda) \y}
         \leq
-        \lambda f(\x) + (1 - \lambda) f(\y)
+        \lambda \func{f}{\x} + (1 - \lambda) \func{f}{\y}
         - \frac{\mu}{2} \lambda (1 - \lambda) \normbf{x - y}^2,
         \quad \forall \x, \y \in \R^n, \; \lambda \in [0, 1]
     \end{equation*}
 \end{definition}
 
 \begin{corollary}{}{}
-    A function \( f: D \subseteq \R^n \to \R \) on a convex domain \( D \) is strongly convex with parameter \( \mu > 0 \) iff the function \( g(\x) := \left( f(\x) - \frac{\mu}{2} \norm{\x}^2 \right) \) is convex on \( D \).
+    A function \( f: D \subseteq \R^n \to \R \) on a convex domain \( D \) is strongly convex with parameter \( \mu > 0 \) iff the function \( \func{g}{\x} := \left( \func{f}{\x} - \frac{\mu}{2} \norm{\x}^2 \right) \) is convex on \( D \).
 \end{corollary}
 
 \begin{proof}
@@ -300,36 +300,36 @@ Assume \( f \in \C^{2} \), and use \( f(\x + \p) = f(\x) + {\nabla f(\x)}^\top \
 \begin{corollary}{First-order condition for strong convexity}{}
     For a function \( f \in \C^1 \) with a convex domain \( D \), \( f \) is strongly convex on \( D \) with parameter \( \mu > 0 \) iff
     \begin{equation*}
-        f(\y)
+        \func{f}{\y}
         \geq
-        f(\x) + {\nabla f(\x)}^\top (\y - \x) + \frac{\mu}{2} \normbf{y - x}^2,
+        \func{f}{\x} + {\nabla \func{f}{\x}}^\top (\y - \x) + \frac{\mu}{2} \normbf{y - x}^2,
         \quad \forall \x, \y \in D
     \end{equation*}
 \end{corollary}
 
 \begin{proof}
-    Define \( g(\x) = f(\x) - \frac{\mu}{2} \norm{\x}^2 \).
-    Then, \( \nabla g(\x) = \nabla f(\x) - \mu \x \).
+    Define \( \func{g}{\x} = \func{f}{\x} - \frac{\mu}{2} \norm{\x}^2 \).
+    Then, \( \nabla \func{g}{\x} = \nabla \func{f}{\x} - \mu \x \).
     From the first-order condition for convexity~\pthmref{thm:first-order-condition-for-convexity}, we have that \( g \) is convex iff
     \begin{align*}
-        g(\y)
+        \func{g}{\y}
         & \geq
-        g(\x) + {\nabla g(\x)}^\top (\y - \x),
+        \func{g}{\x} + {\nabla \func{g}{\x}}^\top (\y - \x),
         \quad \forall \x, \y \in D
         \\
         \implies
-        f(\y) - \frac{\mu}{2} \norm{\y}^2
+        \func{f}{\y} - \frac{\mu}{2} \norm{\y}^2
         & \geq
-        f(\x) - \frac{\mu}{2} \norm{\x}^2 + {\big( \nabla f(\x) - \mu \x \big)}^\top (\y - \x)
+        \func{f}{\x} - \frac{\mu}{2} \norm{\x}^2 + {\big( \nabla \func{f}{\x} - \mu \x \big)}^\top (\y - \x)
         \\
         \implies
-        f(\y)
+        \func{f}{\y}
         & \geq
-        f(\x) + {\nabla f(\x)}^\top (\y - \x) + \frac{\mu}{2} \Big( \norm{\y}^2 - \norm{\x}^2 - 2 \dotp{\x}{(\y - \x)} \Big)
+        \func{f}{\x} + {\nabla \func{f}{\x}}^\top (\y - \x) + \frac{\mu}{2} \Big( \norm{\y}^2 - \norm{\x}^2 - 2 \dotp{\x}{(\y - \x)} \Big)
         \\ & =
-        f(\x) + {\nabla f(\x)}^\top (\y - \x) + \frac{\mu}{2} \Big( \norm{\y}^2 - \cancel{ \norm{\x}^2 } - 2 \dotp{\x}{\y} + \cancel{2} \norm{\x}^2 \Big)
+        \func{f}{\x} + {\nabla \func{f}{\x}}^\top (\y - \x) + \frac{\mu}{2} \Big( \norm{\y}^2 - \cancel{ \norm{\x}^2 } - 2 \dotp{\x}{\y} + \cancel{2} \norm{\x}^2 \Big)
         \\ & =
-        f(\x) + {\nabla f(\x)}^\top (\y - \x) + \frac{\mu}{2} \normbf{y - x}^2
+        \func{f}{\x} + {\nabla \func{f}{\x}}^\top (\y - \x) + \frac{\mu}{2} \normbf{y - x}^2
         , \quad
         \forall \x, \y \in D
     \end{align*}
@@ -340,19 +340,19 @@ Assume \( f \in \C^{2} \), and use \( f(\x + \p) = f(\x) + {\nabla f(\x)}^\top \
 \begin{corollary}{Second-order condition for strong convexity}{}
     For a function \( f \in \C^2 \) with a convex domain \( D \), \( f \) is strongly convex on \( D \) with parameter \( \mu > 0 \) iff
     \begin{equation*}
-        \nabla^2 f(\x)
+        \hess{f}{\x}
         \succeq
-        \mu \mathbf{I}
+        \mu \I
         , \quad
         \forall \x \in D
     \end{equation*}
-    i.e., the Hessian \( \nabla^2 f(\x) \) is positive definite with all eigenvalues at least \( \mu \), for all \( \x \in D \).
+    i.e., the Hessian \( \hess{f}{\x} \) is positive definite with all eigenvalues at least \( \mu \), for all \( \x \in D \).
 \end{corollary}
 
 \begin{proof}
-    Define \( g(\x) = f(\x) - \frac{\mu}{2} \norm{\x}^2 \).
-    Then, \( \nabla^2 g(\x) = \nabla^2 f(\x) - \mu \mathbf{I} \).
-    From the second-order condition for convexity~\pthmref{thm:second-order-condition-for-convexity}, we have that \( g \) is convex iff \( \nabla^2 g(\x) \succeq 0, \; \forall \x \in D \), which is equivalent to the desired result.
+    Define \( \func{g}{\x} = \func{f}{\x} - \frac{\mu}{2} \norm{\x}^2 \).
+    Then, \( \hess{g}{\x} = \hess{f}{\x} - \mu \I \).
+    From the second-order condition for convexity~\pthmref{thm:second-order-condition-for-convexity}, we have that \( g \) is convex iff \( \hess{g}{\x} \succeq 0, \; \forall \x \in D \), which is equivalent to the desired result.
 \end{proof}
 
 \chapter{Algorithmic design}
@@ -362,11 +362,11 @@ Assume \( f \in \C^{2} \), and use \( f(\x + \p) = f(\x) + {\nabla f(\x)}^\top \
 An \textbf{oracle} is a procedure that provides information about the objective function \( f: \R^d \to \R \) at a given point \( \x \in \R^d \).
 An \( n \)-th order oracle provides information up to the \( n \)-th derivative of \( f \) at \( \x \).
 \begin{itemize}
-    \item \textbf{Zero-order oracle:} Given \( \x \in \R^d \), returns the function value \( f(\x) \in \R \).
+    \item \textbf{Zero-order oracle:} Given \( \x \in \R^d \), returns the function value \( \func{f}{\x} \in \R \).
 
-    \item \textbf{First-order oracle:} Given \( \x \in \R^d \), returns a tuple \( \big( f(\x), \nabla f(\x) \big) \in (\R, \R^d) \).
+    \item \textbf{First-order oracle:} Given \( \x \in \R^d \), returns a tuple \( \big( \func{f}{\x}, \nabla \func{f}{\x} \big) \in (\R, \R^d) \).
 
-    \item \textbf{Second-order oracle:} Given \( \x \in \R^d \), returns a tuple \( \big( f(\x), \nabla f(\x), \nabla^2 f(\x) \big) \in (\R, \R^d, \R^{d \times d}) \).
+    \item \textbf{Second-order oracle:} Given \( \x \in \R^d \), returns a tuple \( \big( \func{f}{\x}, \nabla \func{f}{\x}, \hess{f}{\x} \big) \in (\R, \R^d, \R^{d \times d}) \).
 \end{itemize}
 
 \section{Iterative algorithm template}
@@ -377,11 +377,11 @@ An \( n \)-th order oracle provides information up to the \( n \)-th derivative 
     }
     \SetAlgoLined{}
     \KwIn{
-        First-order oracle for the objective function \( f(\x) \);
+        First-order oracle for the objective function \( \func{f}{\x} \);
         Initial point \( \x^{(0)} \in \R^d \);
     }
     \KwOut{
-        Approximate solution to the unconstrained minimisation problem \( \displaystyle \argmin_{\x \in \R^d} f(\x) \)\;
+        Approximate solution to the unconstrained minimisation problem \( \displaystyle \argmin_{\x \in \R^d} \func{f}{\x} \)\;
     }
 
     \( k \leftarrow 0 \)\;
@@ -402,11 +402,11 @@ An \( n \)-th order oracle provides information up to the \( n \)-th derivative 
     }
     \SetAlgoLined{}
     \KwIn{
-        First-order oracle for the objective function \( f(\x) \);
+        First-order oracle for the objective function \( \func{f}{\x} \);
         Initial point \( \x^{(0)} \in \R^d \);
     }
     \KwOut{
-        Approximate solution to the unconstrained minimisation problem \( \displaystyle \argmin_{\x \in \R^d} f(\x) \)\;
+        Approximate solution to the unconstrained minimisation problem \( \displaystyle \argmin_{\x \in \R^d} \func{f}{\x} \)\;
     }
 
     \( k \leftarrow 0 \)\;
@@ -451,16 +451,16 @@ Choose the step length \( \alpha_k \) in line search~\psecref{sec:line-search} b
 \paragraph{Problem:}
 Consider the unconstrained quadratic minimisation problem
 \begin{align*}
-    \min_{\x \in \R^d} f(\x),
+    \min_{\x \in \R^d} \func{f}{\x},
     \quad \text{where }
-    f(\x) = \left( \half \qfbf{x}{Q} + \dotp{\h}{\x} + c \right),
+    \func{f}{\x} = \left( \half \qfbf{x}{Q} + \dotp{\h}{\x} + c \right),
     \quad \Q \succ \zero, \text{i.e.}, \Q \in \mathbf{S}_d^{++},
     \quad \mathbf{h} \in \R^d,
     \quad c \in \R
 \end{align*}
 
 \paragraph{Solution:}
-The gradient of \( f \) can be computed as \( \nabla f(\x) = \Q \x + \mathbf{h} \), and thereby from the first-order necessary condition for local minimum, the local minimum \( \xstar \) must necessarily satisfy
+The gradient of \( f \) can be computed as \( \nabla \func{f}{\x} = \Q \x + \mathbf{h} \), and thereby from the first-order necessary condition for local minimum, the local minimum \( \xstar \) must necessarily satisfy
 \begin{equation*}
     \grad{f}{\xstar} = \Q \xstar + \mathbf{h} = \zero
     \quad \iff \quad
@@ -733,9 +733,9 @@ Determine the largest number \( \alpha_k \) in the sequence \( {\{ \beta^m \bar{
 \section{Sufficient decrease lemma}
 
 \begin{lemma}{Sufficient decrease lemma}{}
-    Suppose \( f \in \C^{1}_{L} \) is bounded below, then \( \forall \x \in \R^n, \; \alpha \in \linterval[scaled]{0}{\frac{1}{L}} \), the gradient descent update \( \x^+ = \x - \alpha \nabla f(\x) \) yields a sufficient decrease in the function value:
+    Suppose \( f \in \C^{1}_{L} \) is bounded below, then \( \forall \x \in \R^n, \; \alpha \in \linterval[scaled]{0}{\frac{1}{L}} \), the gradient descent update \( \x^+ = \x - \alpha \nabla \func{f}{\x} \) yields a sufficient decrease in the function value:
     \begin{equation*}
-        f(\x^+) \leq f(\x) - \frac{\alpha}{2} \norm{\grad{f}{\x}}^2
+        \func{f}{\x^+} \leq \func{f}{\x} - \frac{\alpha}{2} \norm{\grad{f}{\x}}^2
     \end{equation*}
 \end{lemma}
 
