@@ -679,8 +679,12 @@ where \( \lambda_{\max}(\mathbf{A}) \) and \( \lambda_{\min}(\mathbf{A}) \) are 
     For any non-negative real numbers \( a_1, a_2, \ldots, a_n \geq 0 \), we have
     \vspace{-0.5em}
     \begin{equation*}
+        \frac{1}{n} \sum_{i = 1}^{n} a_i
+        \geq
+        {\left( \prod_{i = 1}^{n} a_i \right)}^{\frac{1}{n}}
+        \qquad \text{i.e.,} \quad
         \overbrace{
-            \frac{a_1 + a_2 + \cdots + a_n}{n}
+            \left( \frac{a_1 + a_2 + \cdots + a_n}{n} \right)
         }^{\text{Arithmetic Mean (AM)}}
         \geq
         \overbrace{
@@ -689,6 +693,10 @@ where \( \lambda_{\max}(\mathbf{A}) \) and \( \lambda_{\min}(\mathbf{A}) \) are 
     \end{equation*}
     with equality iff \( a_1 = a_2 = \cdots = a_n \).
 \end{theorem}
+
+\begin{proof}
+    Can be shown by mathematical induction.
+\end{proof}
 
 \section{Cauchy-Schwarz inequality}\label{sec:cauchy-schwarz-inequality}
 
@@ -699,6 +707,21 @@ where \( \lambda_{\max}(\mathbf{A}) \) and \( \lambda_{\min}(\mathbf{A}) \) are 
         \abs{\dotp{\x}{\y}} \leq \norm{\x}_2 \; \norm{\y}_2
     \end{equation*}
     with equality iff \( \x \) and \( \y \) are linearly dependent, i.e., \( \exists c \in \R \) such that \( \x = c \y \) or \( \y = c \x \).
+\end{theorem}
+
+\begin{proof}
+    Follows in the \hyperlink{line-point-minimisation}{problem} of minimising the distance between a point and a line in \( \R^d \).
+\end{proof}
+
+\section{H{\"o}lder's inequality}
+
+\begin{theorem}{H{\"o}lder's inequality}{}
+    For any vectors \( \x, \y \in \R^d \) and for any H{\"o}lder conjugates \( p, q > 1 \) such that \( \frac{1}{p} + \frac{1}{q} = 1 \), we have
+    \vspace{-1em}
+    \begin{equation*}
+        \abs{\dotp{\x}{\y}} \leq \norm{\x}_p \; \norm{\y}_q
+    \end{equation*}
+    with equality iff \( \exists c > 0 \) such that \( \abs{x_i}^p = c \abs{y_i}^q, \; \forall i = 1, 2, \ldots, d \).
 \end{theorem}
 
 \section{Kantorovich inequality}\label{sec:kantorovich-inequality}
@@ -712,6 +735,7 @@ where \( \lambda_{\max}(\mathbf{A}) \) and \( \lambda_{\min}(\mathbf{A}) \) are 
         \frac{{(x_{\max} + x_{\min})}^2}{4 x_{\max} x_{\min}}
         {\left( \sum_{i = 1}^{n} p_i \right)}^2
     \end{equation*}
+    with equality iff \( x_i \in \{ x_{\min}, x_{\max} \}, \ \forall i \in \{1, 2, \ldots, n\} \).
 \end{theorem}
 
 \begin{corollary}{Kantorovich inequality for real symmetric positive definite matrices~\citep{Luenberger1984}}{}
@@ -721,6 +745,7 @@ where \( \lambda_{\max}(\mathbf{A}) \) and \( \lambda_{\min}(\mathbf{A}) \) are 
         \geq
         \frac{4 \lambda_{\max} \lambda_{\min}}{{(\lambda_{\max} + \lambda_{\min})}^2}
     \end{equation*}
+    with equality iff \( \x \) is an eigenvector of \( \Q \) corresponding to either \( \lambda_{\min} \) or \( \lambda_{\max} \).
 \end{corollary}
 
 \begin{proof}
@@ -770,3 +795,30 @@ where \( \lambda_{\max}(\mathbf{A}) \) and \( \lambda_{\min}(\mathbf{A}) \) are 
     where \( f^\ast = \inf_{\x \in D} \func{f}{\x} \).
     Such an \( f \) is said to be \( \mu \)-\textbf{PL} on \( D \).
 \end{definition}
+
+\section{Jensen's inequality}
+
+\begin{theorem}{Jensen's inequality}{}
+    For any convex function \( f: \R^d \to \R \), and for any set of points \( {\{ \x_i \}}_{i = 1}^n, \; \x_i \in \R^d \) and weights \( {\{ \alpha_i \}}_{i = 1}^n, \; \alpha_i \geq 0 \) such that \( \sum_{i = 1}^{n} \alpha_i = 1 \), we have
+    \vspace{-0.5em}
+    \begin{equation*}
+        \func{f}{\sum_{i = 1}^{n} \alpha_i \x_i}
+        \leq
+        \sum_{i = 1}^{n} \alpha_i \func{f}{\x_i}
+    \end{equation*}
+    with equality iff \( \x_1 = \x_2 = \cdots = \x_n \) or \( f \) is linear on the convex hull of \( {\{ \x_i \}}_{i = 1}^n \).
+\end{theorem}
+
+\subsection{Convex hull}
+
+The \textbf{convex hull} of a set of points \( {\{ \x_i \}}_{i = 1}^n, \; \x_i \in \R^d \) is the smallest convex set that contains all the points.
+It can be defined as the set of all convex combinations of the points, i.e.,
+\begin{equation*}
+    \func{\operatorname{conv}}{{\{ \x_i \}}_{i = 1}^n}
+    =
+    \set{
+        \sum_{i = 1}^{n} \alpha_i \x_i
+        \;\middle|\;
+        \alpha_i \geq 0, \; \sum_{i = 1}^{n} \alpha_i = 1
+    }
+\end{equation*}
