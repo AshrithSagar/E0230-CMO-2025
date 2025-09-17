@@ -3,7 +3,7 @@
 
 \section{Metric space}
 
-A \textbf{metric space} \( (S, d) \) is a set \( S \) together with a \textit{metric/distance function} \( d: S \times S \to \R \) that satisfies the following axioms for all \( x, y, z \in S \):
+A \textbf{metric space} \( (S, d) \) is a set \( S \) together with a \textit{metric/distance function} \( d: S \times S \to \R_{\geq 0} \) that satisfies the following axioms for all \( x, y, z \in S \):
 \begin{itemize}
     \item \( \func{d}{x, y} = 0 \iff x = y \)
     \item \textit{Symmetry}: \( \func{d}{x, y} = \func{d}{y, x} \)
@@ -12,7 +12,19 @@ A \textbf{metric space} \( (S, d) \) is a set \( S \) together with a \textit{me
 
 \section{Norm}
 
-A \textbf{normed vector space} \( (\mathbf{V}, \norm{\,\cdot\,}) \) is a vector space \( \mathbf{V} \) over a field \( \mathbb{F} \) (usually \( \R \) or \( \mathbb{C} \)) equipped with a function \( \norm{\,\cdot\,}: \mathbf{V} \to \R \) that satisfies the following properties for all \( \mathbf{u}, \mathbf{v} \in \mathbf{V} \) and \( a \in \mathbb{F} \):
+A \textbf{norm} is a real-valued function \( \eta: V \to \R_{\geq 0} \) that satisfies
+\begin{itemize}
+    \item \( \func{\eta}{x} \geq 0, \quad \forall x \in V \)
+    \item \( \func{\eta}{x} = 0 \iff x = 0 \)
+    \item \( \func{\eta}{s x} = \abs{s} \, \func{\eta}{x}, \quad \forall x \in V, s \in F \)
+    \item \( \func{\eta}{x + y} \leq \func{\eta}{x} + \func{\eta}{y}, \quad \forall x, y \in V \)
+\end{itemize}
+
+\subsection{Vector norm}
+
+A \textbf{vector norm} is a norm defined on a vector space.
+
+A \textbf{normed vector space} \( (\mathbf{V}, \norm{\,\cdot\,}) \) is a vector space \( \mathbf{V} \) over a field \( \mathbb{F} \) (usually \( \R \) or \( \mathbb{C} \)) equipped with a function \( \norm{\,\cdot\,}: \mathbf{V} \to \R_{\geq 0} \) that satisfies the following properties for all \( \mathbf{u}, \mathbf{v} \in \mathbf{V} \) and \( a \in \mathbb{F} \):
 \begin{itemize}
     \item \textit{Non-negativity}: \( \norm{\mathbf{v}} \geq 0 \)
     \item \textit{Definiteness}: \( \norm{\mathbf{v}} = 0 \iff \mathbf{v} = \zero \)
@@ -20,15 +32,8 @@ A \textbf{normed vector space} \( (\mathbf{V}, \norm{\,\cdot\,}) \) is a vector 
     \item \textit{Triangle inequality}: \( \norm{\mathbf{u} + \mathbf{v}} \leq \norm{\mathbf{u}} + \norm{\mathbf{v}} \)
 \end{itemize}
 
-Norm \( \eta: \R^d \to \R \), satisfies
-\begin{itemize}
-    \item \( \func{\eta}{\x} \geq 0 \)
-    \item \( \func{\eta}{\x} = 0 \iff \x = \zero \)
-    \item \( \func{\eta}{s \x} = \abs{s} \, \func{\eta}{\x} \), \quad \( s \in \R \)
-    \item \( \func{\eta}{\x + \y} \leq \func{\eta}{\x} + \func{\eta}{\y} \)
-\end{itemize}
+\subsubsection{\texorpdfstring{\( L_p \) norm}{Lp norm}}
 
-\subsection{\texorpdfstring{\( L_p \) norm}{Lp norm}}
 \begin{equation*}
     \norm{\x}_p
     =
@@ -37,6 +42,7 @@ Norm \( \eta: \R^d \to \R \), satisfies
 \end{equation*}
 
 \paragraph{\( L_1 \) norm (Manhattan norm)}
+
 \begin{equation*}
     \norm{\x}_1
     =
@@ -46,6 +52,7 @@ Norm \( \eta: \R^d \to \R \), satisfies
 \end{equation*}
 
 \paragraph{\( L_2 \) norm (Euclidean norm)}
+
 \begin{equation*}
     \norm{\x}_2
     =
@@ -57,12 +64,117 @@ Norm \( \eta: \R^d \to \R \), satisfies
 \end{equation*}
 
 \paragraph{\( L_{\infty} \) norm (Maximum norm)}
+
 \begin{equation*}
     \norm{\x}_{\infty}
     =
     \max \{ \abs{x_1}, \abs{x_2}, \ldots, \abs{x_d} \}
     =
     \max_{1 \leq i \leq d} \abs{x_i}
+\end{equation*}
+
+\subsection{Matrix norm}
+
+A \textbf{matrix norm} is a norm defined on a space of matrices.
+
+\begin{itemize}
+    \item \textit{Non-negativity}: \( \norm{\mathbf{A}} \geq 0 \)
+    \item \textit{Definiteness}: \( \norm{\mathbf{A}} = 0 \iff \mathbf{A} = \zero \)
+    \item \textit{Homogeneity}: \( \norm{a \mathbf{A}} = \abs{a} \, \norm{\mathbf{A}} \)
+    \item \textit{Triangle inequality}: \( \norm{\mathbf{A} + \mathbf{B}} \leq \norm{\mathbf{A}} + \norm{\mathbf{B}} \)
+    \item \textit{Sub-multiplicativity}: \( \norm{\mathbf{A} \mathbf{B}} \leq \norm{\mathbf{A}} \, \norm{\mathbf{B}} \)
+    \item \textit{Consistency}: \( \norm{\mathbf{A} \x} \leq \norm{\mathbf{A}} \, \norm{\x}, \quad \forall \x \in \R^d \)
+    \item \textit{Transpose invariance}: \( \norm{\mathbf{A}} = \norm{\mathbf{A}^\top} \)
+    \item \textit{Continuity}: \( \norm{\mathbf{A}} \) is continuous with respect to the entries of \( \mathbf{A} \)
+\end{itemize}
+
+\subsubsection{\texorpdfstring{\( L_p \) norm}{Lp norm}}
+
+\begin{equation*}
+    \norm{\mathbf{A}}_p
+    =
+    \sup_{\x \neq \zero} \frac{\norm{\mathbf{A} \x}_p}{\norm{\x}_p}
+    =
+    \max_{\norm{\x}_p = 1} \norm{\mathbf{A} \x}_p,
+    \quad p \geq 1
+\end{equation*}
+
+\paragraph{\( L_1 \) norm (Maximum absolute column sum norm)}
+
+\begin{equation*}
+    \norm{\mathbf{A}}_1
+    =
+    \max_{1 \leq j \leq d} \sum_{i = 1}^{d} \abs{a_{ij}}
+    =
+    \max_{1 \leq j \leq d} \norm{\mathbf{A}_{\ast j}}_1
+\end{equation*}
+
+\paragraph{\( L_2 \) norm (Spectral norm)}
+
+\begin{equation*}
+    \norm{\mathbf{A}}_2
+    =
+    \sqrt{\lambda_{\max}(\mathbf{A}^\top \mathbf{A})}
+    =
+    \sigma_{\max}(\mathbf{A})
+    =
+    \max_{\norm{\x}_2 = 1} \norm{\mathbf{A} \x}_2
+\end{equation*}
+
+\paragraph{Frobenius norm (Euclidean norm)}
+
+\begin{equation*}
+    \norm{\mathbf{A}}_F
+    =
+    \sqrt{\sum_{i = 1}^{d} \sum_{j = 1}^{d} a_{ij}^2}
+    =
+    \sqrt{\operatorname{trace}(\mathbf{A}^\top \mathbf{A})}
+    =
+    \sqrt{\sum_{i = 1}^{d} \sigma_i^2(\mathbf{A})}
+    =
+    \norm{\operatorname{vec}(\mathbf{A})}_2
+\end{equation*}
+
+The vector \( \operatorname{vec}(\mathbf{A}) \) is the \textbf{vectorization} of matrix \( \mathbf{A} \), obtained by stacking its columns into a single column vector, i.e.,
+\begin{equation*}
+    \mathbf{A}
+    =
+    \begin{bmatrix}
+        a_{11} & a_{12} & \cdots & a_{1d} \\
+        a_{21} & a_{22} & \cdots & a_{2d} \\
+        \vdots & \vdots & \ddots & \vdots \\
+        a_{d1} & a_{d2} & \cdots & a_{dd}
+    \end{bmatrix}
+    \in \R^{d \times d}
+    \implies
+    \operatorname{vec}(\mathbf{A})
+    =
+    \begin{bmatrix}
+        a_{11} \\
+        a_{21} \\
+        \vdots \\
+        a_{d1} \\
+        a_{12} \\
+        a_{22} \\
+        \vdots \\
+        a_{d2} \\
+        \vdots \\
+        a_{1d} \\
+        a_{2d} \\
+        \vdots \\
+        a_{dd}
+    \end{bmatrix}
+    \in \R^{d^2}
+\end{equation*}
+
+\paragraph{\( L_{\infty} \) norm (Maximum absolute row sum norm)}
+
+\begin{equation*}
+    \norm{\mathbf{A}}_{\infty}
+    =
+    \max_{1 \leq i \leq d} \sum_{j = 1}^{d} \abs{a_{ij}}
+    =
+    \max_{1 \leq i \leq d} \norm{\mathbf{A}_{i \ast}}_1
 \end{equation*}
 
 \section{Neighborhood}\label{sec:neighborhood}
