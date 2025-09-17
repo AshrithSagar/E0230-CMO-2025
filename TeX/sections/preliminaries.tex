@@ -673,16 +673,39 @@ where \( \lambda_{\max}(\mathbf{A}) \) and \( \lambda_{\min}(\mathbf{A}) \) are 
 
 \chapter{Inequalities}
 
+\section{AM-GM inequality}
+
+\begin{theorem}{AM-GM inequality}{}
+    For any non-negative real numbers \( a_1, a_2, \ldots, a_n \geq 0 \), we have
+    \vspace{-0.5em}
+    \begin{equation*}
+        \overbrace{
+            \frac{a_1 + a_2 + \cdots + a_n}{n}
+        }^{\text{Arithmetic Mean (AM)}}
+        \geq
+        \overbrace{
+            \sqrt[n]{a_1 a_2 \ldots a_n}
+        }^{\text{Geometric Mean (GM)}}
+    \end{equation*}
+    with equality iff \( a_1 = a_2 = \cdots = a_n \).
+\end{theorem}
+
 \section{Cauchy-Schwarz inequality}\label{sec:cauchy-schwarz-inequality}
 
-\begin{equation*}
-    \abs{\dotp{\x}{\y}} \leq \norm{\x}_2 \; \norm{\y}_2, \quad \x, \y \in \R^d
-\end{equation*}
+\begin{theorem}{Cauchy-Schwarz inequality}{}
+    For any vectors \( \x, \y \in \R^d \), we have
+    \vspace{-1em}
+    \begin{equation*}
+        \abs{\dotp{\x}{\y}} \leq \norm{\x}_2 \; \norm{\y}_2
+    \end{equation*}
+    with equality iff \( \x \) and \( \y \) are linearly dependent, i.e., \( \exists c \in \R \) such that \( \x = c \y \) or \( \y = c \x \).
+\end{theorem}
 
 \section{Kantorovich inequality}\label{sec:kantorovich-inequality}
 
 \begin{theorem}{Kantorovich inequality}{}
     Let \( p_i \geq 0, \ 0 < x_{\min} \leq x_i \leq x_{\max}, \ \forall i \in \{1, 2, \ldots, n\} \), then we have
+    \vspace{-1em}
     \begin{equation*}
         \left( \sum_{i = 1}^{n} p_i x_i \right) \left( \sum_{i = 1}^{n} \frac{p_i}{x_i} \right)
         \leq
@@ -691,8 +714,8 @@ where \( \lambda_{\max}(\mathbf{A}) \) and \( \lambda_{\min}(\mathbf{A}) \) are 
     \end{equation*}
 \end{theorem}
 
-\begin{corollary}{Kantorovich inequality for positive definite matrices~\citep{Luenberger1984}}{}
-    For any \( \Q \in \PD \), with smallest eigenvalue \( \lambda_{\min} \) and largest eigenvalue \( \lambda_{\max} \), and for any \( \x \in \R^d \setminus \{ \zero \} \),
+\begin{corollary}{Kantorovich inequality for real symmetric positive definite matrices~\citep{Luenberger1984}}{}
+    For any \( \Q \in \PD \), with smallest eigenvalue \( \lambda_{\min} \) and largest eigenvalue \( \lambda_{\max} \), and for any \( \x \in \R^d \setminus \{ \zero \} \), we have
     \begin{equation*}
         \frac{{(\dotp{\x}{\x})}^2}{(\qf{\x}{\Q})(\qf{\x}{\Qinv})}
         \geq
@@ -736,22 +759,14 @@ where \( \lambda_{\max}(\mathbf{A}) \) and \( \lambda_{\min}(\mathbf{A}) \) are 
     \end{equation*}
 \end{proof}
 
-\section{AM-GM inequality}
-
-For any non-negative real numbers \( a_1, a_2, \ldots, a_n \geq 0 \),
-\begin{equation*}
-    \frac{a_1 + a_2 + \cdots + a_n}{n}
-    \geq
-    \sqrt[n]{a_1 a_2 \ldots a_n}
-\end{equation*}
-with equality iff \( a_1 = a_2 = \cdots = a_n \).
-
 \section{Polyak-\L{}ojasiewicz (PL) inequality}
 
-A function \( f: D \subseteq \R^n \to \R \) on a convex domain \( D \) satisfies the \textbf{Polyak-\L{}ojasiewicz (PL) inequality} with parameter \( \mu > 0 \) if
-\begin{equation*}
-    \half \norm[\Big]{\grad{f}{\x}}^2 \geq \mu \left( \func{f}{\x} - f^\ast \right)
-    , \quad \forall \x \in D
-\end{equation*}
-where \( f^\ast = \inf_{\x \in D} \func{f}{\x} \).
-Such an \( f \) is said to be \( \mu \)-\textbf{PL} on \( D \).
+\begin{definition}{Polyak-\L{}ojasiewicz (PL) inequality}{}
+    A function \( f: D \subseteq \R^n \to \R \) on a convex domain \( D \) satisfies the \textbf{Polyak-\L{}ojasiewicz (PL) inequality} with parameter \( \mu > 0 \) if
+    \begin{equation*}
+        \half \norm[\Big]{\grad{f}{\x}}^2 \geq \mu \left( \func{f}{\x} - f^\ast \right)
+        , \quad \forall \x \in D
+    \end{equation*}
+    where \( f^\ast = \inf_{\x \in D} \func{f}{\x} \).
+    Such an \( f \) is said to be \( \mu \)-\textbf{PL} on \( D \).
+\end{definition}
