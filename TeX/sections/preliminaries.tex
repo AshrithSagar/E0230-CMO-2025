@@ -73,18 +73,50 @@ A \textbf{normed vector space} \( (\mathbf{V}, \norm{\,\cdot\,}) \) is a vector 
     \max_{1 \leq i \leq d} \abs{x_i}
 \end{equation*}
 
+\subsubsection{Energy norm}
+
+For \( \Q \in \PD \), the \textbf{energy norm} (or \( \Q \)-norm) is defined as
+\begin{equation*}
+    \norm{\x}_{\Q}
+    =
+    \sqrt{\qf{\x}{\Q}}
+\end{equation*}
+
+\paragraph{Properties}
+
+\begin{itemize}
+    \item \( \norm{\x}_{\I} = \norm{\x}_2 \)
+
+    \item \( \norm{\x}_{\Q} = \norm{\Q^{\frac{1}{2}} \x}_2 \)
+
+    \item \( \norm{\x}_{\Q} = \norm{\x}_{\Q^{\frac{1}{2}}} \)
+
+    \item \( \lambda_{\min}(\Q) \; \norm{\x}^2 \leq \norm{\x}_{\Q}^2 \leq \lambda_{\max}(\Q) \; \norm{\x}^2 \)
+
+    \item \( \norm{\x}_{\Q} = \norm{\Q \x}_{\Q^{-1}} \)
+
+    \item \( \norm{\x}_{\Q} = \norm{\Q^{-1} \x}_{\Q} \)
+\end{itemize}
+
 \subsection{Matrix norm}
 
 A \textbf{matrix norm} is a norm defined on a space of matrices.
 
 \begin{itemize}
     \item \textit{Non-negativity}: \( \norm{\mathbf{A}} \geq 0 \)
+
     \item \textit{Definiteness}: \( \norm{\mathbf{A}} = 0 \iff \mathbf{A} = \zero \)
+
     \item \textit{Homogeneity}: \( \norm{a \mathbf{A}} = \abs{a} \, \norm{\mathbf{A}} \)
+
     \item \textit{Triangle inequality}: \( \norm{\mathbf{A} + \mathbf{B}} \leq \norm{\mathbf{A}} + \norm{\mathbf{B}} \)
+
     \item \textit{Sub-multiplicativity}: \( \norm{\mathbf{A} \mathbf{B}} \leq \norm{\mathbf{A}} \, \norm{\mathbf{B}} \)
+
     \item \textit{Consistency}: \( \norm{\mathbf{A} \x} \leq \norm{\mathbf{A}} \, \norm{\x}, \quad \forall \x \in \R^d \)
+
     \item \textit{Transpose invariance}: \( \norm{\mathbf{A}} = \norm{\mathbf{A}^\top} \)
+
     \item \textit{Continuity}: \( \norm{\mathbf{A}} \) is continuous with respect to the entries of \( \mathbf{A} \)
 \end{itemize}
 
@@ -121,7 +153,17 @@ A \textbf{matrix norm} is a norm defined on a space of matrices.
     \max_{\norm{\x}_2 = 1} \norm{\mathbf{A} \x}_2
 \end{equation*}
 
-\paragraph{Frobenius norm (Euclidean norm)}
+\paragraph{\( L_{\infty} \) norm (Maximum absolute row sum norm)}
+
+\begin{equation*}
+    \norm{\mathbf{A}}_{\infty}
+    =
+    \max_{1 \leq i \leq d} \sum_{j = 1}^{d} \abs{a_{ij}}
+    =
+    \max_{1 \leq i \leq d} \norm{\mathbf{A}_{i \ast}}_1
+\end{equation*}
+
+\subsubsection{Frobenius norm (Euclidean norm)}
 
 \begin{equation*}
     \norm{\mathbf{A}}_F
@@ -167,15 +209,38 @@ The vector \( \operatorname{vec}(\mathbf{A}) \) is the \textbf{vectorization} of
     \in \R^{d^2}
 \end{equation*}
 
-\paragraph{\( L_{\infty} \) norm (Maximum absolute row sum norm)}
+\subsubsection{Spectral radius}
 
+The \textbf{spectral radius} of a matrix \( \mathbf{A} \in \R^{d \times d} \) with eigenvalues \( \lambda_1, \lambda_2, \ldots, \lambda_d \) is defined as
 \begin{equation*}
-    \norm{\mathbf{A}}_{\infty}
+    \rho(\mathbf{A})
     =
-    \max_{1 \leq i \leq d} \sum_{j = 1}^{d} \abs{a_{ij}}
-    =
-    \max_{1 \leq i \leq d} \norm{\mathbf{A}_{i \ast}}_1
+    \max \set{ \abs{\lambda_1}, \abs{\lambda_2}, \ldots, \abs{\lambda_d} }
 \end{equation*}
+
+\paragraph{Properties}
+
+\begin{itemize}
+    \item \( \rho(\mathbf{A}) = \rho(\mathbf{A}^\top) \)
+
+    \item \( \rho(\mathbf{A}^k) = {\left[ \rho(\mathbf{A}) \right]}^k, \quad k \in \N \)
+
+    \item \( \rho(\inv{\mathbf{A}}) = \frac{1}{\rho(\mathbf{A})}, \quad \text{if } \mathbf{A} \text{ is invertible} \)
+
+    \item \( \rho(\mathbf{A}) \leq \norm{\mathbf{A}}, \quad \forall \text{ matrix norms } \norm{\,\cdot\,} \)
+
+    \item (Gelfand's formula) \( \rho(\mathbf{A}) = \lim_{k \to \infty} {\left( \norm{\mathbf{A}^k} \right)}^{\frac{1}{k}}, \quad \forall \text{ matrix norms } \norm{\,\cdot\,} \)
+
+    \item \( \rho(\mathbf{A}) \leq \norm{\mathbf{A}^k}^{\frac{1}{k}}, \quad \forall k \in \N, \; \forall \text{ consistent matrix norms } \norm{\,\cdot\,} \)
+
+    \item \( \rho(\mathbf{A} \mathbf{B}) \leq \rho(\mathbf{A}) \, \rho(\mathbf{B}) \), if \( \mathbf{A} \) and \( \mathbf{B} \) commute, i.e., \( \mathbf{A} \mathbf{B} = \mathbf{B} \mathbf{A} \)
+
+    \item \( \mathbf{A} \in \R^{d \times d} \implies \rho(\mathbf{A}) \leq \norm{\mathbf{A}}_2 \)
+
+    \item \( \mathbf{A} \in \SD \implies \rho(\mathbf{A}) = \norm{\mathbf{A}}_2 \)
+
+    \item \( \mathbf{A} \in \SD \implies \norm{\mathbf{A} \mathbf{x}}_2 \leq \rho(\mathbf{A}) \, \norm{\x}_2, \quad \forall \x \in \R^d \)
+\end{itemize}
 
 \section{Neighborhood}\label{sec:neighborhood}
 
