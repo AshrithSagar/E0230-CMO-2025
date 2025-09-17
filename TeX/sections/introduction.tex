@@ -60,16 +60,16 @@
 
 \section{Optimisation problem}
 
-An \textbf{unconstrained optimisation problem} is the problem of finding a point \( \xstar \in \R^d \) that minimises a function \( f: \R^d \to \R \), i.e.,
+An \textbf{unconstrained minimisation problem} aims to find a point \( \xstar \in \R^d \) that minimises a function \( f: \R^d \to \R \), i.e.,
 \begin{equation*}
-    f(\xstar) = \min_{\x \in \R^d} f(\x)
+    \func{f}{\xstar} = \min_{\x \in \R^d} \func{f}{\x}
     \quad \iff \quad
-    \xstar = \argmin_{\x \in \R^d} f(\x)
+    \xstar = \argmin_{\x \in \R^d} \func{f}{\x}
     \quad \iff \quad
-    f(\xstar) \leq f(\x), \quad \forall \x \in \R^d
+    \func{f}{\xstar} \leq \func{f}{\x}, \quad \forall \x \in \R^d
 \end{equation*}
 
-The function \( f \) is called the \textbf{objective function}, the point \( \xstar \) is called the \textbf{minimum point}, and the value \( f(\xstar) \) is called the \textbf{minimum value}.
+The function \( f \) is called the \textbf{objective function}, the point \( \xstar \) is called the \textbf{minimum point}, and the value \( \func{f}{\xstar} \) is called the \textbf{minimum value}.
 
 \newpage
 \subsection{Examples}
