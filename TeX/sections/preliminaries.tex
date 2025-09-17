@@ -20,7 +20,7 @@ A \textbf{norm} is a real-valued function \( \eta: V \to \R_{\geq 0} \) that sat
     \item \( \func{\eta}{x + y} \leq \func{\eta}{x} + \func{\eta}{y}, \quad \forall x, y \in V \)
 \end{itemize}
 
-\subsection{Vector norm}
+\section{Vector norm}
 
 A \textbf{vector norm} is a norm defined on a vector space.
 
@@ -32,7 +32,7 @@ A \textbf{normed vector space} \( (\mathbf{V}, \norm{\,\cdot\,}) \) is a vector 
     \item \textit{Triangle inequality}: \( \norm{\mathbf{u} + \mathbf{v}} \leq \norm{\mathbf{u}} + \norm{\mathbf{v}} \)
 \end{itemize}
 
-\subsubsection{\texorpdfstring{\( L_p \) norm}{Lp norm}}
+\subsection{\texorpdfstring{\( L_p \) norm}{Lp norm}}
 
 \begin{equation*}
     \norm{\x}_p
@@ -41,7 +41,7 @@ A \textbf{normed vector space} \( (\mathbf{V}, \norm{\,\cdot\,}) \) is a vector 
     \quad p \geq 1
 \end{equation*}
 
-\paragraph{\( L_1 \) norm (Manhattan norm)}
+\subsubsection{\( L_1 \) norm (Manhattan norm)}
 
 \begin{equation*}
     \norm{\x}_1
@@ -51,7 +51,7 @@ A \textbf{normed vector space} \( (\mathbf{V}, \norm{\,\cdot\,}) \) is a vector 
     \sum_{i = 1}^{d} \abs{x_i}
 \end{equation*}
 
-\paragraph{\( L_2 \) norm (Euclidean norm)}
+\subsubsection{\( L_2 \) norm (Euclidean norm)}
 
 \begin{equation*}
     \norm{\x}_2
@@ -63,7 +63,7 @@ A \textbf{normed vector space} \( (\mathbf{V}, \norm{\,\cdot\,}) \) is a vector 
     \norm{\x}
 \end{equation*}
 
-\paragraph{\( L_{\infty} \) norm (Maximum norm)}
+\subsubsection{\( L_{\infty} \) norm (Maximum norm)}
 
 \begin{equation*}
     \norm{\x}_{\infty}
@@ -73,7 +73,7 @@ A \textbf{normed vector space} \( (\mathbf{V}, \norm{\,\cdot\,}) \) is a vector 
     \max_{1 \leq i \leq d} \abs{x_i}
 \end{equation*}
 
-\subsubsection{Energy norm}
+\subsection{Energy norm}
 
 For \( \Q \in \PD \), the \textbf{energy norm} (or \( \Q \)-norm) is defined as
 \begin{equation*}
@@ -98,7 +98,7 @@ For \( \Q \in \PD \), the \textbf{energy norm} (or \( \Q \)-norm) is defined as
     \item \( \norm{\x}_{\Q} = \norm{\Q^{-1} \x}_{\Q} \)
 \end{itemize}
 
-\subsection{Matrix norm}
+\section{Matrix norm}
 
 A \textbf{matrix norm} is a norm defined on a space of matrices.
 
@@ -110,7 +110,9 @@ A \textbf{matrix norm} is a norm defined on a space of matrices.
     \item \textit{Homogeneity}: \( \norm{a \mathbf{A}} = \abs{a} \, \norm{\mathbf{A}} \)
 
     \item \textit{Triangle inequality}: \( \norm{\mathbf{A} + \mathbf{B}} \leq \norm{\mathbf{A}} + \norm{\mathbf{B}} \)
+\end{itemize}
 
+\begin{itemize}
     \item \textit{Sub-multiplicativity}: \( \norm{\mathbf{A} \mathbf{B}} \leq \norm{\mathbf{A}} \, \norm{\mathbf{B}} \)
 
     \item \textit{Consistency}: \( \norm{\mathbf{A} \x} \leq \norm{\mathbf{A}} \, \norm{\x}, \quad \forall \x \in \R^d \)
@@ -120,7 +122,7 @@ A \textbf{matrix norm} is a norm defined on a space of matrices.
     \item \textit{Continuity}: \( \norm{\mathbf{A}} \) is continuous with respect to the entries of \( \mathbf{A} \)
 \end{itemize}
 
-\subsubsection{\texorpdfstring{\( L_p \) norm}{Lp norm}}
+\subsection{\texorpdfstring{\( L_p \) norm}{Lp norm}}
 
 \begin{equation*}
     \norm{\mathbf{A}}_p
@@ -131,7 +133,7 @@ A \textbf{matrix norm} is a norm defined on a space of matrices.
     \quad p \geq 1
 \end{equation*}
 
-\paragraph{\( L_1 \) norm (Maximum absolute column sum norm)}
+\subsubsection{\( L_1 \) norm (Maximum absolute column sum norm)}
 
 \begin{equation*}
     \norm{\mathbf{A}}_1
@@ -141,7 +143,7 @@ A \textbf{matrix norm} is a norm defined on a space of matrices.
     \max_{1 \leq j \leq d} \norm{\mathbf{A}_{\ast j}}_1
 \end{equation*}
 
-\paragraph{\( L_2 \) norm (Spectral norm)}
+\subsubsection{\( L_2 \) norm (Spectral norm)}
 
 \begin{equation*}
     \norm{\mathbf{A}}_2
@@ -149,11 +151,11 @@ A \textbf{matrix norm} is a norm defined on a space of matrices.
     \sqrt{\lambda_{\max}(\mathbf{A}^\top \mathbf{A})}
     =
     \sigma_{\max}(\mathbf{A})
-    =
-    \max_{\norm{\x}_2 = 1} \norm{\mathbf{A} \x}_2
 \end{equation*}
 
-\paragraph{\( L_{\infty} \) norm (Maximum absolute row sum norm)}
+For \( \mathbf{A} \in \SD, \norm{\mathbf{A}}_2 = \rho(\mathbf{A}) = \abs{\lambda_{\max}(\mathbf{A})} \).
+
+\subsubsection{\( L_{\infty} \) norm (Maximum absolute row sum norm)}
 
 \begin{equation*}
     \norm{\mathbf{A}}_{\infty}
@@ -163,7 +165,7 @@ A \textbf{matrix norm} is a norm defined on a space of matrices.
     \max_{1 \leq i \leq d} \norm{\mathbf{A}_{i \ast}}_1
 \end{equation*}
 
-\subsubsection{Frobenius norm (Euclidean norm)}
+\subsection{Frobenius norm (Euclidean norm)}
 
 \begin{equation*}
     \norm{\mathbf{A}}_F
@@ -209,7 +211,7 @@ The vector \( \operatorname{vec}(\mathbf{A}) \) is the \textbf{vectorization} of
     \in \R^{d^2}
 \end{equation*}
 
-\subsubsection{Spectral radius}
+\subsection{Spectral radius}
 
 The \textbf{spectral radius} of a matrix \( \mathbf{A} \in \R^{d \times d} \) with eigenvalues \( \lambda_1, \lambda_2, \ldots, \lambda_d \) is defined as
 \begin{equation*}
@@ -231,7 +233,7 @@ The \textbf{spectral radius} of a matrix \( \mathbf{A} \in \R^{d \times d} \) wi
 
     \item (Gelfand's formula) \( \rho(\mathbf{A}) = \lim_{k \to \infty} {\left( \norm{\mathbf{A}^k} \right)}^{\frac{1}{k}}, \quad \forall \text{ matrix norms } \norm{\,\cdot\,} \)
 
-    \item \( \rho(\mathbf{A}) \leq \norm{\mathbf{A}^k}^{\frac{1}{k}}, \quad \forall k \in \N, \; \forall \text{ consistent matrix norms } \norm{\,\cdot\,} \)
+    \item \( \rho(\mathbf{A}) \leq \norm{\mathbf{A}^k}^{\frac{1}{k}}, \quad \forall k \in \N, \; \forall \text{ sub-multiplicative matrix norms } \norm{\,\cdot\,} \)
 
     \item \( \rho(\mathbf{A} \mathbf{B}) \leq \rho(\mathbf{A}) \, \rho(\mathbf{B}) \), if \( \mathbf{A} \) and \( \mathbf{B} \) commute, i.e., \( \mathbf{A} \mathbf{B} = \mathbf{B} \mathbf{A} \)
 
@@ -667,7 +669,7 @@ The set of all eigenvalues of \( \mathbf{A} \) is called the \textbf{spectrum} o
 
 The \textbf{condition number} of a matrix \( \mathbf{A} \in \SD \) is given by
 \begin{equation*}
-    \kappa(\mathbf{A}) = \frac{\lambda_{\max}(\mathbf{A})}{\lambda_{\min}(\mathbf{A})}
+    \kappa(\mathbf{A}) = \frac{\abs{\lambda_{\max}(\mathbf{A})}}{\abs{\lambda_{\min}(\mathbf{A})}}
 \end{equation*}
 where \( \lambda_{\max}(\mathbf{A}) \) and \( \lambda_{\min}(\mathbf{A}) \) are the largest and smallest eigenvalues of \( \mathbf{A} \) respectively.
 
@@ -757,7 +759,15 @@ where \( \lambda_{\max}(\mathbf{A}) \) and \( \lambda_{\min}(\mathbf{A}) \) are 
         & =
         {\left( \sum_{i = 1}^{d} c_i \mathbf{v}_i \right)}^\top \Q \left( \sum_{j = 1}^{d} c_j \mathbf{v}_j \right)
         =
-        \sum_{i = 1}^{d} \sum_{j = 1}^{d} c_i c_j \mathbf{v}_i^\top \Q \mathbf{v}_j
+        \sum_{i = 1}^{d} \sum_{j = 1}^{d} c_i c_j \qf{\mathbf{v}_i}{\Q}[\mathbf{v}_j]
+        \\ & =
+        \sum_{i = 1}^{d} c_i^2 \qf{\mathbf{v}_i}{\Q}
+        +
+        \sum_{i \neq j} c_i c_j \qf{\mathbf{v}_i}{\Q}[\mathbf{v}_j]
+        =
+        \sum_{i = 1}^{d} c_i^2 \lambda_i \underbrace{ \dotp{\mathbf{v}_i}{\mathbf{v}_i} }_{= 1}
+        +
+        \cancel{ \sum_{i \neq j} c_i c_j \lambda_j \underbrace{ \dotp{\mathbf{v}_i}{\mathbf{v}_j} }_{= 0} }
         =
         \sum_{i = 1}^{d} c_i^2 \lambda_i
         \\ &
@@ -769,14 +779,18 @@ where \( \lambda_{\max}(\mathbf{A}) \) and \( \lambda_{\min}(\mathbf{A}) \) are 
         \qquad
         \dotp{\x}{\x}
         =
+        \qf{\x}{\I}
+        =
+        \sum_{i = 1}^{d} c_i^2 (1)
+        =
         \sum_{i = 1}^{d} c_i^2
     \end{align*}
     Now, let \( p_i = c_i^2 \) and \( x_i = \lambda_i \) in Kantorovich inequality, we have
     \begin{equation*}
-        \left( \sum_{i = 1}^{d} c_i^2 \lambda_i \right)
-        \left( \sum_{i = 1}^{d} \frac{c_i^2}{\lambda_i} \right)
+        \underbrace{ \left( \sum_{i = 1}^{d} c_i^2 \lambda_i \right) }_{\qf{\x}{\Q}}
+        \underbrace{ \left( \sum_{i = 1}^{d} \frac{c_i^2}{\lambda_i} \right) }_{\qf{\x}{\Qinv}}
         \leq
-        \frac{{(\lambda_{\max} + \lambda_{\min})}^2}{4 \lambda_{\max} \lambda_{\min}} {\left( \sum_{i = 1}^{d} c_i^2 \right)}^2
+        \frac{{(\lambda_{\max} + \lambda_{\min})}^2}{4 \lambda_{\max} \lambda_{\min}} \underbrace{ {\left( \sum_{i = 1}^{d} c_i^2 \right)}^2 }_{{(\dotp{\x}{\x})}^2}
         \implies
         \frac{{(\dotp{\x}{\x})}^2}{(\qf{\x}{\Q})(\qf{\x}{\Qinv})}
         \geq
