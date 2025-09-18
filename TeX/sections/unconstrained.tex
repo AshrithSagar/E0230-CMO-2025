@@ -846,6 +846,21 @@ From the fundamental theorem of calculus~\psecref{sec:fundamental-theorem-of-cal
     }
 \end{equation*}
 
+For a stationary point \( \xstar \), i.e., \( \grad{f}{\xstar} = \zero \), we have
+\begin{equation*}
+    \implies
+    \grad{f}{\x}
+    =
+    \int_{0}^{1} \hess{f}{\xstar + t(\x - \xstar)} (\x - \xstar) \, dt,
+    \quad \forall \x \in \R^d
+\end{equation*}
+
+Suppose \( \hess{f}{\xstar} \succ \zero \), ensuring that \( \xstar \) is a local minimum.
+\begin{equation*}
+    \implies
+    \exists l > 0 \text{ such that } \hess{f}{\xstar} \succeq l \, \I
+\end{equation*}
+
 Assuming \( f \in \C^2_M \), we have
 \begin{equation*}
     \boxed{
@@ -933,23 +948,180 @@ Taking the derivative with respect to \( \y \) on both sides, we have
     }
 \end{equation*}
 
-Now, since \( - \norm{\mathbf{A}} \; \I \preceq \mathbf{A} \preceq \norm{\mathbf{A}} \; \I, \quad \forall \mathbf{A} \in \SD \), we have
-\begin{equation*}
-    - M \norm{\y - \x} \; \I
+Now, since \( - \norm{\mathbf{A}} \, \I \preceq \mathbf{A} \preceq \norm{\mathbf{A}} \, \I, \quad \forall \mathbf{A} \in \SD \), we have
+\begin{align*}
+    - \norm{\hess{f}{\y} - \hess{f}{\x}} \, \I
     \preceq
     \hess{f}{\y} - \hess{f}{\x}
     \preceq
-    M \norm{\y - \x} \; \I,
+    \norm{\hess{f}{\y} - \hess{f}{\x}} \, \I,
     \quad \forall \x, \y \in \R^d
-\end{equation*}
-\begin{equation*}
+    \\
+    \implies
+    - M \norm{\y - \x} \, \I
+    \preceq
+    \hess{f}{\y} - \hess{f}{\x}
+    \preceq
+    M \norm{\y - \x} \, \I,
+    \quad \forall \x, \y \in \R^d
+    \\
     \implies
     \boxed{
-        \hess{f}{\x} - M \norm{\y - \x} \; \I
+        \hess{f}{\x} - M \norm{\y - \x} \, \I
         \preceq
         \hess{f}{\y}
         \preceq
-        \hess{f}{\x} + M \norm{\y - \x} \; \I,
+        \hess{f}{\x} + M \norm{\y - \x} \, \I,
         \quad \forall \x, \y \in \R^d
     }
+\end{align*}
+
+Let \( r_k \triangleq \norm{\xk - \xstar} \).
+Then, we have
+\begin{align*}
+    \implies
+    &
+    \hess{f}{\xstar} - M r_k \, \I
+    \preceq
+    \hess{f}{\xk}
+    \preceq
+    \hess{f}{\xstar} + M r_k \, \I
+    \\
+    \implies
+    &
+    (l - M r_k) \, \I
+    \preceq
+    \hess{f}{\xk}
+    \\
+    \therefore
+    \quad
+    &
+    \text{If }
+    (l - M r_k) > 0
+    \implies
+    \hess{f}{\xk}
+    \succ
+    \zero
+    \\
+    \text{i.e.,}
+    \quad
+    &
+    \text{If }
+    \boxed{
+        r_k < \frac{l}{M}
+    }
+    \implies
+    \hess{f}{\xk}
+    \succ
+    \zero
+    \\
+    \text{Also, }
+    \quad
+    &
+    (l - M r_k) \, \I
+    \preceq
+    \hess{f}{\xk}
+    \implies
+    \frac{1}{(l - M r_k)} \, \I
+    \succeq
+    \hessinv{f}{\xk}
+    \\
+    \text{i.e.,}
+    \quad
+    &
+    \hessinv{f}{\xk}
+    \preceq
+    \frac{1}{(l - M r_k)} \, \I
+    \implies
+    \boxed{
+        \norm{\hessinv{f}{\xk}}
+        \leq
+        \frac{1}{(l - M r_k)}
+    }
+\end{align*}
+
+Now,
+\begin{align*}
+    r_{k+1}
+    & =
+    \norm{\xkp - \xstar}
+    =
+    \norm{\left( \xk - \hessinv{f}{\xk} \grad{f}{\xk} \right) - \xstar}
+    \\ & =
+    \norm{\xk - \xstar - \hessinv{f}{\xk} \grad{f}{\xk}}
+    \\ & =
+    \norm{\hessinv{f}{\xk} \Big( \hess{f}{\xk} (\xk - \xstar) - \grad{f}{\xk} \Big)}
+    \\ & \leq
+    \norm{\hessinv{f}{\xk}} \,
+    \norm{\hess{f}{\xk} (\xk - \xstar) - \grad{f}{\xk}}
+\end{align*}
+\begin{align*}
+    \implies
+    &
+    \norm{\hess{f}{\xk} (\xk - \xstar) - \grad{f}{\xk}}
+    \\ & =
+    \norm{\hess{f}{\xk} (\xk - \xstar) - \int_{0}^{1} \hess{f}{\xstar + t(\xk - \xstar)} (\xk - \xstar) \, dt}
+    \\ & =
+    \norm{\int_{0}^{1} \hess{f}{\xk} (\xk - \xstar)  \, dt - \int_{0}^{1} \hess{f}{\xstar + t(\xk - \xstar)} (\xk - \xstar) \, dt}
+    \\ & =
+    \norm{\int_{0}^{1} \Big( \hess{f}{\xk} - \hess{f}{\xstar + t(\xk - \xstar)} \Big) (\xk - \xstar) \, dt}
+    \\ & \leq
+    \int_{0}^{1} \norm{\Big( \hess{f}{\xk} - \hess{f}{\xstar + t(\xk - \xstar)} \Big) (\xk - \xstar)} \, dt
+    \\ & \leq
+    \int_{0}^{1} \norm[\Big]{\hess{f}{\xk} - \hess{f}{\xstar + t(\xk - \xstar)}} \, \norm{\xk - \xstar} \, dt
+    \\ & \leq
+    \int_{0}^{1} M \norm[\Big]{\xk - \xstar - t(\xk - \xstar)} \, \norm{\xk - \xstar} \, dt
+    \\ & =
+    \int_{0}^{1} M (1 - t) \norm{\xk - \xstar}^2 \, dt
+    \\ & =
+    M
+    \norm{\xk - \xstar}^2
+    \int_{0}^{1} (1 - t) \, dt
+    =
+    \frac{M}{2}
+    r_k^2
+\end{align*}
+\begin{equation*}
+    \implies
+    \boxed{
+        r_{k+1}
+        \leq
+        \frac{M}{2}
+        \norm{\hessinv{f}{\xk}}
+        r_k^2
+    }
+    \implies
+    r_{k+1}
+    \leq
+    \frac{M}{2 (l - M r_k)}
+    r_k^2
 \end{equation*}
+
+Thereby, rate of convergence for Newton's method is quadratic.
+
+Now, we want \( r_{k+1} < r_k \) to ensure successive iterates converge to \( \xstar \), thereby we get
+\begin{equation*}
+    \frac{M}{2 (l - M r_k)}
+    r_k^2
+    <
+    r_k
+    \implies
+    M r_k
+    <
+    2 l - 2 M r_k
+    \implies
+    3 M r_k
+    <
+    2 l
+    \implies
+    \boxed{
+        r_k
+        <
+        \frac{2 l}{3 M}
+    }
+\end{equation*}
+
+Note that \( \displaystyle r_k < \frac{2 l}{3 M} \implies r_k < \frac{l}{M} \), ensuring \( \hess{f}{\xk} \succ \zero \).
+
+Thereby, if we start with \( \displaystyle \boxed{ r_0 < \frac{2 l}{3 M} } \), then since \( \displaystyle r_k < r_{k - 1} < \cdots < r_1 < r_0 < \frac{2 l}{3 M} \), this ensures that \( \displaystyle r_k < \frac{2 l}{3 M} \).
+Thereby, we have \( \hess{f}{\xk} \succ \zero \) throughout the iterations, ensuring that \( \pk \) is a descent direction, thereby the algorithm converges to the local minimum \( \xstar \).
