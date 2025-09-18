@@ -789,11 +789,15 @@ Determine the largest number \( \alpha_k \) in the sequence \( {\{ \beta^m \bar{
 
 \section{Global convergence criterion}
 
-If a scheme generates a sequence \( {\{ \xk \}}_{k = 0}^{\infty} \) such that
+Starting from an arbitrary \( \x_0 \in \R^d \), if a scheme generates a sequence \( {\{ \xk \}}_{k = 1}^{\infty} \) such that
 \begin{equation*}
     \lim_{k \to \infty} \norm{\grad{f}{\xk}} = 0
 \end{equation*}
-then it is said to exhibit \textbf{global convergence}.
+then the scheme is said to exhibit \textbf{global convergence}.
+
+The sequence asymptotically approaches a \textbf{stationary point} \( \xstar \), i.e., \( \grad{f}{\xstar} = \zero \).
+Without further assumptions on \( f \), nothing can be said about \( \xstar \) being a local or global minimum, maximum, or a saddle point.
+The `global' refers to the fact that the initial point \( \x_0 \) is arbitrary, and not about the limit point.
 
 \chapter{Second-order methods}
 
