@@ -1125,3 +1125,43 @@ Note that \( \displaystyle r_k < \frac{2 l}{3 M} \implies r_k < \frac{l}{M} \), 
 
 Thereby, if we start with \( \displaystyle \boxed{ r_0 < \frac{2 l}{3 M} } \), then since \( \displaystyle r_k < r_{k - 1} < \cdots < r_1 < r_0 < \frac{2 l}{3 M} \), this ensures that \( \displaystyle r_k < \frac{2 l}{3 M} \).
 Thereby, we have \( \hess{f}{\xk} \succ \zero \) throughout the iterations, ensuring that \( \pk \) is a descent direction, thereby the algorithm converges to the local minimum \( \xstar \).
+
+\chapter{Conjugate direction methods}
+
+\section{\texorpdfstring{\( \Q \)--conjugates}{Q-conjugates}}
+
+\begin{definition}{\( \Q \)--conjugates}{}
+    Given some \( \Q \in \PD \), a set of vectors \( \set{ \mathbf{u}_i }_{i = 1}^n, \; \mathbf{u}_i \in \R^d \) are said to be \textbf{\( \Q \)--conjugates} if
+    \vspace{-0.5em}
+    \begin{equation*}
+        \qf{\mathbf{u}_i}{\Q}[\mathbf{u}_j] = 0,
+        \quad \forall i, j \in \{ 1, 2, \ldots, n \}, \; i \neq j
+    \end{equation*}
+\end{definition}
+
+\begin{theorem}{Linear independence of \( \Q \)--conjugates}{}
+    The set of \( \Q \)--conjugate vectors are linearly independent.
+\end{theorem}
+
+\begin{proof}
+    Let \( \set{ \mathbf{u}_i }_{i = 1}^n, \; \mathbf{u}_i \in \R^d \) be a set of \( \Q \)--conjugate vectors.
+    Define \( \z \triangleq \sum_{i = 1}^{n} \beta_i \mathbf{u}_i, \; \beta_i \in \R \).
+
+    Then, for any \( l \in \{ 1, 2, \ldots, n \} \), we have
+    \begin{equation*}
+        \qf{\mathbf{u}_l}{\Q}[\z]
+        =
+        \qf{\mathbf{u}_l}{\Q}[\left( \sum_{i = 1}^{n} \beta_i \mathbf{u}_i \right)]
+        =
+        \sum_{i = 1}^{n} \beta_i \qf{\mathbf{u}_l}{\Q}[\mathbf{u}_i]
+        =
+        \beta_l \qf{\mathbf{u}_l}{\Q}
+        + \sum_{i \neq l} \beta_i \cancel{ \qf{\mathbf{u}_l}{\Q}[\mathbf{u}_i] }
+        =
+        \beta_l \qf{\mathbf{u}_l}{\Q}
+    \end{equation*}
+
+    From this, we can see that if \( \z = \zero \), then \( \qf{\mathbf{u}_l}{\Q}[\z] = \zero = \beta_l \qf{\mathbf{u}_l}{\Q} \).
+    Since \( \qf{\mathbf{u}_l}{\Q} > 0, \; \because \Q \succ \zero \), we have that \( \beta_i = 0, \; \forall i \in \{ 1, 2, \ldots, n \} \).
+    Thereby, the vectors \( \set{ \mathbf{u}_i }_{i = 1}^n \) are linearly independent.
+\end{proof}
