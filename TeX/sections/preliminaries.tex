@@ -321,19 +321,21 @@ In \( \R \), every Cauchy sequence is convergent, and every convergent sequence 
 
 \section{Limits}
 
-(\( \epsilon \)--\( \delta \)) definition of \textbf{limit} of a function \( f: D \subseteq \R^d \to \R \) at a limit point \( \x_0 \) of \( D \):
-\begin{equation*}
-    \lim_{\x \to \x_0} \func{f}{\x} = L
-    \quad \iff \quad
-    \forall \epsilon > 0, \
-    \exists \delta > 0, \
-    \text{s.t.} \
-    0 < \norm{\x - \x_0} < \delta, \,
-    \x \in D
-    \implies
-    \abs{\func{f}{\x} - L} < \epsilon
-\end{equation*}
-i.e., \( \func{f}{\x} \) can be made arbitrarily close to \( L \) by making \( \x \) sufficiently close to \( \x_0 \).
+\begin{definition}{\( \epsilon \)--\( \delta \) definition of limit of a function}{}
+    The \textbf{limit} of a function \( f: D \subseteq \R^d \to \R \) at a limit point \( \x_0 \) of \( D \):
+    \begin{equation*}
+        \lim_{\x \to \x_0} \func{f}{\x} = L
+        \quad \iff \quad
+        \forall \epsilon > 0, \
+        \exists \delta > 0, \
+        \text{s.t.} \
+        0 < \norm{\x - \x_0} < \delta, \,
+        \x \in D
+        \implies
+        \abs{\func{f}{\x} - L} < \epsilon
+    \end{equation*}
+    i.e., \( \func{f}{\x} \) can be made arbitrarily close to \( L \) by making \( \x \) sufficiently close to \( \x_0 \).
+\end{definition}
 
 Alternate notation~\psecref{sec:neighborhood}:
 \begin{equation*}
@@ -347,17 +349,19 @@ Alternate notation~\psecref{sec:neighborhood}:
     \func{f}{\x} \in B_{\epsilon}(L)
 \end{equation*}
 
-Sequence definition of \textbf{limit} of a function \( f: D \subseteq \R^d \to \R \) at a limit point \( \x_0 \) of \( D \):
-\begin{equation*}
-    \lim_{\x \to \x_0} \func{f}{\x} = L
-    \; \iff \;
-    \lim_{n \to \infty} \abs{\func{f}{\x_n} - L} = 0
-    \; \iff \;
-    \forall {\{ \x_n \}}_{n = 1}^{\infty} \subseteq D \setminus \{ \x_0 \},
-    \ \x_n \to \x_0
-    \implies
-    \func{f}{\x_n} \to L
-\end{equation*}
+\begin{definition}{Sequence definition of limit of a function}{}
+    Sequence definition of \textbf{limit} of a function \( f: D \subseteq \R^d \to \R \) at a limit point \( \x_0 \) of \( D \):
+    \begin{equation*}
+        \lim_{\x \to \x_0} \func{f}{\x} = L
+        \,\iff\,
+        \lim_{n \to \infty} \abs{\func{f}{\x_n} - L} = 0
+        \,\iff\,
+        \forall {\{ \x_n \}}_{n = 1}^{\infty} \subseteq D \setminus \{ \x_0 \},
+        \; \x_n \to \x_0
+        \implies
+        \func{f}{\x_n} \to L
+    \end{equation*}
+\end{definition}
 
 \section{Continuity}
 
@@ -404,12 +408,46 @@ The \textbf{Hessian} of a function \( f: \R^d \to \R \) at a point \( \x = {\lef
     \in \R^{d \times d}
 \end{equation*}
 
+\section{Fundamental theorem of calculus}
+
+\begin{theorem}{First fundamental theorem of calculus}{}
+    Let \( f: [a, b] \to \R \) be a continuous function.
+    Then the function \( F: [a, b] \to \R \) defined by
+    \begin{equation*}
+        \func{F}{x} = \int_{a}^{x} \func{f}{t} \, dt
+    \end{equation*}
+    is continuous on \( [a, b] \), differentiable on \( (a, b) \), and
+    \begin{equation*}
+        \func{F'}{x} = \func{f}{x},
+        \quad \forall x \in (a, b)
+    \end{equation*}
+\end{theorem}
+
+This means that the integral of \( f \) defines an antiderivative of \( f \), i.e., an antiderivative of \( f \) can be constructed by integrating \( f \).
+
+\begin{theorem}{Second fundamental theorem of calculus / Newton-Leibniz theorem}{}
+    Let \( f: [a, b] \to \R \) be a continuous function.
+
+    Let \( F \) be any antiderivative of \( f \) on \( [a, b] \), i.e., \( \func{F'}{x} = \func{f}{x}, \; \forall x \in (a, b) \).
+    Then
+    \begin{equation*}
+        \int_{a}^{b} \func{f}{x} \, dx = \func{F}{b} - \func{F}{a}
+    \end{equation*}
+\end{theorem}
+
+This tells us that we can evaluate definite integrals using antiderivatives.
+
 \section{Intermediate value theorem}
 
-For a function \( f: [a, b] \to \R \) that is continuous on the closed interval \( [a, b] \), then
-\begin{equation*}
-    \forall N \in (\func{f}{a}, \func{f}{b}), \ \exists \; c \in (a, b) \text{ such that } \func{f}{c} = N
-\end{equation*}
+\begin{theorem}{Intermediate value theorem}{}
+    Let \( f: D \subseteq \R \to \R \) be continuous on the closed interval \( [a, b] \subseteq D \), then \( f \) takes on any given value between \( \func{f}{a} \) and \( \func{f}{b} \) at some point within the interval, i.e.,
+    \vspace{-0.5em}
+    \begin{equation*}
+        \min \{ \func{f}{a}, \func{f}{b} \} \leq N \leq \max \{ \func{f}{a}, \func{f}{b} \}
+        \implies
+        \exists c \in [a, b] \text{ such that } \func{f}{c} = N
+    \end{equation*}
+\end{theorem}
 
 \section{Wierstrass extreme value theorem}
 
