@@ -469,6 +469,7 @@ The gradient of \( f \) can be computed as \( \grad{f}{\x} = \Q \x + \mathbf{h} 
         \xstar = -\Qinv \mathbf{h}
     }
 \end{equation*}
+where \( \Qinv \) exists since \( \Q \succ \zero \).
 
 \paragraph{Challenge:}
 Not allowed to compute \( \Qinv \) explicitly.
@@ -571,7 +572,7 @@ Now, consider the error at the \( k^{th} \) iteration defined as
     \implies
     E_k
     & =
-    \half \qfbf{\left( \xk - \xstar \right)}{Q}
+    \half \qf{(\xk - \xstar)}{\Q}
     \\
     \because
     \grad{f}{\xstar}
@@ -665,7 +666,7 @@ Applying this with \( \z = \grad{f}{\xk} \), we have
     \leq
     \rho^k E_0
 \end{equation*}
-where \( \rho \in \rinterval{0}{1} \) since \( \Q \succ \zero \implies \func{\lambda_{\max}}{\Q} \geq \func{\lambda_{\min}}{\Q} > 0 \), and \( 4ab \leq {(a+b)}^2, \; \forall a, b \).
+where \( \rho \in \rinterval{0}{1} \; \because \Q \succ \zero, \; \func{\lambda_{\max}}{\Q} \geq \func{\lambda_{\min}}{\Q} > 0 \), and \( 4ab \leq {(a+b)}^2, \; \forall a, b \).
 
 \chapter{Inexact line search}
 
@@ -679,6 +680,20 @@ where \( \rho \in \rinterval{0}{1} \) since \( \Q \succ \zero \implies \func{\la
         \quad 0 < c < 1
     \end{equation*}
 \end{definition}
+
+\subsection{Forward expansion}
+
+Note that for sufficiently small \( \alpha_k \), the sufficient decrease condition is always satisfied since
+\begin{align*}
+    \func{f}{\xk + \alpha_k \pk}
+    & =
+    \func{f}{\xk} + \alpha_k \dotp{\grad{f}{\xk}}{\pk} + o(\alpha_k)
+    \\ & <
+    \func{f}{\xk} + c \alpha_k \dotp{\grad{f}{\xk}}{\pk},
+    \qquad \because
+    \dotp{\grad{f}{\xk}}{\pk} < 0,
+    \quad 0 < c < 1
+\end{align*}
 
 \subsection{Backtracking line search}
 
@@ -702,6 +717,15 @@ Determine the largest number \( \alpha_k \) in the sequence \( {\{ \beta^m \bar{
     \end{align*}
 \end{definition}
 
+\subsection{Rate of convergence}
+
+\begin{equation*}
+    \sim
+    R_k
+    =
+    \frac{2 \rho_1 (1 - \rho_2)}{L} \cos^2 \theta^{(k)}
+\end{equation*}
+
 \section{Wolfe conditions}
 
 \begin{definition}{Wolfe conditions}{}
@@ -721,6 +745,13 @@ Determine the largest number \( \alpha_k \) in the sequence \( {\{ \beta^m \bar{
         0 < c_1 < c_2 < 1
     \end{align*}
 \end{definition}
+
+\subsection{Rate of convergence}
+
+\begin{equation*}
+    \sim
+    R_k
+\end{equation*}
 
 \subsection{Strong Wolfe conditions}
 
