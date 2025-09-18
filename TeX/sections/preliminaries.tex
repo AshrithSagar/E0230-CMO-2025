@@ -532,9 +532,25 @@ The \textbf{outer product} of two vectors \( \x \in \R^m \) and \( \y \in \R^n \
 
 A matrix \( \mathbf{A} \in \R^{d \times d} \) is symmetric if \( \mathbf{A} = \mathbf{A}^\top \), i.e., \( a_{ij} = a_{ji}, \ \forall i, j \).
 
+\paragraph{Properties}
+
+\begin{itemize}
+    \item \( \mathbf{A}, \mathbf{B} \in \SD \implies \mathbf{A} + \mathbf{B} \in \SD \).
+        \quad \( \because {(\mathbf{A} + \mathbf{B})}^\top = \mathbf{A}^\top + \mathbf{B}^\top = \mathbf{A} + \mathbf{B} \).
+
+    \item \( \mathbf{A} \in \SD, c \in \R \implies c \mathbf{A} \in \SD \).
+        \quad \( \because {(c \mathbf{A})}^\top = c \mathbf{A}^\top = c \mathbf{A} \).
+
+    \item \( \mathbf{A} \in \SD \implies \mathbf{A}^k \in \SD, \; k \in \N \).
+        \quad \( \because {(\mathbf{A}^k)}^\top = {(\mathbf{A}^\top)}^k = \mathbf{A}^k \).
+
+    \item \( \mathbf{A} \in \SD \implies \mathbf{A}^{-1} \in \SD, \text{ if } \mathbf{A} \text{ is invertible} \).
+        \quad \( \because {(\inv{\mathbf{A}})}^\top = \inv{(\mathbf{A}^\top)} = \inv{\mathbf{A}} \).
+\end{itemize}
+
 \subsection{Symmetric Positive Semi-definite Matrices}
 
-A symmetric matrix \( \mathbf{A} \in \SD \) is \textbf{positive semi-definite} (PSD), denoted as \( \mathbf{A} \succeq 0 \), if
+A symmetric matrix \( \mathbf{A} \in \SD \) is \textbf{positive semi-definite} (PSD), denoted as \( \mathbf{A} \succeq \zero \), if
 \begin{equation*}
     \x^\top \mathbf{A} \x \geq 0,
     \quad \forall \x \in \R^d
@@ -542,7 +558,7 @@ A symmetric matrix \( \mathbf{A} \in \SD \) is \textbf{positive semi-definite} (
 
 \subsection{Symmetric Positive Definite Matrices}
 
-A symmetric matrix \( \mathbf{A} \in \SD \) is \textbf{positive definite} (PD), denoted as \( \mathbf{A} \succ 0 \), if
+A symmetric matrix \( \mathbf{A} \in \SD \) is \textbf{positive definite} (PD), denoted as \( \mathbf{A} \succ \zero \), if
 \begin{equation*}
     \x^\top \mathbf{A} \x > 0,
     \quad \forall \x \in \R^d \setminus \{ \zero \}

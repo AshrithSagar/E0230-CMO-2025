@@ -46,20 +46,20 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
 
 \subsection{First-order necessary condition for a local minimum}
 
-\begin{theorem}{First-order necessary condition for a local minimum}{}
+\begin{theorem}{First-order necessary condition for a local minimum}{first-order-necessary-condition-for-a-local-minimum}
     For a function \( f \in \C^{1} \), if \( \xstar \) is a local minimum of \( f \), then \( \grad{f}{\xstar} = \zero \).
 \end{theorem}
 
 \subsection{Second-order necessary condition for a local minimum}
 
 \begin{theorem}{Second-order necessary condition for a local minimum}{}
-    For a function \( f \in \C^{2} \), if \( \xstar \) is a local minimum of \( f \), then \( \grad{f}{\xstar} = \zero, \; \hess{f}{\xstar} \succeq 0 \).
+    For a function \( f \in \C^{2} \), if \( \xstar \) is a local minimum of \( f \), then \( \grad{f}{\xstar} = \zero, \; \hess{f}{\xstar} \succeq \zero \).
 \end{theorem}
 
 \subsection{Second-order sufficient condition for a strict local minimum}
 
 \begin{theorem}{Second-order sufficient condition for a strict local minimum}{}
-    For a function \( f \in \C^{2} \) such that \( \grad{f}{\xstar} = \zero, \; \hess{f}{\xstar} \succ 0 \), then \( \xstar \) is a strict local minimum of \( f \).
+    For a function \( f \in \C^{2} \) such that \( \grad{f}{\xstar} = \zero, \; \hess{f}{\xstar} \succ \zero \), then \( \xstar \) is a strict local minimum of \( f \).
 \end{theorem}
 
 \subsection{First-order sufficient condition for a global minimum under convexity}
@@ -210,7 +210,7 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
 \begin{theorem}{Second-order condition for convexity}{second-order-condition-for-convexity}
     For a function \( f \in \C^2 \) with a convex domain \( D \), \( f \) is convex on \( D \) iff
     \begin{equation*}
-        \hess{f}{\x} \succeq 0
+        \hess{f}{\x} \succeq \zero
         , \quad
         \forall \x \in D
     \end{equation*}
@@ -239,7 +239,7 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
         , \quad
         \forall \x, \y \in D
     \end{equation*}
-    which implies \( \hess{f}{\x} \succeq 0, \; \forall \x \in D \).
+    which implies \( \hess{f}{\x} \succeq \zero, \; \forall \x \in D \).
     (Note: \( \boldsymbol{\xi} \in D \) since \( D \) is convex.)
 
     \( (\Leftarrow) \)
@@ -252,7 +252,7 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
         \boldsymbol{\xi} = (1 - t) \x + t \y, \; t \in (0, 1)
     \end{equation*}
     for some \( t \in (0, 1) \).
-    Since \( \hess{f}{\x} \succeq 0, \; \forall \x \in D \), we have
+    Since \( \hess{f}{\x} \succeq \zero, \; \forall \x \in D \), we have
     \begin{equation*}
         \func{f}{\y} - \func{f}{\x} - {\grad{f}{\x}}^\top (\y - \x) \geq 0
         , \quad
@@ -352,7 +352,7 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
 \begin{proof}
     Define \( \func{g}{\x} = \func{f}{\x} - \frac{\mu}{2} \norm{\x}^2 \).
     Then, \( \hess{g}{\x} = \hess{f}{\x} - \mu \I \).
-    From the second-order condition for convexity~\pthmref{thm:second-order-condition-for-convexity}, we have that \( g \) is convex iff \( \hess{g}{\x} \succeq 0, \; \forall \x \in D \), which is equivalent to the desired result.
+    From the second-order condition for convexity~\pthmref{thm:second-order-condition-for-convexity}, we have that \( g \) is convex iff \( \hess{g}{\x} \succeq \zero, \; \forall \x \in D \), which is equivalent to the desired result.
 \end{proof}
 
 \chapter{Algorithmic design}
@@ -454,13 +454,14 @@ Consider the unconstrained quadratic minimisation problem
     \min_{\x \in \R^d} \func{f}{\x},
     \quad \text{where }
     \func{f}{\x} = \left( \half \qfbf{x}{Q} + \dotp{\h}{\x} + c \right),
-    \quad \Q \succ 0, \text{i.e.}, \Q \in \mathbf{S}_d^{++},
+    \quad \Q \succ \zero, \text{i.e.}, \Q \in \mathbf{S}_d^{++},
     \quad \mathbf{h} \in \R^d,
     \quad c \in \R
 \end{align*}
 
 \paragraph{Solution:}
-The gradient of \( f \) can be computed as \( \grad{f}{\x} = \Q \x + \mathbf{h} \), and thereby from the first-order necessary condition for local minimum, the local minimum \( \xstar \) must necessarily satisfy
+Since \( \hess{f}{\x} = \Q \succ \zero \), \( f \) is strongly convex, and thereby has a unique global minimum which is also the unique local minimum.
+The gradient of \( f \) can be computed as \( \grad{f}{\x} = \Q \x + \mathbf{h} \), and thereby from the first-order necessary condition for local minimum~\pthmref{thm:first-order-necessary-condition-for-a-local-minimum}, the local minimum \( \xstar \) must necessarily satisfy
 \begin{equation*}
     \grad{f}{\xstar} = \Q \xstar + \mathbf{h} = \zero
     \quad \iff \quad
@@ -481,26 +482,26 @@ To find the optimal step length \( \alpha_k \), consider
     & \triangleq
     \func{f}{\xk + \alpha \pk}
     \\ & =
-    \half {\left( \xk + \alpha \pk \right)}^\top \Q \left( \xk + \alpha \pk \right)
-    + \mathbf{h}^\top \left( \xk + \alpha \pk \right)
+    \half \qf{\left( \xk + \alpha \pk \right)}{\Q}
+    + \dotp{\mathbf{h}}{\!\left( \xk + \alpha \pk \right)}
     + c
     \\ & =
-    \half {\xk}^\top \Q \xk
-    + \alpha {\xk}^\top \Q \pk
-    + \frac{\alpha^2}{2} {\pk}^\top \Q \pk
-    + \mathbf{h}^\top \xk
-    + \alpha \mathbf{h}^\top \pk
+    \half \qf{\xk}{\Q}
+    + \alpha \qf{\xk}{\Q}[\pk]
+    + \frac{\alpha^2}{2} \qf{\pk}{\Q}
+    + \dotp{\mathbf{h}}{\xk}
+    + \alpha \dotp{\mathbf{h}}{\pk}
     + c
     \\ & =
-    \alpha^2 \left( \half {\pk}^\top \Q \pk \right)
-    + \alpha \left( {\xk}^\top \Q \pk + \mathbf{h}^\top \pk \right)
-    + \left( \half {\xk}^\top \Q \xk + \mathbf{h}^\top \xk + c \right)
+    \alpha^2 \left( \half \qf{\pk}{\Q} \right)
+    + \alpha \left( \qf{\xk}{\Q}[\pk] + \dotp{\mathbf{h}}{\pk} \right)
+    + \left( \half \qf{\xk}{\Q} + \dotp{\mathbf{h}}{\xk} + c \right)
     \\ & =
-    \alpha^2 \underbrace{ \left( \half {\pk}^\top \Q \pk \right) }_{p_k}
-    + \alpha \underbrace{ \left( {\grad{f}{\xk}}^\top \pk \right) }_{q_k}
-    + \underbrace{ \left( \func{f}{\xk} \right) }_{r_k}
+    \alpha^2 \underbrace{ \left( \half \qf{\pk}{\Q} \right) }_{p_k}
+    + \alpha \underbrace{ \left( \dotp{\grad{f}{\xk}}{\pk} \right) }_{q_k}
+    + \underbrace{ \Big( \func{f}{\xk} \Big) }_{r_k}
 \end{align*}
-which is a quadratic function in \( \alpha \) with \( p_k > 0 \; \left( \because \Q \succ 0 \right) \) and \( q_k < 0 \; \left( \because \pk \in \func{\mathcal{DS}}{\xk} \right) \).
+which is a quadratic function in \( \alpha \) with \( p_k > 0 \; \left( \because \Q \succ \zero \right) \) and \( q_k < 0 \; \left( \because \pk \in \func{\mathcal{DS}}{\xk} \right) \).
 
 For the \hyperlink{1D-quadratic}{one-dimensional quadratic} case, we can then compute the minimum point and minimum value as
 \begin{equation*}
@@ -509,7 +510,7 @@ For the \hyperlink{1D-quadratic}{one-dimensional quadratic} case, we can then co
     \implies
     \boxed{
         \alpha_k
-        = -\frac{{\grad{f}{\xk}}^\top \pk}{{\pk}^\top \Q \pk}
+        = -\frac{\dotp{\grad{f}{\xk}}{\pk}}{\qf{\pk}{\Q}}
     }
     > 0
 \end{equation*}
@@ -523,7 +524,7 @@ For the \hyperlink{1D-quadratic}{one-dimensional quadratic} case, we can then co
     \boxed{
         \func{f}{\xkp}
         =
-        \func{f}{\xk} - \frac{{\left( {\grad{f}{\xk}}^\top \pk \right)}^2}{2 {\pk}^\top \Q \pk}
+        \func{f}{\xk} - \frac{{\left( \dotp{\grad{f}{\xk}}{\pk} \right)}^2}{2 \qf{\pk}{\Q}}
     }
 \end{equation*}
 
@@ -531,11 +532,11 @@ For the choice \( \pk = -\grad{f}{\xk} \), we have
 \begin{equation*}
     \alpha_k
     =
-    \frac{\norm{\grad{f}{\xk}}^2} {{\grad{f}{\xk}}^\top \Q \grad{f}{\xk}},
+    \frac{\norm{\grad{f}{\xk}}^2} {\qf{\grad{f}{\xk}}{\Q}},
     \qquad
     \func{f}{\xkp}
     =
-    \func{f}{\xk} - \frac{\norm{\grad{f}{\xk}}^4}{2 {\grad{f}{\xk}}^\top \Q \grad{f}{\xk}}
+    \func{f}{\xk} - \frac{\norm{\grad{f}{\xk}}^4}{2 \qf{\grad{f}{\xk}}{\Q}}
 \end{equation*}
 
 \paragraph{Analysis:}
@@ -544,20 +545,21 @@ For a local minimum \( \xstar \), and any \( \p \in \R^d \), we have
 \begin{align*}
     \func{f}{\xstar + \p}
     & =
-    \half \qfbf{(\xstar + \p)}{Q} + \dotp{\h}{(\xstar + \p)} + c
+    \half \qf{(\xstar + \p)}{\Q} + \dotp{\h}{(\xstar + \p)} + c
     \\ & =
-    \half \qfbf{\xstar}{Q} + \qfbf{\xstar}{Q}[\p] + \half \qfbf{\p}{Q} + \dotp{\h}{\xstar} + \dotp{\h}{\p} + c
+    \half \qf{\xstar}{\Q} + \qf{\xstar}{\Q}[\p] + \half \qf{\p}{\Q} + \dotp{\h}{\xstar} + \dotp{\h}{\p} + c
     \\ & =
-    \left( \half \qfbf{\xstar}{Q} + \dotp{\h}{\xstar} + c \right)
+    \left( \half \qf{\xstar}{\Q} + \dotp{\h}{\xstar} + c \right)
     + {\cancel{\left( \Q \xstar + \mathbf{h} \right)}}^\top \p
-    + \half \qfbf{\p}{Q}
+    + \half \qf{\p}{\Q}
     \\ & =
-    \func{f}{\xstar} + \half \qfbf{p}{Q}
+    \func{f}{\xstar} + \half \qf{\p}{\Q}
     \\
     \implies
     \func{f}{\x}
     & =
-    \func{f}{\xstar} + \half \qfbf{(x - \xstar)}{Q}, \quad \forall \x \in \R^d
+    \func{f}{\xstar} + \half \qf{(\x - \xstar)}{\Q},
+    \quad \forall \x \in \R^d
 \end{align*}
 
 Now, consider the error at the \( k^{th} \) iteration defined as
@@ -597,9 +599,9 @@ Now, consider the error at the \( k^{th} \) iteration defined as
     =
     \half \dotp{\Big( \Qinv \, \grad{f}{\xk} \Big)}{\grad{f}{\xk}}
     \\ & =
-    \half \qf{\Big( \grad{f}{\xk} \Big)}{{\left( \Qinv \right)}^\top}[\grad{f}{\xk}]
+    \half \qf{\grad{f}{\xk}}{{\left( \Qinv \right)}^\top}
     =
-    \half \qf{\Big( \grad{f}{\xk} \Big)}{\Qinv}[\grad{f}{\xk}]
+    \half \qf{\grad{f}{\xk}}{\Qinv}
 \end{align*}
 
 Now, the successive error reduction can be computed as
@@ -608,12 +610,12 @@ Now, the successive error reduction can be computed as
     & =
     \func{f}{\xk} - \func{f}{\xkp}
     =
-    \frac{{\left( {\grad{f}{\xk}}^\top \pk \right)}^2}{2 {\pk}^\top \Q \pk}
+    \frac{{\left( \dotp{\grad{f}{\xk}}{\pk} \right)}^2}{2 \qf{\pk}{\Q}}
     \\
     \implies
     \frac{E_{k} - E_{k+1}}{E_k}
     & =
-    \frac{{\left( {\grad{f}{\xk}}^\top \pk \right)}^2}{ {\left( \grad{f}{\xk} \right)}^\top \Qinv \, \grad{f}{\xk} \; {\pk}^\top \Q \pk}
+    \frac{{\left( \dotp{\grad{f}{\xk}}{\pk} \right)}^2}{ {\left( \grad{f}{\xk} \right)}^\top \Qinv \, \grad{f}{\xk} \; \qf{\pk}{\Q}}
 \end{align*}
 
 For the choice \( \pk = -\grad{f}{\xk} \), we have
@@ -663,7 +665,7 @@ Applying this with \( \z = \grad{f}{\xk} \), we have
     \leq
     \rho^k E_0
 \end{equation*}
-where \( \rho \in \rinterval{0}{1} \) since \( \Q \succ 0 \implies \func{\lambda_{\max}}{\Q} \geq \func{\lambda_{\min}}{\Q} > 0 \), and \( 4ab \leq {(a+b)}^2, \; \forall a, b \).
+where \( \rho \in \rinterval{0}{1} \) since \( \Q \succ \zero \implies \func{\lambda_{\max}}{\Q} \geq \func{\lambda_{\min}}{\Q} > 0 \), and \( 4ab \leq {(a+b)}^2, \; \forall a, b \).
 
 \chapter{Inexact line search}
 
@@ -774,17 +776,17 @@ then it is said to exhibit \textbf{global convergence}.
 Refers to the descent direction
 \begin{equation*}
     \pk = -\hessinv{f}{\xk} \grad{f}{\xk},
-    \qquad \hess{f}{\xk} \succ 0
+    \qquad \hess{f}{\xk} \succ \zero
 \end{equation*}
 
 This satisfies the condition for descent direction since
 \begin{align*}
     \hess{f}{\xk}
     &
-    \succ 0
+    \succ \zero
     \implies
     \hessinv{f}{\xk}
-    \succ 0
+    \succ \zero
     \\
     \implies
     \dotp{\grad{f}{\xk}}{\pk}
