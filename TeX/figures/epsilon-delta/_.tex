@@ -1,0 +1,78 @@
+\documentclass[tikz, border=5pt]{standalone}
+\usepackage{amsmath}
+
+\begin{document}
+\begin{tikzpicture}[scale=2]
+    %% Epsilon-delta
+
+    % Parameters
+    \def\a{2.77}
+    \def\b{2.5}
+    \def\eps{0.1}
+    \def\del{0.5}
+    \def\xu{2.58}
+    \def\xd{3}
+
+    % Axes
+    \draw[thick,->]
+    -- (-0.5,0)
+    -- (5,0)
+    node[anchor=north west] {\( x \)};
+
+    \draw[thick,->]
+    -- (0,-0.5)
+    -- (0,5.5)
+    node[anchor=south east] {\( f(x) \)};
+
+    % Function
+    \draw[thick,red,domain=0.675:4.6,smooth,variable=\x]
+    plot ({\x},{(\x - 3)^3 + (\x - 4)^2 + 1});
+
+    % Regions
+    \fill[blue, opacity=0.1]
+    -- (0,{\b-\del})
+    -- (\xu,{\b-\del})
+    -- (\xu,{\b+\del})
+    -- (0,{\b+\del})
+    -- cycle;
+
+    \fill[blue, opacity=0.1]
+    -- (\xu,0)
+    -- (\xd,0)
+    -- (\xd,{\b-\del})
+    -- (\xu,{\b-\del})
+    -- cycle;
+
+    \fill[blue, opacity=0.1]
+    -- (\xu,{\b-\del})
+    -- (\xd,{\b-\del})
+    -- (\xd,{\b+\del})
+    -- (\xu,{\b+\del})
+    -- cycle;
+
+    % Epsilon-delta box
+    \draw[dashed]
+    -- (0,\b)
+    node[anchor=east] {\( b \)}
+    -- (\a,\b)
+    -- (\a,0)
+    node[anchor=north] {\( a \)};
+
+    \draw[dashed]
+    -- (0,{\b+\del})
+    -- (\xu,{\b+\del})
+    -- (\xu,0);
+
+    \draw[dashed]
+    -- (0,{\b-\del})
+    -- (\xd,{\b-\del})
+    -- (\xd,0);
+
+    % Labels
+    \filldraw[blue]
+    -- (\a,\b)
+    circle (1pt)
+    node[anchor=south west] {\( (a, b) \)};
+
+\end{tikzpicture}
+\end{document}
