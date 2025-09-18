@@ -804,7 +804,9 @@ The `global' refers to the fact that the initial point \( \x_0 \) is arbitrary, 
 \begin{equation*}
     \xkp
     =
-    \xk - \hessinv{f}{\x} \grad{f}{\xk}
+    \xk - \hessinv{f}{\x} \grad{f}{\xk},
+    \qquad
+    \hess{f}{\xk} \succ \zero
 \end{equation*}
 
 \paragraph{Newton direction:}
@@ -829,3 +831,125 @@ This satisfies the condition for descent direction since
     - {\left( \grad{f}{\xk} \right)}^\top \hessinv{f}{\xk} \grad{f}{\xk}
     < 0
 \end{align*}
+
+From the fundamental theorem of calculus~\psecref{sec:fundamental-theorem-of-calculus}, with \( \func{g}{t} \triangleq \grad{f}{\x + t(\y - \x)}, \; t \in [0, 1] \), we have
+\begin{equation*}
+    \func{g}{1} - \func{g}{0}
+    =
+    \int_{0}^{1} \func{g'}{t} \, dt
+    \implies
+    \boxed{
+        \grad{f}{\y} - \grad{f}{\x}
+        =
+        \int_{0}^{1} \hess{f}{\x + t(\y - \x)} (\y - \x) \, dt,
+        \quad \forall \x, \y \in \R^d
+    }
+\end{equation*}
+
+Assuming \( f \in \C^2_M \), we have
+\begin{equation*}
+    \boxed{
+        \norm{\hess{f}{\y} - \hess{f}{\x}}
+        \leq
+        M \norm{\y - \x},
+        \quad \forall \x, \y \in \R^d
+    }
+\end{equation*}
+
+From Taylor's theorem, we have
+\begin{equation*}
+    \func{f}{\y}
+    =
+    \func{f}{\x}
+    + \dotp{\grad{f}{\x}}{(\y - \x)}
+    + \half \qf{(\y - \x)}{\hess{f}{\x}}
+    + o(\norm{\y - \x}^2),
+    \quad \forall \x, \y \in \R^d
+\end{equation*}
+
+Taking the derivative with respect to \( \y \) on both sides, we have
+\begin{equation*}
+    \implies
+    \grad{f}{\y}
+    =
+    \grad{f}{\x}
+    + \hess{f}{\x} (\y - \x)
+    + o(\norm{\y - \x}),
+    \quad \forall \x, \y \in \R^d
+\end{equation*}
+
+\begin{align*}
+    \implies
+    \norm{
+        \grad{f}{\y}
+        - \grad{f}{\x}
+        - \hess{f}{\x} (\y - \x)
+    }
+    & =
+    \norm{
+        \int_{0}^{1} \Big( \hess{f}{\x + t(\y - \x)} - \hess{f}{\x} \Big) (\y - \x) \, dt
+    }
+    \\ & \leq
+    \int_{0}^{1} \norm{
+        \Big( \hess{f}{\x + t(\y - \x)} - \hess{f}{\x} \Big) (\y - \x)
+    } \, dt
+    \\ & \leq
+    \int_{0}^{1}
+    \norm{\hess{f}{\x + t(\y - \x)} - \hess{f}{\x}}
+    \norm{\y - \x}
+    \, dt
+    \\ & \leq
+    \int_{0}^{1}
+    M \norm{\cancel{\x} + t(\y - \x) - \cancel{\x}}
+    \norm{\y - \x}
+    \, dt
+    \\ & =
+    \int_{0}^{1}
+    M
+    \norm{\y - \x}^2
+    \, t
+    \, dt
+    =
+    M
+    \norm{\y - \x}^2
+    \int_{0}^{1}
+    t
+    \, dt
+    =
+    \frac{M}{2}
+    \norm{\y - \x}^2
+\end{align*}
+\begin{equation*}
+    \implies
+    \boxed{
+        \norm{
+            \grad{f}{\y}
+            - \grad{f}{\x}
+            - \hess{f}{\x} (\y - \x)
+        }
+        \leq
+        \frac{M}{2} \norm{\y - \x}^2,
+        \quad \forall \x, \y \in \R^d
+    }
+\end{equation*}
+
+Now, since \( - \norm{\mathbf{A}} \; \I \preceq \mathbf{A} \preceq \norm{\mathbf{A}} \; \I, \quad \forall \mathbf{A} \in \SD \), we have
+\begin{equation*}
+    - M \norm{\y - \x} \; \I
+    \preceq
+    \hess{f}{\y} - \hess{f}{\x}
+    \preceq
+    M \norm{\y - \x} \; \I,
+    \quad \forall \x, \y \in \R^d
+\end{equation*}
+\begin{equation*}
+    \implies
+    \boxed{
+        \hess{f}{\x} - M \norm{\y - \x} \; \I
+        \preceq
+        \hess{f}{\y}
+        \preceq
+        \hess{f}{\x} + M \norm{\y - \x} \; \I,
+        \quad \forall \x, \y \in \R^d
+    }
+\end{equation*}
