@@ -112,8 +112,46 @@ Answer True (T) or False (F)
     \item For \( f \), a \( \mathcal{C}^{2} \) function, consider a point \( \hat{\mathbf{x}} \) such that \( \nabla f(\hat{\mathbf{x}}) = 0 \) and the Hessian is positive definite, \( H(\hat{\mathbf{x}}) \succ 0 \).
         Then \( \hat{\mathbf{x}} \) is global minimum of \( f \).
 
+        \begin{solutionbox}
+            False.
+
+            From the given conditions, \( f \in \mathcal{C}^{2}, \nabla f(\hat{\mathbf{x}}) = 0, H(\hat{\mathbf{x}}) \succ 0 \), we can say that \( \hat{\mathbf{x}} \) is a strict local minimum of \( f \) by the second order necessary condition for optimalilty.
+
+            To be able to say that \( \hat{\mathbf{x}} \) is a global minimum of \( f \), we need \( f \) to be convex, i.e., \( H(\mathbf{x}) \succeq 0, \; \forall \mathbf{x} \in \operatorname{dom}(f) \), as per the second order sufficient condition for optimality and the second order condition for convexity.
+        \end{solutionbox}
+
     \item Consider the function \( f: \mathbb{R}^{2} \rightarrow \mathbb{R} \) with \( \mathbf{x} = {\left[x_{1}, x_{2}\right]}^{\top}, f(\mathbf{x}) = {\left(1+x_{1}\right)}^{2}+b{\left(x_{2}-x_{1}^{2}\right)}^{2} \) with \( b>0 \).
         The global minimum of \( f \) for \( b = 100 \) and for \( b = 1 \) are different.
+
+        \begin{solutionbox}
+            False.
+            \vspace{-0.5em}
+            \begin{align*}
+                \implies
+                \nabla f(\mathbf{x})
+                & =
+                {\left[2(1+x_{1}) - 4b x_{1}(x_{2}-x_{1}^{2}), \; 2b(x_{2}-x_{1}^{2})\right]}^{\top}
+                \\
+                \implies
+                \nabla f(\hat{\mathbf{x}})
+                & =
+                \mathbf{0}
+                \implies
+                x_2 = x_1^2, \quad 1 + x_1 = 0
+                \implies
+                \hat{\mathbf{x}} = {\left[-1, 1\right]}^{\top}
+                \\
+                \implies
+                f(\hat{\mathbf{x}})
+                & =
+                {(1-1)}^{2} + b{(1-{(-1)}^{2})}^{2} = 0, \quad \forall b > 0
+            \end{align*}
+            There is only one stationary point and the function value at that point doesn't depend on \( b \).
+            Loosely, we can see that the global minimum is independent of \( b \).
+
+            The given function is the Rosenbrock function \( f(x, y) = {(a-x)}^{2}+b{(y-x^{2})}^{2} \), with \( a = -1, \; b > 0 \).
+            It has a unique global minimum at \( (x, y) = (a, a^{2}), \; \forall b > 0 \).
+        \end{solutionbox}
 
     \item Suppose global minimum, \( \hat{\mathbf{x}} \), exists for a function \( f \in \mathcal{C}^{1} \).
         \( \hat{\mathbf{x}} \in \{ \mathbf{x} \mid \nabla f(\mathbf{x}) = 0 \} \).
