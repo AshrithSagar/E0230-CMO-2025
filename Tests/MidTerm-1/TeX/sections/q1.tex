@@ -147,7 +147,8 @@ Answer True (T) or False (F)
                 {(1-1)}^{2} + b{(1-{(-1)}^{2})}^{2} = 0, \quad \forall b > 0
             \end{align*}
             There is only one stationary point and the function value at that point doesn't depend on \( b \).
-            Loosely, we can see that the global minimum is independent of \( b \).
+            Loosely, we can see that the global minimum would be independent of \( b \).
+            (Provided with additional checks, which we skip here).
 
             The given function is the Rosenbrock function \( f(x, y) = {(a-x)}^{2}+b{(y-x^{2})}^{2} \), with \( a = -1, \; b > 0 \).
             It has a unique global minimum at \( (x, y) = (a, a^{2}), \; \forall b > 0 \).
@@ -156,11 +157,44 @@ Answer True (T) or False (F)
     \item Suppose global minimum, \( \hat{\mathbf{x}} \), exists for a function \( f \in \mathcal{C}^{1} \).
         \( \hat{\mathbf{x}} \in \{ \mathbf{x} \mid \nabla f(\mathbf{x}) = 0 \} \).
 
+        \begin{solutionbox}
+            True.
+
+            Follows from the first order necessary condition for optimality.
+        \end{solutionbox}
+
     \item Exact line search for minimizing Quadratic function can be implemented only when descent direction is along negative of the gradient.
+
+        \begin{solutionbox}
+            False.
+
+            Exact line search can be implemented for any descent direction.
+            We have a closed form expression for the case mentioned in the statement, but that doesn't mean we cannot implement exact line search for other descent directions.
+        \end{solutionbox}
 
     \item Armijo-Goldstein procedure for inexact line search will not apply for Quadratic functions.
 
+        \begin{solutionbox}
+            False.
+
+            Armijo-Goldstein procedure can be applied to any function.
+        \end{solutionbox}
+
     \item Wolfe procedure for inexact line search is always more efficient than Armijo-Goldstein.
 
+        \begin{solutionbox}
+            False.
+
+            There can be cases where Armijo-Goldstein can be more efficient than Wolfe.
+        \end{solutionbox}
+
     \item Strongly convex functions have unique global minimum.
+
+        \begin{solutionbox}
+            True.
+
+            Follows from the second order condition for strong convexity and the second order sufficient condition for optimality.
+
+            Can be shown by contradiction, provided the function is non-constant.
+        \end{solutionbox}
 \end{enumerate}
