@@ -408,6 +408,14 @@ The \textbf{Hessian} of a function \( f: \R^d \to \R \) at a point \( \x = {\lef
     \in \R^{d \times d}
 \end{equation*}
 
+\paragraph{Properties}
+
+\begin{itemize}
+    \item If \( f \) is differentiable at \( x \), then \( f \) is continuous at \( x \).
+
+    \item \( \func{f}{\x} = \half \qf{\x}{\mathbf{A}}, \; \mathbf{A} = \mathbf{u} \mathbf{v}^\top, \; \mathbf{u}, \mathbf{v} \in \R^d, \; \mathbf{u} \neq \mathbf{v} \implies \hess{f}{\x} = \half (\mathbf{A} + \mathbf{A}^\top) = \half (\mathbf{u} \mathbf{v}^\top + \mathbf{v} \mathbf{u}^\top) \).
+\end{itemize}
+
 \section{Fundamental theorem of calculus}\label{sec:fundamental-theorem-of-calculus}
 
 \begin{theorem}{First fundamental theorem of calculus}{}
