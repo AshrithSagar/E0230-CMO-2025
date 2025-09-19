@@ -1,3 +1,29 @@
 \section*{Question 4}
 
+Consider \( f(\mathbf{x}) = \frac{1}{2} \mathbf{x}^{\top} A \mathbf{x}+b^{\top} \mathbf{x}+c \) where \( A = \sum_{i = 1}^{d} \mu_{i} \mathbf{u}_{i} \mathbf{u}_{i}^{\top}, \mathbf{u}_{i} \in \mathbb{R}^{d},{\left\Vert\mathbf{u}_{i}\right\Vert}^{2} = 1, \mathbf{u}_{i}^{\top} \mathbf{u}_{j} = 0, i \neq j i \in[d] \).
+It is given that \( \mu_{1} \geq \ldots, \mu_{d}, \mu_{1} = 100, \mu_{d} = 1 \).
+Note that \( b = \sum_{i = 1}^{n} \beta_{i} \mathbf{u}_{i}, \beta_{i}, c \in \mathbb{R} \).
+Fix \( d = 100 \).
+Let \( \mathbf{x}^{*} \) be the global minimum of \( f \).
+Consider using \texttt{DESCENT} for minimizing \( f(\mathbf{x}) \) with \( \mathbf{x}^{(0)} = 0, \mathbf{u}^{(k)} = -\nabla f\left(\mathbf{x}^{(k)}\right) \), and \( \alpha_{k} \) is chosen by exact linesearch.
+Answer the following with justification.
+\begin{enumerate}[label= (\alph*)]
+    \item Compute \( \mathbf{x}^{(1)} \) in terms of the parameters.
+        State any equations which were used to justify the answer.
+
+    \item Consider the expression
+        \begin{equation*}
+            \frac{f\left(\mathbf{x}^{(100)}\right)-f\left(\mathbf{x}^{*}\right)}{f\left(\mathbf{x}^{(0)}\right)-f\left(\mathbf{x}^{*}\right)} \leq r
+        \end{equation*}
+        What is the smallest value of \( r \) that can be guaranteed.
+        Provide justifications.
+        State clearly any results you may use.
+
+    \item Consider the problem of minimizing \( h \),
+        \begin{equation*}
+            h(\mathbf{y}) = f(U \mathbf{y}), U = \left[\mathbf{u}_{1}, \mathbf{u}_{2}, \ldots, \mathbf{u}_{d}\right]
+        \end{equation*}
+        What is the best value of \( h(\mathbf{y})-h\left(\mathbf{y}^{*}\right) \) you can obtain using at most \( d \) exact line searches.
+\end{enumerate}
+
 \subsection*{Solution}

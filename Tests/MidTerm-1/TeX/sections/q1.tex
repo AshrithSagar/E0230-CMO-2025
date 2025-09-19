@@ -1,3 +1,31 @@
 \section*{Question 1}
 
+Answer True (T) or False (F)
+\begin{enumerate}[label= (\alph*)]
+    \item Let \( f:[-1,1] \rightarrow \mathbb{R} \) with the property that \( \left|f^{\prime \prime}(x)\right| \leq \frac{1}{2} \) for all \( x \in(-1,1) \).
+        If the global minimum of \( f \) is attained in \( (-1,1) \) and \( \min _{[-1,1]} f(x) = 1 \) then \( f(x) \leq 2 \) for all \( x \in(-1,1) \).
+
+    \item Let \( f(\mathbf{x}) = \mathbf{a}^{\top} \mathbf{x} \).
+        The derivative of \( f \) is \( \mathbf{a} \).
+
+    \item The hessian of \( f(\mathbf{x}) = \frac{1}{2} \mathbf{x}^{\top} A \mathbf{x}, A = \mathbf{u v}^{\top}, \mathbf{u} \neq \mathbf{v} \), is given by \( H = A \).
+
+    \item For \( f \), a \( \mathcal{C}^{2} \) function, consider a point \( \hat{\mathbf{x}} \) such that \( \nabla f(\hat{\mathbf{x}}) = 0 \) and the Hessian is positive definite, \( H(\hat{\mathbf{x}}) \succ 0 \).
+        Then \( \hat{\mathbf{x}} \) is global minimum of \( f \).
+
+    \item Consider the function \( f: \mathbb{R}^{2} \rightarrow \mathbb{R} \) with \( \mathbf{x} = {\left[x_{1}, x_{2}\right]}^{\top}, f(\mathbf{x}) = {\left(1+x_{1}\right)}^{2}+b{\left(x_{2}-x_{1}^{2}\right)}^{2} \) with \( b>0 \).
+        The global minimum of \( f \) for \( b = 100 \) and for \( b = 1 \) are different.
+
+    \item Suppose global minimum, \( \hat{\mathbf{x}} \), exists for a function \( f \in \mathcal{C}^{1} \).
+        \( \hat{\mathbf{x}} \in \{ \mathbf{x} \mid \nabla f(\mathbf{x}) = 0 \} \).
+
+    \item Exact line search for minimizing Quadratic function can be implemented only when descent direction is along negative of the gradient.
+
+    \item Armijo-Goldstein procedure for inexact line search will not apply for Quadratic functions.
+
+    \item Wolfe procedure for inexact line search is always more efficient than Armijo-Goldstein.
+
+    \item Strongly convex functions have unique global minimum.
+\end{enumerate}
+
 \subsection*{Solution}

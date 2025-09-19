@@ -1,3 +1,16 @@
 \section*{Question 5}
 
+Let \( \mathbf{x}^{*} \) be the global minimum of a convex function \( f \in \mathcal{C}_{L}^{1} \).
+Use \texttt{DESCENT} with \( \mathbf{u}^{(k)} = -\nabla f\left(\mathbf{x}^{(k)}\right) \).
+Let \( \alpha_{k} = \frac{\beta}{L} \) where \( 0<\beta<2 \).
+Answer the following with justification.
+\begin{enumerate}[label= (\alph*)]
+    \item Do all iterates lie in \( S = \left\{ \mathbf{x} \mid\left\Vert\mathbf{x}-\mathbf{x}^{*}\right\Vert \leq\left\Vert\mathbf{x}^{(0)}-\mathbf{x}^{*}\right\Vert \right\} \)?
+
+    \item Do the iterates obey the sufficient decrease lemma?
+
+    \item Find the minimum number of iterations required to ensure a point whose function value is at most \( .01 \) more than the value of global minimum value.
+        Assume that \( \left\Vert\mathbf{x}^{(0)}-\mathbf{x}^{*}\right\Vert = 1 \).
+\end{enumerate}
+
 \subsection*{Solution}

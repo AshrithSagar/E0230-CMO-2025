@@ -1,9 +1,11 @@
 \documentclass[12pt]{article}
 
 \usepackage[utf8]{inputenc}
-\usepackage{amsfonts, amsmath, amssymb, amsthm, mathtools, latexsym}
-\usepackage{enumitem, fancybox, geometry, graphicx, hyperref}
-\usepackage{booktabs, cancel, footmisc, multirow}
+\usepackage{amsfonts, amsmath, amssymb, amsthm, cancel, interval, latexsym, mathtools}
+\usepackage{booktabs, enumitem, fancybox, footmisc, geometry, graphicx, hyperref, microtype, multirow, titlesec, tocloft, xparse}
+\usepackage[linesnumbered,ruled,vlined]{algorithm2e}
+\usepackage[most]{tcolorbox}
+\usepackage[numbers,sort]{natbib}
 \usepackage[dvipsnames]{xcolor}
 
 \hypersetup{
@@ -17,6 +19,13 @@
     top=1in,
     bottom=1in
 }
+
+\titlespacing*{\section}{0pt}{0.7em}{0.2em}
+\titlespacing*{\subsection}{0pt}{0.5em}{0.2em}
+\titlespacing*{\subsubsection}{0pt}{0.3em}{0.2em}
+
+\setlength{\parskip}{0pt}
+\setlength{\parindent}{0pt}
 
 \begin{document}
 
@@ -38,6 +47,7 @@
 \renewcommand{\baselinestretch}{1.5}
 \newcommand{\argmin}{\mathop{\mathrm{argmin}}}
 
+\input{sections/q0.tex}
 \input{sections/q1.tex}\clearpage
 \input{sections/q2.tex}\clearpage
 \input{sections/q3.tex}\clearpage

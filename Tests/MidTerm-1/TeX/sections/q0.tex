@@ -1,0 +1,13 @@
+In the following, let \( \mathbf{I} = \left[\mathbf{e}_{1}, \ldots, \mathbf{e}_{d}\right] \) be a \( d \times d \) matrix with \( e_{j} \) be the \( j \)th column.
+Also \( \mathbf{x} = {\left[x_{1}, x_{2}, \ldots, x_{d}\right]}^{\top} \in \mathbb{R}^{d} \) and \( \Vert \mathbf{x} \Vert = \sqrt{\mathbf{x}^{\top} \mathbf{x}} \).
+Set of real symmetric \( d \times d \) matrices will be denoted by \( \mathcal{S}_{d} \), the set of positive semidefinite matrices will be denoted by \( \mathcal{S}_{d}^{+} \), and the set of positive definite matrices will be denoted by \( \mathcal{S}_{d}^{++} \).
+\( [n] \) will denote the set \( \{1,2, \ldots, n\} \).
+Denote \( \mathbf{x}, \mathbf{a}, \mathbf{u}, \mathbf{v} \in \mathbb{R}^{d} \).
+For a function \( f: \mathbb{R}^{d} \rightarrow \mathbb{R}, f \in \mathcal{C}_{L}^{1} \) the Algorithm \texttt{DESCENT} will refer to the following iteration
+\begin{equation*}
+    \mathbf{x}^{(k+1)}
+    =
+    \mathbf{x}^{(k)} + \alpha_{k} \mathbf{u}^{(k)}
+    \tag{\texttt{DESCENT}}
+\end{equation*}
+where \( \mathbf{u}^{(k) \top} \nabla f\left(\mathbf{x}^{(k)}\right)<0 \).
