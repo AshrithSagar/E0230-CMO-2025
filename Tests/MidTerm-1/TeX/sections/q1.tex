@@ -5,10 +5,109 @@ Answer True (T) or False (F)
     \item Let \( f:[-1,1] \rightarrow \mathbb{R} \) with the property that \( \left|f^{\prime \prime}(x)\right| \leq \frac{1}{2} \) for all \( x \in(-1,1) \).
         If the global minimum of \( f \) is attained in \( (-1,1) \) and \( \min _{[-1,1]} f(x) = 1 \) then \( f(x) \leq 2 \) for all \( x \in(-1,1) \).
 
+        \begin{solutionbox}
+            True.
+
+            Let \( \hat{x} \in (-1,1) \) be the global minimizer, then we have \( f(\hat{x}) = 1, \; f^{\prime}(\hat{x}) = 0 \).
+            Now, for any \( x \in (-1,1) \), by Taylor's theorem, there exists \( z \) between \( x \) and \( \hat{x} \) such that
+            \begin{align*}
+                f(x)
+                & =
+                f(\hat{x}) + f^{\prime}(\hat{x})(x-\hat{x}) + \frac{f^{\prime \prime}(z)}{2}{(x-\hat{x})}^{2}
+                \\
+                \implies
+                f(x)
+                & =
+                1 + \frac{f^{\prime \prime}(z)}{2}{(x-\hat{x})}^{2} \leq 1 + \frac{1}{4}{(x-\hat{x})}^{2} \leq 2,
+                \quad \because
+                |x-\hat{x}| \leq 2
+            \end{align*}
+        \end{solutionbox}
+
     \item Let \( f(\mathbf{x}) = \mathbf{a}^{\top} \mathbf{x} \).
         The derivative of \( f \) is \( \mathbf{a} \).
 
+        \begin{solutionbox}
+            True.
+            \begin{align*}
+                f(x)
+                & =
+                \sum_{i = 1}^{d} a_{i} x_{i},
+                \quad \mathbf{x} = {\left[x_{1}, x_{2}, \ldots, x_{d}\right]}^{\top},
+                \; \mathbf{a} = {\left[a_{1}, a_{2}, \ldots, a_{d}\right]}^{\top}
+                \\
+                \implies
+                \nabla f(\mathbf{x})
+                & =
+                {\left[\frac{\partial f}{\partial x_{1}}, \frac{\partial f}{\partial x_{2}}, \ldots, \frac{\partial f}{\partial x_{d}}\right]}^{\top} = {\left[a_{1}, a_{2}, \ldots, a_{d}\right]}^{\top} = \mathbf{a}
+            \end{align*}
+        \end{solutionbox}
+
+        \newpage
     \item The hessian of \( f(\mathbf{x}) = \frac{1}{2} \mathbf{x}^{\top} A \mathbf{x}, A = \mathbf{u v}^{\top}, \mathbf{u} \neq \mathbf{v} \), is given by \( H = A \).
+
+        \begin{solutionbox}
+            False.
+            \begin{align*}
+                A
+                & =
+                \mathbf{u v}^{\top}
+                \implies
+                A^{\top}
+                =
+                {\left(\mathbf{u v}^{\top}\right)}^{\top}
+                =
+                \mathbf{v u}^{\top}
+                \\
+                f(\mathbf{x})
+                & =
+                \frac{1}{2} \mathbf{x}^{\top} A \mathbf{x}
+                =
+                \frac{1}{2} \mathbf{x}^{\top} \left( \mathbf{u v}^{\top} \right) \mathbf{x}
+                =
+                \frac{1}{2} {(\mathbf{u}^{\top} \mathbf{x})} (\mathbf{v}^{\top} \mathbf{x})
+                \\
+                \implies
+                \nabla f(\mathbf{x})
+                & =
+                \frac{1}{2} {(\mathbf{u}^{\top} \mathbf{x})} \nabla {(\mathbf{v}^{\top} \mathbf{x})} + \frac{1}{2} {(\mathbf{v}^{\top} \mathbf{x})} \nabla {(\mathbf{u}^{\top} \mathbf{x})}
+                \\ & =
+                \frac{1}{2} {(\mathbf{u}^{\top} \mathbf{x})} \mathbf{v} + \frac{1}{2} {(\mathbf{v}^{\top} \mathbf{x})} \mathbf{u}
+                =
+                \frac{1}{2} (\mathbf{u v}^{\top} + \mathbf{v u}^{\top}) \mathbf{x}
+                =
+                \frac{1}{2} (A + A^{\top}) \mathbf{x}
+                \\
+                \implies
+                H
+                & =
+                \nabla^{2} f(\mathbf{x})
+                =
+                \frac{1}{2} (A + A^{\top})
+                \\
+                \text{Now, } \quad
+                &
+                H = A
+                \iff
+                A = A^{\top}
+                \\
+                \text{Also, } \quad
+                &
+                \mathbf{u v}^{\top} = \mathbf{v u}^{\top}
+                \iff
+                \mathbf{u} = \lambda \mathbf{v}, \; \lambda \in \mathbb{R}
+                \\
+                \because
+                \mathbf{u} \neq \lambda \mathbf{v}
+                & \implies
+                \mathbf{u v}^{\top} \neq \mathbf{v u}^{\top}
+                \implies
+                A \neq A^{\top}
+                \implies
+                H \neq A
+            \end{align*}
+            Should have been given \( \mathbf{u} \neq \lambda \mathbf{v} \) instead of \( \mathbf{u} \neq \mathbf{v} \).
+        \end{solutionbox}
 
     \item For \( f \), a \( \mathcal{C}^{2} \) function, consider a point \( \hat{\mathbf{x}} \) such that \( \nabla f(\hat{\mathbf{x}}) = 0 \) and the Hessian is positive definite, \( H(\hat{\mathbf{x}}) \succ 0 \).
         Then \( \hat{\mathbf{x}} \) is global minimum of \( f \).
@@ -27,5 +126,3 @@ Answer True (T) or False (F)
 
     \item Strongly convex functions have unique global minimum.
 \end{enumerate}
-
-\subsection*{Solution}
