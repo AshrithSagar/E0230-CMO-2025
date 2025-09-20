@@ -6,6 +6,8 @@
 \NewDocumentCommand{\normbf}{om}{{\IfNoValueTF{#1}{\left\lVert\mathbf{#2}\right\rVert}{#1\lVert\mathbf{#2}#1\rVert}}}
 \newcommand{\dotp}[2]{{{#1}^\top#2}}
 \newcommand{\dotpbf}[2]{{{\mathbf{#1}}^\top\mathbf{#2}}}
+\newcommand{\outp}[2]{{#1{#2}^\top}}
+\newcommand{\outpbf}[2]{{\mathbf{#1}{\mathbf{#2}}^\top}}
 \NewDocumentCommand{\qf}{mmo}{{{#1}^\top#2\,\IfValueTF{#3}{#3}{#1}}}
 \NewDocumentCommand{\qfbf}{mmo}{{{\mathbf{#1}}^\top\mathbf{#2}\:\mathbf{\IfValueTF{#3}{#3}{#1}}}}
 \newcommand{\argmin}{\mathop{\mathrm{argmin}}}

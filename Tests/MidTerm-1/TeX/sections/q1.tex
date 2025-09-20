@@ -2,8 +2,8 @@
 
 Answer True (T) or False (F)
 \begin{enumerate}[label= (\alph*)]
-    \item Let \( f:[-1,1] \rightarrow \mathbb{R} \) with the property that \( \left|f^{\prime \prime}(x)\right| \leq \frac{1}{2} \) for all \( x \in(-1,1) \).
-        If the global minimum of \( f \) is attained in \( (-1,1) \) and \( \min _{[-1,1]} f(x) = 1 \) then \( f(x) \leq 2 \) for all \( x \in(-1,1) \).
+    \item Let \( f:[-1,1] \rightarrow \R \) with the property that \( \left|f^{\prime \prime}(x)\right| \leq \half \) for all \( x \in(-1,1) \).
+        If the global minimum of \( f \) is attained in \( (-1,1) \) and \( \min _{[-1,1]} \func{f}{x} = 1 \) then \( \func{f}{x} \leq 2 \) for all \( x \in(-1,1) \).
 
         \begin{solutionbox}
             True.
@@ -11,116 +11,118 @@ Answer True (T) or False (F)
             Let \( \hat{x} \in (-1,1) \) be the global minimizer, then we have \( f(\hat{x}) = 1, \; f^{\prime}(\hat{x}) = 0 \).
             Now, for any \( x \in (-1,1) \), by Taylor's theorem, there exists \( z \) between \( x \) and \( \hat{x} \) such that
             \begin{align*}
-                f(x)
+                \func{f}{x}
                 & =
-                f(\hat{x}) + f^{\prime}(\hat{x})(x-\hat{x}) + \frac{f^{\prime \prime}(z)}{2}{(x-\hat{x})}^{2}
+                f(\hat{x}) + f^{\prime}(\hat{x})(x-\hat{x}) + \frac{f^{\prime \prime}(z)}{2}{(x-\hat{x})}^2
                 \\
                 \implies
-                f(x)
+                \func{f}{x}
                 & =
-                1 + \frac{f^{\prime \prime}(z)}{2}{(x-\hat{x})}^{2} \leq 1 + \frac{1}{4}{(x-\hat{x})}^{2} \leq 2,
+                1 + \frac{f^{\prime \prime}(z)}{2}{(x-\hat{x})}^2 \leq 1 + \frac{1}{4}{(x-\hat{x})}^2 \leq 2,
                 \quad \because
                 |x-\hat{x}| \leq 2
             \end{align*}
         \end{solutionbox}
 
-    \item Let \( f(\mathbf{x}) = \mathbf{a}^{\top} \mathbf{x} \).
+    \item Let \( \func{f}{\x} = \mathbf{a}^\top \x \).
         The derivative of \( f \) is \( \mathbf{a} \).
 
         \begin{solutionbox}
             True.
             \begin{align*}
-                f(x)
+                \func{f}{\x}
                 & =
-                \sum_{i = 1}^{d} a_{i} x_{i},
-                \quad \mathbf{x} = {\left[x_{1}, x_{2}, \ldots, x_{d}\right]}^{\top},
-                \; \mathbf{a} = {\left[a_{1}, a_{2}, \ldots, a_{d}\right]}^{\top}
+                \sum_{i = 1}^{d} a_i x_i,
+                \quad \x = {\left[x_{1}, x_{2}, \ldots, x_{d}\right]}^\top,
+                \; \mathbf{a} = {\left[a_{1}, a_{2}, \ldots, a_{d}\right]}^\top
                 \\
                 \implies
-                \nabla f(\mathbf{x})
+                \grad{f}{\x}
                 & =
-                {\left[\frac{\partial f}{\partial x_{1}}, \frac{\partial f}{\partial x_{2}}, \ldots, \frac{\partial f}{\partial x_{d}}\right]}^{\top} = {\left[a_{1}, a_{2}, \ldots, a_{d}\right]}^{\top} = \mathbf{a}
+                {\left[\frac{\partial f}{\partial x_{1}}, \frac{\partial f}{\partial x_{2}}, \ldots, \frac{\partial f}{\partial x_{d}}\right]}^\top = {\left[a_{1}, a_{2}, \ldots, a_{d}\right]}^\top = \mathbf{a}
             \end{align*}
         \end{solutionbox}
 
         \newpage
-    \item The hessian of \( f(\mathbf{x}) = \frac{1}{2} \mathbf{x}^{\top} A \mathbf{x}, A = \mathbf{u v}^{\top}, \mathbf{u} \neq \mathbf{v} \), is given by \( H = A \).
+    \item The hessian of \( \func{f}{\x} = \half \qf{\x}{A}, A = \outpbf{u}{v}, \mathbf{u} \neq \mathbf{v} \), is given by \( H = A \).
 
         \begin{solutionbox}
             False.
             \begin{align*}
                 A
                 & =
-                \mathbf{u v}^{\top}
+                \outpbf{u}{v}
                 \implies
-                A^{\top}
+                A^\top
                 =
-                {\left(\mathbf{u v}^{\top}\right)}^{\top}
+                {\left(\outpbf{u}{v}\right)}^\top
                 =
-                \mathbf{v u}^{\top}
+                \outpbf{v}{u}
                 \\
-                f(\mathbf{x})
+                \func{f}{\x}
                 & =
-                \frac{1}{2} \mathbf{x}^{\top} A \mathbf{x}
+                \half \qf{\x}{A}
                 =
-                \frac{1}{2} \mathbf{x}^{\top} \left( \mathbf{u v}^{\top} \right) \mathbf{x}
+                \half \qf{\x}{(\outpbf{u}{v})}
                 =
-                \frac{1}{2} {(\mathbf{u}^{\top} \mathbf{x})} (\mathbf{v}^{\top} \mathbf{x})
+                \half {(\dotpbf{u}{\x})} (\dotpbf{v}{\x})
                 \\
                 \implies
-                \nabla f(\mathbf{x})
+                \grad{f}{\x}
                 & =
-                \frac{1}{2} {(\mathbf{u}^{\top} \mathbf{x})} \nabla {(\mathbf{v}^{\top} \mathbf{x})} + \frac{1}{2} {(\mathbf{v}^{\top} \mathbf{x})} \nabla {(\mathbf{u}^{\top} \mathbf{x})}
+                \half (\dotpbf{u}{\x}) \nabla (\dotpbf{v}{\x})
+                + \half (\dotpbf{v}{\x}) \nabla (\dotpbf{u}{\x})
                 \\ & =
-                \frac{1}{2} {(\mathbf{u}^{\top} \mathbf{x})} \mathbf{v} + \frac{1}{2} {(\mathbf{v}^{\top} \mathbf{x})} \mathbf{u}
+                \half (\dotpbf{u}{\x}) \mathbf{v}
+                + \half (\dotpbf{v}{\x}) \mathbf{u}
                 =
-                \frac{1}{2} (\mathbf{u v}^{\top} + \mathbf{v u}^{\top}) \mathbf{x}
+                \half (\outpbf{u}{v} + \outpbf{v}{u}) \x
                 =
-                \frac{1}{2} (A + A^{\top}) \mathbf{x}
+                \half (A + A^\top) \x
                 \\
                 \implies
                 H
                 & =
-                \nabla^{2} f(\mathbf{x})
+                \nabla^2 \func{f}{\x}
                 =
-                \frac{1}{2} (A + A^{\top})
+                \half (A + A^\top)
                 \\
                 \text{Now, } \quad
                 &
                 H = A
                 \iff
-                A = A^{\top}
+                A = A^\top
                 \\
                 \text{Also, } \quad
                 &
-                \mathbf{u v}^{\top} = \mathbf{v u}^{\top}
+                \outpbf{u}{v} = \outpbf{v}{u}
                 \iff
-                \mathbf{u} = \lambda \mathbf{v}, \; \lambda \in \mathbb{R}
+                \mathbf{u} = \lambda \mathbf{v}, \; \lambda \in \R
                 \\
                 \because
                 \mathbf{u} \neq \lambda \mathbf{v}
                 & \implies
-                \mathbf{u v}^{\top} \neq \mathbf{v u}^{\top}
+                \outpbf{u}{v} \neq \outpbf{v}{u}
                 \implies
-                A \neq A^{\top}
+                A \neq A^\top
                 \implies
                 H \neq A
             \end{align*}
             Should have been given \( \mathbf{u} \neq \lambda \mathbf{v} \) instead of \( \mathbf{u} \neq \mathbf{v} \).
         \end{solutionbox}
 
-    \item For \( f \), a \( \mathcal{C}^{2} \) function, consider a point \( \hat{\mathbf{x}} \) such that \( \nabla f(\hat{\mathbf{x}}) = 0 \) and the Hessian is positive definite, \( H(\hat{\mathbf{x}}) \succ 0 \).
-        Then \( \hat{\mathbf{x}} \) is global minimum of \( f \).
+    \item For \( f \), a \( \C^2 \) function, consider a point \( \xhat \) such that \( \grad{f}{\xhat} = 0 \) and the Hessian is positive definite, \( \hess{f}{\xhat} \succ 0 \).
+        Then \( \xhat \) is global minimum of \( f \).
 
         \begin{solutionbox}
             False.
 
-            From the given conditions, \( f \in \mathcal{C}^{2}, \nabla f(\hat{\mathbf{x}}) = 0, H(\hat{\mathbf{x}}) \succ 0 \), we can say that \( \hat{\mathbf{x}} \) is a strict local minimum of \( f \) by the second order necessary condition for optimalilty.
+            From the given conditions, \( f \in \C^2, \grad{f}{\xhat} = 0, \hess{f}{\xhat} \succ 0 \), we can say that \( \xhat \) is a strict local minimum of \( f \) by the second order necessary condition for optimalilty.
 
-            To be able to say that \( \hat{\mathbf{x}} \) is a global minimum of \( f \), we need \( f \) to be convex, i.e., \( H(\mathbf{x}) \succeq 0, \; \forall \mathbf{x} \in \operatorname{dom}(f) \), as per the second order sufficient condition for optimality and the second order condition for convexity.
+            To be able to say that \( \xhat \) is a global minimum of \( f \), we need \( f \) to be convex, i.e., \( \hess{f}{\x} \succeq 0, \; \forall \x \in \operatorname{dom}(f) \), as per the second order sufficient condition for optimality and the second order condition for convexity.
         \end{solutionbox}
 
-    \item Consider the function \( f: \mathbb{R}^{2} \rightarrow \mathbb{R} \) with \( \mathbf{x} = {\left[x_{1}, x_{2}\right]}^{\top}, f(\mathbf{x}) = {\left(1+x_{1}\right)}^{2}+b{\left(x_{2}-x_{1}^{2}\right)}^{2} \) with \( b>0 \).
+    \item Consider the function \( f: \R^2 \rightarrow \R \) with \( \x = {\left[x_{1}, x_{2}\right]}^\top, \func{f}{\x} = {\left(1+x_{1}\right)}^2+b{\left(x_{2}-x_{1}^2\right)}^2 \) with \( b > 0 \).
         The global minimum of \( f \) for \( b = 100 \) and for \( b = 1 \) are different.
 
         \begin{solutionbox}
@@ -128,34 +130,34 @@ Answer True (T) or False (F)
             \vspace{-0.5em}
             \begin{align*}
                 \implies
-                \nabla f(\mathbf{x})
+                \grad{f}{\x}
                 & =
-                {\left[2(1+x_{1}) - 4b x_{1}(x_{2}-x_{1}^{2}), \; 2b(x_{2}-x_{1}^{2})\right]}^{\top}
+                {\left[2(1+x_{1}) - 4b x_{1}(x_{2}-x_{1}^2), \; 2b(x_{2}-x_{1}^2)\right]}^\top
                 \\
                 \implies
-                \nabla f(\hat{\mathbf{x}})
+                \grad{f}{\xhat}
                 & =
                 \mathbf{0}
                 \implies
                 x_2 = x_1^2, \quad 1 + x_1 = 0
                 \implies
-                \hat{\mathbf{x}} = {\left[-1, 1\right]}^{\top}
+                \xhat = {\left[-1, 1\right]}^\top
                 \\
                 \implies
-                f(\hat{\mathbf{x}})
+                \func{f}{\xhat}
                 & =
-                {(1-1)}^{2} + b{(1-{(-1)}^{2})}^{2} = 0, \quad \forall b > 0
+                {(1-1)}^2 + b{(1-{(-1)}^2)}^2 = 0, \quad \forall b > 0
             \end{align*}
             There is only one stationary point and the function value at that point doesn't depend on \( b \).
             Loosely, we can see that the global minimum would be independent of \( b \).
             (Provided with additional checks, which we skip here).
 
-            The given function is the Rosenbrock function \( f(x, y) = {(a-x)}^{2}+b{(y-x^{2})}^{2} \), with \( a = -1, \; b > 0 \).
-            It has a unique global minimum at \( (x, y) = (a, a^{2}), \; \forall b > 0 \).
+            The given function is the Rosenbrock function \( f(x, y) = {(a-x)}^2+b{(y-x^2)}^2 \), with \( a = -1, \; b > 0 \).
+            It has a unique global minimum at \( (x, y) = (a, a^2), \; \forall b > 0 \).
         \end{solutionbox}
 
-    \item Suppose global minimum, \( \hat{\mathbf{x}} \), exists for a function \( f \in \mathcal{C}^{1} \).
-        \( \hat{\mathbf{x}} \in \{ \mathbf{x} \mid \nabla f(\mathbf{x}) = 0 \} \).
+    \item Suppose global minimum, \( \xhat \), exists for a function \( f \in \C^{1} \).
+        \( \xhat \in \{ \x \mid \grad{f}{\x} = 0 \} \).
 
         \begin{solutionbox}
             True.
