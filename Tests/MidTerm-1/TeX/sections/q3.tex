@@ -17,3 +17,38 @@ Answer the following with justification.
 \end{enumerate}
 
 \subsection*{Solution}
+
+\paragraph{Given:}
+\begin{equation*}
+    \min_{\x \in \R^d} \func{f}{\x},
+    \quad
+    \func{f}{\x}
+    =
+    \half {(\dotp{\x}{\mathbf{v}_1})}^2 + t \dotp{\mathbf{v}_2}{\x},
+    \quad t \in \R,
+    \; \mathbf{v}_1, \mathbf{v}_2 \in \R^d,
+    \; \dotp{\mathbf{v}_1}{\mathbf{v}_2} = 0
+\end{equation*}
+
+\subsubsection*{(a)}
+
+\begin{align*}
+    \implies
+    \func{f}{\x}
+    & =
+    \half \qf{\x}{(\outp{\mathbf{v}_1}{\mathbf{v}_1})} + \dotp{(t \mathbf{v}_2)}{\x}
+    \\
+    \implies
+    \grad{f}{\x}
+    & =
+    (\outp{\mathbf{v}_1}{\mathbf{v}_1}) \x + t \mathbf{v}_2
+    \\
+    \implies
+    \hess{f}{\x}
+    & =
+    \outp{\mathbf{v}_1}{\mathbf{v}_1}
+\end{align*}
+
+The eigenvalues of the Hessian are \( \norm{\mathbf{v}_1}^2 \) and \( 0 \) with eigenvectors \( \mathbf{v}_1 \) and any vector orthogonal to \( \mathbf{v}_1 \) respectively.
+
+Since the eigenvalues of the Hessian are non-negative, the function \( f \) is convex by the second-order condition for convexity, i.e., \( \hess{f}{\x} \succeq 0, \; \forall \x \in \R^d \).
