@@ -51,3 +51,64 @@ Consider implementing the Wolfe method of inexact line search for the Algorithm 
     =
     \dotp{\grad{f}{\xk + \alpha \pk}}{\pk}
 \end{align*}
+
+\subsection*{(b) Minimum guaranteed stepsize at \( \xk \)}
+
+Since \( f \in \C^1_L \), we have
+\begin{align*}
+    \norm{\grad{f}{\y} - \grad{f}{\x}}
+    & \leq
+    L \norm{\y - \x},
+    \quad
+    \forall \x, \y \in \R^d
+    \\
+    \implies
+    \norm{\grad{f}{\xk + \alpha \pk} - \grad{f}{\xk}}
+    & \leq
+    L \norm{\alpha \pk}
+    =
+    L \alpha \norm{\pk},
+    \quad
+    \forall \alpha > 0
+\end{align*}
+
+Now, from the curvature condition, we have
+\begin{align*}
+    \implies
+    c_2 \dotp{\grad{f}{\xk}}{\pk}
+    & \leq
+    \dotp{\grad{f}{\xk + \alpha_k \pk}}{\pk}
+    \\
+    \implies
+    (c_2 - 1) \dotp{\grad{f}{\xk}}{\pk}
+    & \leq
+    \dotp{\Big( \grad{f}{\xk + \alpha_k \pk} - \grad{f}{\xk} \Big)}{\pk}
+    \\
+\end{align*}
+Now, by Cauchy-Schwarz inequality, we get
+\begin{align*}
+    \implies
+    \abs{\dotp{\Big( \grad{f}{\xk + \alpha_k \pk} - \grad{f}{\xk} \Big)}{\pk}}
+    & \leq
+    \norm{\grad{f}{\xk + \alpha_k \pk} - \grad{f}{\xk}}
+    \; \norm{\pk}
+    \\ & \leq
+    L \alpha_k \norm{\pk}^2
+\end{align*}
+And since \( x \leq \abs{x}, \; \forall x \in \R \), we finally get
+\begin{align*}
+    \implies
+    (c_2 - 1) \dotp{\grad{f}{\xk}}{\pk}
+    & \leq
+    L \alpha_k \norm{\pk}^2
+\end{align*}
+\begin{equation*}
+    \implies
+    \boxed{
+        \alpha_k
+        \geq
+        \frac{(c_2 - 1)}{L}
+        \frac{\dotp{\grad{f}{\xk}}{\pk}}{\norm{\pk}^2}
+    }
+    > 0
+\end{equation*}
