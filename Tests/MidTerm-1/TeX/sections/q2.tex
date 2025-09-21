@@ -12,3 +12,42 @@ Consider implementing the Wolfe method of inexact line search for the Algorithm 
 \end{enumerate}
 
 \subsection*{Solution}
+
+\subsection*{(a) Wolfe conditions}
+
+\begin{align*}
+    \func{f}{\xk + \alpha_k \pk}
+    & \leq
+    \func{f}{\xk} + c_1 \alpha_k \dotp{\grad{f}{\xk}}{\pk}
+    \tag{sufficient decrease}
+    \\
+    \dotp{\grad{f}{\xk + \alpha_k \pk}}{\pk}
+    & \geq
+    c_2 \dotp{\grad{f}{\xk}}{\pk}
+    \tag{curvature}
+    \\
+    \text{where } \;&
+    0 < c_1 < c_2 < 1
+\end{align*}
+\begin{align*}
+    \func{g}{\alpha_k}
+    & \leq
+    \func{g}{0} + c_1 \alpha_k \func{g^\prime}{0}
+    \tag{sufficient decrease}
+    \\
+    \func{g^\prime}{\alpha_k}
+    & \geq
+    c_2 \func{g^\prime}{0}
+    \tag{curvature}
+    \\
+    \text{where } \;&
+    0 < c_1 < c_2 < 1,
+    \\ &
+    \func{g}{\alpha}
+    \triangleq
+    \func{f}{\xk + \alpha \pk}
+    \implies
+    \func{g^\prime}{\alpha}
+    =
+    \dotp{\grad{f}{\xk + \alpha \pk}}{\pk}
+\end{align*}
