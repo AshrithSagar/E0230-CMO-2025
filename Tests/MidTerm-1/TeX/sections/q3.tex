@@ -52,3 +52,28 @@ Answer the following with justification.
 The eigenvalues of the Hessian are \( \norm{\mathbf{v}_1}^2 \) and \( 0 \) with eigenvectors \( \mathbf{v}_1 \) and any vector orthogonal to \( \mathbf{v}_1 \) respectively.
 
 Since the eigenvalues of the Hessian are non-negative, the function \( f \) is convex by the second-order condition for convexity, i.e., \( \hess{f}{\x} \succeq 0, \; \forall \x \in \R^d \).
+
+\subsubsection*{(b)}
+
+From the first-order necessary condition for optimality, we have
+\begin{align*}
+    \grad{f}{\xstar}
+    & =
+    \zero
+    \implies
+    (\outp{\mathbf{v}_1}{\mathbf{v}_1}) \xstar + t \mathbf{v}_2
+    = \zero
+    \\
+    \implies
+    (\dotp{\mathbf{v}_1}{\xstar}) \mathbf{v}_1
+    & =
+    -t \mathbf{v}_2,
+    \quad
+    \forall t \in \R,
+    \; \mathbf{v}_1, \mathbf{v}_2 \in \R^d,
+    \; \dotp{\mathbf{v}_1}{\mathbf{v}_2} = 0
+\end{align*}
+
+For \( t = 0 \), we have \( \xstar \in \set{ \x \in \R^d \;\middle|\; \dotp{\mathbf{v}_1}{\x} = 0 } \), and \( \func{f}{\xstar} = 0 \).
+
+For \( t \neq 0 \), \( f \) is unbounded below.
