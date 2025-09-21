@@ -117,7 +117,7 @@ And since \( x \leq \abs{x}, \; \forall x \in \R \), we finally get
 
 Yes, the Wolfe method satisfies the sufficient decrease lemma.
 
-Sufficient decrease lemma states that
+Sufficient decrease lemma states
 \begin{equation*}
     \frac{\func{f}{\xk} - \func{f}{\xk + \alpha_k \pk}}{\norm{\grad{f}{\xk}}^2}
     \geq
@@ -192,27 +192,29 @@ and by Cauchy-Schwarz inequality, we get
     \frac{\dotp{\grad{f}{\xk}}{\pk}}{\norm{\grad{f}{\xk}} \norm{\pk}}
     \\
     \because
-    - \norm{\grad{f}{\xk}} \norm{\pk}
+    -1
     & \leq
-    \dotp{\grad{f}{\xk}}{\pk}
+    \frac{\dotp{\grad{f}{\xk}}{\pk}}{\norm{\grad{f}{\xk}} \norm{\pk}}
     \leq
-    \norm{\grad{f}{\xk}} \norm{\pk}
+    1
     \\
     \implies
     - \frac{\dotp{\grad{f}{\xk}}{\pk}}{\norm{\grad{f}{\xk}} \norm{\pk}}
     & \geq
-    1
+    - 1
     \\
     \implies
     R_k
     & \geq
-    c_1
+    - c_1
     \frac{(c_2 - 1)}{L}
+    =
+    \frac{c_1 (1 - c_2)}{L}
     \\
     \implies
     R
     & \triangleq
-    \frac{c_1 (c_2 - 1)}{L}
+    \frac{c_1 (1 - c_2)}{L}
 \end{align*}
 
 Thus, the Wolfe method satisfies the sufficient decrease lemma with
@@ -220,7 +222,7 @@ Thus, the Wolfe method satisfies the sufficient decrease lemma with
     \boxed{
         R
         =
-        \frac{c_1 (c_2 - 1)}{L}
+        \frac{c_1 (1 - c_2)}{L}
     }
     > 0
 \end{equation*}
