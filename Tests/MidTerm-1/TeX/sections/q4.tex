@@ -27,3 +27,63 @@ Answer the following with justification.
 \end{enumerate}
 
 \subsection*{Solution}
+
+\subsubsection*{(a)}
+
+\begin{align*}
+    \implies
+    \x^{(1)}
+    & =
+    \x^{(0)} + \alpha_0 \mathbf{u}^{(0)}
+    =
+    \zero - \alpha_0 \grad{f}{\x^{(0)}}
+    =
+    - \alpha_0 \grad{f}{\zero}
+    \\
+    \implies
+    \grad{f}{\x}
+    & =
+    A \x + b
+    \implies
+    \grad{f}{\x^{(0)}}
+    =
+    \grad{f}{\zero}
+    =
+    A \x^{(0)} + b
+    =
+    b
+    \\
+    \implies
+    \alpha_k
+    & =
+    \argmin_{\alpha \in \R} \func{f}{\xkp}
+    =
+    \argmin_{\alpha \in \R} \func{f}{\xk + \alpha \mathbf{u}^{(k)}}
+    =
+    - \frac{\dotp{\grad{f}{\xk}}{\mathbf{u}^{(k)}}}{\qf{\mathbf{u}^{(k)}}{A}}
+    \\
+    \implies
+    \alpha_0
+    & =
+    - \frac{\dotp{\grad{f}{\x^{(0)}}}{\mathbf{u}^{(0)}}}{\qf{\mathbf{u}^{(0)}}{A}}
+    =
+    - \frac{\dotp{b}{(-b)}}{\qf{(-b)}{A}}
+    =
+    \frac{\norm{b}^2}{\qf{b}{A}}
+    \\ & =
+    \frac{\norm{\sum_{i = 1}^{d} \beta_i \mathbf{u}_i}^2}{\qf{\left( \sum_{i = 1}^{d} \beta_i \mathbf{u}_i \right)}{\left( \sum_{j = 1}^{d} \mu_j \outp{\mathbf{u}_j}{\mathbf{u}_j} \right)}}
+    =
+    \frac{\sum_{i = 1}^{d} \beta_i^2}{\sum_{i = 1}^{d} \mu_i \beta_i^2}
+    \\
+    \implies
+    \x^{(1)}
+    & =
+    - \alpha_0 b
+    \implies
+    \boxed{
+        \x^{(1)}
+        =
+        - \frac{\sum_{i = 1}^{d} \beta_i^2}{\sum_{i = 1}^{d} \mu_i \beta_i^2}
+        \sum_{i = 1}^{d} \beta_i \mathbf{u}_i
+    }
+\end{align*}
