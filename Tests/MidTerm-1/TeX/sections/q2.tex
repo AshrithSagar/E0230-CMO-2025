@@ -112,3 +112,116 @@ And since \( x \leq \abs{x}, \; \forall x \in \R \), we finally get
     }
     > 0
 \end{equation*}
+
+\subsection*{(c) Sufficient decrease lemma}
+
+Yes, the Wolfe method satisfies the sufficient decrease lemma.
+
+Sufficient decrease lemma states that
+\begin{equation*}
+    \frac{\func{f}{\xk} - \func{f}{\xk + \alpha_k \pk}}{\norm{\grad{f}{\xk}}^2}
+    \geq
+    R_k
+    \geq
+    R
+    > 0
+\end{equation*}
+\begin{align*}
+    \implies
+    \func{f}{\xk + \alpha_k \pk}
+    & \leq
+    \func{f}{\xk} + c_1 \alpha_k \dotp{\grad{f}{\xk}}{\pk}
+    \\
+    \implies
+    \func{f}{\xk} - \func{f}{\xk + \alpha_k \pk}
+    & \geq
+    - c_1 \alpha_k \dotp{\grad{f}{\xk}}{\pk}
+\end{align*}
+Since \( -x \geq -\abs{x}, \; \forall x \in \R \),
+and by Cauchy-Schwarz inequality, we get
+\begin{align*}
+    \implies
+    - c_1 \alpha_k \dotp{\grad{f}{\xk}}{\pk}
+    & \geq
+    - c_1 \alpha_k \abs{\dotp{\grad{f}{\xk}}{\pk}}
+    \\
+    \abs{\dotp{\grad{f}{\xk}}{\pk}}
+    & \leq
+    \norm{\grad{f}{\xk}}
+    \; \norm{\pk}
+    \\
+    \implies
+    - c_1 \alpha_k \abs{\dotp{\grad{f}{\xk}}{\pk}}
+    & \geq
+    - c_1 \alpha_k \norm{\grad{f}{\xk}}
+    \; \norm{\pk}
+    \\
+    \implies
+    \func{f}{\xk} - \func{f}{\xk + \alpha_k \pk}
+    & \geq
+    - c_1 \alpha_k \norm{\grad{f}{\xk}}
+    \; \norm{\pk}
+    \\
+    \because
+    \alpha_k
+    & \geq
+    \frac{(c_2 - 1)}{L}
+    \frac{\dotp{\grad{f}{\xk}}{\pk}}{\norm{\pk}^2}
+    \\
+    \implies
+    \func{f}{\xk} - \func{f}{\xk + \alpha_k \pk}
+    & \geq
+    - c_1
+    \frac{(c_2 - 1)}{L}
+    \frac{\dotp{\grad{f}{\xk}}{\pk}}{\norm{\pk}^2}
+    \norm{\grad{f}{\xk}}
+    \; \norm{\pk}
+    \\
+    \implies
+    \frac{\func{f}{\xk} - \func{f}{\xk + \alpha_k \pk}}{\norm{\grad{f}{\xk}}^2}
+    & \geq
+    - c_1
+    \frac{(c_2 - 1)}{L}
+    \frac{\dotp{\grad{f}{\xk}}{\pk}}{\norm{\grad{f}{\xk}} \norm{\pk}}
+    \\
+    \implies
+    R_k
+    & \triangleq
+    - c_1
+    \frac{(c_2 - 1)}{L}
+    \frac{\dotp{\grad{f}{\xk}}{\pk}}{\norm{\grad{f}{\xk}} \norm{\pk}}
+    \\
+    \because
+    - \norm{\grad{f}{\xk}} \norm{\pk}
+    & \leq
+    \dotp{\grad{f}{\xk}}{\pk}
+    \leq
+    \norm{\grad{f}{\xk}} \norm{\pk}
+    \\
+    \implies
+    - \frac{\dotp{\grad{f}{\xk}}{\pk}}{\norm{\grad{f}{\xk}} \norm{\pk}}
+    & \geq
+    1
+    \\
+    \implies
+    R_k
+    & \geq
+    c_1
+    \frac{(c_2 - 1)}{L}
+    \\
+    \implies
+    R
+    & \triangleq
+    \frac{c_1 (c_2 - 1)}{L}
+\end{align*}
+
+Thus, the Wolfe method satisfies the sufficient decrease lemma with
+\begin{equation*}
+    \boxed{
+        R
+        =
+        \frac{c_1 (c_2 - 1)}{L}
+    }
+    > 0
+\end{equation*}
+since \( 0 < c_1 < c_2 < 1 \) and \( L > 0 \).
