@@ -157,6 +157,8 @@ Since \( f \in \C^1_L \), we have
     \\
     \implies
     &
+    R_k
+    \triangleq
     \boxed{
         R
         \triangleq
@@ -218,15 +220,17 @@ Now, since \( f \in \C^1_L \), we have
     & \leq
     \frac{0.02}{L}
     \implies
-    2k \log{\abs{1 - \beta}}
+    2k \ln{\abs{1 - \beta}}
     \leq
-    \log{\frac{0.02}{L}}
+    \ln{\frac{0.02}{L}}
+    =
+    \ln{50} - \ln{L}
     \\
     \implies
     k
     & \geq
     \boxed{
-        \frac{\log{\frac{0.02}{L}}}{2 \log{\abs{1 - \beta}}}
+        \frac{\ln{50} - \ln{L}}{2 \ln{\abs{1 - \beta}}}
     },
-    \quad \because \log{\abs{1 - \beta}} < 0
+    \quad \because \ln{\abs{1 - \beta}} < 0
 \end{align*}
