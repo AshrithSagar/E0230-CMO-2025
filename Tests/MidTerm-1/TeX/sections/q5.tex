@@ -234,3 +234,179 @@ Now, since \( f \in \C^1_L \), we have
     },
     \quad \because \ln{\abs{1 - \beta}} < 0
 \end{align*}
+
+Since \( f \) is convex, we have
+\begin{align*}
+    \func{f}{\y}
+    & \geq
+    \func{f}{\x}
+    + \dotp{\grad{f}{\x}}{(\y - \x)},
+    \quad \forall \x, \y \in \R^d
+    \\
+    \implies
+    \func{f}{\xstar}
+    & \geq
+    \func{f}{\xk}
+    + \dotp{\grad{f}{\xk}}{(\xstar - \xk)}
+    \\
+    \implies
+    \func{f}{\xk} - \func{f}{\xstar}
+    & \leq
+    -\dotp{\grad{f}{\xk}}{(\xstar - \xk)}
+    =
+    \dotp{\grad{f}{\xk}}{(\xk - \xstar)}
+    \\ & \leq
+    \abs{\dotp{\grad{f}{\xk}}{(\xk - \xstar)}}
+    \leq
+    \norm{\grad{f}{\xk}} \, \norm{\xk - \xstar}
+    \\
+    \because
+    \norm{\xk - \xstar}
+    & \leq
+    \norm{\x^{(0)} - \xstar}
+    = 1,
+    \quad \forall k \geq 0
+    \\
+    \implies
+    &
+    \boxed{
+        \func{f}{\xk} - \func{f}{\xstar}
+        \leq
+        \norm{\grad{f}{\xk}},
+        \quad \forall k \geq 0
+    }
+    \\
+    \because
+    \frac{\func{f}{\xk} - \func{f}{\xkp}}{\norm{\grad{f}{\xk}}^2}
+    & \geq
+    R
+    > 0,
+    \quad \forall k \geq 0
+    \\
+    \implies
+    \norm{\grad{f}{\xk}}^2
+    & \leq
+    \frac{\func{f}{\xk} - \func{f}{\xkp}}{R},
+    \quad \forall k \geq 0
+    \\
+    \implies
+    \func{f}{\xk} - \func{f}{\xkp}
+    & \geq
+    R {\left( \func{f}{\xk} - \func{f}{\xstar} \right)}^2,
+    \quad \forall k \geq 0
+\end{align*}
+
+Define \( \delta_k \triangleq \func{f}{\xk} - \func{f}{\xstar} \geq 0 \).
+Then, we have
+\begin{align*}
+    \implies
+    \delta_k - \delta_{k+1}
+    & \geq
+    R \, \delta_k^2,
+    \quad \forall k \geq 0
+    \\
+    \implies
+    \delta_{k+1}
+    & \leq
+    \delta_k - R \, \delta_k^2
+    =
+    \delta_k (1 - R \, \delta_k)
+    \\
+    \implies
+    \frac{1}{\delta_{k+1}}
+    & \geq
+    \frac{1}{\delta_k (1 - R \, \delta_k)}
+    =
+    \frac{1}{\delta_k} \cdot \frac{1}{1 - R \, \delta_k}
+    \\
+    \because
+    \sum_{i = 0}^{\infty} x^i
+    =
+    \frac{1}{1 - x}
+    & \geq
+    1 + x,
+    \quad \forall x \in \R, \; \abs{x} < 1
+    \\
+    \implies
+    \frac{1}{1 - R \, \delta_k}
+    & \geq
+    1 + R \, \delta_k,
+    \quad \text{if } R \, \delta_k < 1
+    \\
+    \implies
+    \frac{1}{\delta_{k+1}}
+    & \geq
+    \frac{1}{\delta_k} (1 + R \, \delta_k)
+    =
+    \frac{1}{\delta_k} + R,
+    \quad \text{if } R \, \delta_k < 1
+    \\
+    \implies
+    \frac{1}{\delta_k}
+    & \geq
+    \frac{1}{\delta_0} + k R
+    \geq
+    k R,
+    \quad \text{if } R \, \delta_i < 1,
+    \; \forall i < k
+    \\
+    \implies
+    \delta_k
+    & \leq
+    \frac{1}{k R},
+    \quad \text{if } R \, \delta_i < 1,
+    \; \forall i < k
+    \\
+    \text{Now, }
+    \because
+    \delta_0
+    =
+    \func{f}{\x^{(0)}} - \func{f}{\xstar}
+    & \leq
+    \frac{L}{2} \, \norm{\x^{(0)} - \xstar}^2
+    =
+    \frac{L}{2}
+    = \frac{1}{R} \cdot \frac{\beta (2 - \beta)}{4}
+    < \frac{1}{R},
+    \quad \because 0 < \beta < 2
+    \\
+    \implies
+    R \, \delta_0
+    & < 1
+    \\
+    \implies
+    R \, \delta_i
+    & < 1,
+    \quad \forall i < k
+    \\
+    \implies
+    &
+    \boxed{
+        \delta_k
+        \leq
+        \frac{1}{k R},
+        \quad \forall k \geq 1
+    }
+    \\
+    \text{Thus, if }
+    \frac{1}{k R}
+    & \leq
+    0.01,
+    \quad \text{then }
+    \func{f}{\xk}
+    \leq
+    \func{f}{\xstar}
+    + 0.01
+\end{align*}
+\begin{equation*}
+    \implies
+    k
+    \geq
+    \frac{1}{0.01 R}
+    =
+    \frac{100}{R}
+    =
+    \boxed{
+        \frac{200 L}{\beta (2 - \beta)}
+    }
+\end{equation*}
