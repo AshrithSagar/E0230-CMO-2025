@@ -38,3 +38,52 @@ Prove the following.
 \end{enumerate}
 
 \subsection*{Solution}
+
+\subsubsection*{(a)}
+
+By the first-order condition for optimality, if \( \xstar \) is a local minimum of \( f \), then we have
+\begin{equation*}
+    \grad{f}{\xstar} = \zero
+\end{equation*}
+
+By the convexity of \( f \), we have (from part (b))
+\begin{equation*}
+    \func{f}{\y}
+    \geq
+    \func{f}{\xstar}
+    + \dotp{\cancel{\grad{f}{\xstar}}}{(\y - \xstar)}
+    =
+    \func{f}{\xstar},
+    \quad \forall \y \in \R^n
+\end{equation*}
+
+Thereby, \underline{if \( \xstar \) is a local minimum of \( f \), then \( \xstar \) is also a global minimum of \( f \)}.
+
+Suppose \( \xhat \) is another local minimum of \( f \).
+Then, by the same argument as above, we have
+\begin{equation*}
+    \func{f}{\y}
+    \geq
+    \func{f}{\xhat},
+    \quad \forall \y \in \R^n
+\end{equation*}
+Then, we have
+\begin{align*}
+    &
+    \func{f}{\xstar}
+    \geq
+    \func{f}{\xhat},
+    \qquad
+    \func{f}{\xhat}
+    \geq
+    \func{f}{\xstar}
+    \\
+    \implies
+    &
+    \func{f}{\xstar}
+    =
+    \func{f}{\xhat}
+\end{align*}
+
+Thus, the function values at all local minima are equal, \\
+and is equal to the global minimum value of \( f \).
