@@ -108,4 +108,62 @@ Since \( 0 < \beta < 2 \implies -2 < -\beta < 0 \implies -1 < 1 - \beta < 1 \imp
     \quad \forall k \geq 0
 \end{equation*}
 
-\( \therefore \) By induction, we can conclude that all the iterates lie in the set \( S = \set{ \x \mid \norm{\x - \xstar} \leq \norm{\x^{(0)} - \xstar} } \).
+By induction, we can see that all the iterates lie in the set \( S = \set{ \x \;\middle|\; \norm{\x - \xstar} \leq \norm{\x^{(0)} - \xstar} } \).
+
+\subsubsection*{(b)}
+
+Sufficient decrease lemma states
+\begin{equation*}
+    \frac{\func{f}{\xk} - \func{f}{\xkp}}{\norm{\grad{f}{\xk}}^2}
+    \geq
+    R_k
+    \geq
+    R
+    > 0
+\end{equation*}
+
+Since \( f \in \C^1_L \), we have
+\begin{align*}
+    \func{f}{\y}
+    & \leq
+    \func{f}{\x}
+    + \dotp{\grad{f}{\x}}{(\y - \x)}
+    + \frac{L}{2} \, \norm{\y - \x}^2,
+    \quad \forall \x, \y \in \R^d
+    \\
+    \implies
+    \func{f}{\xkp}
+    & \leq
+    \func{f}{\xk}
+    + \dotp{\grad{f}{\xk}}{\big( \xkp - \xk \big)}
+    + \frac{L}{2} \, \norm{\xkp - \xk}^2
+    \\
+    \implies
+    \func{f}{\xk} - \func{f}{\xkp}
+    & \geq
+    - \dotp{\grad{f}{\xk}}{\big( \xkp - \xk \big)}
+    - \frac{L}{2} \, \norm{\xkp - \xk}^2
+    \\ & =
+    \frac{\beta}{L} \norm{\grad{f}{\xk}}^2
+    - \frac{\cancel{L}}{2} \frac{\beta^2}{L^{\cancel{2}}} \, \norm{\grad{f}{\xk}}^2
+    \\
+    \implies
+    \frac{\func{f}{\xk} - \func{f}{\xkp}}{\norm{\grad{f}{\xk}}^2}
+    & \geq
+    \frac{\beta}{L}
+    - \frac{\beta^2}{2 L}
+    =
+    \frac{\beta (2 - \beta)}{2 L}
+    \\
+    \implies
+    &
+    \boxed{
+        R
+        \triangleq
+        \frac{\beta (2 - \beta)}{2 L}
+    }
+    > 0,
+    \quad \forall k \geq 0
+\end{align*}
+
+Thus, the iterates obey the sufficient decrease lemma.
