@@ -28,6 +28,50 @@ Answer the following with justification.
 
 \subsubsection*{(a)}
 
+Since \( f \in \C^1_L \), we have
+\begin{align*}
+    \norm{\grad{f}{\x} - \grad{f}{\y}}
+    & \leq
+    L \, \norm{\x - \y},
+    \quad \forall \x, \y \in \R^d
+    \\
+    \implies
+    \norm{\grad{f}{\x}}
+    & =
+    \norm{\grad{f}{\x} - \grad{f}{\xstar}}
+    \leq
+    L \, \norm{\x - \xstar},
+    \quad \forall \x \in \R^d
+    \\
+    \implies
+    \norm{\grad{f}{\x}}^2
+    & \leq
+    L^2 \, \norm{\x - \xstar}^2,
+    \quad \forall \x \in \R^d
+\end{align*}
+Now, by Cauchy-Schwarz inequality, we have
+\begin{align*}
+    \abs{\dotp{\x}{\y}}
+    & \leq
+    \norm{\x} \, \norm{\y},
+    \quad \forall \x, \y \in \R^d
+    \\
+    \implies
+    \abs{\dotp{\left( \grad{f}{\x} - \grad{f}{\y} \right)}{(\x - \y)}}
+    & \leq
+    \norm{\grad{f}{\x} - \grad{f}{\y}} \, \norm{\x - \y},
+    \quad \forall \x, \y \in \R^d
+    \\ & \leq
+    L \, \norm{\x - \y}^2,
+    \quad \forall \x, \y \in \R^d
+    \\
+    \implies
+    \abs{\dotp{\grad{f}{\x}}{(\x - \xstar)}}
+    & \leq
+    L \, \norm{\x - \xstar}^2,
+    \quad \forall \x \in \R^d
+\end{align*}
+Now, we can see that
 \begin{align*}
     \xkp
     & =
@@ -38,12 +82,30 @@ Answer the following with justification.
     \implies
     \xkp - \xstar
     & =
-    \xk - \xstar - \frac{\beta}{L} \Big( \grad{f}{\xk} - \grad{f}{\xstar} \Big)
+    \xk - \xstar - \frac{\beta}{L} \grad{f}{\xk}
     \\
-    \norm{\xkp - \xstar}
+    \norm{\xkp - \xstar}^2
     & =
-    \norm{\big( \xk - \xstar \big) - \frac{\beta}{L} \Big( \grad{f}{\xk} - \grad{f}{\xstar} \Big)}
+    \norm{\big( \xk - \xstar \big) - \frac{\beta}{L} \grad{f}{\xk}}^2
+    \\ & =
+    \norm{\xk - \xstar}^2
+    + \norm{\frac{\beta}{L} \grad{f}{\xk}}^2
+    - 2 \frac{\beta}{L} \dotp{\grad{f}{\xk}}{(\xk - \xstar)}
     \\ & \leq
-    \norm{\xk - \xstar}
-    + \frac{\beta}{L} \norm{\Big( \grad{f}{\xk} - \grad{f}{\xstar} \Big)}
+    \norm{\xk - \xstar}^2
+    + \frac{\beta^2}{\cancel{L^2}} \cancel{L^2} \norm{\xk - \xstar}^2
+    - 2 \frac{\beta}{\cancel{L}} \cancel{L} \norm{\xk - \xstar}^2
+    \\ & =
+    (1 + \beta^2 - 2\beta) \, \norm{\xk - \xstar}^2
+    =
+    {(1 - \beta)}^2 \, \norm{\xk - \xstar}^2
 \end{align*}
+
+Since \( 0 < \beta < 2 \implies -2 < -\beta < 0 \implies -1 < 1 - \beta < 1 \implies {(1 - \beta)}^2 < 1 \), we have
+\begin{equation*}
+    \norm{\xkp - \xstar}^2
+    < \norm{\xk - \xstar}^2,
+    \quad \forall k \geq 0
+\end{equation*}
+
+\( \therefore \) By induction, we can conclude that all the iterates lie in the set \( S = \set{ \x \mid \norm{\x - \xstar} \leq \norm{\x^{(0)} - \xstar} } \).
