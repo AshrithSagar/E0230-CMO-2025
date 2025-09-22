@@ -14,3 +14,36 @@ Answer the following with justification.
 \end{enumerate}
 
 \subsection*{Solution}
+
+\paragraph{Given:}
+\begin{equation*}
+    f \in \C^1_L,
+    \quad
+    \xstar = \argmin_{\x} \func{f}{\x},
+    \quad
+    \mathbf{u}^{(k)} = -\grad{f}{\xk},
+    \quad
+    \alpha_{k} = \frac{\beta}{L}, \; 0 < \beta < 2
+\end{equation*}
+
+\subsubsection*{(a)}
+
+\begin{align*}
+    \xkp
+    & =
+    \xk + \alpha_k \mathbf{u}^{(k)}
+    =
+    \xk - \frac{\beta}{L} \grad{f}{\xk}
+    \\
+    \implies
+    \xkp - \xstar
+    & =
+    \xk - \xstar - \frac{\beta}{L} \Big( \grad{f}{\xk} - \grad{f}{\xstar} \Big)
+    \\
+    \norm{\xkp - \xstar}
+    & =
+    \norm{\big( \xk - \xstar \big) - \frac{\beta}{L} \Big( \grad{f}{\xk} - \grad{f}{\xstar} \Big)}
+    \\ & \leq
+    \norm{\xk - \xstar}
+    + \frac{\beta}{L} \norm{\Big( \grad{f}{\xk} - \grad{f}{\xstar} \Big)}
+\end{align*}
