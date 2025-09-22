@@ -167,3 +167,66 @@ Since \( f \in \C^1_L \), we have
 \end{align*}
 
 Thus, the iterates obey the sufficient decrease lemma.
+
+\subsubsection*{(c)}
+
+We want to find a minimum \( k \) such that
+\begin{equation*}
+    \func{f}{\xk}
+    \leq
+    \func{f}{\xstar}
+    + 0.01
+\end{equation*}
+given that \( \norm{\x^{(0)} - \xstar} = 1 \).
+
+Now, since \( f \in \C^1_L \), we have
+\begin{align*}
+    \func{f}{\y}
+    & \leq
+    \func{f}{\x}
+    + \dotp{\grad{f}{\x}}{(\y - \x)}
+    + \frac{L}{2} \, \norm{\y - \x}^2,
+    \quad \forall \x, \y \in \R^d
+    \\
+    \implies
+    \func{f}{\xk}
+    & \leq
+    \func{f}{\xstar}
+    + \frac{L}{2} \, \norm{\xk - \xstar}^2
+    \\
+    \implies
+    \func{f}{\xk} - \func{f}{\xstar}
+    & \leq
+    \frac{L}{2} \, \norm{\xk - \xstar}^2
+    \leq
+    \frac{L}{2} {(1 - \beta)}^{2k} \, \norm{\x^{(0)} - \xstar}^2
+    =
+    \frac{L}{2} {(1 - \beta)}^{2k}
+    \\
+    \text{Now, if }
+    \frac{L}{2} {(1 - \beta)}^{2k}
+    & \leq
+    0.01,
+    \quad \text{then }
+    \func{f}{\xk}
+    \leq
+    \func{f}{\xstar}
+    + 0.01
+    \\
+    \implies
+    {(1 - \beta)}^{2k}
+    & \leq
+    \frac{0.02}{L}
+    \implies
+    2k \log{\abs{1 - \beta}}
+    \leq
+    \log{\frac{0.02}{L}}
+    \\
+    \implies
+    k
+    & \geq
+    \boxed{
+        \frac{\log{\frac{0.02}{L}}}{2 \log{\abs{1 - \beta}}}
+    },
+    \quad \because \log{\abs{1 - \beta}} < 0
+\end{align*}
