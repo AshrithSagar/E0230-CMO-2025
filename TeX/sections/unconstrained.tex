@@ -1128,7 +1128,7 @@ Thereby, we have \( \hess{f}{\xk} \succ \zero \) throughout the iterations, ensu
 \section{\texorpdfstring{\( \Q \)--conjugates}{Q-conjugates}}
 
 \begin{definition}{\( \Q \)--conjugates}{}
-    Given some \( \Q \in \PD \), a set of vectors \( \set{ \mathbf{u}_i }_{i = 1}^n, \; \mathbf{u}_i \in \R^d \) are said to be \textbf{\( \Q \)--conjugates} if
+    Given some real symmetric positive definite matrix \( \Q \in \PD \), a set of vectors \( \set{ \mathbf{u}_i }_{i = 1}^n, \; \mathbf{u}_i \in \R^d \) are said to be \textbf{conjugates with respect to \( \Q \)} \text{ OR } \textbf{\( \Q \)--conjugates} if
     \vspace{-0.5em}
     \begin{equation*}
         \qf{\mathbf{u}_i}{\Q}[\mathbf{u}_j] = 0,
@@ -1162,3 +1162,84 @@ Thereby, we have \( \hess{f}{\xk} \succ \zero \) throughout the iterations, ensu
     Since \( \qf{\mathbf{u}_l}{\Q} > 0, \; \because \Q \succ \zero \), we have that \( \beta_i = 0, \; \forall i \in \{ 1, 2, \ldots, n \} \).
     Thereby, the vectors \( \set{ \mathbf{u}_i }_{i = 1}^n \) are linearly independent.
 \end{proof}
+
+\section{Conjugate direction methods}
+
+\begin{algorithm}[H]
+    \caption{
+        Conjugate direction algorithm for unconstrained minimisation
+        of a differentiable function \( f : \R^d \to \R \), \( f \in \C^1 \).
+    }
+    \SetAlgoLined{}
+    \KwIn{
+        First-order oracle for the objective function \( \func{f}{\x} \);
+        Initial point \( \x^{(0)} \in \R^d \);
+
+        A set of \( d \) mutually \( \Q \)--conjugate descent directions \( \set{\mathbf{u}_i}_{i = 0}^{d - 1}, \; \mathbf{u}_i \in \R^d, \; \forall i \in \set{0, 1, \ldots, d - 1} \)\;
+        \vspace{-0.5em}
+        \begin{equation*}
+            \qf{\mathbf{u}_i}{\Q}[\mathbf{u}_j] = 0,
+            \quad \forall i, j \in \set{0, 1, \ldots, d - 1}, \; i \neq j
+        \end{equation*}
+    }
+    \KwOut{
+        Approximate solution to the unconstrained minimisation problem \( \displaystyle \xstar = \argmin_{\x \in \R^d} \func{f}{\x} \)\;
+    }
+
+    \( k \leftarrow 0 \)\;
+
+    \While{\( \xk \) is not optimal}{
+        Choose step length \( \alpha_k \) by line search along direction \( \mathbf{u}_k \)\;
+
+        Update the current point: \( \xkp = \xk + \alpha_k \mathbf{u}_k \)\;
+
+        \( k \leftarrow k + 1 \)\;
+    }
+    \Return{\( \xk \)\;}
+\end{algorithm}
+
+\begin{algorithm}[H]
+    \caption{
+        Conjugate direction algorithm for unconstrained minimisation of a convex quadratic function \( f: \R^d \to \R \).
+        \vspace{-1em}
+        \begin{equation*}
+            \func{f}{\x}
+            =
+            \half \qf{\x}{\Q} + \dotp{\mathbf{h}}{\x},
+            \quad \Q \in \PD, \; \mathbf{h} \in \R^d
+        \end{equation*}
+    }
+    \SetAlgoLined{}
+    \KwIn{
+        First-order oracle for the objective function \( \func{f}{\x} \);
+        Initial point \( \x^{(0)} \in \R^d \);
+
+        A set of \( d \) mutually \( \Q \)--conjugate descent directions \( \set{\mathbf{u}_i}_{i = 0}^{d - 1}, \; \mathbf{u}_i \in \R^d, \; \forall i \in \set{0, 1, \ldots, d - 1} \)\;
+        \vspace{-0.5em}
+        \begin{equation*}
+            \qf{\mathbf{u}_i}{\Q}[\mathbf{u}_j] = 0,
+            \quad \forall i, j \in \set{0, 1, \ldots, d - 1}, \; i \neq j
+        \end{equation*}
+    }
+    \KwOut{
+        Exact solution to the unconstrained minimisation problem \( \displaystyle \xstar = \argmin_{\x \in \R^d} \func{f}{\x} \)\;
+    }
+
+    \( k \leftarrow 0 \)\;
+
+    \While{\( k < d \) \emph{ AND } \( \xk \) is not optimal}{
+        Choose step length \( \alpha_k \) by exact line search as
+        \vspace{-0.5em}
+        \begin{equation*}
+            \alpha_k
+            =
+            - \frac{\dotp{\grad{f}{\xk}}{\mathbf{u}_k}}{\qf{\mathbf{u}_k}{\Q}}
+        \end{equation*}
+
+        \vspace{-0.5em}
+        Update the current point: \( \xkp = \xk + \alpha_k \mathbf{u}_k \)\;
+
+        \( k \leftarrow k + 1 \)\;
+    }
+    \Return{\( \xk \)\;}
+\end{algorithm}
