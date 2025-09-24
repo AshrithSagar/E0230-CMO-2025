@@ -1318,15 +1318,71 @@ For a convex quadratic function \( f: \R^d \to \R \), the conjugate gradient met
 
     For all \( k \in \set{1, 2, \ldots, d - 1} \), we have
     \vspace{-0.5em}
-    \begin{align*}
+    \begin{equation}\label{eq:conjugate-gradient-linear-spans}
         \spanset{\u_i}_{i = 0}^{k}
-        & =
+        =
         \spanset{\grad{f}{\x^{(i)}}}_{i = 0}^{k}
         =
         \spanset{\Q^i \, \grad{f}{\x^{(i)}}}_{i = 0}^{k}
-        \\
+    \end{equation}
+    \begin{equation}\label{eq:conjugate-gradient-mutual-Q-conjugacy}
         \qf{\u_k}{\Q}[\u_i]
-        & = 0,
+        = 0,
         \quad \forall i \in \set{0, 1, \ldots, k - 1}
-    \end{align*}
+    \end{equation}
 \end{theorem}
+
+\begin{proof}
+    We prove this using mathematical induction.
+
+    First, note that
+    \begin{equation*}
+        \grad{f}{\x}
+        =
+        \Q \x + \h,
+        \quad \forall \x \in \R^d
+    \end{equation*}
+    \begin{align*}
+        \implies
+        \grad{f}{\xkp}
+        & =
+        \Q \xkp + \h
+        =
+        \Q \big( \xk + \alpha_k \u_k \big) + \h
+        =
+        \left( \Q \xk + \h \right) + \alpha_k \Q \u_k
+        \\ & =
+        \grad{f}{\xk} + \alpha_k \Q \u_k,
+        \quad \forall k \in \set{0, 1, \ldots, d - 1}
+    \end{align*}
+    and by construction of \( \u_{k+1} \), we have
+    \begin{equation}\label{eq:conjugate-gradient-successive-Q-conjugacy}
+        \qf{\u_{k+1}}{\Q}[\u_k]
+        = 0,
+        \quad \forall k \in \set{0, 1, \ldots, d - 1}
+    \end{equation}
+
+    \paragraph{Base case:}
+    For \( k = 1 \), we have
+    \begin{align*}
+        \spanset{\u_0, \u_1}
+        & =
+        \spanset{\u_0, -\grad{f}{\x^{(1)}} + \beta_0 \u_0}
+        =
+        \spanset{\u_0, -\grad{f}{\x^{(1)}}}
+        \\ & =
+        \spanset{-\grad{f}{\xzero}, -\grad{f}{\x^{(1)}}}
+        =
+        \spanset{\grad{f}{\xzero}, \grad{f}{\x^{(1)}}}
+    \end{align*}
+    and from~\peqref{eq:conjugate-gradient-successive-Q-conjugacy}, we have \( \qf{\u_1}{\Q}[\u_0] = 0 \), thereby proving the base case.
+
+    Note that for \( k = 0 \), the first statement~\peqref{eq:conjugate-gradient-linear-spans} is trivial, since
+    \begin{equation*}
+        \spanset{\u_0}
+        =
+        \spanset{-\grad{f}{\xzero}}
+        =
+        \spanset{\grad{f}{\xzero}}
+    \end{equation*}
+\end{proof}
