@@ -24,12 +24,12 @@ A \textbf{norm} is a real-valued function \( \eta: V \to \R_{\geq 0} \) that sat
 
 A \textbf{vector norm} is a norm defined on a vector space.
 
-A \textbf{normed vector space} \( (\mathbf{V}, \norm{\,\cdot\,}) \) is a vector space \( \mathbf{V} \) over a field \( \mathbb{F} \) (usually \( \R \) or \( \mathbb{C} \)) equipped with a function \( \norm{\,\cdot\,}: \mathbf{V} \to \R_{\geq 0} \) that satisfies the following properties for all \( \mathbf{u}, \mathbf{v} \in \mathbf{V} \) and \( a \in \mathbb{F} \):
+A \textbf{normed vector space} \( (\mathbf{V}, \norm{\,\cdot\,}) \) is a vector space \( \mathbf{V} \) over a field \( \mathbb{F} \) (usually \( \R \) or \( \mathbb{C} \)) equipped with a function \( \norm{\,\cdot\,}: \mathbf{V} \to \R_{\geq 0} \) that satisfies the following properties for all \( \u, \v \in \mathbf{V} \) and \( a \in \mathbb{F} \):
 \begin{itemize}
-    \item \textit{Non-negativity}: \( \norm{\mathbf{v}} \geq 0 \)
-    \item \textit{Definiteness}: \( \norm{\mathbf{v}} = 0 \iff \mathbf{v} = \zero \)
-    \item \textit{Homogeneity}: \( \norm{a \mathbf{v}} = \abs{a} \, \norm{\mathbf{v}} \)
-    \item \textit{Triangle inequality}: \( \norm{\mathbf{u} + \mathbf{v}} \leq \norm{\mathbf{u}} + \norm{\mathbf{v}} \)
+    \item \textit{Non-negativity}: \( \norm{\v} \geq 0 \)
+    \item \textit{Definiteness}: \( \norm{\v} = 0 \iff \v = \zero \)
+    \item \textit{Homogeneity}: \( \norm{a \v} = \abs{a} \, \norm{\v} \)
+    \item \textit{Triangle inequality}: \( \norm{\u + \v} \leq \norm{\u} + \norm{\v} \)
 \end{itemize}
 
 \subsection{\texorpdfstring{\( L_p \) norm}{Lp norm}}
@@ -68,7 +68,7 @@ A \textbf{normed vector space} \( (\mathbf{V}, \norm{\,\cdot\,}) \) is a vector 
 \begin{equation*}
     \norm{\x}_{\infty}
     =
-    \max \{ \abs{x_1}, \abs{x_2}, \ldots, \abs{x_d} \}
+    \max \set{\abs{x_1}, \abs{x_2}, \ldots, \abs{x_d}}
     =
     \max_{1 \leq i \leq d} \abs{x_i}
 \end{equation*}
@@ -103,85 +103,85 @@ For \( \Q \in \PD \), the \textbf{energy norm} (or \( \Q \)-norm) is defined as
 A \textbf{matrix norm} is a norm defined on a space of matrices.
 
 \begin{itemize}
-    \item \textit{Non-negativity}: \( \norm{\mathbf{A}} \geq 0 \)
+    \item \textit{Non-negativity}: \( \norm{\A} \geq 0 \)
 
-    \item \textit{Definiteness}: \( \norm{\mathbf{A}} = 0 \iff \mathbf{A} = \zero \)
+    \item \textit{Definiteness}: \( \norm{\A} = 0 \iff \A = \zero \)
 
-    \item \textit{Homogeneity}: \( \norm{a \mathbf{A}} = \abs{a} \, \norm{\mathbf{A}} \)
+    \item \textit{Homogeneity}: \( \norm{a \A} = \abs{a} \, \norm{\A} \)
 
-    \item \textit{Triangle inequality}: \( \norm{\mathbf{A} + \mathbf{B}} \leq \norm{\mathbf{A}} + \norm{\mathbf{B}} \)
+    \item \textit{Triangle inequality}: \( \norm{\A + \B} \leq \norm{\A} + \norm{\B} \)
 \end{itemize}
 
 \begin{itemize}
-    \item \textit{Sub-multiplicativity}: \( \norm{\mathbf{A} \mathbf{B}} \leq \norm{\mathbf{A}} \, \norm{\mathbf{B}} \)
+    \item \textit{Sub-multiplicativity}: \( \norm{\A \B} \leq \norm{\A} \, \norm{\B} \)
 
-    \item \textit{Consistency}: \( \norm{\mathbf{A} \x} \leq \norm{\mathbf{A}} \, \norm{\x}, \quad \forall \x \in \R^d \)
+    \item \textit{Consistency}: \( \norm{\A \x} \leq \norm{\A} \, \norm{\x}, \quad \forall \x \in \R^d \)
 
-    \item \textit{Transpose invariance}: \( \norm{\mathbf{A}} = \norm{\mathbf{A}^\top} \)
+    \item \textit{Transpose invariance}: \( \norm{\A} = \norm{\A^\top} \)
 
-    \item \textit{Continuity}: \( \norm{\mathbf{A}} \) is continuous with respect to the entries of \( \mathbf{A} \)
+    \item \textit{Continuity}: \( \norm{\A} \) is continuous with respect to the entries of \( \A \)
 \end{itemize}
 
 \subsection{\texorpdfstring{\( L_p \) norm}{Lp norm}}
 
 \begin{equation*}
-    \norm{\mathbf{A}}_p
+    \norm{\A}_p
     =
-    \sup_{\x \neq \zero} \frac{\norm{\mathbf{A} \x}_p}{\norm{\x}_p}
+    \sup_{\x \neq \zero} \frac{\norm{\A \x}_p}{\norm{\x}_p}
     =
-    \max_{\norm{\x}_p = 1} \norm{\mathbf{A} \x}_p,
+    \max_{\norm{\x}_p = 1} \norm{\A \x}_p,
     \quad p \geq 1
 \end{equation*}
 
 \subsubsection{\( L_1 \) norm (Maximum absolute column sum norm)}
 
 \begin{equation*}
-    \norm{\mathbf{A}}_1
+    \norm{\A}_1
     =
     \max_{1 \leq j \leq d} \sum_{i = 1}^{d} \abs{a_{ij}}
     =
-    \max_{1 \leq j \leq d} \norm{\mathbf{A}_{\ast j}}_1
+    \max_{1 \leq j \leq d} \norm{\A_{\ast j}}_1
 \end{equation*}
 
 \subsubsection{\( L_2 \) norm (Spectral norm)}
 
 \begin{equation*}
-    \norm{\mathbf{A}}_2
+    \norm{\A}_2
     =
-    \sqrt{\lambda_{\max}(\mathbf{A}^\top \mathbf{A})}
+    \sqrt{\lambda_{\max}(\A^\top \A)}
     =
-    \sigma_{\max}(\mathbf{A})
+    \sigma_{\max}(\A)
 \end{equation*}
 
-For \( \mathbf{A} \in \SD, \norm{\mathbf{A}}_2 = \rho(\mathbf{A}) = \abs{\lambda_{\max}(\mathbf{A})} \).
+For \( \A \in \SD, \norm{\A}_2 = \rho(\A) = \abs{\lambda_{\max}(\A)} \).
 
 \subsubsection{\( L_{\infty} \) norm (Maximum absolute row sum norm)}
 
 \begin{equation*}
-    \norm{\mathbf{A}}_{\infty}
+    \norm{\A}_{\infty}
     =
     \max_{1 \leq i \leq d} \sum_{j = 1}^{d} \abs{a_{ij}}
     =
-    \max_{1 \leq i \leq d} \norm{\mathbf{A}_{i \ast}}_1
+    \max_{1 \leq i \leq d} \norm{\A_{i \ast}}_1
 \end{equation*}
 
 \subsection{Frobenius norm (Euclidean norm)}
 
 \begin{equation*}
-    \norm{\mathbf{A}}_F
+    \norm{\A}_F
     =
     \sqrt{\sum_{i = 1}^{d} \sum_{j = 1}^{d} a_{ij}^2}
     =
-    \sqrt{\operatorname{trace}(\mathbf{A}^\top \mathbf{A})}
+    \sqrt{\operatorname{trace}(\A^\top \A)}
     =
-    \sqrt{\sum_{i = 1}^{d} \sigma_i^2(\mathbf{A})}
+    \sqrt{\sum_{i = 1}^{d} \sigma_i^2(\A)}
     =
-    \norm{\operatorname{vec}(\mathbf{A})}_2
+    \norm{\operatorname{vec}(\A)}_2
 \end{equation*}
 
-The vector \( \operatorname{vec}(\mathbf{A}) \) is the \textbf{vectorization} of matrix \( \mathbf{A} \), obtained by stacking its columns into a single column vector, i.e.,
+The vector \( \operatorname{vec}(\A) \) is the \textbf{vectorization} of matrix \( \A \), obtained by stacking its columns into a single column vector, i.e.,
 \begin{equation*}
-    \mathbf{A}
+    \A
     =
     \begin{bmatrix}
         a_{11} & a_{12} & \cdots & a_{1d} \\
@@ -191,7 +191,7 @@ The vector \( \operatorname{vec}(\mathbf{A}) \) is the \textbf{vectorization} of
     \end{bmatrix}
     \in \R^{d \times d}
     \implies
-    \operatorname{vec}(\mathbf{A})
+    \operatorname{vec}(\A)
     =
     \begin{bmatrix}
         a_{11} \\
@@ -213,9 +213,9 @@ The vector \( \operatorname{vec}(\mathbf{A}) \) is the \textbf{vectorization} of
 
 \subsection{Spectral radius}
 
-The \textbf{spectral radius} of a matrix \( \mathbf{A} \in \R^{d \times d} \) with eigenvalues \( \lambda_1, \lambda_2, \ldots, \lambda_d \) is defined as
+The \textbf{spectral radius} of a matrix \( \A \in \R^{d \times d} \) with eigenvalues \( \lambda_1, \lambda_2, \ldots, \lambda_d \) is defined as
 \begin{equation*}
-    \rho(\mathbf{A})
+    \rho(\A)
     =
     \max \set{ \abs{\lambda_1}, \abs{\lambda_2}, \ldots, \abs{\lambda_d} }
 \end{equation*}
@@ -223,32 +223,36 @@ The \textbf{spectral radius} of a matrix \( \mathbf{A} \in \R^{d \times d} \) wi
 \paragraph{Properties}
 
 \begin{itemize}
-    \item \( \rho(\mathbf{A}) = \rho(\mathbf{A}^\top) \)
+    \item \( \rho(\A) = \rho(\A^\top) \)
 
-    \item \( \rho(\mathbf{A}^k) = {\left[ \rho(\mathbf{A}) \right]}^k, \quad k \in \N \)
+    \item \( \rho(\A^k) = {\left[ \rho(\A) \right]}^k, \quad k \in \N \)
 
-    \item \( \rho(\inv{\mathbf{A}}) = \frac{1}{\rho(\mathbf{A})}, \quad \text{if } \mathbf{A} \text{ is invertible} \)
+    \item \( \rho(\inv{\A}) = \frac{1}{\rho(\A)}, \quad \text{if } \A \text{ is invertible} \)
 
-    \item \( \rho(\mathbf{A}) \leq \norm{\mathbf{A}}, \quad \forall \text{ matrix norms } \norm{\,\cdot\,} \)
+    \item \( \rho(\A) \leq \norm{\A}, \quad \forall \text{ matrix norms } \norm{\,\cdot\,} \)
 
-    \item (Gelfand's formula) \( \rho(\mathbf{A}) = \lim_{k \to \infty} {\left( \norm{\mathbf{A}^k} \right)}^{\frac{1}{k}}, \quad \forall \text{ matrix norms } \norm{\,\cdot\,} \)
+    \item (Gelfand's formula) \( \rho(\A) = \lim_{k \to \infty} {\left( \norm{\A^k} \right)}^{\frac{1}{k}}, \quad \forall \text{ matrix norms } \norm{\,\cdot\,} \)
 
-    \item \( \rho(\mathbf{A}) \leq \norm{\mathbf{A}^k}^{\frac{1}{k}}, \quad \forall k \in \N, \; \forall \text{ sub-multiplicative matrix norms } \norm{\,\cdot\,} \)
+    \item \( \rho(\A) \leq \norm{\A^k}^{\frac{1}{k}}, \quad \forall k \in \N, \; \forall \text{ sub-multiplicative matrix norms } \norm{\,\cdot\,} \)
 
-    \item \( \rho(\mathbf{A} \mathbf{B}) \leq \rho(\mathbf{A}) \, \rho(\mathbf{B}) \), if \( \mathbf{A} \) and \( \mathbf{B} \) commute, i.e., \( \mathbf{A} \mathbf{B} = \mathbf{B} \mathbf{A} \)
+    \item \( \rho(\A \B) \leq \rho(\A) \, \rho(\B) \), if \( \A \) and \( \B \) commute, i.e., \( \A \B = \B \A \)
 
-    \item \( \mathbf{A} \in \R^{d \times d} \implies \rho(\mathbf{A}) \leq \norm{\mathbf{A}}_2 \)
+    \item \( \A \in \R^{d \times d} \implies \rho(\A) \leq \norm{\A}_2 \)
 
-    \item \( \mathbf{A} \in \SD \implies \rho(\mathbf{A}) = \norm{\mathbf{A}}_2 \)
+    \item \( \A \in \SD \implies \rho(\A) = \norm{\A}_2 \)
 
-    \item \( \mathbf{A} \in \SD \implies \norm{\mathbf{A} \mathbf{x}}_2 \leq \rho(\mathbf{A}) \, \norm{\x}_2, \quad \forall \x \in \R^d \)
+    \item \( \A \in \SD \implies \norm{\A \mathbf{x}}_2 \leq \rho(\A) \, \norm{\x}_2, \quad \forall \x \in \R^d \)
 \end{itemize}
 
 \section{Neighborhood}\label{sec:neighborhood}
 
 A \textbf{neighborhood} of a point \( \x \in \R^d \) is an open ball centered at \( \x \) with radius \( r > 0 \), defined as
 \begin{equation*}
-    B_{r}(\x) = \left\{ \z \in \R^d \;\big|\; \normbf{z - x} < r \right\}, \quad r > 0, \ \x \in \R^d
+    B_{r}(\x)
+    =
+    \set{\z \in \R^d \given \norm{\z - \x} < r},
+    \quad r > 0,
+    \; \x \in \R^d
 \end{equation*}
 
 \section{Interior point}
@@ -257,9 +261,9 @@ A point \( \x \in S \) is an \textbf{interior point} of set \( S \subseteq \R^d 
 
 \section{Limit point}
 
-A point \( \x \in \R^d \) is a \textbf{limit point} of set \( S \subseteq \R^d \) if every neighborhood of \( \x \) contains at least one point of \( S \) different from \( \x \) itself, i.e., for every \( r > 0 \), there exists a point \( \y \in S \setminus \{ \x \} \) such that \( \y \in B_{r}(\x) \).
+A point \( \x \in \R^d \) is a \textbf{limit point} of set \( S \subseteq \R^d \) if every neighborhood of \( \x \) contains at least one point of \( S \) different from \( \x \) itself, i.e., for every \( r > 0 \), there exists a point \( \y \in S \setminus \set{\x} \) such that \( \y \in B_{r}(\x) \).
 \begin{equation*}
-    \forall r > 0, \ B_{r}(\x) \cap (S \setminus \{ \x \}) \neq \emptyset
+    \forall r > 0, \; B_{r}(\x) \cap (S \setminus \set{\x}) \neq \emptyset
 \end{equation*}
 
 Trivially, every interior point of \( S \) is also a limit point of \( S \).
@@ -274,26 +278,26 @@ A set \( S \subseteq \R^d \) is \textbf{closed} if it contains all its limit poi
 
 \section{Bounded set}
 
-A set \( S \subseteq \R^d \) is \textbf{bounded} if there exists \( \z \in \R^d, M \in \R \) such that \( \normbf{z - x} < M, \ \forall \x \in S \).
+A set \( S \subseteq \R^d \) is \textbf{bounded} if there exists \( \z \in \R^d, M \in \R \) such that \( \norm{\z - \x} < M, \; \forall \x \in S \).
 
 \section{Infimum}
 
-The \textbf{infimum} (greatest lower bound) of a set \( S \subseteq \R \) is the largest real number \( m \) such that \( m \leq x, \ \forall x \in S \).
+The \textbf{infimum} (greatest lower bound) of a set \( S \subseteq \R \) is the largest real number \( m \) such that \( m \leq x, \; \forall x \in S \).
 
 \section{Supremum}
 
-The \textbf{supremum} (least upper bound) of a set \( S \subseteq \R \) is the smallest real number \( M \) such that \( M \geq x, \ \forall x \in S \).
+The \textbf{supremum} (least upper bound) of a set \( S \subseteq \R \) is the smallest real number \( M \) such that \( M \geq x, \; \forall x \in S \).
 
 \section{Closure}
 
 The \textbf{closure} of a set \( S \subseteq \R^d \) is the smallest closed set containing \( S \), which can be obtained by adding all limit points of \( S \) to \( S \) itself.
 \begin{equation*}
-    \operatorname{closure}{(S)} = S \cup \{ \text{all limit points of } S \}
+    \operatorname{closure}{(S)} = S \cup \set{\text{all limit points of } S}
 \end{equation*}
 
 \section{Convergent sequence}
 
-A sequence of real numbers \( {\{ a_n \}}_{n = 1}^{\infty} \) is said to \textbf{converge} to a limit \( L \in \R \) if
+A sequence of real numbers \( \set{a_n}_{n = 1}^{\infty} \) is said to \textbf{converge} to a limit \( L \in \R \) if
 \begin{equation*}
     a_n \to L
     \quad \iff \quad
@@ -307,7 +311,7 @@ A sequence of real numbers \( {\{ a_n \}}_{n = 1}^{\infty} \) is said to \textbf
 
 \section{Cauchy sequence}
 
-A sequence of real numbers \( {\{ a_k \}}_{k = 1}^{\infty} \) is a \textbf{Cauchy sequence} if
+A sequence of real numbers \( \set{a_k}_{k = 1}^{\infty} \) is a \textbf{Cauchy sequence} if
 \begin{equation*}
     \forall \epsilon > 0, \
     \exists N \in \N, \
@@ -344,7 +348,7 @@ Alternate notation~\psecref{sec:neighborhood}:
     \forall \epsilon > 0, \
     \exists \delta > 0, \
     \text{s.t.} \
-    \x \in D \cap B_{\delta}(\x_0) \setminus \{ \x_0 \}
+    \x \in D \cap B_{\delta}(\x_0) \setminus \set{\x_0}
     \implies
     \func{f}{\x} \in B_{\epsilon}(L)
 \end{equation*}
@@ -356,7 +360,7 @@ Alternate notation~\psecref{sec:neighborhood}:
         \,\iff\,
         \lim_{n \to \infty} \abs{\func{f}{\x_n} - L} = 0
         \,\iff\,
-        \forall {\{ \x_n \}}_{n = 1}^{\infty} \subseteq D \setminus \{ \x_0 \},
+        \forall \set{\x_n}_{n = 1}^{\infty} \subseteq D \setminus \set{\x_0},
         \; \x_n \to \x_0
         \implies
         \func{f}{\x_n} \to L
@@ -373,7 +377,7 @@ For a function \( f: D \subseteq \R^d \to \R \),
     \exists \delta > 0, \
     \text{s.t.} \
     \abs{\func{f}{\x} - L} < \epsilon, \
-    \forall \x \in D \cap B_{\delta}(\mathbf{c}) \setminus \{ \mathbf{c} \}
+    \forall \x \in D \cap B_{\delta}(\mathbf{c}) \setminus \set{\mathbf{c}}
 \end{equation*}
 
 \section{Continuous functions}
@@ -413,7 +417,7 @@ The \textbf{Hessian} of a function \( f: \R^d \to \R \) at a point \( \x = {\lef
 \begin{itemize}
     \item If \( f \) is differentiable at \( x \), then \( f \) is continuous at \( x \).
 
-    \item \( \func{f}{\x} = \half \qf{\x}{\mathbf{A}}, \; \mathbf{A} = \mathbf{u} \mathbf{v}^\top, \; \mathbf{u}, \mathbf{v} \in \R^d, \; \mathbf{u} \neq \mathbf{v} \implies \hess{f}{\x} = \half (\mathbf{A} + \mathbf{A}^\top) = \half (\mathbf{u} \mathbf{v}^\top + \mathbf{v} \mathbf{u}^\top) \).
+    \item \( \func{f}{\x} = \half \qf{\x}{\A}, \; \A = \u \v^\top, \; \u, \v \in \R^d, \; \u \neq \v \implies \hess{f}{\x} = \half (\A + \A^\top) = \half (\u \v^\top + \v \u^\top) \).
 \end{itemize}
 
 \section{Fundamental theorem of calculus}\label{sec:fundamental-theorem-of-calculus}
@@ -451,7 +455,7 @@ This tells us that we can evaluate definite integrals using antiderivatives.
     Let \( f: D \subseteq \R \to \R \) be continuous on the closed interval \( [a, b] \subseteq D \), then \( f \) takes on any given value between \( \func{f}{a} \) and \( \func{f}{b} \) at some point within the interval, i.e.,
     \vspace{-0.5em}
     \begin{equation*}
-        \min \{ \func{f}{a}, \func{f}{b} \} \leq N \leq \max \{ \func{f}{a}, \func{f}{b} \}
+        \min \set{\func{f}{a}, \func{f}{b}} \leq N \leq \max \set{\func{f}{a}, \func{f}{b}}
         \implies
         \exists c \in [a, b] \text{ such that } \func{f}{c} = N
     \end{equation*}
@@ -488,7 +492,7 @@ where the remainder term \( R_{n+1}(x) \) is given by the Lagrange form:
 
 A function \( f: \R^d \to \R \) is said to be of \textbf{class} \( \C^k \) if all partial derivatives of \( f \) up to and including order \( k \in \N \) exist and are continuous.
 
-If a function is of class \( \C^k \ \forall k \in \N \), it is said to be of class \( \C^{\infty} \) or \textbf{smooth}.
+If a function is of class \( \C^k \; \forall k \in \N \), it is said to be of class \( \C^{\infty} \) or \textbf{smooth}.
 
 \subsection{Properties}
 
@@ -507,7 +511,7 @@ If a function is of class \( \C^k \ \forall k \in \N \), it is said to be of cla
 
     \item If \( f, g \in \C^k \), then \( f + g, f \cdot g \in \C^k \).
 
-    \item If \( f \in \C^k \), then \( \frac{\partial f}{\partial x_i} \in \C^{k-1}, \ \forall i = 1, 2, \ldots, d \).
+    \item If \( f \in \C^k \), then \( \frac{\partial f}{\partial x_i} \in \C^{k-1}, \; \forall i = 1, 2, \ldots, d \).
 \end{itemize}
 
 \section{Lipschitz}
@@ -516,7 +520,7 @@ A function \( f: \R^d \to \R \) is said to be \( L \)-\textbf{smooth} if it is d
 \begin{equation*}
     \norm{\grad{f}{\x} - \grad{f}{\y}}_2
     \leq
-    L \; \normbf{x - y}_2,
+    L \; \norm{\x - \y}_2,
     \quad \forall \x, \y \in \R^d
 \end{equation*}
 
@@ -527,13 +531,13 @@ Here, we denote \( f \in \C^{1}_L \) to mean that \( f \) is \( L \)-smooth and 
 \subsection{Properties}
 
 \begin{itemize}
-    \item If \( f \in \C^{2} \), then \( f \in \C^{1}_L \) iff \( \hess{f}{\x} \preceq L \I, \ \forall \x \in \R^d \).
+    \item If \( f \in \C^{2} \), then \( f \in \C^{1}_L \) iff \( \hess{f}{\x} \preceq L \I, \; \forall \x \in \R^d \).
 
     \item If \( f \in \C^{1}_L \), then
         \begin{equation*}
             \abs{ \func{f}{\y} - \func{f}{\x} - {\grad{f}{\x}}^\top (\y - \x) }
             \leq
-            \frac{L}{2} \normbf[\big]{y - x}^2,
+            \frac{L}{2} \norm[\big]{\y - \x}^2,
             \quad \forall \x, \y \in \R^d
         \end{equation*}
 
@@ -561,12 +565,12 @@ The \textbf{outer product} of two vectors \( \x \in \R^m \) and \( \y \in \R^n \
 \subsection{Properties}
 
 \begin{itemize}
-    \item \( \operatorname{rank} (\x \y^\top) = 1, \; \forall \x \in \R^m \setminus \{ \zero \}, \; \forall \y \in \R^n \setminus \{ \zero \} \).
+    \item \( \operatorname{rank} (\x \y^\top) = 1, \; \forall \x \in \R^m \setminus \set{\zero}, \; \forall \y \in \R^n \setminus \set{\zero} \).
 
     \item \( \x \x^\top \in \mathbf{S}_d^+, \; \forall \x \in \R^d \).
 
-    \item \( \operatorname{spec}(\x \x^\top) = \{ \norm{\x}_2^2, 0^{(d-1)} \} \).
-        Eigenvectors: \( \{ \x \} \cup \underbrace{ \{ \mathbf{v} \mid \dotpbf{v}{x} = 0 \} }_{\x^\perp} \).
+    \item \( \operatorname{spec}(\x \x^\top) = \set{\norm{\x}_2^2, 0^{(d-1)}} \).
+        Eigenvectors: \( \set{\x} \cup \underbrace{ \set{\v \given \dotp{\v}{\x} = 0} }_{\x^\perp} \).
 
         Eigenvalues of \( \x \x^\top \) are \( \norm{\x}_2^2 \) and \( 0 \) (with multiplicity \( d-1 \)).
         The eigenvector corresponding to \( \norm{\x}_2^2 \) is \( \x \); the eigenspace corresponding to \( 0 \) is the orthogonal complement \( \x^\perp \).
@@ -576,75 +580,75 @@ The \textbf{outer product} of two vectors \( \x \in \R^m \) and \( \y \in \R^n \
 
 \subsection{Symmetric Matrices}
 
-A matrix \( \mathbf{A} \in \R^{d \times d} \) is symmetric if \( \mathbf{A} = \mathbf{A}^\top \), i.e., \( a_{ij} = a_{ji}, \ \forall i, j \).
+A matrix \( \A \in \R^{d \times d} \) is symmetric if \( \A = \A^\top \), i.e., \( a_{ij} = a_{ji}, \; \forall i, j \).
 
 \paragraph{Properties}
 
 \begin{itemize}
-    \item \( \mathbf{A}, \mathbf{B} \in \SD \implies \mathbf{A} + \mathbf{B} \in \SD \).
-        \quad \( \because {(\mathbf{A} + \mathbf{B})}^\top = \mathbf{A}^\top + \mathbf{B}^\top = \mathbf{A} + \mathbf{B} \).
+    \item \( \A, \B \in \SD \implies \A + \B \in \SD \).
+        \quad \( \because {(\A + \B)}^\top = \A^\top + \B^\top = \A + \B \).
 
-    \item \( \mathbf{A} \in \SD, c \in \R \implies c \mathbf{A} \in \SD \).
-        \quad \( \because {(c \mathbf{A})}^\top = c \mathbf{A}^\top = c \mathbf{A} \).
+    \item \( \A \in \SD, c \in \R \implies c \A \in \SD \).
+        \quad \( \because {(c \A)}^\top = c \A^\top = c \A \).
 
-    \item \( \mathbf{A} \in \SD \implies \mathbf{A}^k \in \SD, \; k \in \N \).
-        \quad \( \because {(\mathbf{A}^k)}^\top = {(\mathbf{A}^\top)}^k = \mathbf{A}^k \).
+    \item \( \A \in \SD \implies \A^k \in \SD, \; k \in \N \).
+        \quad \( \because {(\A^k)}^\top = {(\A^\top)}^k = \A^k \).
 
-    \item \( \mathbf{A} \in \SD \implies \mathbf{A}^{-1} \in \SD, \text{ if } \mathbf{A} \text{ is invertible} \).
-        \quad \( \because {(\inv{\mathbf{A}})}^\top = \inv{(\mathbf{A}^\top)} = \inv{\mathbf{A}} \).
+    \item \( \A \in \SD \implies \A^{-1} \in \SD, \text{ if } \A \text{ is invertible} \).
+        \quad \( \because {(\inv{\A})}^\top = \inv{(\A^\top)} = \inv{\A} \).
 \end{itemize}
 
 \subsection{Symmetric Positive Semi-definite Matrices}
 
-A symmetric matrix \( \mathbf{A} \in \SD \) is \textbf{positive semi-definite} (PSD), denoted as \( \mathbf{A} \succeq \zero \), if
+A symmetric matrix \( \A \in \SD \) is \textbf{positive semi-definite} (PSD), denoted as \( \A \succeq \zero \), if
 \begin{equation*}
-    \x^\top \mathbf{A} \x \geq 0,
+    \x^\top \A \x \geq 0,
     \quad \forall \x \in \R^d
 \end{equation*}
 
 \subsection{Symmetric Positive Definite Matrices}
 
-A symmetric matrix \( \mathbf{A} \in \SD \) is \textbf{positive definite} (PD), denoted as \( \mathbf{A} \succ \zero \), if
+A symmetric matrix \( \A \in \SD \) is \textbf{positive definite} (PD), denoted as \( \A \succ \zero \), if
 \begin{equation*}
-    \x^\top \mathbf{A} \x > 0,
-    \quad \forall \x \in \R^d \setminus \{ \zero \}
+    \x^\top \A \x > 0,
+    \quad \forall \x \in \R^d \setminus \set{\zero}
 \end{equation*}
 
 \section{Eigenvalues and Eigenvectors}
 
 \begin{equation*}
-    \mathbf{A}\mathbf{v} = \lambda \mathbf{v}
+    \A\v = \lambda \v
 \end{equation*}
 where
-\( \mathbf{A} \in \R^{d \times d} \), \quad
+\( \A \in \R^{d \times d} \), \quad
 \( \lambda \in \R \longrightarrow \) Eigenvalue, \quad
-\( \mathbf{v} \in \R^d \setminus \{ \zero \} \longrightarrow \) corresponding Eigenvector.
+\( \v \in \R^d \setminus \set{\zero} \longrightarrow \) corresponding Eigenvector.
 
-The set of all eigenvalues of \( \mathbf{A} \) is called the \textbf{spectrum} of \( \mathbf{A} \).
+The set of all eigenvalues of \( \A \) is called the \textbf{spectrum} of \( \A \).
 
 \subsection{Properties}
 
 \begin{itemize}
-    \item \( \operatorname{trace}(\mathbf{A}) = \sum_{i = 1}^{d} a_{ii} = \sum_{i = 1}^{d} \lambda_i \).
+    \item \( \operatorname{trace}(\A) = \sum_{i = 1}^{d} a_{ii} = \sum_{i = 1}^{d} \lambda_i \).
 
-    \item \( \det(\mathbf{A}) = \prod_{i = 1}^{d} \lambda_i \).
+    \item \( \det(\A) = \prod_{i = 1}^{d} \lambda_i \).
 
-    \item \( \mathbf{A} \in \SD \implies \mathbf{A} \) has an orthonormal basis of eigenvectors in \( \R^d \) \, \psecref{sec:spectral-decomposition-theorem}
+    \item \( \A \in \SD \implies \A \) has an orthonormal basis of eigenvectors in \( \R^d \) \, \psecref{sec:spectral-decomposition-theorem}
 
-    \item \( \mathbf{A} \in \SD \implies \operatorname{spec}(\mathbf{A}) \subseteq \R^d \) \, \psecref{sec:spectral-decomposition-theorem}
+    \item \( \A \in \SD \implies \operatorname{spec}(\A) \subseteq \R^d \) \, \psecref{sec:spectral-decomposition-theorem}
 
-    \item \( \mathbf{A} \in \SD \implies \mathbf{v}_i^\top \mathbf{v}_j = 0, \; \text{if } \lambda_i \neq \lambda_j \) \, \psecref{sec:spectral-decomposition-theorem}
+    \item \( \A \in \SD \implies \v_i^\top \v_j = 0, \; \text{if } \lambda_i \neq \lambda_j \) \, \psecref{sec:spectral-decomposition-theorem}
 \end{itemize}
 
 \section{Spectral Decomposition Theorem}\label{sec:spectral-decomposition-theorem}
 
 \begin{theorem}{Spectral Decomposition Theorem}{}
-    For any \( \mathbf{A} \in \SD \), there exists an orthonormal basis of eigenvectors \( \{ \mathbf{v}_1, \mathbf{v}_2, \ldots, \mathbf{v}_d \} \), \; \( \mathbf{v}_i \in \R^d \setminus \{ \zero \} \), with corresponding eigenvalues \( \lambda_1 \geq \lambda_2 \geq \cdots \geq \lambda_d, \; \lambda_i \in \R \), such that
+    For any \( \A \in \SD \), there exists an orthonormal basis of eigenvectors \( \set{\v_i}_{i = 1}^{d}, \v_i \in \R^d \setminus \set{\zero} \), with corresponding eigenvalues \( \lambda_1 \geq \lambda_2 \geq \cdots \geq \lambda_d, \; \lambda_i \in \R \), such that
     \begin{equation*}
-        \mathbf{A} = \sum_{i = 1}^{d} \lambda_i \mathbf{v}_i \mathbf{v}_i^\top
+        \A = \sum_{i = 1}^{d} \lambda_i \v_i \v_i^\top
         = \mathbf{V} \boldsymbol{\Lambda} \mathbf{V}^\top
     \end{equation*}
-    where \( \mathbf{V} = [\mathbf{v}_1, \mathbf{v}_2, \ldots, \mathbf{v}_d] \in \R^{d \times d} \) is an orthogonal matrix (i.e., \( \dotpbf{V}{V} = \I \)) and \( \boldsymbol{\Lambda} = \operatorname{diag}(\lambda_1, \lambda_2, \ldots, \lambda_d) \in \R^{d \times d} \) is a diagonal matrix containing the eigenvalues of \( \mathbf{A} \).
+    where \( \mathbf{V} = [\v_1, \v_2, \ldots, \v_d] \in \R^{d \times d} \) is an orthogonal matrix (i.e., \( \dotp{\V}{\V} = \I \)) and \( \boldsymbol{\Lambda} = \operatorname{diag}(\lambda_1, \lambda_2, \ldots, \lambda_d) \in \R^{d \times d} \) is a diagonal matrix containing the eigenvalues of \( \A \).
 \end{theorem}
 
 \begin{proof}
@@ -652,64 +656,64 @@ The set of all eigenvalues of \( \mathbf{A} \) is called the \textbf{spectrum} o
     (Can be shown considering Hermitian matrices, Fundamental theorem of algebra, and properties of complex conjugates).
 
     The eigenvectors corresponding to distinct eigenvalues are orthogonal.
-    This can be shown using the fact that for any two eigenvectors \( \mathbf{v}_i \) and \( \mathbf{v}_j \) corresponding to distinct eigenvalues \( \lambda_i \) and \( \lambda_j \), we have
+    This can be shown using the fact that for any two eigenvectors \( \v_i \) and \( \v_j \) corresponding to distinct eigenvalues \( \lambda_i \) and \( \lambda_j \), we have
     \begin{align*}
-        \mathbf{v}_i^\top \mathbf{A} \mathbf{v}_j
+        \v_i^\top \A \v_j
         & =
-        \mathbf{v}_i^\top (\mathbf{A} \mathbf{v}_j)
+        \v_i^\top (\A \v_j)
         =
-        \lambda_j \mathbf{v}_i^\top \mathbf{v}_j,
+        \lambda_j \v_i^\top \v_j,
         \qquad \text{Similarly, } \;
-        \mathbf{v}_j^\top \mathbf{A} \mathbf{v}_i
+        \v_j^\top \A \v_i
         =
-        \lambda_i \mathbf{v}_j^\top \mathbf{v}_i
+        \lambda_i \v_j^\top \v_i
         \\
         \text{Now, } \;
-        \mathbf{v}_i^\top \mathbf{A} \mathbf{v}_j
+        \v_i^\top \A \v_j
         & =
-        \mathbf{v}_i^\top \mathbf{A}^\top \mathbf{v}_j
+        \v_i^\top \A^\top \v_j
         =
-        {(\mathbf{A} \mathbf{v}_i)}^\top \mathbf{v}_j
+        {(\A \v_i)}^\top \v_j
         =
-        {(\lambda_i \mathbf{v}_i)}^\top \mathbf{v}_j
+        {(\lambda_i \v_i)}^\top \v_j
         =
-        \lambda_i \mathbf{v}_i^\top \mathbf{v}_j
+        \lambda_i \v_i^\top \v_j
         =
-        \lambda_i \mathbf{v}_j^\top \mathbf{v}_i
+        \lambda_i \v_j^\top \v_i
         =
-        \mathbf{v}_j^\top \mathbf{A} \mathbf{v}_i
+        \v_j^\top \A \v_i
         \\
         \implies
-        \lambda_j \mathbf{v}_i^\top \mathbf{v}_j
+        \lambda_j \v_i^\top \v_j
         & =
-        \lambda_i \mathbf{v}_i^\top \mathbf{v}_j
+        \lambda_i \v_i^\top \v_j
         \implies
-        (\lambda_j - \lambda_i) \mathbf{v}_i^\top \mathbf{v}_j
+        (\lambda_j - \lambda_i) \v_i^\top \v_j
         = 0
         \implies
-        \mathbf{v}_i^\top \mathbf{v}_j = 0,
+        \v_i^\top \v_j = 0,
         \; \because
         \lambda_i \neq \lambda_j,
         \;\;
         \therefore
-        \mathbf{v}_i, \mathbf{v}_j \text{ are orthogonal.}
+        \v_i, \v_j \text{ are orthogonal.}
     \end{align*}
 
     For repeated eigenvalues, if any, we can always find a set of orthonormal eigenvectors using the Gram-Schmidt process.
-    Thereby, we can always find \( d \) orthonormal eigenvectors of \( \mathbf{A} \), thus forming an orthonormal basis for \( \R^d \).
-    This gives that \( \mathbf{V} \) is an orthogonal matrix \( \implies \dotpbf{V}{V} = \I \implies \mathbf{V}^{-1} = \mathbf{V}^\top \).
+    Thereby, we can always find \( d \) orthonormal eigenvectors of \( \A \), thus forming an orthonormal basis for \( \R^d \).
+    This gives that \( \mathbf{V} \) is an orthogonal matrix \( \implies \dotp{\V}{\V} = \I \implies \mathbf{V}^{-1} = \mathbf{V}^\top \).
 
-    Now, with \( \boldsymbol{\Lambda} = \operatorname{diag}(\lambda_1, \lambda_2, \ldots, \lambda_d) \) and \( \mathbf{V} = [\mathbf{v}_1, \mathbf{v}_2, \ldots, \mathbf{v}_d] \), we have
+    Now, with \( \boldsymbol{\Lambda} = \operatorname{diag}(\lambda_1, \lambda_2, \ldots, \lambda_d) \) and \( \mathbf{V} = [\v_1, \v_2, \ldots, \v_d] \), we have
     \begin{equation*}
-        \mathbf{A} \mathbf{V}
+        \A \mathbf{V}
         =
-        [\mathbf{A} \mathbf{v}_1, \mathbf{A} \mathbf{v}_2, \ldots, \mathbf{A} \mathbf{v}_d]
+        [\A \v_1, \A \v_2, \ldots, \A \v_d]
         =
-        [\lambda_1 \mathbf{v}_1, \lambda_2 \mathbf{v}_2, \ldots, \lambda_d \mathbf{v}_d]
+        [\lambda_1 \v_1, \lambda_2 \v_2, \ldots, \lambda_d \v_d]
         =
         \mathbf{V} \boldsymbol{\Lambda}
         \implies
-        \mathbf{A}
+        \A
         =
         \mathbf{V} \boldsymbol{\Lambda} \mathbf{V}^{-1}
         =
@@ -720,20 +724,20 @@ The set of all eigenvalues of \( \mathbf{A} \) is called the \textbf{spectrum} o
 \begin{itemize}
     \item The identity matrix \( \I \in \R^{d \times d} \) has eigenvalues \( \lambda_i = 1, \; \forall i \) and the corresponding eigenvectors can be chosen as any orthonormal basis of \( \R^d \), commonly taken as the standard basis vectors \( \mathbf{e}_i \in \R^d \).
 
-    \item \( \mathbf{A} \in \PSD \iff \mathbf{A} \in \SD, \text{ and } \lambda_i \geq 0, \; \forall i \).
+    \item \( \A \in \PSD \iff \A \in \SD, \text{ and } \lambda_i \geq 0, \; \forall i \).
 
-    \item \( \mathbf{A} \in \PD \iff \mathbf{A} \in \SD, \text{ and } \lambda_i > 0, \; \forall i \).
+    \item \( \A \in \PD \iff \A \in \SD, \text{ and } \lambda_i > 0, \; \forall i \).
 
-    \item \( \mathbf{A} \in \PD, \; \kappa(\mathbf{A}) = 1 \iff \mathbf{A} = c \I, \; c > 0 \).
+    \item \( \A \in \PD, \; \kappa(\A) = 1 \iff \A = c \I, \; c > 0 \).
 \end{itemize}
 
 \section{Condition number}
 
-The \textbf{condition number} of a matrix \( \mathbf{A} \in \SD \) is given by
+The \textbf{condition number} of a matrix \( \A \in \SD \) is given by
 \begin{equation*}
-    \kappa(\mathbf{A}) = \frac{\abs{\lambda_{\max}(\mathbf{A})}}{\abs{\lambda_{\min}(\mathbf{A})}}
+    \kappa(\A) = \frac{\abs{\lambda_{\max}(\A)}}{\abs{\lambda_{\min}(\A)}}
 \end{equation*}
-where \( \lambda_{\max}(\mathbf{A}) \) and \( \lambda_{\min}(\mathbf{A}) \) are the largest and smallest eigenvalues of \( \mathbf{A} \) respectively.
+where \( \lambda_{\max}(\A) \) and \( \lambda_{\min}(\A) \) are the largest and smallest eigenvalues of \( \A \) respectively.
 
 \chapter{Inequalities}
 
@@ -791,7 +795,7 @@ where \( \lambda_{\max}(\mathbf{A}) \) and \( \lambda_{\min}(\mathbf{A}) \) are 
 \section{Kantorovich inequality}\label{sec:kantorovich-inequality}
 
 \begin{theorem}{Kantorovich inequality}{}
-    Let \( p_i \geq 0, \ 0 < x_{\min} \leq x_i \leq x_{\max}, \ \forall i \in \{1, 2, \ldots, n\} \), then we have
+    Let \( p_i \geq 0, \; 0 < x_{\min} \leq x_i \leq x_{\max}, \; \forall i \in \set{1, 2, \ldots, n} \), then we have
     \vspace{-1em}
     \begin{equation*}
         \left( \sum_{i = 1}^{n} p_i x_i \right) \left( \sum_{i = 1}^{n} \frac{p_i}{x_i} \right)
@@ -799,11 +803,11 @@ where \( \lambda_{\max}(\mathbf{A}) \) and \( \lambda_{\min}(\mathbf{A}) \) are 
         \frac{{(x_{\max} + x_{\min})}^2}{4 x_{\max} x_{\min}}
         {\left( \sum_{i = 1}^{n} p_i \right)}^2
     \end{equation*}
-    with equality iff \( x_i \in \{ x_{\min}, x_{\max} \}, \ \forall i \in \{1, 2, \ldots, n\} \).
+    with equality iff \( x_i \in \set{x_{\min}, x_{\max}}, \; \forall i \in \set{1, 2, \ldots, n} \).
 \end{theorem}
 
 \begin{corollary}{Kantorovich inequality for real symmetric positive definite matrices~\citep{Luenberger1984}}{}
-    For any \( \Q \in \PD \), with smallest eigenvalue \( \lambda_{\min} \) and largest eigenvalue \( \lambda_{\max} \), and for any \( \x \in \R^d \setminus \{ \zero \} \), we have
+    For any \( \Q \in \PD \), with smallest eigenvalue \( \lambda_{\min} \) and largest eigenvalue \( \lambda_{\max} \), and for any \( \x \in \R^d \setminus \set{\zero} \), we have
     \begin{equation*}
         \frac{{(\dotp{\x}{\x})}^2}{(\qf{\x}{\Q})(\qf{\x}{\Qinv})}
         \geq
@@ -813,23 +817,23 @@ where \( \lambda_{\max}(\mathbf{A}) \) and \( \lambda_{\min}(\mathbf{A}) \) are 
 \end{corollary}
 
 \begin{proof}
-    Let the matrix \( \Q \) have eigenvalues \( \lambda_1, \lambda_2, \ldots, \lambda_d \), with corresponding orthonormal eigenvectors \( \mathbf{v}_1, \mathbf{v}_2, \ldots, \mathbf{v}_d \).
-    Since the eigenvectors form an orthonormal basis for \( \R^d \), any vector \( \x \in \R^d \) can be expressed as a linear combination of these eigenvectors as \( \x = \sum_{i = 1}^{d} c_i \mathbf{v}_i \), where each coefficient \( c_i \) is the projection of \( \x \) onto the eigenvector \( \mathbf{v}_i \), given by \( c_i = \mathbf{v}_i^\top \x \).
+    Let the matrix \( \Q \) have eigenvalues \( \lambda_1, \lambda_2, \ldots, \lambda_d \), with corresponding orthonormal eigenvectors \( \v_1, \v_2, \ldots, \v_d \).
+    Since the eigenvectors form an orthonormal basis for \( \R^d \), any vector \( \x \in \R^d \) can be expressed as a linear combination of these eigenvectors as \( \x = \sum_{i = 1}^{d} c_i \v_i \), where each coefficient \( c_i \) is the projection of \( \x \) onto the eigenvector \( \v_i \), given by \( c_i = \v_i^\top \x \).
     Now,
     \begin{align*}
         \qf{\x}{\Q}
         & =
-        {\left( \sum_{i = 1}^{d} c_i \mathbf{v}_i \right)}^\top \Q \left( \sum_{j = 1}^{d} c_j \mathbf{v}_j \right)
+        {\left( \sum_{i = 1}^{d} c_i \v_i \right)}^\top \Q \left( \sum_{j = 1}^{d} c_j \v_j \right)
         =
-        \sum_{i = 1}^{d} \sum_{j = 1}^{d} c_i c_j \qf{\mathbf{v}_i}{\Q}[\mathbf{v}_j]
+        \sum_{i = 1}^{d} \sum_{j = 1}^{d} c_i c_j \qf{\v_i}{\Q}[\v_j]
         \\ & =
-        \sum_{i = 1}^{d} c_i^2 \qf{\mathbf{v}_i}{\Q}
+        \sum_{i = 1}^{d} c_i^2 \qf{\v_i}{\Q}
         +
-        \sum_{i \neq j} c_i c_j \qf{\mathbf{v}_i}{\Q}[\mathbf{v}_j]
+        \sum_{i \neq j} c_i c_j \qf{\v_i}{\Q}[\v_j]
         =
-        \sum_{i = 1}^{d} c_i^2 \lambda_i \underbrace{ \dotp{\mathbf{v}_i}{\mathbf{v}_i} }_{= 1}
+        \sum_{i = 1}^{d} c_i^2 \lambda_i \underbrace{ \dotp{\v_i}{\v_i} }_{= 1}
         +
-        \cancel{ \sum_{i \neq j} c_i c_j \lambda_j \underbrace{ \dotp{\mathbf{v}_i}{\mathbf{v}_j} }_{= 0} }
+        \cancel{ \sum_{i \neq j} c_i c_j \lambda_j \underbrace{ \dotp{\v_i}{\v_j} }_{= 0} }
         =
         \sum_{i = 1}^{d} c_i^2 \lambda_i
         \\ &
@@ -875,26 +879,27 @@ where \( \lambda_{\max}(\mathbf{A}) \) and \( \lambda_{\min}(\mathbf{A}) \) are 
 \section{Jensen's inequality}
 
 \begin{theorem}{Jensen's inequality}{}
-    For any convex function \( f: \R^d \to \R \), and for any set of points \( {\{ \x_i \}}_{i = 1}^n, \; \x_i \in \R^d \) and weights \( {\{ \alpha_i \}}_{i = 1}^n, \; \alpha_i \geq 0 \) such that \( \sum_{i = 1}^{n} \alpha_i = 1 \), we have
+    For any convex function \( f: \R^d \to \R \), and for any set of points \( \set{\x_i}_{i = 1}^n, \; \x_i \in \R^d \) and weights \( \set{\alpha_i}_{i = 1}^n, \; \alpha_i \geq 0 \) such that \( \sum_{i = 1}^{n} \alpha_i = 1 \), we have
     \vspace{-0.5em}
     \begin{equation*}
         \func{f}{\sum_{i = 1}^{n} \alpha_i \x_i}
         \leq
         \sum_{i = 1}^{n} \alpha_i \func{f}{\x_i}
     \end{equation*}
-    with equality iff \( \x_1 = \x_2 = \cdots = \x_n \) or \( f \) is linear on the convex hull of \( {\{ \x_i \}}_{i = 1}^n \).
+    with equality iff \( \x_1 = \x_2 = \cdots = \x_n \) or \( f \) is linear on the convex hull of \( \set{\x_i}_{i = 1}^n \).
 \end{theorem}
 
 \subsection{Convex hull}
 
-The \textbf{convex hull} of a set of points \( {\{ \x_i \}}_{i = 1}^n, \; \x_i \in \R^d \) is the smallest convex set that contains all the points.
+The \textbf{convex hull} of a set of points \( \set{\x_i}_{i = 1}^n, \; \x_i \in \R^d \) is the smallest convex set that contains all the points.
 It can be defined as the set of all convex combinations of the points, i.e.,
 \begin{equation*}
-    \func{\operatorname{conv}}{{\{ \x_i \}}_{i = 1}^n}
+    \func{\operatorname{conv}}{\set{\x_i}_{i = 1}^n}
     =
     \set{
         \sum_{i = 1}^{n} \alpha_i \x_i
-        \;\middle|\;
-        \alpha_i \geq 0, \; \sum_{i = 1}^{n} \alpha_i = 1
+        \given
+        \alpha_i \geq 0,
+        \; \sum_{i = 1}^{n} \alpha_i = 1
     }
 \end{equation*}

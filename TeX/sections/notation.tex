@@ -5,35 +5,35 @@
 
     \( \R_{> 0} \)
     &
-    Set of all positive real numbers, \( \R_{>0} = \{ x \in \R \mid x > 0 \} \)
+    Set of all positive real numbers, \( \R_{>0} = \set{x \in \R \given x > 0} \)
     \\
 
     \( \R_{\geq 0} \)
     &
-    Set of all non-negative real numbers, \( \R_{\geq 0} = \{ x \in \R \mid x \geq 0 \} \)
+    Set of all non-negative real numbers, \( \R_{\geq 0} = \set{x \in \R \given x \geq 0} \)
     \\
 
     \( \R^{d \times d} \)
     &
-    Set of all real \( d \times d \) matrices, \( \R^{d \times d} = \{ {(a_{ij})}_{i, j = 1}^d \mid a_{ij} \in \R, \; i,j = 1,\ldots,d \} \)
+    Set of all real \( d \times d \) matrices, \( \R^{d \times d} = \set{{(a_{ij})}_{i, j = 1}^d \given a_{ij} \in \R, \; i,j = 1,\ldots,d} \)
     \\
 
     \( \SD \)
     &
     Set of all real \( d \times d \) symmetric matrices,
-    \( \SD = \{ \mathbf{A} \in \R^{d \times d} \mid \mathbf{A} = \mathbf{A}^\top \} \)
+    \( \SD = \set{\A \in \R^{d \times d} \given \A = \A^\top} \)
     \\
 
     \( \PSD \)
     &
     Set of all real \( d \times d \) symmetric positive semi-definite matrices,
-    \( \PSD = \{ \mathbf{A} \in \SD \mid \mathbf{A} \succeq \zero \} \)
+    \( \PSD = \set{\A \in \SD \given \A \succeq \zero} \)
     \\
 
     \( \PD \)
     &
     Set of all real \( d \times d \) symmetric positive definite matrices,
-    \( \PD = \{ \mathbf{A} \in \SD \mid \mathbf{A} \succ \zero \} \)
+    \( \PD = \set{\A \in \SD \given \A \succ \zero} \)
 
 \end{tabular}
 
@@ -48,7 +48,7 @@ A function \( f: \R^d \to \R \) is said to be in \( o(g(\x)) \) as \( \x \to \x_
     \exists \delta > 0,
     \text{ s.t. }
     \abs{\frac{f(\x)}{g(\x)}} < \epsilon,
-    \quad \forall \x \in B_{\delta}(\x_0) \setminus \{ \x_0 \}
+    \quad \forall \x \in B_{\delta}(\x_0) \setminus \set{\x_0}
 \end{equation*}
 
 \subsection{Properties}
@@ -68,5 +68,5 @@ A function \( f: \R^d \to \R \) is said to be in \( o(g(\x)) \) as \( \x \to \x_
 
     \item \( f \in o(g), \; \phi: \R \to \R \text{ is continuous at } 0 \text{ with } \phi(0) = 0 \implies \phi(f(\x)) \in o(\phi(g(\x))) \).
 
-    \item \( \alpha > \beta > 0 \implies \|\x - \x_0\|^\alpha \in o(\|\x - \x_0\|^\beta) \text{ as } \x \to \x_0 \).
+    \item \( \alpha > \beta > 0 \implies \norm{\x - \x_0}^\alpha \in \smalloh{\norm{\x - \x_0}^\beta} \text{ as } \x \to \x_0 \).
 \end{itemize}

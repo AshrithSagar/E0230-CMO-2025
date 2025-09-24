@@ -7,11 +7,11 @@
 
 \subsection{First-order methods}
 
-Assume \( f \in \C^{1} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\grad{f}{\x}}{\p} + o(\normbf{p}) \).
+Assume \( f \in \C^{1} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\grad{f}{\x}}{\p} + o(\norm{\p}) \).
 
 \subsection{Second-order methods}
 
-Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\grad{f}{\x}}{\p} + \half \qf{\p}{\hess{f}{\x}} + o(\normbf{p}^2) \).
+Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\grad{f}{\x}}{\p} + \half \qf{\p}{\hess{f}{\x}} + o(\norm{\p}^2) \).
 
 \section{Types of minimum}
 
@@ -38,7 +38,8 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
 \begin{definition}{Strict local minimum}{}
     The point \( \xstar \in \R^d \) is a \textbf{strict local minimum} of the function \( f: \R^d \to \R \) if there exists a \( \delta > 0 \) such that for all \( \x \) in the \( \delta \)-neighborhood of \( \xstar \) except \( \xstar \) itself, we have \( \func{f}{\xstar} < \func{f}{\x} \), i.e.,
     \begin{equation*}
-        \func{f}{\xstar} < \func{f}{\x}, \quad \forall \x \in B_{\delta}(\xstar) \setminus \{ \xstar \}
+        \func{f}{\xstar} < \func{f}{\x},
+        \quad \forall \x \in B_{\delta}(\xstar) \setminus \set{\xstar}
     \end{equation*}
 \end{definition}
 
@@ -269,7 +270,7 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
         \func{f}{\lambda \x + (1 - \lambda) \y}
         \leq
         \lambda \func{f}{\x} + (1 - \lambda) \func{f}{\y}
-        - \frac{\mu}{2} \lambda (1 - \lambda) \normbf{x - y}^2,
+        - \frac{\mu}{2} \lambda (1 - \lambda) \norm{\x - \y}^2,
         \quad \forall \x, \y \in \R^n, \; \lambda \in [0, 1]
     \end{equation*}
 \end{definition}
@@ -281,7 +282,7 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
 \begin{proof}
     Follows from the identity:
     \begin{align*}
-        \lambda (1 - \lambda) \normbf{x - y}^2
+        \lambda (1 - \lambda) \norm{\x - \y}^2
         & =
         \lambda (1 - \lambda) \Big( \norm{\y}^2 + \norm{\x}^2 - 2 \dotp{\x}{\y} \Big)
         \\ & =
@@ -302,7 +303,7 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
     \begin{equation*}
         \func{f}{\y}
         \geq
-        \func{f}{\x} + {\grad{f}{\x}}^\top (\y - \x) + \frac{\mu}{2} \normbf{y - x}^2,
+        \func{f}{\x} + {\grad{f}{\x}}^\top (\y - \x) + \frac{\mu}{2} \norm{\y - \x}^2,
         \quad \forall \x, \y \in D
     \end{equation*}
 \end{corollary}
@@ -329,7 +330,7 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
         \\ & =
         \func{f}{\x} + {\grad{f}{\x}}^\top (\y - \x) + \frac{\mu}{2} \Big( \norm{\y}^2 - \cancel{ \norm{\x}^2 } - 2 \dotp{\x}{\y} + \cancel{2} \norm{\x}^2 \Big)
         \\ & =
-        \func{f}{\x} + {\grad{f}{\x}}^\top (\y - \x) + \frac{\mu}{2} \normbf{y - x}^2
+        \func{f}{\x} + {\grad{f}{\x}}^\top (\y - \x) + \frac{\mu}{2} \norm{\y - \x}^2
         , \quad
         \forall \x, \y \in D
     \end{align*}
@@ -414,7 +415,9 @@ An \( n \)-th order oracle provides information up to the \( n \)-th derivative 
     \While{\( \xk \) is not optimal}{
         Choose a descent direction \( \pk \) from the set of descent directions
         \begin{equation*}
-            \func{\mathcal{DS}}{\xk} = \left\{ \p \in \R^d \;\Big|\; \dotp{\grad{f}{\xk}}{\p} < 0 \right\}
+            \func{\mathcal{DS}}{\xk}
+            =
+            \set{\p \in \R^d \given \dotp{\grad{f}{\xk}}{\p} < 0}
         \end{equation*}
 
         Choose a step length \( \alpha_k \geq 0 \)\;
@@ -453,20 +456,20 @@ Consider the unconstrained quadratic minimisation problem
 \begin{align*}
     \min_{\x \in \R^d} \func{f}{\x},
     \quad \text{where }
-    \func{f}{\x} = \left( \half \qfbf{x}{Q} + \dotp{\h}{\x} + c \right),
+    \func{f}{\x} = \left( \half \qf{\x}{\Q} + \dotp{\h}{\x} + c \right),
     \quad \Q \succ \zero, \text{i.e.}, \Q \in \mathbf{S}_d^{++},
-    \quad \mathbf{h} \in \R^d,
+    \quad \h \in \R^d,
     \quad c \in \R
 \end{align*}
 
 \paragraph{Solution:}
 Since \( \hess{f}{\x} = \Q \succ \zero \), \( f \) is strongly convex, and thereby has a unique global minimum which is also the unique local minimum.
-The gradient of \( f \) can be computed as \( \grad{f}{\x} = \Q \x + \mathbf{h} \), and thereby from the first-order necessary condition for local minimum~\pthmref{thm:first-order-necessary-condition-for-a-local-minimum}, the local minimum \( \xstar \) must necessarily satisfy
+The gradient of \( f \) can be computed as \( \grad{f}{\x} = \Q \x + \h \), and thereby from the first-order necessary condition for local minimum~\pthmref{thm:first-order-necessary-condition-for-a-local-minimum}, the local minimum \( \xstar \) must necessarily satisfy
 \begin{equation*}
-    \grad{f}{\xstar} = \Q \xstar + \mathbf{h} = \zero
+    \grad{f}{\xstar} = \Q \xstar + \h = \zero
     \quad \iff \quad
     \boxed{
-        \xstar = -\Qinv \mathbf{h}
+        \xstar = -\Qinv \h
     }
 \end{equation*}
 where \( \Qinv \) exists since \( \Q \succ \zero \).
@@ -484,19 +487,19 @@ To find the optimal step length \( \alpha_k \), consider
     \func{f}{\xk + \alpha \pk}
     \\ & =
     \half \qf{\left( \xk + \alpha \pk \right)}{\Q}
-    + \dotp{\mathbf{h}}{\!\left( \xk + \alpha \pk \right)}
+    + \dotp{\h}{\!\left( \xk + \alpha \pk \right)}
     + c
     \\ & =
     \half \qf{\xk}{\Q}
     + \alpha \qf{\xk}{\Q}[\pk]
     + \frac{\alpha^2}{2} \qf{\pk}{\Q}
-    + \dotp{\mathbf{h}}{\xk}
-    + \alpha \dotp{\mathbf{h}}{\pk}
+    + \dotp{\h}{\xk}
+    + \alpha \dotp{\h}{\pk}
     + c
     \\ & =
     \alpha^2 \left( \half \qf{\pk}{\Q} \right)
-    + \alpha \left( \qf{\xk}{\Q}[\pk] + \dotp{\mathbf{h}}{\pk} \right)
-    + \left( \half \qf{\xk}{\Q} + \dotp{\mathbf{h}}{\xk} + c \right)
+    + \alpha \left( \qf{\xk}{\Q}[\pk] + \dotp{\h}{\pk} \right)
+    + \left( \half \qf{\xk}{\Q} + \dotp{\h}{\xk} + c \right)
     \\ & =
     \alpha^2 \underbrace{ \left( \half \qf{\pk}{\Q} \right) }_{p_k}
     + \alpha \underbrace{ \left( \dotp{\grad{f}{\xk}}{\pk} \right) }_{q_k}
@@ -551,7 +554,7 @@ For a local minimum \( \xstar \), and any \( \p \in \R^d \), we have
     \half \qf{\xstar}{\Q} + \qf{\xstar}{\Q}[\p] + \half \qf{\p}{\Q} + \dotp{\h}{\xstar} + \dotp{\h}{\p} + c
     \\ & =
     \left( \half \qf{\xstar}{\Q} + \dotp{\h}{\xstar} + c \right)
-    + {\cancel{\left( \Q \xstar + \mathbf{h} \right)}}^\top \p
+    + {\cancel{\left( \Q \xstar + \h \right)}}^\top \p
     + \half \qf{\p}{\Q}
     \\ & =
     \func{f}{\xstar} + \half \qf{\p}{\Q}
@@ -577,14 +580,14 @@ Now, consider the error at the \( k^{th} \) iteration defined as
     \because
     \grad{f}{\xstar}
     & =
-    \Q \xstar + \mathbf{h}
+    \Q \xstar + \h
     =
     \zero
     \\
     \implies
     \grad{f}{\xk}
     & =
-    \Q \xk + \mathbf{h}
+    \Q \xk + \h
     =
     \Q \left( \xk - \xstar \right)
     \\
@@ -633,7 +636,7 @@ From Kantorovich inequality~\psecref{sec:kantorovich-inequality}, we have
     \frac{\norm{\z}^4}{(\qf{\z}{\Q})(\qf{\z}{\Qinv})}
     \geq
     \frac{4 \func{\lambda_{\min}}{\Q} \func{\lambda_{\max}}{\Q}}{{\left( \func{\lambda_{\min}}{\Q} + \func{\lambda_{\max}}{\Q} \right)}^2},
-    \quad \forall \z \in \R^d \setminus \{ \zero \}
+    \quad \forall \z \in \R^d \setminus \set{\zero}
 \end{equation*}
 where \( \func{\lambda_{\min}}{\Q} \) and \( \func{\lambda_{\max}}{\Q} \) are the minimum and maximum eigenvalues of \( \Q \), respectively.
 
@@ -697,7 +700,7 @@ Note that for sufficiently small \( \alpha_k \), the sufficient decrease conditi
 
 \subsection{Backtracking line search}
 
-Determine the largest number \( \alpha_k \) in the sequence \( {\{ \beta^m \bar{\alpha} \}}_{m = 0}^{\infty} \) that satisfies the \textit{sufficient decrease condition}, where \( \bar{\alpha} > 0 \) is an initial step length and \( 0 < \beta < 1 \) is a scaling factor.
+Determine the largest number \( \alpha_k \) in the sequence \( \set{\beta^m \bar{\alpha}}_{m = 0}^{\infty} \) that satisfies the \textit{sufficient decrease condition}, where \( \bar{\alpha} > 0 \) is an initial step length and \( 0 < \beta < 1 \) is a scaling factor.
 
 \section{Goldstein conditions / Armijo-Goldstein conditions}
 
@@ -786,7 +789,7 @@ Determine the largest number \( \alpha_k \) in the sequence \( {\{ \beta^m \bar{
 
 \section{Global convergence criterion}
 
-Starting from an arbitrary \( \x_0 \in \R^d \), if a scheme generates a sequence \( {\{ \xk \}}_{k = 1}^{\infty} \) such that
+Starting from an arbitrary \( \xzero \in \R^d \), if a scheme generates a sequence \( \set{\xk}_{k = 1}^{\infty} \) such that
 \begin{equation*}
     \lim_{k \to \infty} \norm{\grad{f}{\xk}} = 0
 \end{equation*}
@@ -794,7 +797,7 @@ then the scheme is said to exhibit \textbf{global convergence}.
 
 The sequence asymptotically approaches a \textbf{stationary point} \( \xstar \), i.e., \( \grad{f}{\xstar} = \zero \).
 Without further assumptions on \( f \), nothing can be said about \( \xstar \) being a local or global minimum, maximum, or a saddle point.
-The `global' refers to the fact that the initial point \( \x_0 \) is arbitrary, and not about the limit point.
+The `global' refers to the fact that the initial point \( \xzero \) is arbitrary, and not about the limit point.
 
 \chapter{Second-order methods}
 
@@ -945,7 +948,7 @@ Taking the derivative with respect to \( \y \) on both sides, we have
     }
 \end{equation*}
 
-Now, since \( - \norm{\mathbf{A}} \, \I \preceq \mathbf{A} \preceq \norm{\mathbf{A}} \, \I, \quad \forall \mathbf{A} \in \SD \), we have
+Now, since \( - \norm{\A} \, \I \preceq \A \preceq \norm{\A} \, \I, \quad \forall \A \in \SD \), we have
 \begin{align*}
     - \norm{\hess{f}{\y} - \hess{f}{\x}} \, \I
     \preceq
@@ -1128,11 +1131,11 @@ Thereby, we have \( \hess{f}{\xk} \succ \zero \) throughout the iterations, ensu
 \section{\texorpdfstring{\( \Q \)--conjugates}{Q-conjugates}}
 
 \begin{definition}{\( \Q \)--conjugates}{}
-    Given some real symmetric positive definite matrix \( \Q \in \PD \), a set of vectors \( \set{ \mathbf{u}_i }_{i = 1}^n, \; \mathbf{u}_i \in \R^d \) are said to be \textbf{conjugates with respect to \( \Q \)} \text{ OR } \textbf{\( \Q \)--conjugates} if
+    Given some real symmetric positive definite matrix \( \Q \in \PD \), a set of vectors \( \set{ \u_i }_{i = 1}^n, \; \u_i \in \R^d \) are said to be \textbf{conjugates with respect to \( \Q \)} \text{ OR } \textbf{\( \Q \)--conjugates} if
     \vspace{-0.5em}
     \begin{equation*}
-        \qf{\mathbf{u}_i}{\Q}[\mathbf{u}_j] = 0,
-        \quad \forall i, j \in \{ 1, 2, \ldots, n \}, \; i \neq j
+        \qf{\u_i}{\Q}[\u_j] = 0,
+        \quad \forall i, j \in \set{1, 2, \ldots, n}, \; i \neq j
     \end{equation*}
 \end{definition}
 
@@ -1141,26 +1144,26 @@ Thereby, we have \( \hess{f}{\xk} \succ \zero \) throughout the iterations, ensu
 \end{theorem}
 
 \begin{proof}
-    Let \( \set{ \mathbf{u}_i }_{i = 1}^n, \; \mathbf{u}_i \in \R^d \) be a set of \( \Q \)--conjugate vectors.
-    Define \( \z \triangleq \sum_{i = 1}^{n} \beta_i \mathbf{u}_i, \; \beta_i \in \R \).
+    Let \( \set{ \u_i }_{i = 1}^n, \; \u_i \in \R^d \) be a set of \( \Q \)--conjugate vectors.
+    Define \( \z \triangleq \sum_{i = 1}^{n} \beta_i \u_i, \; \beta_i \in \R \).
 
-    Then, for any \( l \in \{ 1, 2, \ldots, n \} \), we have
+    Then, for any \( l \in \set{1, 2, \ldots, n} \), we have
     \begin{equation*}
-        \qf{\mathbf{u}_l}{\Q}[\z]
+        \qf{\u_l}{\Q}[\z]
         =
-        \qf{\mathbf{u}_l}{\Q}[\left( \sum_{i = 1}^{n} \beta_i \mathbf{u}_i \right)]
+        \qf{\u_l}{\Q}[\left( \sum_{i = 1}^{n} \beta_i \u_i \right)]
         =
-        \sum_{i = 1}^{n} \beta_i \qf{\mathbf{u}_l}{\Q}[\mathbf{u}_i]
+        \sum_{i = 1}^{n} \beta_i \qf{\u_l}{\Q}[\u_i]
         =
-        \beta_l \qf{\mathbf{u}_l}{\Q}
-        + \sum_{i \neq l} \beta_i \cancel{ \qf{\mathbf{u}_l}{\Q}[\mathbf{u}_i] }
+        \beta_l \qf{\u_l}{\Q}
+        + \sum_{i \neq l} \beta_i \cancel{ \qf{\u_l}{\Q}[\u_i] }
         =
-        \beta_l \qf{\mathbf{u}_l}{\Q}
+        \beta_l \qf{\u_l}{\Q}
     \end{equation*}
 
-    From this, we can see that if \( \z = \zero \), then \( \qf{\mathbf{u}_l}{\Q}[\z] = \zero = \beta_l \qf{\mathbf{u}_l}{\Q} \).
-    Since \( \qf{\mathbf{u}_l}{\Q} > 0, \; \because \Q \succ \zero \), we have that \( \beta_i = 0, \; \forall i \in \{ 1, 2, \ldots, n \} \).
-    Thereby, the vectors \( \set{ \mathbf{u}_i }_{i = 1}^n \) are linearly independent.
+    From this, we can see that if \( \z = \zero \), then \( \qf{\u_l}{\Q}[\z] = \zero = \beta_l \qf{\u_l}{\Q} \).
+    Since \( \qf{\u_l}{\Q} > 0, \; \because \Q \succ \zero \), we have that \( \beta_i = 0, \; \forall i \in \set{1, 2, \ldots, n} \).
+    Thereby, the vectors \( \set{ \u_i }_{i = 1}^n \) are linearly independent.
 \end{proof}
 
 \section{Conjugate direction methods}
@@ -1175,10 +1178,10 @@ Thereby, we have \( \hess{f}{\xk} \succ \zero \) throughout the iterations, ensu
         First-order oracle for the objective function \( \func{f}{\x} \);
         Initial point \( \xzero \in \R^d \);
 
-        A set of \( d \) mutually \( \Q \)--conjugate descent directions \( \set{\mathbf{u}_i}_{i = 0}^{d - 1}, \; \mathbf{u}_i \in \R^d, \; \forall i \in \set{0, 1, \ldots, d - 1} \)\;
+        A set of \( d \) mutually \( \Q \)--conjugate descent directions \( \set{\u_i}_{i = 0}^{d - 1}, \; \u_i \in \R^d, \; \forall i \in \set{0, 1, \ldots, d - 1} \)\;
         \vspace{-0.5em}
         \begin{equation*}
-            \qf{\mathbf{u}_i}{\Q}[\mathbf{u}_j] = 0,
+            \qf{\u_i}{\Q}[\u_j] = 0,
             \quad \forall i, j \in \set{0, 1, \ldots, d - 1}, \; i \neq j
         \end{equation*}
     }
@@ -1189,9 +1192,9 @@ Thereby, we have \( \hess{f}{\xk} \succ \zero \) throughout the iterations, ensu
     \( k \leftarrow 0 \)\;
 
     \While{\( \xk \) is not optimal}{
-        Choose step length \( \alpha_k \) by line search along direction \( \mathbf{u}_k \)\;
+        Choose step length \( \alpha_k \) by line search along direction \( \u_k \)\;
 
-        Update the current point: \( \xkp = \xk + \alpha_k \mathbf{u}_k \)\;
+        Update the current point: \( \xkp = \xk + \alpha_k \u_k \)\;
 
         \( k \leftarrow k + 1 \)\;
     }
@@ -1205,8 +1208,8 @@ Thereby, we have \( \hess{f}{\xk} \succ \zero \) throughout the iterations, ensu
         \begin{equation*}
             \func{f}{\x}
             =
-            \half \qf{\x}{\Q} + \dotp{\mathbf{h}}{\x},
-            \quad \Q \in \PD, \; \mathbf{h} \in \R^d
+            \half \qf{\x}{\Q} + \dotp{\h}{\x},
+            \quad \Q \in \PD, \; \h \in \R^d
         \end{equation*}
     }
     \SetAlgoLined{}
@@ -1214,10 +1217,10 @@ Thereby, we have \( \hess{f}{\xk} \succ \zero \) throughout the iterations, ensu
         First-order oracle for the objective function \( \func{f}{\x} \);
         Initial point \( \xzero \in \R^d \);
 
-        A set of \( d \) mutually \( \Q \)--conjugate descent directions \( \set{\mathbf{u}_i}_{i = 0}^{d - 1}, \; \mathbf{u}_i \in \R^d, \; \forall i \in \set{0, 1, \ldots, d - 1} \)\;
+        A set of \( d \) mutually \( \Q \)--conjugate descent directions \( \set{\u_i}_{i = 0}^{d - 1}, \; \u_i \in \R^d, \; \forall i \in \set{0, 1, \ldots, d - 1} \)\;
         \vspace{-0.5em}
         \begin{equation*}
-            \qf{\mathbf{u}_i}{\Q}[\mathbf{u}_j] = 0,
+            \qf{\u_i}{\Q}[\u_j] = 0,
             \quad \forall i, j \in \set{0, 1, \ldots, d - 1}, \; i \neq j
         \end{equation*}
     }
@@ -1228,16 +1231,16 @@ Thereby, we have \( \hess{f}{\xk} \succ \zero \) throughout the iterations, ensu
     \( k \leftarrow 0 \)\;
 
     \While{\( k < d \) \emph{ AND } \( \xk \) is not optimal}{
-        Choose step length \( \alpha_k \) by exact line search along direction \( \mathbf{u}_k \) as
+        Choose step length \( \alpha_k \) by exact line search along direction \( \u_k \) as
         \vspace{-0.5em}
         \begin{equation*}
             \alpha_k
             =
-            - \frac{\dotp{\grad{f}{\xk}}{\mathbf{u}_k}}{\qf{\mathbf{u}_k}{\Q}}
+            - \frac{\dotp{\grad{f}{\xk}}{\u_k}}{\qf{\u_k}{\Q}}
         \end{equation*}
 
         \vspace{-0.5em}
-        Update the current point: \( \xkp = \xk + \alpha_k \mathbf{u}_k \)\;
+        Update the current point: \( \xkp = \xk + \alpha_k \u_k \)\;
 
         \( k \leftarrow k + 1 \)\;
     }
@@ -1256,8 +1259,8 @@ For a convex quadratic function \( f: \R^d \to \R \), the conjugate direction me
         \begin{equation*}
             \func{f}{\x}
             =
-            \half \qf{\x}{\Q} + \dotp{\mathbf{h}}{\x},
-            \quad \Q \in \PD, \; \mathbf{h} \in \R^d
+            \half \qf{\x}{\Q} + \dotp{\h}{\x},
+            \quad \Q \in \PD, \; \h \in \R^d
         \end{equation*}
     }
     \SetAlgoLined{}
@@ -1271,34 +1274,34 @@ For a convex quadratic function \( f: \R^d \to \R \), the conjugate direction me
 
     \( k \leftarrow 0 \)\;
 
-    \( \mathbf{u}_0 \leftarrow -\grad{f}{\xzero} \)\;
+    \( \u_0 \leftarrow -\grad{f}{\xzero} \)\;
 
     \While{\( k < d \) \emph{ AND } \( \xk \) is not optimal}{
-        Choose step length \( \alpha_k \) by exact line search along direction \( \mathbf{u}_k \) as
+        Choose step length \( \alpha_k \) by exact line search along direction \( \u_k \) as
         \vspace{-0.5em}
         \begin{equation*}
             \alpha_k
             =
-            - \frac{\dotp{\grad{f}{\xk}}{\mathbf{u}_k}}{\qf{\mathbf{u}_k}{\Q}}
+            - \frac{\dotp{\grad{f}{\xk}}{\u_k}}{\qf{\u_k}{\Q}}
         \end{equation*}
 
         \vspace{-0.5em}
-        Update the current point: \( \xkp = \xk + \alpha_k \mathbf{u}_k \)\;
+        Update the current point: \( \xkp = \xk + \alpha_k \u_k \)\;
 
         Find the next conjugate direction as
         \vspace{-0.5em}
         \begin{equation*}
-            \mathbf{u}_{k+1}
+            \u_{k+1}
             =
             -\grad{f}{\xkp}
-            + \beta_k \mathbf{u}_k
+            + \beta_k \u_k
         \end{equation*}
-        such that \( \mathbf{u}_{k+1} \) is \( \Q \)--conjugate to \( \mathbf{u}_k \), thereby
+        such that \( \u_{k+1} \) is \( \Q \)--conjugate to \( \u_k \), thereby
         \vspace{-0.5em}
         \begin{equation*}
             \beta_k
             =
-            \frac{\qf{\grad{f}{\xkp}}{\Q}[\mathbf{u}_k]}{\qf{\mathbf{u}_k}{\Q}}
+            \frac{\qf{\grad{f}{\xkp}}{\Q}[\u_k]}{\qf{\u_k}{\Q}}
         \end{equation*}
 
         \vspace{-0.5em}
@@ -1311,18 +1314,18 @@ For a convex quadratic function \( f: \R^d \to \R \), the conjugate direction me
 For a convex quadratic function \( f: \R^d \to \R \), the conjugate gradient method terminates in at most \( d \) iterations.
 
 \begin{theorem}{Mutual \( \Q \)--conjugacy of directions in conjugate gradient method}{}
-    The directions \( \set{\mathbf{u}_k}_{k = 0}^{d - 1} \) generated by the conjugate gradient method are mutually \( \Q \)--conjugate.
+    The directions \( \set{\u_k}_{k = 0}^{d - 1} \) generated by the conjugate gradient method are mutually \( \Q \)--conjugate.
 
     For all \( k \in \set{1, 2, \ldots, d - 1} \), we have
     \vspace{-0.5em}
     \begin{align*}
-        \spanset{\mathbf{u}_0, \ldots, \mathbf{u}_k}
+        \spanset{\u_i}_{i = 0}^{k}
         & =
-        \spanset{\grad{f}{\x_0}, \ldots, \grad{f}{\x_k}}
+        \spanset{\grad{f}{\x^{(i)}}}_{i = 0}^{k}
         =
-        \spanset{\grad{f}{\x_0}, \Q \, \grad{f}{\x_0}, \ldots, \Q^k \, \grad{f}{\x_0}}
+        \spanset{\Q^i \, \grad{f}{\x^{(i)}}}_{i = 0}^{k}
         \\
-        \qf{\mathbf{u}_k}{\Q}[\mathbf{u}_i]
+        \qf{\u_k}{\Q}[\u_i]
         & = 0,
         \quad \forall i \in \set{0, 1, \ldots, k - 1}
     \end{align*}
