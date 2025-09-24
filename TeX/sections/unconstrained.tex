@@ -1323,7 +1323,7 @@ For a convex quadratic function \( f: \R^d \to \R \), the conjugate gradient met
         =
         \spanset{\grad{f}{\x^{(i)}}}_{i = 0}^{k}
         =
-        \spanset{\Q^i \, \grad{f}{\x^{(i)}}}_{i = 0}^{k}
+        \spanset{\Q^i \, \grad{f}{\x^{(0)}}}_{i = 0}^{k}
     \end{equation}
     \begin{equation}\label{eq:conjugate-gradient-mutual-Q-conjugacy}
         \qf{\u_k}{\Q}[\u_i]
@@ -1354,18 +1354,37 @@ For a convex quadratic function \( f: \R^d \to \R \), the conjugate gradient met
         \\ & =
         \grad{f}{\xk} + \alpha_k \Q \u_k,
         \quad \forall k \in \set{0, 1, \ldots, d - 1}
+        \\
+        \implies
+        \spanset{\Q \u_k, \grad{f}{\xkp}}
+        & =
+        \spanset{\Q \u_k, \grad{f}{\xk} + \alpha_k \Q \u_k}
+        =
+        \spanset{\Q \u_k, \grad{f}{\xk}}
     \end{align*}
-    and by construction of \( \u_{k+1} \), we have
+    \begin{equation*}
+        \therefore
+        \boxed{
+            \spanset{\Q \u_k, \grad{f}{\xkp}}
+            =
+            \spanset{\Q \u_k, \grad{f}{\xk}},
+            \quad \forall k \in \set{0, 1, \ldots, d - 1}
+        }
+    \end{equation*}
+
+    By the construction of \( \u_{k+1} \), we have that the successive directions \( \u_k, \u_{k+1} \) are \( \Q \)--conjugate, i.e.,
     \begin{equation}\label{eq:conjugate-gradient-successive-Q-conjugacy}
         \qf{\u_{k+1}}{\Q}[\u_k]
         = 0,
         \quad \forall k \in \set{0, 1, \ldots, d - 1}
     \end{equation}
 
-    \paragraph{Base case:}
+    \subsubsection*{Base case:}
     For \( k = 1 \), we have
     \begin{align*}
-        \spanset{\u_0, \u_1}
+        \boxed{
+            \spanset{\u_0, \u_1}
+        }
         & =
         \spanset{\u_0, -\grad{f}{\x^{(1)}} + \beta_0 \u_0}
         =
@@ -1373,7 +1392,19 @@ For a convex quadratic function \( f: \R^d \to \R \), the conjugate gradient met
         \\ & =
         \spanset{-\grad{f}{\xzero}, -\grad{f}{\x^{(1)}}}
         =
-        \spanset{\grad{f}{\xzero}, \grad{f}{\x^{(1)}}}
+        \boxed{
+            \spanset{\grad{f}{\xzero}, \grad{f}{\x^{(1)}}}
+        }
+        \\ & =
+        \spanset{\grad{f}{\xzero}, \grad{f}{\xzero} + \alpha_0 \Q \u_0}
+        =
+        \spanset{\grad{f}{\xzero}, \Q \u_0}
+        \\ & =
+        \spanset{\grad{f}{\xzero}, -\Q \, \grad{f}{\xzero}}
+        =
+        \boxed{
+            \spanset{\grad{f}{\xzero}, \Q \, \grad{f}{\xzero}}
+        }
     \end{align*}
     and from~\peqref{eq:conjugate-gradient-successive-Q-conjugacy}, we have \( \qf{\u_1}{\Q}[\u_0] = 0 \), thereby proving the base case.
 
@@ -1384,5 +1415,34 @@ For a convex quadratic function \( f: \R^d \to \R \), the conjugate gradient met
         \spanset{-\grad{f}{\xzero}}
         =
         \spanset{\grad{f}{\xzero}}
+    \end{equation*}
+
+    \subsubsection*{Inductive step:}
+    Assume that the statements~\peqref{eq:conjugate-gradient-linear-spans} and~\peqref{eq:conjugate-gradient-mutual-Q-conjugacy} hold for some \( k = m, \; m < d - 1 \), i.e.,
+    \begin{equation*}
+        \spanset{\u_i}_{i = 0}^{m}
+        =
+        \spanset{\grad{f}{\x^{(i)}}}_{i = 0}^{m}
+        =
+        \spanset{\Q^i \, \grad{f}{\x^{(0)}}}_{i = 0}^{m}
+    \end{equation*}
+    \begin{equation*}
+        \qf{\u_m}{\Q}[\u_i]
+        = 0,
+        \quad \forall i \in \set{0, 1, \ldots, m - 1}
+    \end{equation*}
+
+    We want to show that the statements hold for \( k = m + 1 \), i.e.,
+    \begin{equation*}
+        \spanset{\u_i}_{i = 0}^{m + 1}
+        =
+        \spanset{\grad{f}{\x^{(i)}}}_{i = 0}^{m + 1}
+        =
+        \spanset{\Q^i \, \grad{f}{\x^{(0)}}}_{i = 0}^{m + 1}
+    \end{equation*}
+    \begin{equation*}
+        \qf{\u_{m + 1}}{\Q}[\u_i]
+        = 0,
+        \quad \forall i \in \set{0, 1, \ldots, m}
     \end{equation*}
 \end{proof}
