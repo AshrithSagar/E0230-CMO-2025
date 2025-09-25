@@ -28,6 +28,10 @@
 \ExplSyntaxOff{}
 
 \newcommand{\inv}[1]{{{#1}^{-1}}}
+\newcommand{\trace}[1]{\func{\mathrm{trace}}{#1}}
+\newcommand{\determinant}[1]{\func{\mathrm{det}}{#1}}
+\newcommand{\rank}[1]{\func{\mathrm{rank}}{#1}}
+\newcommand{\diag}[1]{\func{\mathrm{diag}}{#1}}
 
 \newcommand{\func}[2]{{#1\!\left(#2\right)}}
 \newcommand{\grad}[2]{{\nabla\!\func{#1}{#2}}}
@@ -43,7 +47,7 @@
 
 \newcommand{\C}{{\mathcal{C}}}
 
-\LoopCommands{xyzphIQABUV}[#1]{\newmathcommand#2{{\mathbf{#1}}}}
+\LoopCommands{xyzpheIQABUV}[#1]{\newmathcommand#2{{\mathbf{#1}}}}
 \LoopCommands{uv}[#1]{\renewmathcommand#2{{\mathbf{#1}}}}
 \newcommand{\Qinv}{\inv{\mathbf{Q}}}
 

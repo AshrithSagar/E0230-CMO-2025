@@ -24,7 +24,7 @@ A \textbf{norm} is a real-valued function \( \eta: V \to \R_{\geq 0} \) that sat
 
 A \textbf{vector norm} is a norm defined on a vector space.
 
-A \textbf{normed vector space} \( (\mathbf{V}, \norm{\,\cdot\,}) \) is a vector space \( \mathbf{V} \) over a field \( \mathbb{F} \) (usually \( \R \) or \( \mathbb{C} \)) equipped with a function \( \norm{\,\cdot\,}: \mathbf{V} \to \R_{\geq 0} \) that satisfies the following properties for all \( \u, \v \in \mathbf{V} \) and \( a \in \mathbb{F} \):
+A \textbf{normed vector space} \( (\V, \norm{\,\cdot\,}) \) is a vector space \( \V \) over a field \( \mathbb{F} \) (usually \( \R \) or \( \mathbb{C} \)) equipped with a function \( \norm{\,\cdot\,}: \V \to \R_{\geq 0} \) that satisfies the following properties for all \( \u, \v \in \V \) and \( a \in \mathbb{F} \):
 \begin{itemize}
     \item \textit{Non-negativity}: \( \norm{\v} \geq 0 \)
     \item \textit{Definiteness}: \( \norm{\v} = 0 \iff \v = \zero \)
@@ -87,15 +87,15 @@ For \( \Q \in \PD \), the \textbf{energy norm} (or \( \Q \)-norm) is defined as
 \begin{itemize}
     \item \( \norm{\x}_{\I} = \norm{\x}_2 \)
 
-    \item \( \norm{\x}_{\Q} = \norm{\Q^{\frac{1}{2}} \x}_2 \)
+    \item \( \norm{\x}_{\Q} = \norm{\Q^\half \x}_2 \)
 
-    \item \( \norm{\x}_{\Q} = \norm{\x}_{\Q^{\frac{1}{2}}} \)
+    \item \( \norm{\x}_{\Q} = \norm{\x}_{\Q^\half} \)
 
     \item \( \lambda_{\min}(\Q) \; \norm{\x}^2 \leq \norm{\x}_{\Q}^2 \leq \lambda_{\max}(\Q) \; \norm{\x}^2 \)
 
-    \item \( \norm{\x}_{\Q} = \norm{\Q \x}_{\Q^{-1}} \)
+    \item \( \norm{\x}_{\Q} = \norm{\Q \x}_{\Qinv} \)
 
-    \item \( \norm{\x}_{\Q} = \norm{\Q^{-1} \x}_{\Q} \)
+    \item \( \norm{\x}_{\Q} = \norm{\Qinv \x}_{\Q} \)
 \end{itemize}
 
 \section{Matrix norm}
@@ -172,7 +172,7 @@ For \( \A \in \SD, \norm{\A}_2 = \rho(\A) = \abs{\lambda_{\max}(\A)} \).
     =
     \sqrt{\sum_{i = 1}^{d} \sum_{j = 1}^{d} a_{ij}^2}
     =
-    \sqrt{\operatorname{trace}(\A^\top \A)}
+    \sqrt{\trace{\A^\top \A}}
     =
     \sqrt{\sum_{i = 1}^{d} \sigma_i^2(\A)}
     =
@@ -548,11 +548,162 @@ Here, we denote \( f \in \C^{1}_L \) to mean that \( f \) is \( L \)-smooth and 
 
 \chapter{Linear Algebra}
 
+\section{Vectors}
+
+A \textbf{vector} \( \x \in \R^d \) is an ordered tuple of \( d \) real numbers, i.e.,
+\begin{equation*}
+    \x
+    =
+    \begin{bmatrix}
+        x_1 & x_2 & \cdots & x_d
+    \end{bmatrix}^\top,
+    \quad x_i \in \R,
+    \; \forall i = 1, 2, \ldots, d
+\end{equation*}
+
+\subsection{Linear combinations}
+
+A \textbf{linear combination} of a set of vectors \( \set{\v_i}_{i = 1}^{n} \subseteq \R^d \) is defined as
+\begin{equation*}
+    \sum_{i = 1}^{n} \alpha_i \v_i,
+    \quad \alpha_i \in \R,
+    \; \forall i \in \set{1, 2, \ldots, n}
+\end{equation*}
+
+\subsection{Linear independence}
+
+A set of vectors \( \set{\v_i}_{i = 1}^{n} \subseteq \R^d \) are said to be \textbf{linearly independent} if
+\begin{equation*}
+    \sum_{i = 1}^{n} \alpha_i \v_i = \zero,
+    \quad \alpha_i \in \R,
+    \; \forall i \in \set{1, 2, \ldots, n}
+    \quad \implies \quad
+    \alpha_i = 0,
+    \; \forall i \in \set{1, 2, \ldots, n}
+\end{equation*}
+
+Otherwise, they are said to be \textbf{linearly dependent}.
+
+\section{Linear span}
+
+The \textbf{linear span} / \textbf{linear hull} of a set of vectors \( \set{\v_i}_{i = 1}^{n}, \v_i \in \R^d \) is defined as the set of all possible linear combinations of the vectors, i.e.,
+\begin{equation*}
+    \spanset{\v_i}_{i = 1}^{n}
+    =
+    \set{
+        \sum_{i = 1}^{n} \alpha_i \v_i
+        \given
+        \alpha_i \in \R,
+        \; \forall i \in \set{1, 2, \ldots, n}
+    }
+\end{equation*}
+
+\subsection{Properties}
+
+\begin{itemize}
+    \item \( \spanset{\v_i}_{i = 1}^{n} \) is a subspace of \( \R^d \).
+
+    \item If \( \set{\v_i}_{i = 1}^{n} \) are linearly independent, then \( \dim{\spanset{\v_i}_{i = 1}^{n}} = n \).
+
+    \item If \( n < d \), then \( \spanset{\v_i}_{i = 1}^{n} \subsetneq \R^d \), i.e., \( \spanset{\v_i}_{i = 1}^{n} \) is a proper subspace of \( \R^d \).
+
+    \item If \( n = d \) and \( \set{\v_i}_{i = 1}^{n} \) are linearly independent, then \( \spanset{\v_i}_{i = 1}^{n} = \R^d \).
+
+    \item If \( n > d \), then \( \set{\v_i}_{i = 1}^{n} \) are linearly dependent.
+
+    \item \( \spanset{\e_i}_{i = 1}^{d} = \R^d  \).
+\end{itemize}
+
+\section{Basis}
+
+A \textbf{basis} of a subspace \( \V \subseteq \R^d \) is a set of linearly independent vectors \( \set{\v_i}_{i = 1}^{k} \subseteq \V \) such that
+\begin{equation*}
+    \V
+    =
+    \spanset{\v_i}_{i = 1}^{k}
+\end{equation*}
+i.e., the basis is a linearly independent spanning set of \( \V \).
+
+The vectors \( \set{\v_i}_{i = 1}^{k} \) are called the \textbf{basis vectors} of \( \V \).
+
+The number of vectors \( k \) in the basis is called the \textbf{dimension} of the subspace \( \V \), denoted as \( \dim{\V} = k \).
+
+\subsection{Properties}
+
+\begin{itemize}
+    \item Any vector \( \x \in \V \) can be expressed (uniquely) as a linear combination of the basis vectors.
+        \begin{equation*}
+            \x
+            =
+            \sum_{i = 1}^{k} c_i \v_i,
+            \quad c_i \in \R,
+            \; \forall i \in \set{1, 2, \ldots, k}
+        \end{equation*}
+        The coefficients \( c_i \) are called the \textbf{coordinates}/\textbf{components} of \( \x \) with respect to the basis \( \set{\v_i}_{i = 1}^{k} \).
+
+    \item Every vector space \( \V \subseteq \R^d \) has a basis.
+
+    \item A vector space can have several bases; however, all bases of a vector space have the same dimension.\\
+        This is known as the \textbf{dimension theorem} for (finite-dimensional) vector spaces.\\
+        (Can be shown by Steinitz exchange lemma).
+
+    \item The orthogonal complement of \( \V \) is given by
+        \begin{equation*}
+            \V^\perp
+            =
+            \set{
+                \x \in \R^d \given \dotp{\x}{\v_i} = 0,
+                \; \forall i = 1, 2, \ldots, k
+            }
+        \end{equation*}
+\end{itemize}
+
+\section{Orthonormal basis}
+
+A set of vectors \( \set{\v_i}_{i = 1}^{k} \subseteq \R^d \) is said to form an \textbf{orthonormal basis} of a subspace \( \V \subseteq \R^d \) if
+\begin{itemize}
+    \item \textit{Basis}: \( \V = \spanset{\v_i}_{i = 1}^{k} \)
+    \item \textit{Orthogonality}: \( \dotp{\v_i}{\v_j} = 0, \; \forall i \neq j \)
+    \item \textit{Normality}: \( \norm{\v_i}_2 = 1, \; \forall i \)
+\end{itemize}
+
+\section{Dot product}
+
+The \textbf{dot product} (or inner product) of two vectors \( \x, \y \in \R^d \) is defined as
+\begin{equation*}
+    \dotp{\x}{\y}
+    =
+    \sum_{i = 1}^{d} x_i y_i
+    \quad \in \R
+\end{equation*}
+
+\subsection{Properties}
+
+\begin{itemize}
+    \item \textit{Commutative}: \( \dotp{\x}{\y} = \dotp{\y}{\x}, \; \forall \x, \y \in \R^d \).
+
+    \item \textit{Distributive}: \( \dotp{\x}{(\y + \z)} = \dotp{\x}{\y} + \dotp{\x}{\z}, \; \forall \x, \y, \z \in \R^d \).
+
+    \item \textit{Associative}: \( \dotp{(a \x)}{\y} = \dotp{\x}{(a \y)} = a \left( \dotp{\x}{\y} \right), \; \forall \x, \y \in \R^d, \; a \in \R \).
+
+    \item \textit{Definiteness}: \( \dotp{\x}{\x} = \norm{\x}_2^2 \geq 0, \; \forall \x \in \R^d, \; \text{and } \dotp{\x}{\x} = 0 \iff \x = \zero \).
+
+    \item \textit{Orthogonality}: \( \x \perp \y \iff \dotp{\x}{\y} = 0 \).
+
+    \item Cauchy-Schwarz inequality~\psecref{sec:cauchy-schwarz-inequality}: \( \abs{\dotp{\x}{\y}} \leq \norm{\x}_2 \, \norm{\y}_2, \; \forall \x, \y \in \R^d \).
+
+    \item \( \dotp{\x}{\y} = \norm{\x}_2 \, \norm{\y}_2 \cos \theta \), where \( \theta \) is the angle between \( \x \) and \( \y \).
+
+    \item \( \dotp{\x}{\y} = \trace{\outp{\y}{\x}}, \; \forall \x, \y \in \R^d \).
+
+    \item \( \dotp{\x}{\y} = \norm{\x}_2^2, \iff \x = \y \).
+\end{itemize}
+
 \section{Outer product}
 
 The \textbf{outer product} of two vectors \( \x \in \R^m \) and \( \y \in \R^n \) is defined as
 \begin{equation*}
-    \x \y^\top =
+    \outp{\x}{\y} =
     \begin{bmatrix}
         x_1 y_1 & x_1 y_2 & \cdots & x_1 y_n \\
         x_2 y_1 & x_2 y_2 & \cdots & x_2 y_n \\
@@ -565,18 +716,33 @@ The \textbf{outer product} of two vectors \( \x \in \R^m \) and \( \y \in \R^n \
 \subsection{Properties}
 
 \begin{itemize}
-    \item \( \operatorname{rank} (\x \y^\top) = 1, \; \forall \x \in \R^m \setminus \set{\zero}, \; \forall \y \in \R^n \setminus \set{\zero} \).
+    \item \( \rank{\outp{\x}{\y}} = 1, \; \forall \x \in \R^m \setminus \set{\zero}, \; \forall \y \in \R^n \setminus \set{\zero} \).
 
-    \item \( \x \x^\top \in \mathbf{S}_d^+, \; \forall \x \in \R^d \).
+    \item \( \outp{\x}{\x} \in \mathbf{S}_d^+, \; \forall \x \in \R^d \).
 
-    \item \( \operatorname{spec}(\x \x^\top) = \set{\norm{\x}_2^2, 0^{(d-1)}} \).
+    \item \( \operatorname{spec}(\outp{\x}{\x}) = \set{\norm{\x}_2^2, 0^{(d-1)}} \).
         Eigenvectors: \( \set{\x} \cup \underbrace{ \set{\v \given \dotp{\v}{\x} = 0} }_{\x^\perp} \).
 
-        Eigenvalues of \( \x \x^\top \) are \( \norm{\x}_2^2 \) and \( 0 \) (with multiplicity \( d-1 \)).
+        Eigenvalues of \( \outp{\x}{\x} \) are \( \norm{\x}_2^2 \) and \( 0 \) (with multiplicity \( d-1 \)).
         The eigenvector corresponding to \( \norm{\x}_2^2 \) is \( \x \); the eigenspace corresponding to \( 0 \) is the orthogonal complement \( \x^\perp \).
 \end{itemize}
 
 \section{Matrices}
+
+A \textbf{matrix} \( \A \in \R^{m \times n} \) is a rectangular array of real numbers with \( m \) rows and \( n \) columns, i.e.,
+\begin{equation*}
+    \A
+    =
+    \begin{bmatrix}
+        a_{11} & a_{12} & \cdots & a_{1n} \\
+        a_{21} & a_{22} & \cdots & a_{2n} \\
+        \vdots & \vdots & \ddots & \vdots \\
+        a_{m1} & a_{m2} & \cdots & a_{mn}
+    \end{bmatrix},
+    \quad a_{ij} \in \R,
+    \; \forall i \in \set{1, 2, \ldots, m},
+    \; \forall j \in \set{1, 2, \ldots, n}
+\end{equation*}
 
 \subsection{Symmetric Matrices}\label{sec:symmetric-matrices}
 
@@ -629,15 +795,15 @@ The set of all eigenvalues of \( \A \) is called the \textbf{spectrum} of \( \A 
 \subsection{Properties}
 
 \begin{itemize}
-    \item \( \operatorname{trace}(\A) = \sum_{i = 1}^{d} a_{ii} = \sum_{i = 1}^{d} \lambda_i \).
+    \item \( \trace{\A} = \sum_{i = 1}^{d} a_{ii} = \sum_{i = 1}^{d} \lambda_i \).
 
-    \item \( \det(\A) = \prod_{i = 1}^{d} \lambda_i \).
+    \item \( \determinant{\A} = \prod_{i = 1}^{d} \lambda_i \).
 
     \item \( \A \in \SD \implies \A \) has an orthonormal basis of eigenvectors in \( \R^d \) \, \psecref{sec:spectral-decomposition-theorem}
 
     \item \( \A \in \SD \implies \operatorname{spec}(\A) \subseteq \R^d \) \, \psecref{sec:spectral-decomposition-theorem}
 
-    \item \( \A \in \SD \implies \v_i^\top \v_j = 0, \; \text{if } \lambda_i \neq \lambda_j \) \, \psecref{sec:spectral-decomposition-theorem}
+    \item \( \A \in \SD \implies \dotp{\v_i}{\v_j} = 0, \; \text{if } \lambda_i \neq \lambda_j \) \, \psecref{sec:spectral-decomposition-theorem}
 \end{itemize}
 
 \section{Spectral Decomposition Theorem}\label{sec:spectral-decomposition-theorem}
@@ -645,10 +811,15 @@ The set of all eigenvalues of \( \A \) is called the \textbf{spectrum} of \( \A 
 \begin{theorem}{Spectral Decomposition Theorem}{}
     For any \( \A \in \SD \), there exists an orthonormal basis of eigenvectors \( \set{\v_i}_{i = 1}^{d}, \v_i \in \R^d \setminus \set{\zero} \), with corresponding eigenvalues \( \lambda_1 \geq \lambda_2 \geq \cdots \geq \lambda_d, \; \lambda_i \in \R \), such that
     \begin{equation*}
-        \A = \sum_{i = 1}^{d} \lambda_i \v_i \v_i^\top
-        = \mathbf{V} \boldsymbol{\Lambda} \mathbf{V}^\top
+        \A = \sum_{i = 1}^{d} \lambda_i \outp{\v_i}{\v_i}
+        = \V \boldsymbol{\Lambda} \V^\top
+        = \V \boldsymbol{\Lambda} \inv{\V}
     \end{equation*}
-    where \( \mathbf{V} = [\v_1, \v_2, \ldots, \v_d] \in \R^{d \times d} \) is an orthogonal matrix (i.e., \( \dotp{\V}{\V} = \I \)) and \( \boldsymbol{\Lambda} = \operatorname{diag}(\lambda_1, \lambda_2, \ldots, \lambda_d) \in \R^{d \times d} \) is a diagonal matrix containing the eigenvalues of \( \A \).
+    where \( \V =
+        \begin{bmatrix}
+            \v_1 & \v_2 & \cdots & \v_d
+        \end{bmatrix}
+    \in \R^{d \times d} \) is an orthogonal matrix (i.e., \( \dotp{\V}{\V} = \outp{\V}{\V} = \I \)) and \( \boldsymbol{\Lambda} = \diag{\lambda_1, \lambda_2, \ldots, \lambda_d} \in \R^{d \times d} \) is a diagonal matrix containing the eigenvalues of \( \A \).
 \end{theorem}
 
 \begin{proof}
@@ -662,7 +833,7 @@ The set of all eigenvalues of \( \A \) is called the \textbf{spectrum} of \( \A 
         & =
         \v_i^\top (\A \v_j)
         =
-        \lambda_j \v_i^\top \v_j,
+        \lambda_j \dotp{\v_i}{\v_j},
         \qquad \text{Similarly, } \;
         \v_j^\top \A \v_i
         =
@@ -677,21 +848,21 @@ The set of all eigenvalues of \( \A \) is called the \textbf{spectrum} of \( \A 
         =
         {(\lambda_i \v_i)}^\top \v_j
         =
-        \lambda_i \v_i^\top \v_j
+        \lambda_i \dotp{\v_i}{\v_j}
         =
         \lambda_i \v_j^\top \v_i
         =
         \v_j^\top \A \v_i
         \\
         \implies
-        \lambda_j \v_i^\top \v_j
+        \lambda_j \dotp{\v_i}{\v_j}
         & =
-        \lambda_i \v_i^\top \v_j
+        \lambda_i \dotp{\v_i}{\v_j}
         \implies
-        (\lambda_j - \lambda_i) \v_i^\top \v_j
+        (\lambda_j - \lambda_i) \dotp{\v_i}{\v_j}
         = 0
         \implies
-        \v_i^\top \v_j = 0,
+        \dotp{\v_i}{\v_j} = 0,
         \; \because
         \lambda_i \neq \lambda_j,
         \;\;
@@ -701,23 +872,23 @@ The set of all eigenvalues of \( \A \) is called the \textbf{spectrum} of \( \A 
 
     For repeated eigenvalues, if any, we can always find a set of orthonormal eigenvectors using the Gram-Schmidt process.
     Thereby, we can always find \( d \) orthonormal eigenvectors of \( \A \), thus forming an orthonormal basis for \( \R^d \).
-    This gives that \( \mathbf{V} \) is an orthogonal matrix \( \implies \dotp{\V}{\V} = \I \implies \mathbf{V}^{-1} = \mathbf{V}^\top \).
+    This gives that \( \V \) is an orthogonal matrix \( \implies \dotp{\V}{\V} = \I \implies \inv{\V} = \V^\top \).
 
-    Now, with \( \boldsymbol{\Lambda} = \operatorname{diag}(\lambda_1, \lambda_2, \ldots, \lambda_d) \) and \( \mathbf{V} = [\v_1, \v_2, \ldots, \v_d] \), we have
+    Now, with \( \boldsymbol{\Lambda} = \diag{\lambda_1, \lambda_2, \ldots, \lambda_d} \) and \( \V = [\v_1, \v_2, \ldots, \v_d] \), we have
     \begin{equation*}
-        \A \mathbf{V}
+        \A \V
         =
         [\A \v_1, \A \v_2, \ldots, \A \v_d]
         =
         [\lambda_1 \v_1, \lambda_2 \v_2, \ldots, \lambda_d \v_d]
         =
-        \mathbf{V} \boldsymbol{\Lambda}
+        \V \boldsymbol{\Lambda}
         \implies
         \A
         =
-        \mathbf{V} \boldsymbol{\Lambda} \mathbf{V}^{-1}
+        \V \boldsymbol{\Lambda} \inv{\V}
         =
-        \mathbf{V} \boldsymbol{\Lambda} \mathbf{V}^\top
+        \V \boldsymbol{\Lambda} \V^\top
     \end{equation*}
 \end{proof}
 

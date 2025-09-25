@@ -1406,7 +1406,7 @@ For a convex quadratic function \( f: \R^d \to \R \), the conjugate direction me
         \func{f}{\xzero + \U^{(k)} \gamma^{(k)}},
         \quad \forall k \in \set{1, 2, \ldots, d}
     \end{equation*}
-    Then, since \( \set{\u_i}_{i = 0}^{d - 1} \) form a basis for \( \R^d \), the matrix \( \U^{(k)} \) has full column rank, i.e., \( \func{\operatorname{rank}}{\U^{(k)}} = k, \; \forall k \in \set{1, 2, \ldots, d} \).
+    Then, since \( \set{\u_i}_{i = 0}^{d - 1} \) form a basis for \( \R^d \), the matrix \( \U^{(k)} \) has full column rank, i.e., \( \rank{\U^{(k)}} = k, \; \forall k \in \set{1, 2, \ldots, d} \).
     Thereby, for any \( \x \in S_k \), there exists a unique \( \gamma^{(k)} \in \R^k \) such that \( \x = \xzero + \U^{(k)} \gamma^{(k)} \), for all \( k \in \set{1, 2, \ldots, d} \).
     Hence, we can see that the constrained minimisation problem with \( f \) over the affine subspace \( S_k \) is equivalent to the unconstrained minimisation problem with \( g \) over \( \R^k \), i.e.,
     \vspace{-0.5em}
@@ -1441,7 +1441,7 @@ For a convex quadratic function \( f: \R^d \to \R \), the conjugate direction me
     \end{align*}
 
     Since \( \set{\u_i}_{i = 0}^{d - 1} \) are mutually \( \Q \)--conjugate, it follows that \( \U^{(k)} \) is an orthogonal matrix, i.e., \( \dotp{\U^{(k)}}{\U^{(k)}} = \outp{\U^{(k)}}{\U^{(k)}} = \I, \; \forall k \in \set{1, 2, \ldots, d} \).
-    Thereby, we have that \( \qf{\U^{(k)}}{\Q} \) is a diagonal matrix with positive diagonal entries, i.e., \( \hess{g}{\gamma^{(k)}} = \func{\operatorname{diag}}{\qf{\u_i}{\Q}}_{i = 0}^{k - 1} \succ \zero, \; \because \Q \succ \zero, \; \forall k \in \set{1, 2, \ldots, d} \).
+    Thereby, we have that \( \qf{\U^{(k)}}{\Q} \) is a diagonal matrix with positive diagonal entries, i.e., \( \hess{g}{\gamma^{(k)}} = \diag{\qf{\u_i}{\Q}}_{i = 0}^{k - 1} \succ \zero, \; \because \Q \succ \zero, \; \forall k \in \set{1, 2, \ldots, d} \).
     \begin{align*}
         \implies
         {\gamma^{(k)}}^\ast
