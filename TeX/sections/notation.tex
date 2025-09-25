@@ -1,41 +1,76 @@
 
 \chapter{Notation}
 
-\begin{tabular}{ll}
+% chktex-file 44
+\begin{table}[h!]
+    \centering
+    \renewcommand{\arraystretch}{1.5}
+    \begin{tabular}{l|l}
 
-    \( \R_{> 0} \)
-    &
-    Set of all positive real numbers, \( \R_{>0} = \set{x \in \R \given x > 0} \)
-    \\
+        \( \R_{> 0} \)
+        &
+        Set of all positive real numbers,
+        \( \R_{>0} = \set{x \in \R \given x > 0} \)
+        \\ \hline
 
-    \( \R_{\geq 0} \)
-    &
-    Set of all non-negative real numbers, \( \R_{\geq 0} = \set{x \in \R \given x \geq 0} \)
-    \\
+        \( \R_{\geq 0} \)
+        &
+        Set of all non-negative real numbers,
+        \( \R_{\geq 0} = \set{x \in \R \given x \geq 0} \)
+        \\ \hline
 
-    \( \R^{d \times d} \)
-    &
-    Set of all real \( d \times d \) matrices, \( \R^{d \times d} = \set{{(a_{ij})}_{i, j = 1}^d \given a_{ij} \in \R, \; i,j = 1,\ldots,d} \)
-    \\
+        \( \R^{d \times d} \)
+        &
+        Set of all real \( d \times d \) matrices,
+        \( \R^{d \times d} = \set{{(a_{ij})}_{i, j = 1}^d \given a_{ij} \in \R, \; i,j = 1,\ldots,d} \)
+        \\ \hline
 
-    \( \SD \)
-    &
-    Set of all real \( d \times d \) symmetric matrices,
-    \( \SD = \set{\A \in \R^{d \times d} \given \A = \A^\top} \)
-    \\
+        \( \A \succeq \zero \)
+        &
+        Matrix \( \A \) is symmetric positive semi-definite~\psecref{sec:symmetric-positive-semi-definite-matrices},
+        \( \A \succeq \zero \iff \qf{\z}{\A} \geq 0, \; \forall \z \in \R^d \)
+        \\ \hline
 
-    \( \PSD \)
-    &
-    Set of all real \( d \times d \) symmetric positive semi-definite matrices,
-    \( \PSD = \set{\A \in \SD \given \A \succeq \zero} \)
-    \\
+        \( \A \succ \zero \)
+        &
+        Matrix \( \A \) is symmetric positive definite~\psecref{sec:symmetric-positive-definite-matrices},
+        \( \A \succ \zero \iff \qf{\z}{\A} > 0, \; \forall \z \in \R^d \setminus \set{\zero} \)
+        \\ \hline
 
-    \( \PD \)
-    &
-    Set of all real \( d \times d \) symmetric positive definite matrices,
-    \( \PD = \set{\A \in \SD \given \A \succ \zero} \)
+        \( \A \succeq \B \)
+        &
+        Matrix \( (\A - \B) \) is symmetric positive semi-definite~\psecref{sec:symmetric-positive-semi-definite-matrices},
+        \\ &
+        \( \A \succeq \B \iff \qf{\z}{(\A - \B)} \geq 0, \; \forall \z \in \R^d \)
+        \\ \hline
 
-\end{tabular}
+        \( \A \succ \B \)
+        &
+        Matrix \( (\A - \B) \) is symmetric positive definite~\psecref{sec:symmetric-positive-definite-matrices},
+        \\ &
+        \( \A \succ \B \iff \qf{\z}{(\A - \B)} > 0, \; \forall \z \in \R^d \setminus \set{\zero} \)
+        \\ \hline
+
+        \( \SD \)
+        &
+        Set of all real \( d \times d \) symmetric matrices~\psecref{sec:symmetric-matrices},
+        \( \SD = \set{\A \in \R^{d \times d} \given \A = \A^\top} \)
+        \\ \hline
+
+        \( \PSD \)
+        &
+        Set of all real \( d \times d \) symmetric positive semi-definite matrices~\psecref{sec:symmetric-positive-semi-definite-matrices},
+        \\ &
+        \( \PSD = \set{\A \in \SD \given \A \succeq \zero} \)
+        \\ \hline
+
+        \( \PD \)
+        &
+        Set of all real \( d \times d \) symmetric positive definite matrices~\psecref{sec:symmetric-positive-definite-matrices},
+        \( \PD = \set{\A \in \SD \given \A \succ \zero} \)
+
+    \end{tabular}
+\end{table}
 
 \section{Little-o notation}
 

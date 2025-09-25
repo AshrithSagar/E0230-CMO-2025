@@ -1358,7 +1358,7 @@ For a convex quadratic function \( f: \R^d \to \R \), the conjugate direction me
         \quad \forall k \in \set{1, 2, \ldots, d}
     \end{equation*}
 
-    Applying Taylor's theorem to \( g \) at \( \gamma^{(k)} = \zero \), we have
+    Applying Taylor's theorem~\psecref{sec:multivariate-taylor-theorem} to \( g \) at \( \gamma^{(k)} = \zero \), we have
     \begin{align*}
         \func{g}{\gamma^{(k)}}
         & =
@@ -1381,8 +1381,8 @@ For a convex quadratic function \( f: \R^d \to \R \), the conjugate direction me
         \quad \forall k \in \set{1, 2, \ldots, d}
     \end{align*}
 
-    Since \( \set{\u_i}_{i = 0}^{d - 1} \) are mutually \( \Q \)--conjugate, we have that \( \U^{(k)} \) is an orthogonal matrix, i.e., \( \dotp{\U^{(k)}}{\U^{(k)}} = \outp{\U^{(k)}}{\U^{(k)}} = \I, \; \forall k \in \set{1, 2, \ldots, d} \).
-    Thereby, we have that \( \qf{\U^{(k)}}{\Q} \) is a diagonal matrix with positive diagonal entries, i.e., \( \hess{g}{\gamma^{(k)}} = \func{\operatorname{diag}}{\qf{\u_i}{\Q}}_{i = 0}^{k - 1} \succ \zero, \; \forall k \in \set{1, 2, \ldots, d} \).
+    Since \( \set{\u_i}_{i = 0}^{d - 1} \) are mutually \( \Q \)--conjugate, it follows that \( \U^{(k)} \) is an orthogonal matrix, i.e., \( \dotp{\U^{(k)}}{\U^{(k)}} = \outp{\U^{(k)}}{\U^{(k)}} = \I, \; \forall k \in \set{1, 2, \ldots, d} \).
+    Thereby, we have that \( \qf{\U^{(k)}}{\Q} \) is a diagonal matrix with positive diagonal entries, i.e., \( \hess{g}{\gamma^{(k)}} = \func{\operatorname{diag}}{\qf{\u_i}{\Q}}_{i = 0}^{k - 1} \succ \zero, \; \because \Q \succ \zero, \; \forall k \in \set{1, 2, \ldots, d} \).
     \begin{align*}
         \implies
         {\gamma^{(k)}}^\ast
