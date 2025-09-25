@@ -34,8 +34,8 @@
 
 \begin{minipage}{0.4\textwidth}
     \begin{align*}
-        \min_{x} \quad & \sum_{i} c_i x_i \\
-        \text{subject to} \quad
+        \minimize_{x} \quad & \sum_{i} c_i x_i \\
+        \subjectto \quad
         & \sum_{i} x_i a_{ij} \geq r_j, \quad \forall j \\
         & x_i \geq 0, \quad \forall i
     \end{align*}
@@ -57,3 +57,22 @@
         \item[\( r_j \)] Minimum required amount of nutrient \( j \) per day.
     \end{description}
 \end{minipage}
+
+\section{Optimisation}
+
+\vspace{-1em}
+\begin{figure}[h]
+    \centering
+    \begin{minipage}{0.475\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/optimisation/_}
+    \end{minipage}%
+    \hfill
+    \begin{minipage}{0.525\textwidth}
+        An \textbf{optimisation problem} deals with finding the best solution from all feasible solutions.
+
+        The focus here is mainly on \textbf{continuous optimisation}, which deals with problems where the variables used in the objective function are required to be continuous.
+
+        This continuity assumption allows for the use of calculus and other mathematical tools to find optimal solutions.
+    \end{minipage}
+\end{figure}

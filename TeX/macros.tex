@@ -39,6 +39,8 @@
 \newcommand{\hessinv}[2]{\inv{\left[\hess{#1}{#2}\right]}}
 
 \LoopCommands{{argmin}{argmax}}[#1]{\newmathcommand#2{\mathop{\mathrm{#1}}}}
+\LoopCommands{{minimize}{maximize}}[#1]{\DeclareMathOperator*{#2}{#1}}
+\DeclareMathOperator{\subjectto}{subject~to}
 \newcommand{\smalloh}[1]{\func{{\scriptstyle\mathcal{O}}}{#1}}
 
 \newcommand{\SD}[1][d]{{\mathcal{S}_{#1}}}

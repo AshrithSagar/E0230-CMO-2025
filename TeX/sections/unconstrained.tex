@@ -6,13 +6,24 @@
 \section{Optimisation problem}
 
 An \textbf{unconstrained minimisation problem} aims to find a point \( \xstar \in \R^d \) that minimises a function \( f: \R^d \to \R \), i.e.,
-\begin{equation*}
-    \func{f}{\xstar} = \min_{\x \in \R^d} \func{f}{\x}
+\vspace{-1.5em}
+\begin{align*}
+    &
+    \minimize_{\x \in \R^d} \func{f}{\x}
+    \\
+    \func{f}{\xstar}
+    =
+    \min_{\x \in \R^d} \func{f}{\x}
     \quad \iff \quad
-    \xstar = \argmin_{\x \in \R^d} \func{f}{\x}
+    \xstar
+    & =
+    \argmin_{\x \in \R^d} \func{f}{\x}
     \quad \iff \quad
-    \func{f}{\xstar} \leq \func{f}{\x}, \quad \forall \x \in \R^d
-\end{equation*}
+    \func{f}{\xstar}
+    \leq
+    \func{f}{\x},
+    \quad \forall \x \in \R^d
+\end{align*}
 
 The function \( f \) is called the \textbf{objective function}, the point \( \xstar \) is called the \textbf{minimum point}, and the value \( \func{f}{\xstar} \) is called the \textbf{minimum value}.
 
