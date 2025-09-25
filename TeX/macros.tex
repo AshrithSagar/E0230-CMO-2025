@@ -49,16 +49,14 @@
 
 \newcommand{\C}{{\mathcal{C}}}
 
-\LoopCommands{xyzpheIQABUV}[#1]{\newmathcommand#2{{\mathbf{#1}}}}
-\LoopCommands{uv}[#1]{\renewmathcommand#2{{\mathbf{#1}}}}
-\newcommand{\Qinv}{\inv{\mathbf{Q}}}
+\LoopCommands{xyzpheuv}[#1]{\declaremathcommandPIE#2{{\mathbf{#1}}##1##2\IfEmptyTF{##3}{}{^{(\GetExponent{##3})}}}}
 
-\newcommand{\xstar}{{\x^\ast}}
+\LoopCommands{IQABUV}[#1]{\newmathcommand#2{{\mathbf{#1}}}}
+\newcommand{\Qinv}{\inv{\Q}}
+
+\newcommand{\xstar}{{{\mathbf{x}}^\ast}}
 \newcommand{\xhat}{{\hat{\x}}}
-\newcommand{\xk}{{\x^{(k)}}}
-\newcommand{\pk}{{\p^{(k)}}}
-\newcommand{\xkp}{{\x^{(k+1)}}}
-\newcommand{\xzero}{{\x^{(0)}}}
+\newcommand{\ppow}[1]{^{(#1)}}
 
 \newcommand{\half}{{\frac{1}{2}}}
 \newcommand{\zero}{{\mathbf{0}}}

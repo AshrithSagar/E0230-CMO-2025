@@ -449,7 +449,7 @@ An \( n \)-th order oracle provides information up to the \( n \)-th derivative 
     \SetAlgoLined{}
     \KwIn{
         First-order oracle for the objective function \( \func{f}{\x} \);
-        Initial point \( \xzero \in \R^d \);
+        Initial point \( \x^0 \in \R^d \);
     }
     \KwOut{
         Approximate solution to the unconstrained minimisation problem \( \displaystyle \argmin_{\x \in \R^d} \func{f}{\x} \)\;
@@ -457,12 +457,12 @@ An \( n \)-th order oracle provides information up to the \( n \)-th derivative 
 
     \( k \leftarrow 0 \)\;
 
-    \While{\( \xk \) is not optimal}{
-        Update the current point: \( \xkp = \func{\operatorname{ALGO}}{\xk} \)\;
+    \While{\( \x^k \) is not optimal}{
+        Update the current point: \( \x^{k+1} = \func{\operatorname{ALGO}}{\x^k} \)\;
 
         \( k \leftarrow k + 1 \)\;
     }
-    \Return{\( \xk \)\;}
+    \Return{\( \x^k \)\;}
 \end{algorithm}
 
 \section{Line search methods}\label{sec:line-search}
@@ -474,7 +474,7 @@ An \( n \)-th order oracle provides information up to the \( n \)-th derivative 
     \SetAlgoLined{}
     \KwIn{
         First-order oracle for the objective function \( \func{f}{\x} \);
-        Initial point \( \xzero \in \R^d \);
+        Initial point \( \x^0 \in \R^d \);
     }
     \KwOut{
         Approximate solution to the unconstrained minimisation problem \( \displaystyle \argmin_{\x \in \R^d} \func{f}{\x} \)\;
@@ -482,32 +482,32 @@ An \( n \)-th order oracle provides information up to the \( n \)-th derivative 
 
     \( k \leftarrow 0 \)\;
 
-    \While{\( \xk \) is not optimal}{
-        Choose a descent direction \( \pk \) from the set of descent directions
+    \While{\( \x^k \) is not optimal}{
+        Choose a descent direction \( \p^k \) from the set of descent directions
         \begin{equation*}
-            \func{\mathcal{DS}}{\xk}
+            \func{\mathcal{DS}}{\x^k}
             =
-            \set{\p \in \R^d \given \dotp{\grad{f}{\xk}}{\p} < 0}
+            \set{\p \in \R^d \given \dotp{\grad{f}{\x^k}}{\p} < 0}
         \end{equation*}
 
         Choose a step length \( \alpha_k \geq 0 \)\;
 
-        Update the current point: \( \xkp = \xk + \alpha_k \pk \)\;
+        Update the current point: \( \x^{k+1} = \x^k + \alpha_k \p^k \)\;
 
         \( k \leftarrow k + 1 \)\;
     }
-    \Return{\( \xk \)\;}
+    \Return{\( \x^k \)\;}
 \end{algorithm}
 
 \paragraph{Gradient descent:}
-Algorithms that use the gradient \( \grad{f}{\xk} \) to compute the descent direction \( \pk \).
+Algorithms that use the gradient \( \grad{f}{\x^k} \) to compute the descent direction \( \p^k \).
 
 \paragraph{Steepest descent method (Cauchy):}
 Choose the descent direction as
 \begin{equation*}
-    \pk = -\grad{f}{\xk}
+    \p^k = -\grad{f}{\x^k}
     ,\qquad \text{or normalized} \quad
-    \pk = - \frac{\grad{f}{\xk}}{\norm{\grad{f}{\xk}}}
+    \p^k = - \frac{\grad{f}{\x^k}}{\norm{\grad{f}{\x^k}}}
 \end{equation*}
 
 \chapter{Exact line search}
@@ -516,7 +516,7 @@ Choose the step length \( \alpha_k \) in line search~\psecref{sec:line-search} b
 \begin{equation*}
     \alpha_k = \argmin_{\alpha \geq 0} g_k(\alpha),
     \qquad \text{where } \;
-    g_k(\alpha) \triangleq f\left( \xk + \alpha \pk \right)
+    g_k(\alpha) \triangleq f\left( \x^k + \alpha \p^k \right)
 \end{equation*}
 
 \section{Convex quadratic minimisation problem}
@@ -554,28 +554,28 @@ To find the optimal step length \( \alpha_k \), consider
 \begin{align*}
     g_k(\alpha)
     & \triangleq
-    \func{f}{\xk + \alpha \pk}
+    \func{f}{\x^k + \alpha \p^k}
     \\ & =
-    \half \qf{\left( \xk + \alpha \pk \right)}{\Q}
-    + \dotp{\h}{\!\left( \xk + \alpha \pk \right)}
+    \half \qf{\left( \x^k + \alpha \p^k \right)}{\Q}
+    + \dotp{\h}{\!\left( \x^k + \alpha \p^k \right)}
     + c
     \\ & =
-    \half \qf{\xk}{\Q}
-    + \alpha \qf{\xk}{\Q}[\pk]
-    + \frac{\alpha^2}{2} \qf{\pk}{\Q}
-    + \dotp{\h}{\xk}
-    + \alpha \dotp{\h}{\pk}
+    \half \qf{\x^k}{\Q}
+    + \alpha \qf{\x^k}{\Q}[\p^k]
+    + \frac{\alpha^2}{2} \qf{\p^k}{\Q}
+    + \dotp{\h}{\x^k}
+    + \alpha \dotp{\h}{\p^k}
     + c
     \\ & =
-    \alpha^2 \left( \half \qf{\pk}{\Q} \right)
-    + \alpha \left( \qf{\xk}{\Q}[\pk] + \dotp{\h}{\pk} \right)
-    + \left( \half \qf{\xk}{\Q} + \dotp{\h}{\xk} + c \right)
+    \alpha^2 \left( \half \qf{\p^k}{\Q} \right)
+    + \alpha \left( \qf{\x^k}{\Q}[\p^k] + \dotp{\h}{\p^k} \right)
+    + \left( \half \qf{\x^k}{\Q} + \dotp{\h}{\x^k} + c \right)
     \\ & =
-    \alpha^2 \underbrace{ \left( \half \qf{\pk}{\Q} \right) }_{p_k}
-    + \alpha \underbrace{ \left( \dotp{\grad{f}{\xk}}{\pk} \right) }_{q_k}
-    + \underbrace{ \Big( \func{f}{\xk} \Big) }_{r_k}
+    \alpha^2 \underbrace{ \left( \half \qf{\p^k}{\Q} \right) }_{p_k}
+    + \alpha \underbrace{ \left( \dotp{\grad{f}{\x^k}}{\p^k} \right) }_{q_k}
+    + \underbrace{ \Big( \func{f}{\x^k} \Big) }_{r_k}
 \end{align*}
-which is a quadratic function in \( \alpha \) with \( p_k > 0 \; \left( \because \Q \succ \zero \right) \) and \( q_k < 0 \; \left( \because \pk \in \func{\mathcal{DS}}{\xk} \right) \).
+which is a quadratic function in \( \alpha \) with \( p_k > 0 \; \left( \because \Q \succ \zero \right) \) and \( q_k < 0 \; \left( \because \p^k \in \func{\mathcal{DS}}{\x^k} \right) \).
 
 For the \hyperlink{1D-quadratic}{one-dimensional quadratic} case, we can then compute the minimum point and minimum value as
 \begin{equation*}
@@ -584,33 +584,33 @@ For the \hyperlink{1D-quadratic}{one-dimensional quadratic} case, we can then co
     \implies
     \boxed{
         \alpha_k
-        = -\frac{\dotp{\grad{f}{\xk}}{\pk}}{\qf{\pk}{\Q}}
+        = -\frac{\dotp{\grad{f}{\x^k}}{\p^k}}{\qf{\p^k}{\Q}}
     }
     > 0
 \end{equation*}
 \begin{equation*}
-    \func{f}{\xkp}
+    \func{f}{\x^{k+1}}
     =
     g_k(\alpha_k)
     =
     r_k - \frac{q_k^2}{4 p_k}
     \implies
     \boxed{
-        \func{f}{\xkp}
+        \func{f}{\x^{k+1}}
         =
-        \func{f}{\xk} - \frac{{\left( \dotp{\grad{f}{\xk}}{\pk} \right)}^2}{2 \qf{\pk}{\Q}}
+        \func{f}{\x^k} - \frac{{\left( \dotp{\grad{f}{\x^k}}{\p^k} \right)}^2}{2 \qf{\p^k}{\Q}}
     }
 \end{equation*}
 
-For the choice \( \pk = -\grad{f}{\xk} \), we have
+For the choice \( \p^k = -\grad{f}{\x^k} \), we have
 \begin{equation*}
     \alpha_k
     =
-    \frac{\norm{\grad{f}{\xk}}^2} {\qf{\grad{f}{\xk}}{\Q}},
+    \frac{\norm{\grad{f}{\x^k}}^2} {\qf{\grad{f}{\x^k}}{\Q}},
     \qquad
-    \func{f}{\xkp}
+    \func{f}{\x^{k+1}}
     =
-    \func{f}{\xk} - \frac{\norm{\grad{f}{\xk}}^4}{2 \qf{\grad{f}{\xk}}{\Q}}
+    \func{f}{\x^k} - \frac{\norm{\grad{f}{\x^k}}^4}{2 \qf{\grad{f}{\x^k}}{\Q}}
 \end{equation*}
 
 \paragraph{Analysis:}
@@ -640,12 +640,12 @@ Now, consider the error at the \( k^{th} \) iteration defined as
 \begin{align*}
     E_k
     & \triangleq
-    \func{f}{\xk} - \func{f}{\xstar}
+    \func{f}{\x^k} - \func{f}{\xstar}
     \\
     \implies
     E_k
     & =
-    \half \qf{(\xk - \xstar)}{\Q}
+    \half \qf{(\x^k - \xstar)}{\Q}
     \\
     \because
     \grad{f}{\xstar}
@@ -655,50 +655,50 @@ Now, consider the error at the \( k^{th} \) iteration defined as
     \zero
     \\
     \implies
-    \grad{f}{\xk}
+    \grad{f}{\x^k}
     & =
-    \Q \xk + \h
+    \Q \x^k + \h
     =
-    \Q \left( \xk - \xstar \right)
+    \Q \left( \x^k - \xstar \right)
     \\
     \implies
-    \left( \xk - \xstar \right)
+    \left( \x^k - \xstar \right)
     & =
-    \Qinv \, \grad{f}{\xk}
+    \Qinv \, \grad{f}{\x^k}
     \\
     \implies
     E_k
     & =
-    \half \dotp{\left( \xk - \xstar \right)}{\grad{f}{\xk}}
+    \half \dotp{\left( \x^k - \xstar \right)}{\grad{f}{\x^k}}
     =
-    \half \dotp{\Big( \Qinv \, \grad{f}{\xk} \Big)}{\grad{f}{\xk}}
+    \half \dotp{\Big( \Qinv \, \grad{f}{\x^k} \Big)}{\grad{f}{\x^k}}
     \\ & =
-    \half \qf{\grad{f}{\xk}}{{\left( \Qinv \right)}^\top}
+    \half \qf{\grad{f}{\x^k}}{{\left( \Qinv \right)}^\top}
     =
-    \half \qf{\grad{f}{\xk}}{\Qinv}
+    \half \qf{\grad{f}{\x^k}}{\Qinv}
 \end{align*}
 
 Now, the successive error reduction can be computed as
 \begin{align*}
     E_k - E_{k+1}
     & =
-    \func{f}{\xk} - \func{f}{\xkp}
+    \func{f}{\x^k} - \func{f}{\x^{k+1}}
     =
-    \frac{{\left( \dotp{\grad{f}{\xk}}{\pk} \right)}^2}{2 \qf{\pk}{\Q}}
+    \frac{{\left( \dotp{\grad{f}{\x^k}}{\p^k} \right)}^2}{2 \qf{\p^k}{\Q}}
     \\
     \implies
     \frac{E_{k} - E_{k+1}}{E_k}
     & =
-    \frac{{\left( \dotp{\grad{f}{\xk}}{\pk} \right)}^2}{ {\left( \grad{f}{\xk} \right)}^\top \Qinv \, \grad{f}{\xk} \; \qf{\pk}{\Q}}
+    \frac{{\left( \dotp{\grad{f}{\x^k}}{\p^k} \right)}^2}{ {\left( \grad{f}{\x^k} \right)}^\top \Qinv \, \grad{f}{\x^k} \; \qf{\p^k}{\Q}}
 \end{align*}
 
-For the choice \( \pk = -\grad{f}{\xk} \), we have
+For the choice \( \p^k = -\grad{f}{\x^k} \), we have
 \begin{align*}
     \frac{E_{k} - E_{k+1}}{E_k}
     & =
-    \frac{{\left( {\grad{f}{\xk}}^\top \left( -\grad{f}{\xk} \right) \right)}^2}{ {\left( \grad{f}{\xk} \right)}^\top \Qinv \, \grad{f}{\xk} \; {\left( -\grad{f}{\xk} \right)}^\top \Q \left( -\grad{f}{\xk} \right)}
+    \frac{{\left( {\grad{f}{\x^k}}^\top \left( -\grad{f}{\x^k} \right) \right)}^2}{ {\left( \grad{f}{\x^k} \right)}^\top \Qinv \, \grad{f}{\x^k} \; {\left( -\grad{f}{\x^k} \right)}^\top \Q \left( -\grad{f}{\x^k} \right)}
     \\ & =
-    \frac{{\Vert \grad{f}{\xk} \Vert}^4}{ {\left( \grad{f}{\xk} \right)}^\top \Qinv \, \grad{f}{\xk} \; {\grad{f}{\xk}}^\top \Q \grad{f}{\xk}}
+    \frac{{\Vert \grad{f}{\x^k} \Vert}^4}{ {\left( \grad{f}{\x^k} \right)}^\top \Qinv \, \grad{f}{\x^k} \; {\grad{f}{\x^k}}^\top \Q \grad{f}{\x^k}}
 \end{align*}
 
 From Kantorovich inequality~\psecref{sec:kantorovich-inequality}, we have
@@ -710,7 +710,7 @@ From Kantorovich inequality~\psecref{sec:kantorovich-inequality}, we have
 \end{equation*}
 where \( \func{\lambda_{\min}}{\Q} \) and \( \func{\lambda_{\max}}{\Q} \) are the minimum and maximum eigenvalues of \( \Q \), respectively.
 
-Applying this with \( \z = \grad{f}{\xk} \), we have
+Applying this with \( \z = \grad{f}{\x^k} \), we have
 \begin{align*}
     \frac{E_k - E_{k+1}}{E_k}
     & \geq
@@ -747,9 +747,9 @@ where \( \rho \in \rinterval{0}{1} \; \because \Q \succ \zero, \; \func{\lambda_
 
 \begin{definition}{Sufficient decrease condition (Armijo condition)}{}
     \begin{equation*}
-        \func{f}{\xk + \alpha_k \pk}
+        \func{f}{\x^k + \alpha_k \p^k}
         \leq
-        \func{f}{\xk} + c \alpha_k \dotp{\grad{f}{\xk}}{\pk},
+        \func{f}{\x^k} + c \alpha_k \dotp{\grad{f}{\x^k}}{\p^k},
         \quad 0 < c < 1
     \end{equation*}
 \end{definition}
@@ -758,13 +758,13 @@ where \( \rho \in \rinterval{0}{1} \; \because \Q \succ \zero, \; \func{\lambda_
 
 Note that for sufficiently small \( \alpha_k \), the sufficient decrease condition is always satisfied since
 \begin{align*}
-    \func{f}{\xk + \alpha_k \pk}
+    \func{f}{\x^k + \alpha_k \p^k}
     & =
-    \func{f}{\xk} + \alpha_k \dotp{\grad{f}{\xk}}{\pk} + o(\alpha_k)
+    \func{f}{\x^k} + \alpha_k \dotp{\grad{f}{\x^k}}{\p^k} + o(\alpha_k)
     \\ & <
-    \func{f}{\xk} + c \alpha_k \dotp{\grad{f}{\xk}}{\pk},
+    \func{f}{\x^k} + c \alpha_k \dotp{\grad{f}{\x^k}}{\p^k},
     \qquad \because
-    \dotp{\grad{f}{\xk}}{\pk} < 0,
+    \dotp{\grad{f}{\x^k}}{\p^k} < 0,
     \quad 0 < c < 1
 \end{align*}
 
@@ -777,12 +777,12 @@ Determine the largest number \( \alpha_k \) in the sequence \( \set{\beta^m \bar
 \begin{definition}{Goldstein conditions / Armijo-Goldstein conditions}{}
     \vspace*{-1em}
     \begin{align*}
-        \func{f}{\xk} + (1 - c) \alpha_k \dotp{\grad{f}{\xk}}{\pk}
+        \func{f}{\x^k} + (1 - c) \alpha_k \dotp{\grad{f}{\x^k}}{\p^k}
         & \leq
         \overbrace{
-            \func{f}{\xk + \alpha_k \pk}
+            \func{f}{\x^k + \alpha_k \p^k}
             \leq
-            \func{f}{\xk} + c \alpha_k \dotp{\grad{f}{\xk}}{\pk}
+            \func{f}{\x^k} + c \alpha_k \dotp{\grad{f}{\x^k}}{\p^k}
         }^{\text{sufficient decrease}}
         \\
         \text{where } \;&
@@ -804,14 +804,14 @@ Determine the largest number \( \alpha_k \) in the sequence \( \set{\beta^m \bar
 \begin{definition}{Wolfe conditions}{}
     \vspace*{-1em}
     \begin{align*}
-        \func{f}{\xk + \alpha_k \pk}
+        \func{f}{\x^k + \alpha_k \p^k}
         & \leq
-        \func{f}{\xk} + c_1 \alpha_k \dotp{\grad{f}{\xk}}{\pk}
+        \func{f}{\x^k} + c_1 \alpha_k \dotp{\grad{f}{\x^k}}{\p^k}
         \tag{sufficient decrease}
         \\
-        \dotp{\grad{f}{\xk + \alpha_k \pk}}{\pk}
+        \dotp{\grad{f}{\x^k + \alpha_k \p^k}}{\p^k}
         & \geq
-        c_2 \dotp{\grad{f}{\xk}}{\pk}
+        c_2 \dotp{\grad{f}{\x^k}}{\p^k}
         \tag{curvature}
         \\
         \text{where } \;&
@@ -828,14 +828,14 @@ Determine the largest number \( \alpha_k \) in the sequence \( \set{\beta^m \bar
 \begin{definition}{Strong Wolfe conditions}{}
     \vspace*{-1em}
     \begin{align*}
-        \func{f}{\xk + \alpha_k \pk}
+        \func{f}{\x^k + \alpha_k \p^k}
         & \leq
-        \func{f}{\xk} + c_1 \alpha_k \dotp{\grad{f}{\xk}}{\pk}
+        \func{f}{\x^k} + c_1 \alpha_k \dotp{\grad{f}{\x^k}}{\p^k}
         \tag{sufficient decrease}
         \\
-        \abs{\dotp{\grad{f}{\xk + \alpha_k \pk}}{\pk}}
+        \abs{\dotp{\grad{f}{\x^k + \alpha_k \p^k}}{\p^k}}
         & \leq
-        c_2 \abs{\dotp{\grad{f}{\xk}}{\pk}}
+        c_2 \abs{\dotp{\grad{f}{\x^k}}{\p^k}}
         \tag{strong curvature}
         \\
         \text{where } \;&
@@ -846,59 +846,61 @@ Determine the largest number \( \alpha_k \) in the sequence \( \set{\beta^m \bar
 \section{Sufficient decrease lemma}
 
 \begin{lemma}{Sufficient decrease lemma}{}
-    Suppose \( f \in \C^{1}_{L} \) is bounded below, then \( \forall \x \in \R^n, \; \alpha \in \linterval[scaled]{0}{\frac{1}{L}} \), the gradient descent update \( \x^+ = \x - \alpha \grad{f}{\x} \) yields a sufficient decrease in the function value:
+    Suppose \( f \in \C^{1}_{L} \) is bounded below, then \( \forall \x \in \R^n, \; \alpha \in \linterval[scaled]{0}{\frac{1}{L}} \), the gradient descent update \( \xhat = \x - \alpha \grad{f}{\x} \) yields a sufficient decrease in the function value:
     \begin{equation*}
-        \func{f}{\x^+} \leq \func{f}{\x} - \frac{\alpha}{2} \norm{\grad{f}{\x}}^2
+        \func{f}{\xhat}
+        \leq
+        \func{f}{\x} - \frac{\alpha}{2} \norm{\grad{f}{\x}}^2
     \end{equation*}
 \end{lemma}
 
 \begin{equation*}
-    \frac{\func{f}{\xk} - \func{f}{\xkp}}{\norm{\grad{f}{\xk}}^2}
+    \frac{\func{f}{\x^k} - \func{f}{\x^{k+1}}}{\norm{\grad{f}{\x^k}}^2}
     \geq R_k \geq R > 0
 \end{equation*}
 
 \section{Global convergence criterion}
 
-Starting from an arbitrary \( \xzero \in \R^d \), if a scheme generates a sequence \( \set{\xk}_{k = 1}^{\infty} \) such that
+Starting from an arbitrary \( \x^0 \in \R^d \), if a scheme generates a sequence \( \set{\x^k}_{k = 1}^{\infty} \) such that
 \begin{equation*}
-    \lim_{k \to \infty} \norm{\grad{f}{\xk}} = 0
+    \lim_{k \to \infty} \norm{\grad{f}{\x^k}} = 0
 \end{equation*}
 then the scheme is said to exhibit \textbf{global convergence}.
 
 The sequence asymptotically approaches a \textbf{stationary point} \( \xstar \), i.e., \( \grad{f}{\xstar} = \zero \).
 Without further assumptions on \( f \), nothing can be said about \( \xstar \) being a local or global minimum, maximum, or a saddle point.
-The `global' refers to the fact that the initial point \( \xzero \) is arbitrary, and not about the limit point.
+The `global' refers to the fact that the initial point \( \x^0 \) is arbitrary, and not about the limit point.
 
 \chapter{Second-order methods}
 
 \begin{equation*}
-    \xkp
+    \x^{k+1}
     =
-    \xk - \hessinv{f}{\x} \grad{f}{\xk},
+    \x^k - \hessinv{f}{\x} \grad{f}{\x^k},
     \qquad
-    \hess{f}{\xk} \succ \zero
+    \hess{f}{\x^k} \succ \zero
 \end{equation*}
 
 \paragraph{Newton direction:}
 Refers to the descent direction
 \begin{equation*}
-    \pk = -\hessinv{f}{\xk} \grad{f}{\xk},
-    \qquad \hess{f}{\xk} \succ \zero
+    \p^k = -\hessinv{f}{\x^k} \grad{f}{\x^k},
+    \qquad \hess{f}{\x^k} \succ \zero
 \end{equation*}
 
 This satisfies the condition for descent direction since
 \begin{align*}
-    \hess{f}{\xk}
+    \hess{f}{\x^k}
     &
     \succ \zero
     \implies
-    \hessinv{f}{\xk}
+    \hessinv{f}{\x^k}
     \succ \zero
     \\
     \implies
-    \dotp{\grad{f}{\xk}}{\pk}
+    \dotp{\grad{f}{\x^k}}{\p^k}
     & =
-    - {\left( \grad{f}{\xk} \right)}^\top \hessinv{f}{\xk} \grad{f}{\xk}
+    - {\left( \grad{f}{\x^k} \right)}^\top \hessinv{f}{\x^k} \grad{f}{\x^k}
     < 0
 \end{align*}
 
@@ -1046,14 +1048,14 @@ Now, since \( - \norm{\A} \, \I \preceq \A \preceq \norm{\A} \, \I, \quad \foral
     }
 \end{align*}
 
-Let \( r_k \triangleq \norm{\xk - \xstar} \).
+Let \( r_k \triangleq \norm{\x^k - \xstar} \).
 Then, we have
 \begin{align*}
     \implies
     &
     \hess{f}{\xstar} - M r_k \, \I
     \preceq
-    \hess{f}{\xk}
+    \hess{f}{\x^k}
     \preceq
     \hess{f}{\xstar} + M r_k \, \I
     \\
@@ -1061,7 +1063,7 @@ Then, we have
     &
     (l - M r_k) \, \I
     \preceq
-    \hess{f}{\xk}
+    \hess{f}{\x^k}
     \\
     \therefore
     \quad
@@ -1069,7 +1071,7 @@ Then, we have
     \text{If }
     (l - M r_k) > 0
     \implies
-    \hess{f}{\xk}
+    \hess{f}{\x^k}
     \succ
     \zero
     \\
@@ -1081,7 +1083,7 @@ Then, we have
         r_k < \frac{l}{M}
     }
     \implies
-    \hess{f}{\xk}
+    \hess{f}{\x^k}
     \succ
     \zero
     \\
@@ -1090,21 +1092,21 @@ Then, we have
     &
     (l - M r_k) \, \I
     \preceq
-    \hess{f}{\xk}
+    \hess{f}{\x^k}
     \implies
     \frac{1}{(l - M r_k)} \, \I
     \succeq
-    \hessinv{f}{\xk}
+    \hessinv{f}{\x^k}
     \\
     \text{i.e.,}
     \quad
     &
-    \hessinv{f}{\xk}
+    \hessinv{f}{\x^k}
     \preceq
     \frac{1}{(l - M r_k)} \, \I
     \implies
     \boxed{
-        \norm{\hessinv{f}{\xk}}
+        \norm{\hessinv{f}{\x^k}}
         \leq
         \frac{1}{(l - M r_k)}
     }
@@ -1114,38 +1116,38 @@ Now,
 \begin{align*}
     r_{k+1}
     & =
-    \norm{\xkp - \xstar}
+    \norm{\x^{k+1} - \xstar}
     =
-    \norm{\left( \xk - \hessinv{f}{\xk} \grad{f}{\xk} \right) - \xstar}
+    \norm{\left( \x^k - \hessinv{f}{\x^k} \grad{f}{\x^k} \right) - \xstar}
     \\ & =
-    \norm{\xk - \xstar - \hessinv{f}{\xk} \grad{f}{\xk}}
+    \norm{\x^k - \xstar - \hessinv{f}{\x^k} \grad{f}{\x^k}}
     \\ & =
-    \norm{\hessinv{f}{\xk} \Big( \hess{f}{\xk} (\xk - \xstar) - \grad{f}{\xk} \Big)}
+    \norm{\hessinv{f}{\x^k} \Big( \hess{f}{\x^k} (\x^k - \xstar) - \grad{f}{\x^k} \Big)}
     \\ & \leq
-    \norm{\hessinv{f}{\xk}} \,
-    \norm{\hess{f}{\xk} (\xk - \xstar) - \grad{f}{\xk}}
+    \norm{\hessinv{f}{\x^k}} \,
+    \norm{\hess{f}{\x^k} (\x^k - \xstar) - \grad{f}{\x^k}}
 \end{align*}
 \begin{align*}
     \implies
     &
-    \norm{\hess{f}{\xk} (\xk - \xstar) - \grad{f}{\xk}}
+    \norm{\hess{f}{\x^k} (\x^k - \xstar) - \grad{f}{\x^k}}
     \\ & =
-    \norm{\hess{f}{\xk} (\xk - \xstar) - \int_{0}^{1} \hess{f}{\xstar + t(\xk - \xstar)} (\xk - \xstar) \, dt}
+    \norm{\hess{f}{\x^k} (\x^k - \xstar) - \int_{0}^{1} \hess{f}{\xstar + t(\x^k - \xstar)} (\x^k - \xstar) \, dt}
     \\ & =
-    \norm{\int_{0}^{1} \hess{f}{\xk} (\xk - \xstar)  \, dt - \int_{0}^{1} \hess{f}{\xstar + t(\xk - \xstar)} (\xk - \xstar) \, dt}
+    \norm{\int_{0}^{1} \hess{f}{\x^k} (\x^k - \xstar)  \, dt - \int_{0}^{1} \hess{f}{\xstar + t(\x^k - \xstar)} (\x^k - \xstar) \, dt}
     \\ & =
-    \norm{\int_{0}^{1} \Big( \hess{f}{\xk} - \hess{f}{\xstar + t(\xk - \xstar)} \Big) (\xk - \xstar) \, dt}
+    \norm{\int_{0}^{1} \Big( \hess{f}{\x^k} - \hess{f}{\xstar + t(\x^k - \xstar)} \Big) (\x^k - \xstar) \, dt}
     \\ & \leq
-    \int_{0}^{1} \norm{\Big( \hess{f}{\xk} - \hess{f}{\xstar + t(\xk - \xstar)} \Big) (\xk - \xstar)} \, dt
+    \int_{0}^{1} \norm{\Big( \hess{f}{\x^k} - \hess{f}{\xstar + t(\x^k - \xstar)} \Big) (\x^k - \xstar)} \, dt
     \\ & \leq
-    \int_{0}^{1} \norm[\Big]{\hess{f}{\xk} - \hess{f}{\xstar + t(\xk - \xstar)}} \, \norm{\xk - \xstar} \, dt
+    \int_{0}^{1} \norm[\Big]{\hess{f}{\x^k} - \hess{f}{\xstar + t(\x^k - \xstar)}} \, \norm{\x^k - \xstar} \, dt
     \\ & \leq
-    \int_{0}^{1} M \norm[\Big]{\xk - \xstar - t(\xk - \xstar)} \, \norm{\xk - \xstar} \, dt
+    \int_{0}^{1} M \norm[\Big]{\x^k - \xstar - t(\x^k - \xstar)} \, \norm{\x^k - \xstar} \, dt
     \\ & =
-    \int_{0}^{1} M (1 - t) \norm{\xk - \xstar}^2 \, dt
+    \int_{0}^{1} M (1 - t) \norm{\x^k - \xstar}^2 \, dt
     \\ & =
     M
-    \norm{\xk - \xstar}^2
+    \norm{\x^k - \xstar}^2
     \int_{0}^{1} (1 - t) \, dt
     =
     \frac{M}{2}
@@ -1157,7 +1159,7 @@ Now,
         r_{k+1}
         \leq
         \frac{M}{2}
-        \norm{\hessinv{f}{\xk}}
+        \norm{\hessinv{f}{\x^k}}
         r_k^2
     }
     \implies
@@ -1191,10 +1193,10 @@ Now, we want \( r_{k+1} < r_k \) to ensure successive iterates converge to \( \x
     }
 \end{equation*}
 
-Note that \( \displaystyle r_k < \frac{2 l}{3 M} \implies r_k < \frac{l}{M} \), ensuring \( \hess{f}{\xk} \succ \zero \).
+Note that \( \displaystyle r_k < \frac{2 l}{3 M} \implies r_k < \frac{l}{M} \), ensuring \( \hess{f}{\x^k} \succ \zero \).
 
 Thereby, if we start with \( \displaystyle \boxed{ r_0 < \frac{2 l}{3 M} } \), then since \( \displaystyle r_k < r_{k - 1} < \cdots < r_1 < r_0 < \frac{2 l}{3 M} \), this ensures that \( \displaystyle r_k < \frac{2 l}{3 M} \).
-Thereby, we have \( \hess{f}{\xk} \succ \zero \) throughout the iterations, ensuring that \( \pk \) is a descent direction, thereby the algorithm converges to the local minimum \( \xstar \).
+Thereby, we have \( \hess{f}{\x^k} \succ \zero \) throughout the iterations, ensuring that \( \p^k \) is a descent direction, thereby the algorithm converges to the local minimum \( \xstar \).
 
 \chapter{Conjugate direction methods}
 
@@ -1295,7 +1297,7 @@ Thereby, we have \( \hess{f}{\xk} \succ \zero \) throughout the iterations, ensu
     \SetAlgoLined{}
     \KwIn{
         First-order oracle for the objective function \( \func{f}{\x} \);
-        Initial point \( \xzero \in \R^d \);
+        Initial point \( \x^0 \in \R^d \);
 
         A set of \( d \) mutually \( \Q \)--conjugate descent directions \( \set{\u_i}_{i = 0}^{d - 1}, \; \u_i \in \R^d, \; \forall i \in \set{0, 1, \ldots, d - 1} \)\;
         \vspace{-0.5em}
@@ -1310,14 +1312,14 @@ Thereby, we have \( \hess{f}{\xk} \succ \zero \) throughout the iterations, ensu
 
     \( k \leftarrow 0 \)\;
 
-    \While{\( \xk \) is not optimal}{
+    \While{\( \x^k \) is not optimal}{
         Choose step length \( \alpha_k \) by line search along direction \( \u_k \)\;
 
-        Update the current point: \( \xkp = \xk + \alpha_k \u_k \)\;
+        Update the current point: \( \x^{k+1} = \x^k + \alpha_k \u_k \)\;
 
         \( k \leftarrow k + 1 \)\;
     }
-    \Return{\( \xk \)\;}
+    \Return{\( \x^k \)\;}
 \end{algorithm}
 
 \begin{algorithm}[H]
@@ -1334,7 +1336,7 @@ Thereby, we have \( \hess{f}{\xk} \succ \zero \) throughout the iterations, ensu
     \SetAlgoLined{}
     \KwIn{
         First-order oracle for the objective function \( \func{f}{\x} \);
-        Initial point \( \xzero \in \R^d \);
+        Initial point \( \x^0 \in \R^d \);
 
         A set of \( d \) mutually \( \Q \)--conjugate descent directions \( \set{\u_i}_{i = 0}^{d - 1}, \; \u_i \in \R^d, \; \forall i \in \set{0, 1, \ldots, d - 1} \)\;
         \vspace{-0.5em}
@@ -1349,45 +1351,45 @@ Thereby, we have \( \hess{f}{\xk} \succ \zero \) throughout the iterations, ensu
 
     \( k \leftarrow 0 \)\;
 
-    \While{\( k < d \) \emph{ AND } \( \xk \) is not optimal}{
+    \While{\( k < d \) \emph{ AND } \( \x^k \) is not optimal}{
         Choose step length \( \alpha_k \) by exact line search along direction \( \u_k \) as
         \vspace{-0.5em}
         \begin{equation*}
             \alpha_k
             =
-            - \frac{\dotp{\grad{f}{\xk}}{\u_k}}{\qf{\u_k}{\Q}}
+            - \frac{\dotp{\grad{f}{\x^k}}{\u_k}}{\qf{\u_k}{\Q}}
         \end{equation*}
 
         \vspace{-0.5em}
-        Update the current point: \( \xkp = \xk + \alpha_k \u_k \)\;
+        Update the current point: \( \x^{k+1} = \x^k + \alpha_k \u_k \)\;
 
         \( k \leftarrow k + 1 \)\;
     }
-    \Return{\( \xk \)\;}
+    \Return{\( \x^k \)\;}
 \end{algorithm}
 
 \paragraph{Finite termination property:}
 For a convex quadratic function \( f: \R^d \to \R \), the conjugate direction method terminates in at most \( d \) iterations.
 
 \begin{theorem}{Expanding subspace theorem}{expanding-subspace-theorem}
-    For a convex quadratic function \( f: \R^d \to \R \), the sequence of iterates \( \set{\xk}_{k = 0}^{d} \) generated by the conjugate direction method satisfies
+    For a convex quadratic function \( f: \R^d \to \R \), the sequence of iterates \( \set{\x^k}_{k = 0}^{d} \) generated by the conjugate direction method satisfies
     \vspace{-0.5em}
     \begin{equation*}
         \begin{aligned}
-            \xk
+            \x^k
             & =
             \argmin_{\x \in S_k} \func{f}{\x}
             \\
             \quad \text{where }
             S_k
             & \triangleq
-            \set{\x \given \x = \xzero + \p, \; \p \in \spanset{\u_i}_{i = 0}^{k - 1}}
+            \set{\x \given \x = \x^0 + \p, \; \p \in \spanset{\u_i}_{i = 0}^{k - 1}}
         \end{aligned},
         \quad \forall k \in \set{1, 2, \ldots, d}
     \end{equation*}
 
     \vspace{-0.5em}
-    i.e., the current iterate \( \xk \) is the minimiser of \( f \) over the affine subspace spanned by the initial point \( \xzero \) and the first \( k \) conjugate directions \( \set{\u_i}_{i = 0}^{k - 1} \), for all \( k \in \set{1, 2, \ldots, d} \).
+    i.e., the current iterate \( \x^k \) is the minimiser of \( f \) over the affine subspace spanned by the initial point \( \x^0 \) and the first \( k \) conjugate directions \( \set{\u_i}_{i = 0}^{k - 1} \), for all \( k \in \set{1, 2, \ldots, d} \).
 \end{theorem}
 
 \begin{proof}
@@ -1406,7 +1408,7 @@ For a convex quadratic function \( f: \R^d \to \R \), the conjugate direction me
             \begin{bmatrix}
                 \gamma_0 & \gamma_1 & \cdots & \gamma_{k - 1}
             \end{bmatrix}^\top
-            \in \R^{k}
+            \in \R^k
         \end{aligned}
         , \quad \forall k \in \set{1, 2, \ldots, d}
     \end{equation*}
@@ -1414,11 +1416,11 @@ For a convex quadratic function \( f: \R^d \to \R \), the conjugate direction me
     \begin{equation*}
         \func{g}{\gamma^{(k)}}
         \triangleq
-        \func{f}{\xzero + \U^{(k)} \gamma^{(k)}},
+        \func{f}{\x^0 + \U^{(k)} \gamma^{(k)}},
         \quad \forall k \in \set{1, 2, \ldots, d}
     \end{equation*}
     Then, since \( \set{\u_i}_{i = 0}^{d - 1} \) form a basis for \( \R^d \), the matrix \( \U^{(k)} \) has full column rank, i.e., \( \rank{\U^{(k)}} = k, \; \forall k \in \set{1, 2, \ldots, d} \).
-    Thereby, for any \( \x \in S_k \), there exists a unique \( \gamma^{(k)} \in \R^k \) such that \( \x = \xzero + \U^{(k)} \gamma^{(k)} \), for all \( k \in \set{1, 2, \ldots, d} \).
+    Thereby, for any \( \x \in S_k \), there exists a unique \( \gamma^{(k)} \in \R^k \) such that \( \x = \x^0 + \U^{(k)} \gamma^{(k)} \), for all \( k \in \set{1, 2, \ldots, d} \).
     Hence, we can see that the constrained minimisation problem with \( f \) over the affine subspace \( S_k \) is equivalent to the unconstrained minimisation problem with \( g \) over \( \R^k \), i.e.,
     \vspace{-0.5em}
     \begin{equation*}
@@ -1440,7 +1442,7 @@ For a convex quadratic function \( f: \R^d \to \R \), the conjugate direction me
         \implies
         \grad{g}{\gamma^{(k)}}
         & =
-        \dotp{\U^{(k)}}{\grad{f}{\xzero}}
+        \dotp{\U^{(k)}}{\grad{f}{\x^0}}
         + \qf{\U^{(k)}}{\Q} \gamma^{(k)},
         \quad \forall k \in \set{1, 2, \ldots, d}
         \\
@@ -1461,24 +1463,24 @@ For a convex quadratic function \( f: \R^d \to \R \), the conjugate direction me
         =
         - \hessinv{g}{\zero} \grad{g}{\zero}
         \\ & =
-        - \inv{\left[ \qf{\U^{(k)}}{\Q} \right]} \dotp{\U^{(k)}}{\grad{f}{\xzero}}
+        - \inv{\left[ \qf{\U^{(k)}}{\Q} \right]} \dotp{\U^{(k)}}{\grad{f}{\x^0}}
         \\
         \implies
         {\gamma^{(k)}}^\ast_i
         & =
-        - \frac{\dotp{\u_i}{\grad{f}{\xzero}}}{\qf{\u_i}{\Q}},
+        - \frac{\dotp{\u_i}{\grad{f}{\x^0}}}{\qf{\u_i}{\Q}},
         \quad \forall i \in \set{0, 1, \ldots, k - 1}, \; \forall k \in \set{1, 2, \ldots, d}
     \end{align*}
     \begin{align*}
         \because
         \grad{g}{{\gamma^{(k)}}^\ast}
         & =
-        \dotp{\U^{(k)}}{\grad{f}{\xzero + Q \U^{(k)} \gamma}}
+        \dotp{\U^{(k)}}{\grad{f}{\x^0 + Q \U^{(k)} \gamma}}
         =
         \zero
         \\
         \implies
-        \dotp{\U^{(k)}}{\grad{f}{\xk}}
+        \dotp{\U^{(k)}}{\grad{f}{\x^k}}
         & =
         \zero,
         \quad \forall k \in \set{1, 2, \ldots, d}
@@ -1486,12 +1488,12 @@ For a convex quadratic function \( f: \R^d \to \R \), the conjugate direction me
     \begin{equation}\label{eq:conjugate-direction-orthogonality}
         \therefore
         \boxed{
-            \dotp{\u_i}{\grad{f}{\xk}}
+            \dotp{\u_i}{\grad{f}{\x^k}}
             = 0,
             \quad \forall i \in \set{0, 1, \ldots, k - 1}, \; \forall k \in \set{1, 2, \ldots, d}
         }
     \end{equation}
-    Thereby, we have that the gradient \( \grad{f}{\xk} \) is orthogonal to the subspace spanned by the first \( k \) conjugate directions \( \set{\u_i}_{i = 0}^{k - 1} \), for all \( k \in \set{1, 2, \ldots, d} \).
+    Thereby, we have that the gradient \( \grad{f}{\x^k} \) is orthogonal to the subspace spanned by the first \( k \) conjugate directions \( \set{\u_i}_{i = 0}^{k - 1} \), for all \( k \in \set{1, 2, \ldots, d} \).
 \end{proof}
 
 \section{Conjugate gradient methods}
@@ -1510,7 +1512,7 @@ For a convex quadratic function \( f: \R^d \to \R \), the conjugate direction me
     \SetAlgoLined{}
     \KwIn{
         First-order oracle for the objective function \( \func{f}{\x} \);
-        Initial point \( \xzero \in \R^d \);
+        Initial point \( \x^0 \in \R^d \);
     }
     \KwOut{
         Exact solution to the unconstrained minimisation problem \( \displaystyle \argmin_{\x \in \R^d} \func{f}{\x} \)\;
@@ -1518,26 +1520,26 @@ For a convex quadratic function \( f: \R^d \to \R \), the conjugate direction me
 
     \( k \leftarrow 0 \)\;
 
-    \( \u_0 \leftarrow -\grad{f}{\xzero} \)\;
+    \( \u_0 \leftarrow -\grad{f}{\x^0} \)\;
 
-    \While{\( k < d \) \emph{ AND } \( \xk \) is not optimal}{
+    \While{\( k < d \) \emph{ AND } \( \x^k \) is not optimal}{
         Choose step length \( \alpha_k \) by exact line search along direction \( \u_k \) as
         \vspace{-0.5em}
         \begin{equation*}
             \alpha_k
             =
-            - \frac{\dotp{\grad{f}{\xk}}{\u_k}}{\qf{\u_k}{\Q}}
+            - \frac{\dotp{\grad{f}{\x^k}}{\u_k}}{\qf{\u_k}{\Q}}
         \end{equation*}
 
         \vspace{-0.5em}
-        Update the current point: \( \xkp = \xk + \alpha_k \u_k \)\;
+        Update the current point: \( \x^{k+1} = \x^k + \alpha_k \u_k \)\;
 
         Find the next conjugate direction as
         \vspace{-0.5em}
         \begin{equation*}
             \u_{k+1}
             =
-            -\grad{f}{\xkp}
+            -\grad{f}{\x^{k+1}}
             + \beta_k \u_k
         \end{equation*}
         such that \( \u_{k+1} \) is \( \Q \)--conjugate to \( \u_k \), thereby
@@ -1545,13 +1547,13 @@ For a convex quadratic function \( f: \R^d \to \R \), the conjugate direction me
         \begin{equation*}
             \beta_k
             =
-            \frac{\qf{\grad{f}{\xkp}}{\Q}[\u_k]}{\qf{\u_k}{\Q}}
+            \frac{\qf{\grad{f}{\x^{k+1}}}{\Q}[\u_k]}{\qf{\u_k}{\Q}}
         \end{equation*}
 
         \vspace{-0.5em}
         \( k \leftarrow k + 1 \)\;
     }
-    \Return{\( \xk \)\;}
+    \Return{\( \x^k \)\;}
 \end{algorithm}
 
 \paragraph{Finite termination property:}
@@ -1565,9 +1567,9 @@ For a convex quadratic function \( f: \R^d \to \R \), the conjugate gradient met
     \begin{equation}\label{eq:conjugate-gradient-linear-spans}
         \spanset{\u_i}_{i = 0}^{k}
         =
-        \spanset{\grad{f}{\x^{(i)}}}_{i = 0}^{k}
+        \spanset{\grad{f}{\x^i}}_{i = 0}^{k}
         =
-        \spanset{\Q^i \, \grad{f}{\x^{(0)}}}_{i = 0}^{k}
+        \spanset{\Q^i \, \grad{f}{\x^0}}_{i = 0}^{k}
     \end{equation}
     \begin{equation}\label{eq:conjugate-gradient-mutual-Q-conjugacy}
         \qf{\u_k}{\Q}[\u_i]
@@ -1588,30 +1590,30 @@ For a convex quadratic function \( f: \R^d \to \R \), the conjugate gradient met
     \end{equation*}
     \begin{align*}
         \implies
-        \grad{f}{\xkp}
+        \grad{f}{\x^{k+1}}
         & =
-        \Q \xkp + \h
+        \Q \x^{k+1} + \h
         =
-        \Q \big( \xk + \alpha_k \u_k \big) + \h
+        \Q \big( \x^k + \alpha_k \u_k \big) + \h
         =
-        \left( \Q \xk + \h \right) + \alpha_k \Q \u_k
+        \left( \Q \x^k + \h \right) + \alpha_k \Q \u_k
         \\ & =
-        \grad{f}{\xk} + \alpha_k \Q \u_k,
+        \grad{f}{\x^k} + \alpha_k \Q \u_k,
         \quad \forall k \in \set{0, 1, \ldots, d - 1}
         \\
         \implies
-        \spanset{\Q \u_k, \grad{f}{\xkp}}
+        \spanset{\Q \u_k, \grad{f}{\x^{k+1}}}
         & =
-        \spanset{\Q \u_k, \grad{f}{\xk} + \alpha_k \Q \u_k}
+        \spanset{\Q \u_k, \grad{f}{\x^k} + \alpha_k \Q \u_k}
         =
-        \spanset{\Q \u_k, \grad{f}{\xk}}
+        \spanset{\Q \u_k, \grad{f}{\x^k}}
     \end{align*}
     \begin{equation*}
         \therefore
         \boxed{
-            \spanset{\Q \u_k, \grad{f}{\xkp}}
+            \spanset{\Q \u_k, \grad{f}{\x^{k+1}}}
             =
-            \spanset{\Q \u_k, \grad{f}{\xk}},
+            \spanset{\Q \u_k, \grad{f}{\x^k}},
             \quad \forall k \in \set{0, 1, \ldots, d - 1}
         }
     \end{equation*}
@@ -1630,24 +1632,24 @@ For a convex quadratic function \( f: \R^d \to \R \), the conjugate gradient met
             \spanset{\u_0, \u_1}
         }
         & =
-        \spanset{\u_0, -\grad{f}{\x^{(1)}} + \beta_0 \u_0}
+        \spanset{\u_0, -\grad{f}{\x^1} + \beta_0 \u_0}
         =
-        \spanset{\u_0, -\grad{f}{\x^{(1)}}}
+        \spanset{\u_0, -\grad{f}{\x^1}}
         \\ & =
-        \spanset{-\grad{f}{\xzero}, -\grad{f}{\x^{(1)}}}
+        \spanset{-\grad{f}{\x^0}, -\grad{f}{\x^1}}
         =
         \boxed{
-            \spanset{\grad{f}{\xzero}, \grad{f}{\x^{(1)}}}
+            \spanset{\grad{f}{\x^0}, \grad{f}{\x^1}}
         }
         \\ & =
-        \spanset{\grad{f}{\xzero}, \grad{f}{\xzero} + \alpha_0 \Q \u_0}
+        \spanset{\grad{f}{\x^0}, \grad{f}{\x^0} + \alpha_0 \Q \u_0}
         =
-        \spanset{\grad{f}{\xzero}, \Q \u_0}
+        \spanset{\grad{f}{\x^0}, \Q \u_0}
         \\ & =
-        \spanset{\grad{f}{\xzero}, -\Q \, \grad{f}{\xzero}}
+        \spanset{\grad{f}{\x^0}, -\Q \, \grad{f}{\x^0}}
         =
         \boxed{
-            \spanset{\grad{f}{\xzero}, \Q \, \grad{f}{\xzero}}
+            \spanset{\grad{f}{\x^0}, \Q \, \grad{f}{\x^0}}
         }
     \end{align*}
     and from~\peqref{eq:conjugate-gradient-successive-Q-conjugacy}, we have \( \qf{\u_1}{\Q}[\u_0] = 0 \), thereby proving the base case.
@@ -1656,9 +1658,9 @@ For a convex quadratic function \( f: \R^d \to \R \), the conjugate gradient met
     \begin{equation*}
         \spanset{\u_0}
         =
-        \spanset{-\grad{f}{\xzero}}
+        \spanset{-\grad{f}{\x^0}}
         =
-        \spanset{\grad{f}{\xzero}}
+        \spanset{\grad{f}{\x^0}}
     \end{equation*}
 
     \subsubsection*{Inductive step:}
@@ -1666,9 +1668,9 @@ For a convex quadratic function \( f: \R^d \to \R \), the conjugate gradient met
     \begin{equation*}
         \spanset{\u_i}_{i = 0}^{m}
         =
-        \spanset{\grad{f}{\x^{(i)}}}_{i = 0}^{m}
+        \spanset{\grad{f}{\x^i}}_{i = 0}^{m}
         =
-        \spanset{\Q^i \, \grad{f}{\x^{(0)}}}_{i = 0}^{m}
+        \spanset{\Q^i \, \grad{f}{\x^0}}_{i = 0}^{m}
     \end{equation*}
     \begin{equation*}
         \qf{\u_m}{\Q}[\u_i]
@@ -1680,9 +1682,9 @@ For a convex quadratic function \( f: \R^d \to \R \), the conjugate gradient met
     \begin{equation*}
         \spanset{\u_i}_{i = 0}^{m + 1}
         =
-        \spanset{\grad{f}{\x^{(i)}}}_{i = 0}^{m + 1}
+        \spanset{\grad{f}{\x^i}}_{i = 0}^{m + 1}
         =
-        \spanset{\Q^i \, \grad{f}{\x^{(0)}}}_{i = 0}^{m + 1}
+        \spanset{\Q^i \, \grad{f}{\x^0}}_{i = 0}^{m + 1}
     \end{equation*}
     \begin{equation*}
         \qf{\u_{m + 1}}{\Q}[\u_i]
