@@ -546,7 +546,7 @@ Here, we denote \( f \in \C^{1}_L \) to mean that \( f \) is \( L \)-smooth and 
         \end{proof}
 \end{itemize}
 
-\chapter{Linear Algebra}
+\chapter{Linear algebra}
 
 \section{Vectors}
 
@@ -779,7 +779,7 @@ Without loss of generality, we can assume \( \A \in \SD \) since
     \item There may be multiple matrices associated with a given quadratic form; however, every quadratic form \( q_\A \) has a unique symmetric matrix associated with it, given by \( \half \pbrac{\A + \A^\top} \).
 \end{itemize}
 
-\subsection{Symmetric Matrices}\label{sec:symmetric-matrices}
+\subsection{Symmetric matrices}\label{sec:symmetric-matrices}
 
 A matrix \( \A \in \R^{d \times d} \) is symmetric if \( \A = \A^\top \), i.e., \( a_{ij} = a_{ji}, \; \forall i, j \).
 
@@ -799,7 +799,7 @@ A matrix \( \A \in \R^{d \times d} \) is symmetric if \( \A = \A^\top \), i.e., 
         \quad \( \because {(\inv{\A})}^\top = \inv{(\A^\top)} = \inv{\A} \).
 \end{itemize}
 
-\subsection{Symmetric Positive Semi-definite Matrices}\label{sec:symmetric-positive-semi-definite-matrices}
+\subsection{Symmetric positive semi-definite matrices}\label{sec:symmetric-positive-semi-definite-matrices}
 
 A symmetric matrix \( \A \in \SD \) is \textbf{positive semi-definite} (PSD), denoted as \( \A \succeq \zero \), if
 \begin{equation*}
@@ -807,7 +807,7 @@ A symmetric matrix \( \A \in \SD \) is \textbf{positive semi-definite} (PSD), de
     \quad \forall \x \in \R^d
 \end{equation*}
 
-\subsection{Symmetric Positive Definite Matrices}\label{sec:symmetric-positive-definite-matrices}
+\subsection{Symmetric positive definite matrices}\label{sec:symmetric-positive-definite-matrices}
 
 A symmetric matrix \( \A \in \SD \) is \textbf{positive definite} (PD), denoted as \( \A \succ \zero \), if
 \begin{equation*}
@@ -841,9 +841,9 @@ The set of all eigenvalues of \( \A \) is called the \textbf{spectrum} of \( \A 
     \item \( \A \in \SD \implies \dotp{\v_i}{\v_j} = 0, \; \text{if } \lambda_i \neq \lambda_j \) \, \psecref{sec:spectral-decomposition-theorem}
 \end{itemize}
 
-\section{Spectral Decomposition Theorem}\label{sec:spectral-decomposition-theorem}
+\section{Spectral decomposition theorem}\label{sec:spectral-decomposition-theorem}
 
-\begin{theorem}{Spectral Decomposition Theorem}{}
+\begin{theorem}{Spectral decomposition theorem}{}
     For any \( \A \in \SD \), there exists an orthonormal basis of eigenvectors \( \set{\v_i}_{i = 1}^{d}, \v_i \in \R^d \setminus \set{\zero} \), with corresponding eigenvalues \( \lambda_1 \geq \lambda_2 \geq \cdots \geq \lambda_d, \; \lambda_i \in \R \), such that
     \begin{equation*}
         \A = \sum_{i = 1}^{d} \lambda_i \outp{\v_i}{\v_i}
@@ -944,6 +944,12 @@ The \textbf{condition number} of a matrix \( \A \in \SD \) is given by
     \kappa(\A) = \frac{\abs{\lambda_{\max}(\A)}}{\abs{\lambda_{\min}(\A)}}
 \end{equation*}
 where \( \lambda_{\max}(\A) \) and \( \lambda_{\min}(\A) \) are the largest and smallest eigenvalues of \( \A \) respectively.
+
+\section{Cayley-Hamilton theorem}
+
+\begin{theorem}{Cayley-Hamilton theorem}{}
+    Every square matrix \( \A \in \R^{d \times d} \) satisfies its own characteristic equation, i.e., if \( p(\lambda) = \determinant{\A - \lambda \I} \) is the characteristic polynomial of \( \A \), then \( p(\A) = \zero \).
+\end{theorem}
 
 \chapter{Inequalities}
 
