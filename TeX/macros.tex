@@ -9,6 +9,9 @@
 \newcommand{\given}{\;\middle|\;}
 \newcommand\spanset[1]{{\mathrm{span}\set{#1}}}
 
+\NewDocumentCommand{\pbrac}{om}{{\IfNoValueTF{#1}{\left\lparen#2\right\rparen}{#1\lparen#2#1\rparen}}}
+\NewDocumentCommand{\bbrac}{om}{{\IfNoValueTF{#1}{\left\lbrack#2\right\rbrack}{#1\lbrack#2#1\rbrack}}}
+
 \NewDocumentCommand{\abs}{om}{{\IfNoValueTF{#1}{\left\lvert#2\right\rvert}{#1\lvert#2#1\rvert}}}
 \NewDocumentCommand{\norm}{om}{{\IfNoValueTF{#1}{\left\lVert#2\right\rVert}{#1\lVert#2#1\rVert}}}
 
@@ -33,7 +36,7 @@
 \newcommand{\rank}[1]{\func{\mathrm{rank}}{#1}}
 \newcommand{\diag}[1]{\func{\mathrm{diag}}{#1}}
 
-\newcommand{\func}[2]{{#1\!\left(#2\right)}}
+\newcommand{\func}[2]{{#1\!\left\lparen#2\right\rparen}}
 \newcommand{\grad}[2]{{\nabla\!\func{#1}{#2}}}
 \newcommand{\hess}[2]{{\nabla^2\!\func{#1}{#2}}}
 \newcommand{\hessinv}[2]{\inv{\left[\hess{#1}{#2}\right]}}

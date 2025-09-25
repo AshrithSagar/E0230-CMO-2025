@@ -744,6 +744,41 @@ A \textbf{matrix} \( \A \in \R^{m \times n} \) is a rectangular array of real nu
     \; \forall j \in \set{1, 2, \ldots, n}
 \end{equation*}
 
+\subsection{Quadratic form}
+
+The \textbf{quadratic form} associated with a matrix \( \A \in \R^{d \times d} \) is defined as
+\begin{equation*}
+    \func{q_\A}{x_1, x_2, \ldots, x_d}
+    \triangleq
+    \sum_{i = 1}^{d} \sum_{j = 1}^{d} a_{ij} x_i x_j
+    =
+    \qf{\x}{\A},
+    \qquad
+    \A
+    =
+    \bbrac{a_{ij}}_{i, j = 1}^{d}
+    \in \R^{d \times d},
+    \quad
+    \x
+    =
+    \bbrac{x_i}_{i = 1}^{d}
+    \in \R^d
+\end{equation*}
+
+Without loss of generality, we can assume \( \A \in \SD \) since
+\begin{equation*}
+    \qf{\x}{\A}
+    =
+    \qf{\x}{{\bbrac{\half \pbrac{\A + \A^\top}}}},
+    \quad \forall \A \in \R^{d \times d}, \x \in \R^d
+\end{equation*}
+
+\subsubsection{Properties}
+
+\begin{itemize}
+    \item There may be multiple matrices associated with a given quadratic form; however, every quadratic form \( q_\A \) has a unique symmetric matrix associated with it, given by \( \half \pbrac{\A + \A^\top} \).
+\end{itemize}
+
 \subsection{Symmetric Matrices}\label{sec:symmetric-matrices}
 
 A matrix \( \A \in \R^{d \times d} \) is symmetric if \( \A = \A^\top \), i.e., \( a_{ij} = a_{ji}, \; \forall i, j \).
