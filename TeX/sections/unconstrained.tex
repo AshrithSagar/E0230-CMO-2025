@@ -1691,4 +1691,30 @@ For a convex quadratic function \( f: \R^d \to \R \), the conjugate gradient met
         = 0,
         \quad \forall i \in \set{0, 1, \ldots, m}
     \end{equation*}
+
+    From the expanding subspace theorem~\pthmref{thm:expanding-subspace-theorem}~\peqref{eq:conjugate-direction-orthogonality}, we have
+    \begin{equation*}
+        \dotp{\grad{f}{\x^{m+1}}}{\u_i}
+        = \zero,
+        \quad \forall i \in \set{0, 1, \ldots, m}
+    \end{equation*}
+    \begin{align*}
+        \because
+        \grad{f}{\x^{m+1}}
+        & =
+        \grad{f}{\x^m} + \alpha_m \Q \u_m
+        \implies
+        \grad{f}{\x^{m+1}}
+        \in
+        \spanset{\grad{f}{\x^m}, \Q \u_m}
+        \\
+        \Q \u_{m+1}
+        & \in
+        \spanset{\Q^i \, \grad{f}{\x^0}}_{i = 0}^{m + 1}
+        \\
+        \grad{f}{\x^{m+1}}
+        & \in
+        \spanset{\Q^i \, \grad{f}{\x^0}}_{i = 0}^{m + 1},
+        \quad \text{ from the inductive hypothesis}
+    \end{align*}
 \end{proof}
