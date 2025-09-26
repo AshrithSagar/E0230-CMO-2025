@@ -1213,42 +1213,40 @@ Thereby, we have \( \hess{f}{\x^k} \succ \zero \) throughout the iterations, ens
 \subsection{Properties}
 
 \begin{itemize}
-    \item \( \Q \)--conjugacy is a generalisation of orthogonality.
-        \vspace{-0.5em}
-        \begin{equation*}
-            \text{If } \Q = \I,
-            \text{ then }
+    \item\label{item:orthogonality-implies-q-conjugacy}
+        \textit{Generalisation of orthogonality}:\\
+        If \( \Q = \I \), then \( \Q \)--conjugacy reduces to orthogonality, i.e.,
+        \(
+            \Q = \I
+            \implies
             \qf{\u}{\Q}[\v] = \dotp{\u}{\v} = 0
-        \end{equation*}
+        \).
 
-    \item \( \Q \)--conjugacy is a symmetric relation.
-        \vspace{-0.5em}
-        \begin{equation*}
+    \item \textit{Symmetry}:
+        \(
             \qf{\u}{\Q}[\v] = 0
             \iff
             \qf{\v}{\Q}[\u] = 0,
             \quad \because \Q = \Q^\top
-        \end{equation*}
+        \)
 
-    \item \( \Q \)--conjugacy is not a transitive relation.
-        \vspace{-0.5em}
-        \begin{equation*}
+    \item Not transitive.
+        \(
             \qf{\x}{\Q}[\y] = 0,
             \quad
             \qf{\y}{\Q}[\z] = 0
             \notimplies
             \qf{\x}{\Q}[\z] = 0
-        \end{equation*}
+        \)
 
     \item The zero vector \( \zero \) is \( \Q \)--conjugate to every vector in \( \R^d \).
-        \vspace{-0.5em}
-        \begin{equation*}
+        \(
             \qf{\zero}{\Q}[\v]
             =
             \qf{\v}{\Q}[\zero]
             = 0,
             \quad \forall \v \in \R^d
-        \end{equation*}
+        \)
 \end{itemize}
 
 \begin{definition}{Mutually \( \Q \)--conjugate vectors}{}
@@ -1286,6 +1284,10 @@ Thereby, we have \( \hess{f}{\x^k} \succ \zero \) throughout the iterations, ens
     Since \( \qf{\u_l}{\Q} > 0, \because \Q \succ \zero, \u_l \neq \zero \), we have that \( \beta_i = 0, \; \forall i \in \set{1, 2, \ldots, n} \).
     Thereby, the vectors \( \set{ \u_i }_{i = 1}^n \) are linearly independent.
 \end{proof}
+
+\begin{corollary}{}{}
+    Any set of non-zero mutually orthogonal vectors are linearly independent.
+\end{corollary}
 
 \section{Conjugate direction methods}
 
