@@ -2031,7 +2031,7 @@ For a convex quadratic function \( f: \R^d \to \R \), the conjugate gradient met
         \quad \forall k \in \set{0, 1, \ldots, d - 1},
         \qquad \because \Q \succ \zero
     \end{align*}
-    \begin{equation*}
+    \begin{equation}\label{eq:conjugate-gradient-step-length-equivalence}
         \therefore
         \boxed{
             \alpha_k
@@ -2041,7 +2041,7 @@ For a convex quadratic function \( f: \R^d \to \R \), the conjugate gradient met
             \frac{\norm{\grad{f}{\x^k}}_2^2}{\qf{\u_k}{\Q}},
             \quad \forall k \in \set{0, 1, \ldots, d - 1}
         }
-    \end{equation*}
+    \end{equation}
 
     \begin{align*}
         \because
@@ -2100,13 +2100,13 @@ For a convex quadratic function \( f: \R^d \to \R \), the conjugate gradient met
         \norm{\grad{f}{\x^k}}_2^2
         - 2 \alpha_k \qf{\u_k}{\Q}
         + \alpha_k^2 \norm{\Q \u_k}_2^2,
-        \quad \forall k \in \set{1, 2, \ldots, d - 1}
+        \quad \forall k \in \set{0, 1, \ldots, d - 1}
         \\
         \because
         \alpha_k \qf{\u_k}{\Q}
         & =
         \norm{\grad{f}{\x^k}}_2^2,
-        \quad \forall k \in \set{0, 1, \ldots, d - 1}
+        \quad \forall k \in \set{0, 1, \ldots, d - 1},\qquad \text{ from~\peqref{eq:conjugate-gradient-step-length-equivalence}}
         \\
         \implies
         \norm{\grad{f}{\x^{k+1}}}_2^2
@@ -2114,11 +2114,11 @@ For a convex quadratic function \( f: \R^d \to \R \), the conjugate gradient met
         \cancel{ \norm{\grad{f}{\x^k}}_2^2 }
         - \cancel{2} \norm{\grad{f}{\x^k}}_2^2
         + \alpha_k^2 \norm{\Q \u_k}_2^2,
-        \quad \forall k \in \set{1, 2, \ldots, d - 1}
+        \quad \forall k \in \set{0, 1, \ldots, d - 1}
         \\ & =
         - \norm{\grad{f}{\x^k}}_2^2
         + \alpha_k^2 \norm{\Q \u_k}_2^2,
-        \quad \forall k \in \set{1, 2, \ldots, d - 1}
+        \quad \forall k \in \set{0, 1, \ldots, d - 1}
         \\
         \text{Now, }
         \qf{\grad{f}{\x^{k+1}}}{\Q}[\u_k]
@@ -2150,14 +2150,31 @@ For a convex quadratic function \( f: \R^d \to \R \), the conjugate gradient met
         + \alpha_k \qf{\grad{f}{\x^{k+1}}}{\Q}[\u_k]
         + \cancel{ \norm{\grad{f}{\x^k}}_2^2 },
         \quad \forall k \in \set{1, 2, \ldots, d - 1}
-    \end{align*}
-    \begin{equation*}
+        \\
         \implies
+        &
         \boxed{
             \norm{\grad{f}{\x^{k+1}}}_2^2
             =
             \alpha_k \qf{\grad{f}{\x^{k+1}}}{\Q}[\u_k],
-            \quad \forall k \in \set{1, 2, \ldots, d - 1}
+            \quad \forall k \in \set{0, 1, \ldots, d - 1}
+        }
+        \\
+        \implies
+        \norm{\grad{f}{\x^{k+1}}}_2^2
+        & =
+        \frac{\norm{\grad{f}{\x^k}}_2^2}{\qf{\u_k}{\Q}} \qf{\grad{f}{\x^{k+1}}}{\Q}[\u_k],
+        \quad \forall k \in \set{0, 1, \ldots, d - 1}
+    \end{align*}
+    \begin{equation*}
+        \therefore
+        \boxed{
+            \beta_k
+            =
+            \frac{\norm{\grad{f}{\x^{k+1}}}_2^2}{\norm{\grad{f}{\x^k}}_2^2}
+            =
+            \frac{\qf{\grad{f}{\x^{k+1}}}{\Q}[\u_k]}{\qf{\u_k}{\Q}},
+            \quad \forall k \in \set{0, 1, \ldots, d - 1}
         }
     \end{equation*}
 \end{proof}
