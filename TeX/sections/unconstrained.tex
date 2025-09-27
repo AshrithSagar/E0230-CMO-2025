@@ -1566,6 +1566,22 @@ For a convex quadratic function \( f: \R^d \to \R \), the conjugate direction me
         \vspace{-0.5em}
         Update the current point: \( \x^{k+1} = \x^k + \alpha_k \u_k \)\;
 
+        Find the new gradient by using either the first-order oracle or the recurrence relation
+        \vspace{-0.5em}
+        \begin{equation*}
+            \grad{f}{\x^{k+1}}
+            =
+            \grad{f}{\x^k}
+            + \alpha_k \Q \u_k
+        \end{equation*}
+        or the quadratic structure of \( f \)
+        \vspace{-0.5em}
+        \begin{equation*}
+            \grad{f}{\x^{k+1}}
+            =
+            \Q \x^{k+1} + \h
+        \end{equation*}
+
         Find the next conjugate direction as
         \vspace{-0.5em}
         \begin{equation*}
@@ -1922,13 +1938,20 @@ For a convex quadratic function \( f: \R^d \to \R \), the conjugate gradient met
         \vspace{-0.5em}
         Update the current point: \( \x^{k+1} = \x^k + \alpha_k \u_k \)\;
 
-        Find the new gradient by using:
+        Find the new gradient by using either the first-order oracle or the recurrence relation
         \vspace{-0.5em}
         \begin{equation*}
             \grad{f}{\x^{k+1}}
             =
             \grad{f}{\x^k}
             + \alpha_k \Q \u_k
+        \end{equation*}
+        or the quadratic structure of \( f \)
+        \vspace{-0.5em}
+        \begin{equation*}
+            \grad{f}{\x^{k+1}}
+            =
+            \Q \x^{k+1} + \h
         \end{equation*}
 
         Find the next conjugate direction as
@@ -1956,7 +1979,7 @@ For a convex quadratic function \( f: \R^d \to \R \), the conjugate gradient met
 \end{theorem}
 
 \begin{proof}
-    The only differences between the two algorithms are in the equations used to compute \( \alpha_k \) and \( \beta_k \), and the way to obtain \( \grad{f}{\x^{k+1}} \).
+    The only differences between the two algorithms are in the equations used to compute \( \alpha_k \) and \( \beta_k \).
 
     The equivalence of \( \alpha_k \)'s follows from the expanding subspace theorem~\pthmref{thm:expanding-subspace-theorem}, as
     \begin{align*}
@@ -2017,6 +2040,124 @@ For a convex quadratic function \( f: \R^d \to \R \), the conjugate gradient met
             =
             \frac{\norm{\grad{f}{\x^k}}_2^2}{\qf{\u_k}{\Q}},
             \quad \forall k \in \set{0, 1, \ldots, d - 1}
+        }
+    \end{equation*}
+
+    \begin{align*}
+        \because
+        \grad{f}{\x^{k+1}}
+        & =
+        \grad{f}{\x^k}
+        + \alpha_k \Q \u_k,
+        \quad \forall k \in \set{0, 1, \ldots, d - 1}
+        \\
+        \implies
+        \norm{\grad{f}{\x^{k+1}}}_2^2
+        & =
+        \norm{\grad{f}{\x^k}}_2^2
+        + 2 \alpha_k \dotp{\grad{f}{\x^k}}{\Q \u_k}
+        + \alpha_k^2 \norm{\Q \u_k}_2^2,
+        \quad \forall k \in \set{0, 1, \ldots, d - 1}
+        \\
+        \text{Now, }
+        \because
+        \grad{f}{\x^k}
+        & =
+        -\u_k
+        + \beta_{k - 1} \u_{k - 1},
+        \quad \forall k \in \set{1, 2, \ldots, d - 1}
+        \\
+        \implies
+        \qf{\grad{f}{\x^k}}{\Q}[\u_k]
+        & =
+        -\qf{\u_k}{\Q}
+        + \beta_{k - 1} \cancel{ \qf{\u_{k-1}}{\Q}[\u_k] },
+        \quad \forall k \in \set{1, 2, \ldots, d - 1}
+        \\
+        & =
+        -\qf{\u_k}{\Q},
+        \qquad \text{ from~\peqref{eq:conjugate-gradient-successive-Q-conjugacy}}
+        \\
+        \text{Also, }
+        \because
+        \u_0
+        & =
+        -\grad{f}{\x^0}
+        \implies
+        \qf{\grad{f}{\x^0}}{\Q}[\u_0]
+        =
+        -\qf{\u_0}{\Q}
+        \\
+        \implies
+        \qf{\grad{f}{\x^k}}{\Q}[\u_k]
+        & =
+        -\qf{\u_k}{\Q},
+        \quad \forall k \in \set{0, 1, \ldots, d - 1}
+        \\
+        \implies
+        \norm{\grad{f}{\x^{k+1}}}_2^2
+        & =
+        \norm{\grad{f}{\x^k}}_2^2
+        - 2 \alpha_k \qf{\u_k}{\Q}
+        + \alpha_k^2 \norm{\Q \u_k}_2^2,
+        \quad \forall k \in \set{1, 2, \ldots, d - 1}
+        \\
+        \because
+        \alpha_k \qf{\u_k}{\Q}
+        & =
+        \norm{\grad{f}{\x^k}}_2^2,
+        \quad \forall k \in \set{0, 1, \ldots, d - 1}
+        \\
+        \implies
+        \norm{\grad{f}{\x^{k+1}}}_2^2
+        & =
+        \cancel{ \norm{\grad{f}{\x^k}}_2^2 }
+        - \cancel{2} \norm{\grad{f}{\x^k}}_2^2
+        + \alpha_k^2 \norm{\Q \u_k}_2^2,
+        \quad \forall k \in \set{1, 2, \ldots, d - 1}
+        \\ & =
+        - \norm{\grad{f}{\x^k}}_2^2
+        + \alpha_k^2 \norm{\Q \u_k}_2^2,
+        \quad \forall k \in \set{1, 2, \ldots, d - 1}
+        \\
+        \text{Now, }
+        \qf{\grad{f}{\x^{k+1}}}{\Q}[\u_k]
+        & =
+        \qf{\grad{f}{\x^k}}{\Q}[\u_k]
+        + \alpha_k \norm{\Q \u_k}_2^2,
+        \quad \forall k \in \set{0, 1, \ldots, d - 1}
+        \\ & =
+        -\qf{\u_k}{\Q}
+        + \alpha_k \norm{\Q \u_k}_2^2,
+        \quad \forall k \in \set{0, 1, \ldots, d - 1}
+        \\
+        \implies
+        \alpha_k \norm{\Q \u_k}_2^2
+        & =
+        \qf{\grad{f}{\x^{k+1}}}{\Q}[\u_k]
+        + \qf{\u_k}{\Q},
+        \quad \forall k \in \set{0, 1, \ldots, d - 1}
+        \\
+        \implies
+        \norm{\grad{f}{\x^{k+1}}}_2^2
+        & =
+        - \norm{\grad{f}{\x^k}}_2^2
+        + \alpha_k \qf{\grad{f}{\x^{k+1}}}{\Q}[\u_k]
+        + \alpha_k \qf{\u_k}{\Q},
+        \quad \forall k \in \set{1, 2, \ldots, d - 1}
+        \\ & =
+        - \cancel{ \norm{\grad{f}{\x^k}}_2^2 }
+        + \alpha_k \qf{\grad{f}{\x^{k+1}}}{\Q}[\u_k]
+        + \cancel{ \norm{\grad{f}{\x^k}}_2^2 },
+        \quad \forall k \in \set{1, 2, \ldots, d - 1}
+    \end{align*}
+    \begin{equation*}
+        \implies
+        \boxed{
+            \norm{\grad{f}{\x^{k+1}}}_2^2
+            =
+            \alpha_k \qf{\grad{f}{\x^{k+1}}}{\Q}[\u_k],
+            \quad \forall k \in \set{1, 2, \ldots, d - 1}
         }
     \end{equation*}
 \end{proof}
