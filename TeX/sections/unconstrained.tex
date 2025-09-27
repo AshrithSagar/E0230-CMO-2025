@@ -1530,9 +1530,9 @@ For a convex quadratic function \( f: \R^d \to \R \), the conjugate direction me
 
 \section{Conjugate gradient methods}
 
-\begin{algorithm}[H]
+\begin{algorithm}[H]\label{alg:preliminary-conjugate-gradient-method}
     \caption{
-        Conjugate gradient algorithm for unconstrained minimisation of a convex quadratic function \( f: \R^d \to \R \).
+        (Preliminary) Conjugate gradient algorithm for unconstrained minimisation of a convex quadratic function \( f: \R^d \to \R \).
         \vspace{-1em}
         \begin{equation*}
             \func{f}{\x}
@@ -1885,3 +1885,138 @@ For a convex quadratic function \( f: \R^d \to \R \), the conjugate gradient met
         \spanset{\Q^i \, \grad{f}{\x^0}}_{i = 0}^{k - 1}
     \end{equation*}
 \end{corollary}
+
+\begin{algorithm}[H]\label{alg:practical-conjugate-gradient-method}
+    \caption{
+        (Practical) Conjugate gradient algorithm for unconstrained minimisation of a convex quadratic function \( f: \R^d \to \R \).
+        \vspace{-1em}
+        \begin{equation*}
+            \func{f}{\x}
+            =
+            \half \qf{\x}{\Q} + \dotp{\h}{\x},
+            \quad \Q \in \PD, \; \h \in \R^d
+        \end{equation*}
+    }
+    \SetAlgoLined{}
+    \KwIn{
+        First-order oracle for the objective function \( \func{f}{\x} \);
+        Initial point \( \x^0 \in \R^d \);
+    }
+    \KwOut{
+        Exact solution to the unconstrained minimisation problem \( \displaystyle \argmin_{\x \in \R^d} \func{f}{\x} \)\;
+    }
+
+    \( k \leftarrow 0 \)\;
+
+    \( \u_0 \leftarrow -\grad{f}{\x^0} \)\;
+
+    \While{\( k < d \) \emph{ AND } \( \x^k \) is not optimal}{
+        Choose step length \( \alpha_k \) as
+        \vspace{-0.5em}
+        \begin{equation*}
+            \alpha_k
+            =
+            \frac{\norm{\grad{f}{\x^k}}_2^2}{\qf{\u_k}{\Q}}
+        \end{equation*}
+
+        \vspace{-0.5em}
+        Update the current point: \( \x^{k+1} = \x^k + \alpha_k \u_k \)\;
+
+        Find the new gradient by using:
+        \vspace{-0.5em}
+        \begin{equation*}
+            \grad{f}{\x^{k+1}}
+            =
+            \grad{f}{\x^k}
+            + \alpha_k \Q \u_k
+        \end{equation*}
+
+        Find the next conjugate direction as
+        \vspace{-0.5em}
+        \begin{align*}
+            \u_{k+1}
+            & =
+            -\grad{f}{\x^{k+1}}
+            + \beta_k \u_k,
+            \\
+            \text{where }
+            \beta_k
+            & =
+            \frac{\norm{\grad{f}{\x^{k+1}}}_2^2}{\norm{\grad{f}{\x^k}}_2^2}
+        \end{align*}
+
+        \vspace{-0.5em}
+        \( k \leftarrow k + 1 \)\;
+    }
+    \Return{\( \x^k \)\;}
+\end{algorithm}
+
+\begin{theorem}{}{}
+    The algorithms given in~\palgref{alg:preliminary-conjugate-gradient-method} and~\palgref{alg:practical-conjugate-gradient-method} are mathematically equivalent, under exact arithmetic.
+\end{theorem}
+
+\begin{proof}
+    The only differences between the two algorithms are in the equations used to compute \( \alpha_k \) and \( \beta_k \), and the way to obtain \( \grad{f}{\x^{k+1}} \).
+
+    The equivalence of \( \alpha_k \)'s follows from the expanding subspace theorem~\pthmref{thm:expanding-subspace-theorem}, as
+    \begin{align*}
+        \because
+        \u_k
+        & =
+        -\grad{f}{\x^k}
+        + \beta_{k - 1} \u_{k - 1},
+        \quad \forall k \in \set{1, 2, \ldots, d - 1}
+        \\
+        \implies
+        - \dotp{\grad{f}{\x^k}}{\u_k}
+        & =
+        \norm{\grad{f}{\x^k}}_2^2
+        - \beta_{k - 1} \dotp{\grad{f}{\x^k}}{\u_{k-1}},
+        \quad \forall k \in \set{1, 2, \ldots, d - 1}
+        \\
+        \because
+        \dotp{\grad{f}{\x^k}}{\u_{k-1}}
+        & = 0,
+        \quad \forall k \in \set{1, 2, \ldots, d},
+        \qquad \text{ from~\peqref{eq:conjugate-direction-orthogonality}}
+        \\
+        \implies
+        - \dotp{\grad{f}{\x^k}}{\u_k}
+        & =
+        \norm{\grad{f}{\x^k}}_2^2,
+        \quad \forall k \in \set{1, 2, \ldots, d - 1}
+        \\
+        \text{Also, }
+        \because
+        \u_0
+        & =
+        -\grad{f}{\x^0}
+        \implies
+        - \dotp{\grad{f}{\x^0}}{\u_0}
+        =
+        \norm{\grad{f}{\x^0}}_2^2
+        \\
+        \implies
+        - \dotp{\grad{f}{\x^k}}{\u_k}
+        & =
+        \norm{\grad{f}{\x^k}}_2^2,
+        \quad \forall k \in \set{0, 1, \ldots, d - 1}
+        \\
+        \because
+        \qf{\u_k}{\Q}
+        & > 0,
+        \quad \forall k \in \set{0, 1, \ldots, d - 1},
+        \qquad \because \Q \succ \zero
+    \end{align*}
+    \begin{equation*}
+        \therefore
+        \boxed{
+            \alpha_k
+            =
+            - \frac{\dotp{\grad{f}{\x^k}}{\u_k}}{\qf{\u_k}{\Q}}
+            =
+            \frac{\norm{\grad{f}{\x^k}}_2^2}{\qf{\u_k}{\Q}},
+            \quad \forall k \in \set{0, 1, \ldots, d - 1}
+        }
+    \end{equation*}
+\end{proof}
