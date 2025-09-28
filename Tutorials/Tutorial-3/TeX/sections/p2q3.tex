@@ -17,3 +17,81 @@ Consider the function
 \end{enumerate}
 
 \subsection*{Solution}
+
+\vspace{-1em}
+\begin{equation*}
+    \implies
+    f(x) =
+    \begin{cases}
+        x^2 + x, & x \geq 0 \\
+        x^2 - x, & x < 0
+    \end{cases}
+\end{equation*}
+
+\vspace{-1em}
+\subsection*{(1) Newton's method at \( x = 0 \)}
+
+\vspace{-1em}
+\begin{align*}
+    \implies
+    f'(x)
+    & =
+    \begin{cases}
+        2x + 1, & x > 0 \\
+        2x - 1, & x < 0
+    \end{cases}
+    \\
+    f''(x)
+    & =
+    2,
+    \quad x \neq 0
+\end{align*}
+
+At \( x = 0 \), \( f'(x) \) is \underline{not defined}, hence Newton's method cannot be directly applied at \( x = 0 \).
+
+\vspace{-1em}
+\subsection*{(2) Newton's method, \( x_0 = 1 \)}
+
+\vspace{-1em}
+\begin{align*}
+    \implies
+    x_1
+    & =
+    x_0 - \frac{f'(x_0)}{f''(x_0)}
+    =
+    1 - \frac{3}{2}
+    \implies
+    \boxed{
+        x_1
+        =
+        -\half
+    }
+    < 0
+\end{align*}
+
+\vspace{-1em}
+\subsection*{(3) Newton's method, \( x_0 = -1 \)}
+
+\vspace{-1em}
+\begin{align*}
+    \implies
+    x_1
+    & =
+    x_0 - \frac{f'(x_0)}{f''(x_0)}
+    =
+    -1 - \frac{-3}{2}
+    \implies
+    \boxed{
+        x_1
+        =
+        \half
+    }
+    > 0
+\end{align*}
+
+\vspace{-1em}
+\subsection*{(4) Limitations of Newton's method}
+
+This example exhibits \underline{oscillatory behavior} when applying Newton's method starting from different initial points.
+As can be seen from the iterates, starting with \( x_0 = 1 \) leads to \( x_1 = -\half \), and starting with \( x_0 = -1 \) leads to \( x_1 = \half \).
+This oscillation occurs because the function \( f(x) \) is not twice differentiable at \( x = 0 \), where the derivative \( f'(x) \) is discontinuous.
