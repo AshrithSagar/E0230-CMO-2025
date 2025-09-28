@@ -30,3 +30,142 @@ Take
 \end{enumerate}
 
 \subsection*{Solution}
+
+\subsubsection*{(1) Exact solution \( \xstar = \inv{\A} \b \)}
+
+\begin{align*}
+    \implies
+    \inv{\A}
+    & =
+    \frac{1}{\det{\A}}
+    \begin{bmatrix}
+        3 & -2 \\
+        -2 & 6
+    \end{bmatrix}
+    =
+    \frac{1}{14}
+    \begin{bmatrix}
+        3 & -2 \\
+        -2 & 6
+    \end{bmatrix}
+    \\
+    \implies
+    \xstar
+    & =
+    \frac{1}{14}
+    \begin{bmatrix}
+        3 & -2 \\
+        -2 & 6
+    \end{bmatrix}
+    \begin{bmatrix}
+        2 \\
+        1
+    \end{bmatrix}
+    =
+    \frac{1}{14}
+    \begin{bmatrix}
+        4 \\
+        2
+    \end{bmatrix}
+    \implies
+    \boxed{
+        \xstar
+        =
+        \frac{1}{7}
+        \begin{bmatrix}
+            2 \\
+            1
+        \end{bmatrix}
+    }
+\end{align*}
+
+\subsubsection*{(2) \( \x_1 \)}
+
+\begin{align*}
+    \implies
+    \r_0
+    & =
+    \A \x_0 - \b
+    =
+    -\b
+    \implies
+    \p_0
+    =
+    -\r_0
+    =
+    \b
+    \\
+    \implies
+    \alpha_0
+    & =
+    \frac{\dotp{\r_0}{\r_0}}{\qf{\p_0}{\A}}
+    =
+    \frac{5}{
+        \begin{bmatrix}
+            2 & 1
+        \end{bmatrix}
+        \begin{bmatrix}
+            6 & 2 \\
+            2 & 3
+        \end{bmatrix}
+        \begin{bmatrix}
+            2 \\
+            1
+        \end{bmatrix}
+    }
+    =
+    \frac{5}{
+        \begin{bmatrix}
+            2 & 1
+        \end{bmatrix}
+        \begin{bmatrix}
+            13 \\
+            7
+        \end{bmatrix}
+    }
+    =
+    \frac{5}{33}
+    \\
+    \implies
+    \x_1
+    & =
+    \x_0 + \alpha_0 \p_0
+    \implies
+    \boxed{
+        \x_1
+        =
+        \frac{5}{33}
+        \begin{bmatrix}
+            2 \\
+            1
+        \end{bmatrix}
+    }
+\end{align*}
+
+\subsubsection*{(3) Error \( \Delta_1 = \xstar - \x_1 \)}
+
+\begin{equation*}
+    \Delta_1
+    =
+    \xstar - \x_1
+    =
+    \frac{1}{7}
+    \begin{bmatrix}
+        2 \\
+        1
+    \end{bmatrix}
+    -
+    \frac{5}{33}
+    \begin{bmatrix}
+        2 \\
+        1
+    \end{bmatrix}
+    =
+    \boxed{
+        \frac{-2}{231}
+        \begin{bmatrix}
+            2 \\
+            1
+        \end{bmatrix}
+    }
+\end{equation*}
