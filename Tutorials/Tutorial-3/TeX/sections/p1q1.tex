@@ -85,3 +85,178 @@ With
         \quad \forall x_1, x_2 \in \R
     }
 \end{equation*}
+
+\begin{equation*}
+    \A \xstar
+    =
+    \b
+    \quad \iff \quad
+    \xstar
+    =
+    \argmin{\x \in \R^d} \func{f}{\x}
+\end{equation*}
+
+\subsection*{(2) One step of steepest descent and CG}
+
+\paragraph{Steepest descent}
+
+\begin{align*}
+    \x^{k+1}
+    & =
+    \x^k - \alpha_k \grad{f}{\x^k},
+    \quad
+    \alpha_k
+    =
+    \argmin_{\alpha \in \R}
+    \func{f}{\x^k - \alpha \grad{f}{\x^k}}
+    \\ &
+    \implies
+    \alpha_k
+    =
+    \frac{\dotp{\grad{f}{\x^k}}{\grad{f}{\x^k}}}
+    {\qf{\grad{f}{\x^k}}{\A}}
+    > 0
+    \\
+    \implies
+    \grad{f}{\x^0}
+    & =
+    A \x^0 - \b
+    =
+    -\b
+    =
+    \begin{bmatrix}
+        -2 \\
+        -2
+    \end{bmatrix}
+    \\
+    \implies
+    \alpha_0
+    & =
+    \frac{4}{
+        \begin{bmatrix}
+            -2 &
+            -2
+        \end{bmatrix}
+        \begin{bmatrix}
+            2 & 0 \\
+            0 & 8
+        \end{bmatrix}
+        \begin{bmatrix}
+            -2 \\
+            -2
+        \end{bmatrix}
+    }
+    =
+    \frac{4}{
+        \begin{bmatrix}
+            -2 &
+            -2
+        \end{bmatrix}
+        \begin{bmatrix}
+            -4 \\
+            -16
+        \end{bmatrix}
+    }
+    =
+    \frac{4}{40}
+    =
+    \frac{1}{10}
+    \\
+    \implies
+    \x^1
+    & =
+    \x^0 - \alpha_0 \grad{f}{\x^0}
+    =
+    -\frac{1}{10}
+    \begin{bmatrix}
+        -2 \\
+        -2
+    \end{bmatrix}
+    \implies
+    \boxed{
+        \x^1_{\mathrm{GD}}
+        =
+        \frac{1}{5}
+        \begin{bmatrix}
+            1 \\
+            1
+        \end{bmatrix}
+    }
+\end{align*}
+
+\paragraph{Conjugate gradient}
+
+\begin{align*}
+    \x^{k+1}
+    & =
+    \x^k + \alpha_k \u_k,
+    \quad
+    \u_0
+    =
+    -\r_0,
+    \quad
+    \r_k
+    =
+    \grad{f}{\x^k}
+    =
+    \A \x^k - \b
+    \\
+    \alpha_k
+    & =
+    \frac{\dotp{\r_k}{\r_k}}{\qf{\u_k}{\A}},
+    \quad
+    \u_{k+1}
+    =
+    -\r_{k+1} + \beta_k \u_k,
+    \quad
+    \beta_k
+    =
+    \frac{\dotp{\r_{k+1}}{\r_{k+1}}}{\dotp{\r_k}{\r_k}}
+    \\
+    \implies
+    \r_0
+    & =
+    -\b,
+    \quad
+    \u_0
+    =
+    -\r_0
+    =
+    b
+    \implies
+    \alpha_0
+    =
+    \frac{1}{10}
+    \\
+    \implies
+    \x^1
+    & =
+    \x^0 + \alpha_0 \u_0
+    =
+    \frac{1}{10}
+    \begin{bmatrix}
+        2 \\
+        2
+    \end{bmatrix}
+    \implies
+    \boxed{
+        \x^1_{\mathrm{CG}}
+        =
+        \frac{1}{5}
+        \begin{bmatrix}
+            1 \\
+            1
+        \end{bmatrix}
+    }
+\end{align*}
+
+\subsection*{(3) Comparison of new iterates}
+
+Both gradient descent and conjugate gradient yield the same new iterate after one step:
+
+\subsection*{(4) Zig-zag pattern in GD}
+
+Gradient descent exhibits a ``zig-zag'' pattern because it updates the solution in the direction of the steepest descent, which is orthogonal to the level curves of the objective function, which are ellipses in this case.
+Each step of gradient descent tends to overshoot in one direction and then corrects in the perpendicular direction in the next step, leading to a zig-zag trajectory towards the minimum.
+
+The conjugate gradient method, effetively transforms the coordinate system to align with the principal axes of the ellipses, thereby converging in atmost \( d \) steps for a \( d \)-dimensional problem.
