@@ -1,3 +1,35 @@
-\section*{Question 1}
+\section*{Question 1: CG vs Gradient Descent}
+
+Consider the system
+\begin{equation*}
+    A =
+    \begin{bmatrix}
+        2 & 0 \\
+        0 & 8
+    \end{bmatrix},
+    \quad
+    b =
+    \begin{bmatrix}
+        2 \\
+        2
+    \end{bmatrix}.
+\end{equation*}
+
+\begin{enumerate}
+    \item Write the equivalent quadratic objective
+        \begin{equation*}
+            f(x) = \frac{1}{2} x^{\top} A x - b^{\top} x
+        \end{equation*}
+
+    \item Starting from \( x_{0} = {(0,0)}^{\top} \), compute:
+        \begin{itemize}
+            \item One step of steepest descent (take a step along \( -\nabla f\left(x_{0}\right) \) with exact line search).
+            \item One step of conjugate gradient.
+        \end{itemize}
+
+    \item Compare the new iterates \( x_{1}^{\mathrm{GD}} \) and \( x_{1}^{\mathrm{CG}} \).
+
+    \item Why does gradient descent exhibit a ``zig-zag'' pattern here, while CG terminates in at most 2 steps?
+\end{enumerate}
 
 \subsection*{Solution}

@@ -1,3 +1,32 @@
-\section*{Question 3}
+\section*{Question 3: Error in the Energy Norm}
+
+Take
+\begin{equation*}
+    A =
+    \begin{bmatrix}
+        6 & 2 \\
+        2 & 3
+    \end{bmatrix},
+    \quad
+    b =
+    \begin{bmatrix}
+        2 \\
+        1
+    \end{bmatrix}.
+\end{equation*}
+
+\begin{enumerate}
+    \item Compute the exact solution \( x^{*} = A^{-1} b \).
+
+    \item Run one step of CG from \( x_{0} = {(0,0)}^{\top} \), giving \( x_{1} \).
+
+    \item Compute the error \( e_{1} = x^{*}-x_{1} \).
+
+    \item Verify that \( e_{1} \) is orthogonal to the Krylov subspace in the \( A \)-inner product, i.e.
+        \begin{equation*}
+            p_{0}^{\top} A e_{1} = 0
+        \end{equation*}
+        What does this mean geometrically?
+\end{enumerate}
 
 \subsection*{Solution}
