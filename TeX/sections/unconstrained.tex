@@ -77,11 +77,11 @@ Note that \( \because f(t) \geq 0, \; \forall t \in \R \implies f(t^\ast) \geq 0
 
 \subsection{First-order methods}
 
-Assume \( f \in \C^{1} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\grad{f}{\x}}{\p} + o(\norm{\p}) \).
+Assume \( f \in \C^{1} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\grad{f}{\x}}{\p} + \smalloh{\norm{\p}} \).
 
 \subsection{Second-order methods}
 
-Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\grad{f}{\x}}{\p} + \half \qf{\p}{\hess{f}{\x}} + o(\norm{\p}^2) \).
+Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\grad{f}{\x}}{\p} + \half \qf{\p}{\hess{f}{\x}} + \smalloh{\norm{\p}^2} \).
 
 \section{Types of minimum}
 
@@ -760,7 +760,7 @@ Note that for sufficiently small \( \alpha_k \), the sufficient decrease conditi
 \begin{align*}
     \func{f}{\x^k + \alpha_k \p^k}
     & =
-    \func{f}{\x^k} + \alpha_k \dotp{\grad{f}{\x^k}}{\p^k} + o(\alpha_k)
+    \func{f}{\x^k} + \alpha_k \dotp{\grad{f}{\x^k}}{\p^k} + \smalloh{\alpha_k}
     \\ & <
     \func{f}{\x^k} + c \alpha_k \dotp{\grad{f}{\x^k}}{\p^k},
     \qquad \because
@@ -950,7 +950,7 @@ From Taylor's theorem, we have
     \func{f}{\x}
     + \dotp{\grad{f}{\x}}{(\y - \x)}
     + \half \qf{(\y - \x)}{\hess{f}{\x}}
-    + o(\norm{\y - \x}^2),
+    + \smalloh{\norm{\y - \x}^2},
     \quad \forall \x, \y \in \R^d
 \end{equation*}
 
@@ -961,7 +961,7 @@ Taking the derivative with respect to \( \y \) on both sides, we have
     =
     \grad{f}{\x}
     + \hess{f}{\x} (\y - \x)
-    + o(\norm{\y - \x}),
+    + \smalloh{\norm{\y - \x}},
     \quad \forall \x, \y \in \R^d
 \end{equation*}
 

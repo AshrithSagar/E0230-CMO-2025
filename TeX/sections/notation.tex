@@ -75,8 +75,10 @@
 \section{Little-o notation}
 
 (Landau's notation~\cite{apostol1991calculus})
-A function \( f: \R^d \to \R \) is said to be in \( o(g(\x)) \) as \( \x \to \x_0 \), for some function \( g: \R^d \to \R \), \( g(\x) \neq 0 \) in a neighborhood of \( \x_0 \), if
+A function \( f: \R^d \to \R \) is said to be in \( \smalloh{g(\x)} \) as \( \x \to \x_0 \), for some function \( g: \R^d \to \R \), \( g(\x) \neq 0 \) in a neighborhood of \( \x_0 \), if
 \begin{equation*}
+    f \in \smalloh{g}
+    \quad \iff \quad
     \lim_{\x \to \x_0} \frac{f(\x)}{g(\x)} = 0
     \quad \iff \quad
     \forall \epsilon > 0,
@@ -89,19 +91,19 @@ A function \( f: \R^d \to \R \) is said to be in \( o(g(\x)) \) as \( \x \to \x_
 \subsection{Properties}
 
 \begin{itemize}
-    \item \( f \in o(g) \implies c \cdot f \in o(g), \; \forall c \in \R \).
+    \item \( f \in \smalloh{g} \implies c \cdot f \in \smalloh{g}, \; \forall c \in \R \).
 
-    \item \( f \in o(F), \;  g \in o(G) \implies f \cdot g \in o(F \cdot G) \).
+    \item \( f \in \smalloh{F}, \;  g \in \smalloh{G} \implies f \cdot g \in \smalloh{F \cdot G} \).
 
-    \item \( f \in o(h), \; g \in o(h) \implies f + g \in o(h) \).
+    \item \( f \in \smalloh{h}, \; g \in \smalloh{h} \implies f + g \in \smalloh{h} \).
 
-    \item \( f \in o(g), \; g \in o(h) \implies f \in o(h) \).
+    \item \( f \in \smalloh{g}, \; g \in \smalloh{h} \implies f \in \smalloh{h} \).
 
-    \item \( f(\x) \in o(1) \text{ as } \x \to \x_0 \implies f(\x) \to 0 \text{ as } \x \to \x_0 \).
+    \item \( f(\x) \in \smalloh{1} \text{ as } \x \to \x_0 \implies f(\x) \to 0 \text{ as } \x \to \x_0 \).
 
-    \item \( |f(\x)| \leq |h(\x)| \text{ near } \x_0, \; h \in o(g) \implies f \in o(g) \).
+    \item \( |f(\x)| \leq |h(\x)| \text{ near } \x_0, \; h \in \smalloh{g} \implies f \in \smalloh{g} \).
 
-    \item \( f \in o(g), \; \phi: \R \to \R \text{ is continuous at } 0 \text{ with } \phi(0) = 0 \implies \phi(f(\x)) \in o(\phi(g(\x))) \).
+    \item \( f \in \smalloh{g}, \; \phi: \R \to \R \text{ is continuous at } 0 \text{ with } \phi(0) = 0 \implies \phi(f(\x)) \in \smalloh{\phi(g(\x))} \).
 
     \item \( \alpha > \beta > 0 \implies \norm{\x - \x_0}^\alpha \in \smalloh{\norm{\x - \x_0}^\beta} \text{ as } \x \to \x_0 \).
 \end{itemize}
