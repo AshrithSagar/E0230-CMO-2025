@@ -2231,14 +2231,6 @@ Define the polynomial \( P_k^\ast: \bbrac{\;\cdot\;} \to \R \) of degree at most
     }
 \end{equation*}
 
-\begin{equation*}
-    \implies
-    P_k^\ast
-    =
-    \argmin_{P_k}
-    \norm{\x^0 + P_k(\Q) \, \grad{f}{\x^0} - \xstar}_{\Q}
-\end{equation*}
-
 \begin{align*}
     \implies
     \x^{k+1} - \xstar
@@ -2249,3 +2241,71 @@ Define the polynomial \( P_k^\ast: \bbrac{\;\cdot\;} \to \R \) of degree at most
     =
     \bbrac{\I + P_k^\ast(\Q) \, \Q} \, (\x^0 - \xstar)
 \end{align*}
+
+\begin{equation*}
+    \implies
+    P_k^\ast
+    =
+    \argmin_{P_k}
+    \norm{\x^0 + P_k(\Q) \, \grad{f}{\x^0} - \xstar}_{\Q}
+\end{equation*}
+
+From spectral decomposition theorem~\pthmref{thm:spectral-decomposition-theorem}, we have
+\(
+    \Q
+    =
+    \sum_{i = 1}^{d} \lambda_i \, \outp{\v_i}{\v_i}
+\).
+
+Since \( \set{\v_i}_{i = 1}^{d} \) forms an orthonormal basis for \( \R^d \), we have
+\begin{align*}
+    \implies
+    \x^0 - \xstar
+    & =
+    \sum_{i = 1}^{d} \mu_i \, \v_i,
+    \quad \mu_i \in \R,
+    \; \forall i \in \set{1, 2, \ldots, d}
+    \implies
+    \norm{\x^0 - \xstar}_{\Q}^2
+    =
+    \sum_{i = 1}^{d} \lambda_i \, \mu_i^2
+    \\
+    P_k(\Q) \, \v_i
+    & =
+    P_k(\lambda_i) \, \v_i,
+    \quad \forall i \in \set{1, 2, \ldots, d}
+    \\
+    \implies
+    \x^{k+1} - \xstar
+    & =
+    \bbrac{\I + P_k^\ast(\Q) \, \Q} \, (\x^0 - \xstar)
+    =
+    \sum_{i = 1}^{d} \mu_i \, \bbrac{1 + P_k^\ast(\lambda_i) \, \lambda_i} \, \v_i
+    \\
+    \implies
+    \norm{\x^{k+1} - \xstar}_{\Q}^2
+    & =
+    \sum_{i = 1}^{d} \lambda_i \, \mu_i^2 \, \bbrac{1 + P_k^\ast(\lambda_i) \, \lambda_i}^2
+    =
+    \min_{P_k}
+    \sum_{i = 1}^{d} \lambda_i \, \mu_i^2 \, \bbrac{1 + P_k(\lambda_i) \, \lambda_i}^2
+    \\
+    \implies
+    \norm{\x^{k+1} - \xstar}_{\Q}^2
+    & \leq
+    \min_{P_k}
+    \max_{1 \leq i \leq d}
+    \bbrac{1 + P_k(\lambda_i) \, \lambda_i}^2
+    \sum_{i = 1}^{d} \lambda_i \, \mu_i^2
+\end{align*}
+\begin{equation*}
+    \therefore
+    \boxed{
+        \norm{\x^{k+1} - \xstar}_{\Q}^2
+        \leq
+        \min_{P_k}
+        \max_{1 \leq i \leq d}
+        \bbrac{1 + P_k(\lambda_i) \, \lambda_i}^2
+        \norm{\x^0 - \xstar}_{\Q}^2
+    }
+\end{equation*}
