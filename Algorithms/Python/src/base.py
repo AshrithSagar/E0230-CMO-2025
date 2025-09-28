@@ -633,3 +633,81 @@ class SteepestGradientDescentBacktracking(
             if alpha < self.alpha_min:
                 return self.alpha_min
         return alpha
+
+
+class ConjugateDirectionMethod(IterativeOptimiser):
+    """
+    Linear conjugate direction method for convex quadratic functions.\\
+    `x_{k+1} = x_k + alpha_k * p_k`\\
+    where `p_k` are conjugate directions and `alpha_k` is the exact line search step length.
+    """
+
+    def initialise_state(self):
+        super().initialise_state()
+        self.Q: floatVec = np.array(self.config.get("Q"), dtype=float)
+        if self.Q is None:
+            raise ValueError("Q matrix is required for conjugate direction method.")
+        self.denom_thresh = float(self.config.get("denom_thresh", 1e-14))
+        self.alpha_min = float(self.config.get("alpha_min", 1e-8))
+
+        self.r: floatVec | None = None  # Residual (negative gradient)
+        self.p: floatVec | None = None  # Search direction
+        self.k_prev: int | None = None  # Previous iteration number
+
+    def step(self, x, k, f, grad, oracle_fn):
+        r_k = -grad  # Residual is negative gradient
+        if self.r is None or self.p is None or self.k_prev is None or k == 1:
+            # First iteration or reset
+            p_k = r_k
+        else:
+            beta_k = float((r_k.T @ r_k) / (self.r.T @ self.r))
+            p_k = r_k + beta_k * self.p
+
+        numer = float(r_k.T @ p_k)
+        denom = float(p_k.T @ self.Q @ p_k)
+
+        # Fallback if denominator is too small
+        if abs(denom) < self.denom_thresh:
+            alpha_k = self.alpha_min
+        else:
+            alpha_k = -numer / denom
+
+        # Update state
+        self.r = r_k
+        self.p = p_k
+        self.k_prev = k
+
+        return x + alpha_k * p_k
+
+
+class ConjugateGradientMethod(ConjugateDirectionMethod):
+    """
+    Linear conjugate gradient method for convex quadratic functions.\\
+    `x_{k+1} = x_k + alpha_k * p_k`\\
+    where `p_k` are conjugate directions and `alpha_k` is the exact line search step length.
+    """
+
+    def step(self, x, k, f, grad, oracle_fn):
+        r_k = -grad  # Residual is negative gradient
+        if self.r is None or self.p is None or self.k_prev is None or k == 1:
+            # First iteration or reset
+            p_k = r_k
+        else:
+            beta_k = float((r_k.T @ r_k) / (self.r.T @ self.r))
+            p_k = r_k + beta_k * self.p
+
+        numer = float(r_k.T @ p_k)
+        denom = float(p_k.T @ self.Q @ p_k)
+
+        # Fallback if denominator is too small
+        if abs(denom) < self.denom_thresh:
+            alpha_k = self.alpha_min
+        else:
+            alpha_k = -numer / denom
+
+        # Update state
+        self.r = r_k
+        self.p = p_k
+        self.k_prev = k
+
+        return x + alpha_k * p_k
