@@ -2309,3 +2309,64 @@ Since \( \set{\v_i}_{i = 1}^{d} \) forms an orthonormal basis for \( \R^d \), we
         \norm{\x^0 - \xstar}_{\Q}^2
     }
 \end{equation*}
+
+\begin{theorem}{{}~\citep{Nocedal2006}}{}
+    If \( \Q \) has exactly \( s \) distinct eigenvalues, then the CG method converges in at most \( s \) iterations.
+\end{theorem}
+
+\begin{proof}
+    Let the distinct eigenvalues of \( \Q \) be \( \lambda_1, \lambda_2, \ldots, \lambda_s \).
+
+    Consider the polynomial
+    \begin{equation*}
+        \Q_s(x)
+        =
+        {(-1)}^s
+        \prod_{i = 1}^{s} \frac{x - \lambda_i}{\lambda_i}
+    \end{equation*}
+    which is of degree \( s \) and satisfies \( \Q_s(0) = 1 \) and \( \Q_s(\lambda_i) = 0, \; \forall i \in \set{1, 2, \ldots, s} \).
+
+    \begin{align*}
+        \implies
+        0
+        & \leq
+        \min_{P_{s - 1}}
+        \max_{1 \leq i \leq d}
+        \bbrac{1 + P_k(\lambda_i) \, \lambda_i}^2
+        \leq
+        \max_{1 \leq i \leq d}
+        \bbrac{\Q_s(\lambda_i)}^2
+        =
+        0
+        \\
+        \implies
+        \norm{\x^s - \xstar}_{\Q}^2
+        & \leq
+        0
+        \implies
+        \x^s = \xstar
+    \end{align*}
+\end{proof}
+
+\begin{theorem}{{}~\citep{Nocedal2006}}{}
+    If \( Q \) has eigenvalues \( 0 < \lambda_1 \leq \lambda_2 \leq \cdots \leq \lambda_d \), then the CG method generates iterates that satisfy
+    \begin{equation*}
+        \norm{\x^{k+1} - \xstar}_{\Q}^2
+        \leq
+        \pbrac{\frac{\lambda_{d-k} - \lambda_1}{\lambda_{d-k} + \lambda_1}}^2
+        \norm{\x^0 - \xstar}_{\Q}^2,
+        \quad \forall k \in \set{0, 1, \ldots, d - 1}
+    \end{equation*}
+\end{theorem}
+
+\begin{corollary}{{}~\citep{Nocedal2006}}{}
+    If \( Q \) has eigenvalues \( 0 < \lambda_1 \leq \lambda_2 \leq \cdots \leq \lambda_d \), then the CG method generates iterates that satisfy
+    \begin{equation*}
+        \norm{\x^{k} - \xstar}_{\Q}
+        \leq
+        2 \bbrac{\frac{\sqrt{\kappa(\Q)} - 1}{\sqrt{\kappa(\Q)} + 1}}^k
+        \norm{\x^0 - \xstar}_{\Q},
+        \quad \forall k \in \set{0, 1, \ldots, d}
+    \end{equation*}
+    where \( \kappa(\Q) = \frac{\lambda_d}{\lambda_1} \) is the condition number of \( \Q \).
+\end{corollary}
