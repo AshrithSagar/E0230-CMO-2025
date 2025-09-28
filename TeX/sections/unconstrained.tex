@@ -1198,7 +1198,7 @@ Note that \( \displaystyle r_k < \frac{2 l}{3 M} \implies r_k < \frac{l}{M} \), 
 Thereby, if we start with \( \displaystyle \boxed{ r_0 < \frac{2 l}{3 M} } \), then since \( \displaystyle r_k < r_{k - 1} < \cdots < r_1 < r_0 < \frac{2 l}{3 M} \), this ensures that \( \displaystyle r_k < \frac{2 l}{3 M} \).
 Thereby, we have \( \hess{f}{\x^k} \succ \zero \) throughout the iterations, ensuring that \( \p^k \) is a descent direction, thereby the algorithm converges to the local minimum \( \xstar \).
 
-\chapter{Conjugate direction methods}
+\chapter{Conjugate gradient methods}
 
 \section{\texorpdfstring{\( \Q \)--conjugacy}{Q-conjugacy}}
 
@@ -2180,3 +2180,72 @@ For a convex quadratic function \( f: \R^d \to \R \), the conjugate gradient met
         }
     \end{equation*}
 \end{proof}
+
+\section{Polynomial optimisation perspective}
+
+Define the polynomial \( P_k^\ast: \bbrac{\;\cdot\;} \to \R \) of degree at most \( k \) as
+\begin{equation*}
+    P_k^\ast(x)
+    \triangleq
+    \sum_{i = 0}^{k} \gamma_i \, x^i,
+    \quad \gamma_i \in \R,
+    \; \forall i \in \set{0, 1, \ldots, k},
+    \; \forall k \in \set{0, 1, \ldots, d - 1}
+\end{equation*}
+
+\begin{align*}
+    \implies
+    \x^{k+1}
+    & =
+    \x^0 + \sum_{i = 0}^{k} \alpha_i \, \u_i
+    =
+    \x^0 + \sum_{i = 0}^{k} \gamma_i \, \Q^i \, \grad{f}{\x^0}
+    \\
+    \implies
+    &
+    \boxed{
+        \x^{k+1}
+        =
+        \x^0 + P_k^\ast(\Q) \, \grad{f}{\x^0},
+        \quad \forall k \in \set{0, 1, \ldots, d - 1}
+    }
+\end{align*}
+
+\begin{align*}
+    \implies
+    f(\x) - f(\xstar)
+    & =
+    \pbrac{\half \qf{\x}{\Q} + \dotp{\h}{\x}} - \pbrac{\half \qf{\xstar}{\Q} + \dotp{\h}{\xstar}}
+    \\ & =
+    \half \qf{\x}{\Q} - \qf{\x}{\Q}[\xstar] + \half \qf{\xstar}{\Q}
+    =
+    \half \qf{(\x - \xstar)}{\Q}
+\end{align*}
+\begin{equation*}
+    \implies
+    \boxed{
+        \half \norm{\x - \xstar}^2_{\Q}
+        =
+        f(\x) - f(\xstar),
+        \quad \forall \x \in \R^d
+    }
+\end{equation*}
+
+\begin{equation*}
+    \implies
+    P_k^\ast
+    =
+    \argmin_{P_k}
+    \norm{\x^0 + P_k(\Q) \, \grad{f}{\x^0} - \xstar}_{\Q}
+\end{equation*}
+
+\begin{align*}
+    \implies
+    \x^{k+1} - \xstar
+    & =
+    \x^0 + P_k^\ast(\Q) \, \grad{f}{\x^0} - \xstar
+    \\ & =
+    (\x^0 - \xstar) + P_k^\ast(\Q) \, \Q \, (\x^0 - \xstar)
+    =
+    \bbrac{\I + P_k^\ast(\Q) \, \Q} \, (\x^0 - \xstar)
+\end{align*}
