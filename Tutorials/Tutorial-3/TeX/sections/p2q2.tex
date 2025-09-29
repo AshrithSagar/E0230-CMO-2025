@@ -43,6 +43,8 @@ Consider
         x_1
         =
         -\frac{1}{3}
+        \approx
+        -0.33333
     }
     \\
     \implies
@@ -67,13 +69,19 @@ Consider
     }{
         3(2 + e^{-\frac{1}{3}})
     }
-    =
+    \\
+    \implies
+    &
     \boxed{
+        x_2
+        =
         \frac{
             -4 e^{-\frac{1}{3}}
         }{
             3(2 + e^{-\frac{1}{3}})
         }
+        \approx
+        -0.35168
     }
 \end{align*}
 
@@ -118,3 +126,13 @@ Consider
 
 Yes, we observe quadratic convergence.
 This happens because once the iterates are sufficiently close to \( x^\ast \), the Taylor series expansion of \( f \) around \( x^\ast \) is \underline{dominated by the quadratic term}, leading to rapid convergence of Newton's method.
+
+\begin{equation*}
+    \frac{0.01839}{0.35173^2}
+    \approx
+    0.14864
+    , \qquad
+    \frac{0.00005}{0.01839^2}
+    \approx
+    0.14784
+\end{equation*}

@@ -119,12 +119,14 @@ Take
             2 & 1
         \end{bmatrix}
         \begin{bmatrix}
-            13 \\
+            14 \\
             7
         \end{bmatrix}
     }
     =
-    \frac{5}{33}
+    \frac{5}{35}
+    =
+    \frac{1}{7}
     \\
     \implies
     \x_1
@@ -134,13 +136,19 @@ Take
     \boxed{
         \x_1
         =
-        \frac{5}{33}
+        \frac{1}{7}
         \begin{bmatrix}
             2 \\
             1
         \end{bmatrix}
     }
 \end{align*}
+
+We know that CG converges in at most \( d \) steps for a \( d \)--dimensional problem.
+
+Here, \( d = 2 \), thereby expecting convergence in at most \( 2 \) steps.
+
+From above, we see that CG converged in just one step.
 
 \subsubsection*{(3) Error \( \Delta_1 = \xstar - \x_1 \)}
 
@@ -155,17 +163,18 @@ Take
         1
     \end{bmatrix}
     -
-    \frac{5}{33}
+    \frac{1}{7}
     \begin{bmatrix}
         2 \\
         1
     \end{bmatrix}
-    =
+    \implies
     \boxed{
-        \frac{-2}{231}
+        \Delta_1
+        =
         \begin{bmatrix}
-            2 \\
-            1
+            0 \\
+            0
         \end{bmatrix}
     }
 \end{equation*}
@@ -174,10 +183,10 @@ Take
 
 This relation would mean that \( \p_0 \) and \( \Delta_1 \) are \( \A \)--conjugate vectors.
 
+This holds trivially here since \( \Delta_1 = 0 \).
 \begin{equation*}
     \qf{\p_0}{\A}[\Delta_1]
     =
-    \frac{-2}{231}
     \begin{bmatrix}
         2 & 1
     \end{bmatrix}
@@ -186,13 +195,11 @@ This relation would mean that \( \p_0 \) and \( \Delta_1 \) are \( \A \)--conjug
         2 & 3
     \end{bmatrix}
     \begin{bmatrix}
-        2 \\
-        1
+        0 \\
+        0
     \end{bmatrix}
     =
-    \frac{-2}{\cancel{33} \times 7} \cancel{33}
-    =
-    -\frac{2}{7}
+    0
 \end{equation*}
 
 The error \( \Delta_k = (\xstar - \x^k) \) is always \( \A \)--orthogonal to the subspace of the gradients computed so far, i.e., \( \spanset{\grad{f}{\x^i}}_{i = 0}^{k-1} \).
