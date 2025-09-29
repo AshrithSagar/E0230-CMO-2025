@@ -89,5 +89,5 @@ Alternative methods available in these cases: Sub-gradient methods, Proximal gra
 \subsection*{(4) Limitations of Newton's method}
 
 This example exhibits \underline{oscillatory behavior} when applying Newton's method starting from different initial points.
-As can be seen from the iterates, starting with \( x_0 = 1 \) leads to \( x_1 = -\half \), and starting with \( x_0 = -1 \) leads to \( x_1 = \half \).
+As can be seen from the iterates, starting with \( x_0 = 1 (> 0) \) leads to \( x_1 = -\half (< 0) \), and starting with \( x_0 = -1 (< 0) \) leads to \( x_1 = \half (> 0) \).
 This oscillation occurs because the function \( f(x) \) is not twice differentiable at \( x = 0 \), where the derivative \( f'(x) \) is discontinuous.

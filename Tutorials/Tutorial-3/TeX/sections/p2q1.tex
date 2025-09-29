@@ -37,33 +37,30 @@ Consider the function
 \begin{equation*}
     x_{n+1}
     =
-    x_n - \frac{f(x_n)}{f'(x_n)}
+    x_n - \frac{f'(x_n)}{f''(x_n)}
 \end{equation*}
 \begin{align*}
     \implies
     x_1
     & =
-    0 - \frac{2}{-2}
+    0 - \frac{-2}{0}
     \implies
     \boxed{
         x_1
         =
-        1
+        \text{undefined}
     }
     \\
     \implies
-    x_2
-    & =
-    1 - \frac{1}{1}
-    \implies
+    &
     \boxed{
         x_2
         =
-        0
+        \text{undefined}
     }
 \end{align*}
 
-The method doesn't converge, it osscilates between the points \( 0 \) and \( 1 \).
+Newton's method can't be applied here since \( f''(x_0) = 0 \).
 
 \subsection*{(3) Newton's method, \( x_0 = -2 \)}
 
@@ -71,7 +68,7 @@ The method doesn't converge, it osscilates between the points \( 0 \) and \( 1 \
     \implies
     x_1
     & =
-    -2 - \frac{2}{-12}
+    -2 - \frac{10}{-12}
     \implies
     \boxed{
         x_1
@@ -91,16 +88,16 @@ The method doesn't converge, it osscilates between the points \( 0 \) and \( 1 \
     \frac{-7}{6} + \frac{25}{84}
     =
     \frac{-438}{504}
+    \\
     \implies
+    &
     \boxed{
         x_2
         =
         \frac{-217}{252}
+        \approx
+        -0.8611
     }
-    \\
-    x_2
-    & \approx
-    -0.8611
 \end{align*}
 
 \subsection*{(4) Comparison}
@@ -109,8 +106,7 @@ In the first case, starting from \( x_0 = 0 \), we find that \( f''(x_0) = 0 \).
 This makes the Newton's method update undefined, and hence we cannot proceed with the iterations.
 This illustrates that Newton's method can \underline{fail to converge} if the starting point is at a location where the second derivative is zero or very small.
 In the second case, starting from \( x_0 = -2 \), we find that the iterations proceed without any issues, and we obtain valid updates for \( x_1 \) and \( x_2 \).
-This shows that the choice of \underline{starting point is crucial for the convergence} of Newton's method.
-
+This shows that the choice of \underline{starting point is crucial for the convergence} of Newton's method.\\\\
 Newton's region: \( \frac{2l}{2M} \).
-Only within the Newton's region wil we converge quadratically.
+Only within the Newton's region will we converge quadratically.
 \( x_0 = 0 \) is outside the Newton's region.

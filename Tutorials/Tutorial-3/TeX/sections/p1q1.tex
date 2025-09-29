@@ -96,6 +96,47 @@ With
     \argmin{\x \in \R^d} \func{f}{\x}
 \end{equation*}
 
+\begin{equation*}
+    \implies
+    \xstar
+    =
+    \A^{-1} \b
+    =
+    \begin{bmatrix}
+        2 & 0 \\
+        0 & 8
+    \end{bmatrix}^{-1}
+    \begin{bmatrix}
+        2 \\
+        2
+    \end{bmatrix}
+    =
+    \frac{1}{16}
+    \begin{bmatrix}
+        8 & 0 \\
+        0 & 2
+    \end{bmatrix}
+    \begin{bmatrix}
+        2 \\
+        2
+    \end{bmatrix}
+    =
+    \frac{1}{16}
+    \begin{bmatrix}
+        16 \\
+        4
+    \end{bmatrix}
+    \implies
+    \boxed{
+        \xstar
+        =
+        \begin{bmatrix}
+            1 \\
+            0.25
+        \end{bmatrix}
+    }
+\end{equation*}
+
 \subsection*{(2) One step of steepest descent and CG}
 
 \paragraph{Steepest descent}
@@ -193,13 +234,13 @@ With
     \quad
     \u_0
     =
-    -\r_0,
+    \r_0,
     \quad
     \r_k
     =
-    \grad{f}{\x^k}
+    -\grad{f}{\x^k}
     =
-    \A \x^k - \b
+    \b - \A \x^k
     \\
     \alpha_k
     & =
@@ -216,13 +257,13 @@ With
     \implies
     \r_0
     & =
-    -\b,
+    \b,
     \quad
     \u_0
     =
-    -\r_0
+    \r_0
     =
-    b
+    \b
     \implies
     \alpha_0
     =

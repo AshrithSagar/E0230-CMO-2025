@@ -137,4 +137,4 @@ The search directions upto iteration \( k \) (inclusive) lie in the Krylov subsp
     \spanset{\A^i \, \r_0}_{i = 0}^{k-1}
 \end{equation*}
 and the CG procedure uptill iteration \( k \) is equivalent to minimizing the quadratic function \( f \) over the affine space \( \x_0 + \func{\mathcal{K}_k}{\A, \r_0} \).
-At \( k = d \), since \( \spanset{\p_i}_{i = 0}^{k - 1} \) are linearly independent, we get that the Krylov subspace becomes \( \R^d \) for any \( r_0 \), thereby, the final iterate \( \x^d \) is independent of the initial residual \( \r_0 \), but the intermediate search directions and iterates depend on \( \r_0 \).
+At \( k = d \), since \( \spanset{\p_i}_{i = 0}^{k - 1} \) are linearly independent, we get that the Krylov subspace becomes \( \R^d \) for any \( r_0 \), thereby, the final iterate \( \x^d \) is \underline{independent of the initial residual \( \r_0 \)}, but the intermediate search directions and iterates depend on \( \r_0 \).
