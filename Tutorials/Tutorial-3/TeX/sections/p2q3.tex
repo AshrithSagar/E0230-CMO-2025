@@ -18,7 +18,6 @@ Consider the function
 
 \subsection*{Solution}
 
-\vspace{-1em}
 \begin{equation*}
     \implies
     f(x) =
@@ -28,10 +27,8 @@ Consider the function
     \end{cases}
 \end{equation*}
 
-\vspace{-1em}
 \subsection*{(1) Newton's method at \( x = 0 \)}
 
-\vspace{-1em}
 \begin{align*}
     \implies
     f'(x)
@@ -49,10 +46,12 @@ Consider the function
 
 At \( x = 0 \), \( f'(x) \) is \underline{not defined}, hence Newton's method cannot be directly applied at \( x = 0 \).
 
-\vspace{-1em}
+For Newton's method, we need the function to once differentiable, and twice differentiable at the point of interest.
+
+Alternative methods available in these cases: Sub-gradient methods, Proximal gradient methods.
+
 \subsection*{(2) Newton's method, \( x_0 = 1 \)}
 
-\vspace{-1em}
 \begin{align*}
     \implies
     x_1
@@ -69,10 +68,8 @@ At \( x = 0 \), \( f'(x) \) is \underline{not defined}, hence Newton's method ca
     < 0
 \end{align*}
 
-\vspace{-1em}
 \subsection*{(3) Newton's method, \( x_0 = -1 \)}
 
-\vspace{-1em}
 \begin{align*}
     \implies
     x_1
@@ -89,7 +86,6 @@ At \( x = 0 \), \( f'(x) \) is \underline{not defined}, hence Newton's method ca
     > 0
 \end{align*}
 
-\vspace{-1em}
 \subsection*{(4) Limitations of Newton's method}
 
 This example exhibits \underline{oscillatory behavior} when applying Newton's method starting from different initial points.

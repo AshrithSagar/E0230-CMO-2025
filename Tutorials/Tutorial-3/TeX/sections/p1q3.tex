@@ -85,13 +85,13 @@ Take
     \implies
     \r_0
     & =
-    \A \x_0 - \b
+    \b - \A \x_0
     =
-    -\b
+    \b
     \implies
     \p_0
     =
-    -\r_0
+    \r_0
     =
     \b
     \\
@@ -194,3 +194,6 @@ This relation would mean that \( \p_0 \) and \( \Delta_1 \) are \( \A \)--conjug
     =
     -\frac{2}{7}
 \end{equation*}
+
+The error is always orthogonal to the subspace of the gradients computed so far.
+This is because the CG method minimizes the error in the \( A \)--norm at every step, and hence the error must be orthogonal to the direction in which we are minimising.
