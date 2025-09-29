@@ -768,7 +768,7 @@ Note that for sufficiently small \( \alpha_k \), the sufficient decrease conditi
 \begin{align*}
     \func{f}{\x^k + \alpha_k \p^k}
     & =
-    \func{f}{\x^k} + \alpha_k \dotp{\grad{f}{\x^k}}{\p^k} + \alpha_k \, \smalloh{\p^k}
+    \func{f}{\x^k} + \alpha_k \dotp{\grad{f}{\x^k}}{\p^k} + \smalloh{\p^k}
     \\ & <
     \func{f}{\x^k} + c \alpha_k \dotp{\grad{f}{\x^k}}{\p^k},
     \qquad \because
@@ -779,6 +779,44 @@ Note that for sufficiently small \( \alpha_k \), the sufficient decrease conditi
 \subsection{Backtracking line search}
 
 Determine the largest number \( \alpha_k \) in the sequence \( \set{\beta^m \bar{\alpha}}_{m = 0}^{\infty} \) that satisfies the \textit{sufficient decrease condition}, where \( \bar{\alpha} > 0 \) is an initial step length and \( 0 < \beta < 1 \) is a scaling factor.
+
+\begin{algorithm}[H]
+    \caption{
+        Backtracking line search to satisfy the sufficient decrease condition
+    }
+    \SetAlgoLined{}
+    \KwIn{
+        First-order oracle for the objective function \( \func{f}{\x} \);
+        Initial point \( \x^0 \in \R^d \);
+
+        Initial step length \( \bar{\alpha} > 0 \);
+        Scaling factor \( 0 < \beta < 1 \);
+        Sufficient decrease parameter \( 0 < c < 1 \);
+    }
+    \KwOut{
+        Approximate solution to the unconstrained minimisation problem \( \displaystyle \argmin_{\x \in \R^d} \func{f}{\x} \)\;
+    }
+
+    \( k \leftarrow 0 \)\;
+
+    \While{\( \x^k \) is not optimal}{
+        Choose a descent direction \( \p^k \)\;
+
+        Initialize the step length:
+        \( \alpha \leftarrow \bar{\alpha} \)\;
+
+        \While{\( \func{f}{\x^k + \alpha \p^k} > \func{f}{\x^k} + c \alpha \dotp{\grad{f}{\x^k}}{\p^k} \)}{
+            \( \alpha \leftarrow \beta \alpha \)\;
+        }
+
+        \( \alpha_k \leftarrow \alpha \)\;
+
+        Update the current point: \( \x^{k+1} = \x^k + \alpha_k \p^k \)\;
+
+        \( k \leftarrow k + 1 \)\;
+    }
+    \Return{\( \x^k \)\;}
+\end{algorithm}
 
 \section{Goldstein conditions / Armijo-Goldstein conditions}
 
