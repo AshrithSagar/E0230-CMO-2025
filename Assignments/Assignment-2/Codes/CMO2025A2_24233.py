@@ -1,7 +1,203 @@
 # ---------- CMO 2025 Assignment 2 ----------
 
 # ---------- Imports ----------
+from typing import Callable
+
 import numpy as np
+from numpy.typing import NDArray
+from scipy.sparse.linalg import LinearOperator
+
+# Type aliases
+type Vector = NDArray[np.float64]
+type Matrix = NDArray[np.float64]
 
 
-# ---------- Algorithms ----------
+# ---------- Implementations ----------
+def CD_SOLVE(
+    A: Matrix,
+    b: Vector,
+    x0: Vector | None = None,
+    maxiter: int = 100,
+) -> tuple[Vector, list[float], list[float], list[float]]:
+    """
+    Conjugate Direction Method.
+
+    Parameters:
+        A (NDArray): SPD matrix from oracle.
+        b (NDArray): Right-hand side vector.
+        x0 (NDArray, optional): Initial point. Defaults to zero vector.
+        maxiter (int, optional): Maximum number of iterations. Defaults to 100.
+
+    Returns:
+        x (NDArray): Final iterate after Conjugate Descent.
+        alphas (list[float]): List of step sizes `alpha_k`.
+        numerators (list[float]): List of values `-grad_f(x_k)' u_k`.
+        lambdas (list[float]): Corresponding eigenvalues `lambda_k`.
+    """
+
+    # Initialise x0
+    if x0 is None:
+        x0 = np.zeros_like(b)
+
+
+def CG_SOLVE(
+    A: Matrix | LinearOperator,
+    b: Vector,
+    tol: float = 1e-6,
+    maxiter: int = 10_000,
+    log_directions: bool = False,
+) -> (
+    tuple[Vector, int, list[float]]
+    | tuple[Vector, int, list[float], list[Vector], list[Vector]]
+):
+    """
+    Standard Conjugate Gradient Method.
+
+    Parameters:
+        A (NDArray or LinearOperator): SPD matrix from oracle.
+        b (NDArray): Right-hand side vector.
+        tol (float, optional): Convergence tolerance. Defaults to 1e-6.
+        maxiter (int, optional): Maximum number of iterations. Defaults to 10_000.
+        log_directions (bool, optional): Boolean flag. Defaults to False.
+            When set to True, the function must additionally return the first `m` residuals and search directions.
+
+    Returns:
+        x (NDArray): Approximate solution vector.
+        iters (int): Number of iterations taken.
+        residuals (list[float]): Residual norms `||r_k||_2` at each iteration.
+
+        In addition, if log_directions is set to True, then
+        residual_list (list[NDArray]): First `m` residuals {r_0,...,r_(m-1)}.
+        directions (list[NDArray]): First `m` CG search directions {p_0,...,p_(m-1)}.
+    """
+
+
+def GS_ORTHOGONALISE(P: list[Vector], Q: Matrix) -> list[Vector]:
+    """
+    Gram-Schmidt orthogonalisation.
+
+    Parameters:
+        P (list[Vector]): A list (or array) of vectors {p_0,...,p_(m-1)} to be orthogonalised.
+        Q (NDArray): SPD matrix (here use `A` from oracle).
+
+    Returns:
+        D (list[Vector]): The Q-orthogonalised vectors {d_0,...,d_(m-1)}.
+    """
+
+
+def CG_SOLVE_FAST(
+    A: Matrix | LinearOperator,
+    b: Vector,
+    tol: float = 1e-6,
+    maxiter: int = 10_000,
+    log_directions: bool = False,
+) -> (
+    tuple[Vector, int, list[float]]
+    | tuple[Vector, int, list[float], list[Vector], list[Vector]]
+):
+    """
+    Improved Conjugate Gradient Method.
+
+    Parameters:
+        A (NDArray or LinearOperator): SPD matrix from oracle.
+        b (NDArray): Right-hand side vector.
+        tol (float, optional): Convergence tolerance. Defaults to 1e-6.
+        maxiter (int, optional): Maximum number of iterations. Defaults to 10_000.
+        log_directions (bool, optional): Boolean flag. Defaults to False.
+            When set to True, the function must additionally return the first `m` residuals and search directions.
+
+    Returns:
+        x (NDArray): Approximate solution vector.
+        iters (int): Number of iterations taken.
+        residuals (list[float]): Residual norms `||r_k||_2` at each iteration.
+
+        In addition, if log_directions is set to True, then
+        residual_list (list[NDArray]): First `m` residuals {r_0,...,r_(m-1)}.
+        directions (list[NDArray]): First `m` CG search directions {p_0,...,p_(m-1)}.
+    """
+
+
+def NEWTON_SOLVE(
+    f_grad: Callable[[Vector], Vector],
+    f_hess: Callable[[Vector], Vector],
+    x0: Vector,
+    tol: float = 1e-8,
+    maxiter: int = 100,
+) -> tuple[Vector, int, list[Vector]]:
+    """
+    Newton's Method.
+
+    Parameters:
+        f_grad (Callable): Gradient function of f(x).
+        f_hess (Callable): Hessian function of f(x).
+        x0 (Vector): Initial point. (NumPy array of length 2).
+        tol (float, optional): Convergence tolerance. Defaults to 1e-8.
+        maxiter (int, optional): Maximum number of iterations. Defaults to 100.
+
+    Returns:
+        x (NDArray): Final iterate.
+        iters (int): Number of iterations performed.
+        trajectory (list[NDArray]): List of iterates (for plotting Newton paths).
+    """
+
+
+def PROJ_CIRCLE(
+    y: Vector,
+    center: Vector = np.array([0.0, 0.0]),
+    radius: float = 5.0,
+) -> Vector:
+    """
+    Projection onto circle.
+
+    Parameters:
+        y (NDArray): Point to project (NumPy array of length 2).
+        center (NDArray, optional): Centre of circle. Defaults to np.array([0.0, 0.0]).
+        radius (float, optional): Radius of circle. Defaults to 5.0.
+
+    Returns:
+        y_proj (NDArray): Projection of `y` on the closed Euclidean ball (NumPy array of length 2).
+    """
+
+
+def PROJ_BOX(
+    y: Vector,
+    center: Vector = np.array([0.0, 0.0]),
+    radius: float = 5.0,
+) -> Vector:
+    """
+    Projection onto box.
+
+    Parameters:
+        y (NDArray): Point to project (NumPy array of length 2).
+        low (NDArray, optional): Lower corner of box. Defaults to np.array([-3.0, 0.0]).
+        high (NDArray, optional): Upper corner of box. Defaults to np.array([3.0, 4.0]).
+
+    Returns:
+        y_proj (NDArray): Projection of `y` on the closed Euclidean ball (NumPy array of length 2).
+    """
+
+
+def SEPARATE_HYPERPLANE() -> tuple[Vector, float, tuple[Vector, Vector]]:
+    """
+    Separating hyperplane (geometry / classification).
+
+    Returns:
+        n (NDArray): Normal vector of hyperplane (NumPy array of length 2).
+        c (float): Offset (scalar) so that hyperplane is {x: n'x = c}.
+        a_closest, b_closest (tuple[NDArray, NDArray]): The closest points in `C_A` and `C_B` used to construct the hyperplane.
+    """
+
+
+def CHECK_FARKAS() -> tuple[bool]:
+    """
+    Farkas lemma / infeasibility check.
+
+    Returns:
+        feasible: boolean flag (True if feasible).
+
+        If infeasible:
+        y_cert: (NDArray) a Farkas certificate satisfying `y >= 0`, `A'y = 0` (numerically), and `b'y < 0` (numerically).
+
+        Diagnostic info (objective value, solver status).
+    """
+    pass
