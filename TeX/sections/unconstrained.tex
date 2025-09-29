@@ -135,7 +135,7 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
 
 \subsection{First-order sufficient condition for a global minimum under convexity}
 
-\begin{theorem}{First-order sufficient condition for a global minimum under convexity}{}
+\begin{theorem}{First-order sufficient condition for a global minimum under convexity}{first-order-sufficient-condition-for-a-global-minimum-under-convexity}
     For a convex function \( f \in \C^1 \) with \( \grad{f}{\xstar} = \zero \), then \( \xstar \) is a global minimum of \( f \).
 \end{theorem}
 
@@ -426,6 +426,35 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
     From the second-order condition for convexity~\pthmref{thm:second-order-condition-for-convexity}, we have that \( g \) is convex iff \( \hess{g}{\x} \succeq \zero, \; \forall \x \in D \), which is equivalent to the desired result.
 \end{proof}
 
+\section{Strongly convex quadratic minimisation problem}\label{sec:strongly-convex-quadratic-minimisation-problem}
+
+\paragraph{Problem:}
+Consider the unconstrained strongly convex quadratic minimisation problem
+\begin{align*}
+    \min_{\x \in \R^d} \func{f}{\x},
+    \quad \text{where }
+    \func{f}{\x} = \left( \half \qf{\x}{\Q} + \dotp{\h}{\x} + c \right),
+    \quad \Q \succ \zero, \text{i.e.}, \Q \in \mathbf{S}_d^{++},
+    \quad \h \in \R^d,
+    \quad c \in \R
+\end{align*}
+
+\paragraph{Solution:}
+Since \( \hess{f}{\x} = \Q \succ \zero \), \( f \) is strongly convex, and thereby has a unique global minimum which is also the unique local minimum~\pthmref{thm:first-order-sufficient-condition-for-a-global-minimum-under-convexity}.
+The gradient of \( f \) can be computed as \( \grad{f}{\x} = \Q \x + \h \), and thereby from the first-order necessary condition for local minimum~\pthmref{thm:first-order-necessary-condition-for-a-local-minimum}, the local minimum \( \xstar \) (that is also the global minimum) must necessarily satisfy
+\begin{equation*}
+    \grad{f}{\xstar} = \Q \xstar + \h = \zero
+    \quad \iff \quad
+    \boxed{
+        \xstar = -\Qinv \h
+    }
+\end{equation*}
+where \( \Qinv \) exists since \( \Q \succ \zero \).
+
+\paragraph{Challenge:}
+Not allowed to compute \( \Qinv \) explicitly.
+Matrix-vector products with \( \Q \) are allowed.
+
 \chapter{Algorithmic design}
 
 \section{Oracle}
@@ -519,34 +548,9 @@ Choose the step length \( \alpha_k \) in line search~\psecref{sec:line-search} b
     g_k(\alpha) \triangleq f\left( \x^k + \alpha \p^k \right)
 \end{equation*}
 
-\section{Convex quadratic minimisation problem}
+\section{Strongly convex quadratic minimisation problem}
 
-\paragraph{Problem:}
-Consider the unconstrained quadratic minimisation problem
-\begin{align*}
-    \min_{\x \in \R^d} \func{f}{\x},
-    \quad \text{where }
-    \func{f}{\x} = \left( \half \qf{\x}{\Q} + \dotp{\h}{\x} + c \right),
-    \quad \Q \succ \zero, \text{i.e.}, \Q \in \mathbf{S}_d^{++},
-    \quad \h \in \R^d,
-    \quad c \in \R
-\end{align*}
-
-\paragraph{Solution:}
-Since \( \hess{f}{\x} = \Q \succ \zero \), \( f \) is strongly convex, and thereby has a unique global minimum which is also the unique local minimum.
-The gradient of \( f \) can be computed as \( \grad{f}{\x} = \Q \x + \h \), and thereby from the first-order necessary condition for local minimum~\pthmref{thm:first-order-necessary-condition-for-a-local-minimum}, the local minimum \( \xstar \) must necessarily satisfy
-\begin{equation*}
-    \grad{f}{\xstar} = \Q \xstar + \h = \zero
-    \quad \iff \quad
-    \boxed{
-        \xstar = -\Qinv \h
-    }
-\end{equation*}
-where \( \Qinv \) exists since \( \Q \succ \zero \).
-
-\paragraph{Challenge:}
-Not allowed to compute \( \Qinv \) explicitly.
-Matrix-vector products with \( \Q \) are allowed.
+Consider the unconstrained strongly convex quadratic minimisation problem~\psecref{sec:strongly-convex-quadratic-minimisation-problem}.
 
 \paragraph{Algorithm design:}
 
@@ -1356,7 +1360,7 @@ Thereby, we have \( \hess{f}{\x^k} \succ \zero \) throughout the iterations, ens
 
 \begin{algorithm}[H]
     \caption{
-        Conjugate direction algorithm for unconstrained minimisation of a convex quadratic function \( f: \R^d \to \R \).
+        Conjugate direction algorithm for unconstrained minimisation of a strongly convex quadratic function \( f: \R^d \to \R \).
         \vspace{-1em}
         \begin{equation*}
             \func{f}{\x}
@@ -1533,7 +1537,7 @@ For a convex quadratic function \( f: \R^d \to \R \), the conjugate direction me
 \begin{algorithm}[H]\label{alg:preliminary-conjugate-gradient-method}
     \caption{
         {}~\citep{Nocedal2006}
-        (Preliminary) Conjugate gradient algorithm for unconstrained minimisation of a convex quadratic function \( f: \R^d \to \R \).
+        (Preliminary) Conjugate gradient algorithm for unconstrained minimisation of a strongly convex quadratic function \( f: \R^d \to \R \).
         \vspace{-1em}
         \begin{equation*}
             \func{f}{\x}
@@ -1906,7 +1910,7 @@ For a convex quadratic function \( f: \R^d \to \R \), the conjugate gradient met
 \begin{algorithm}[H]\label{alg:practical-conjugate-gradient-method}
     \caption{
         {}~\citep{Nocedal2006}
-        (Practical) Conjugate gradient algorithm for unconstrained minimisation of a convex quadratic function \( f: \R^d \to \R \).
+        (Practical) Conjugate gradient algorithm for unconstrained minimisation of a strongly convex quadratic function \( f: \R^d \to \R \).
         \vspace{-1em}
         \begin{equation*}
             \func{f}{\x}
