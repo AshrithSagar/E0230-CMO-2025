@@ -539,7 +539,7 @@ Choose the descent direction as
     \p^k = - \frac{\grad{f}{\x^k}}{\norm{\grad{f}{\x^k}}}
 \end{equation*}
 
-\chapter{Exact line search}
+\chapter{Exact line search}\label{sec:exact-line-search}
 
 Choose the step length \( \alpha_k \) in line search~\psecref{sec:line-search} by solving the one-dimensional optimisation problem
 \begin{equation*}
@@ -747,6 +747,10 @@ where \( \rho \in \rinterval{0}{1} \; \because \Q \succ \zero, \; \func{\lambda_
 
 \chapter{Inexact line search}
 
+The exact line search method~\psecref{sec:exact-line-search} may be computationally expensive or infeasible.
+
+Instead, we can choose the step length \( \alpha_k \) in line search such that it satisfies certain conditions that ensure sufficient decrease in the objective function value.
+
 \section{Sufficient decrease condition (Armijo condition)}
 
 \begin{definition}{Sufficient decrease condition (Armijo condition)~\citep{Nocedal2006}}{}
@@ -764,7 +768,7 @@ Note that for sufficiently small \( \alpha_k \), the sufficient decrease conditi
 \begin{align*}
     \func{f}{\x^k + \alpha_k \p^k}
     & =
-    \func{f}{\x^k} + \alpha_k \dotp{\grad{f}{\x^k}}{\p^k} + \smalloh{\alpha_k}
+    \func{f}{\x^k} + \alpha_k \dotp{\grad{f}{\x^k}}{\p^k} + \alpha_k \, \smalloh{\p^k}
     \\ & <
     \func{f}{\x^k} + c \alpha_k \dotp{\grad{f}{\x^k}}{\p^k},
     \qquad \because
