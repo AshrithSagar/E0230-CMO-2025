@@ -4,16 +4,8 @@ version = "0.1.0"
 description = "E0230-CMO-2025 Assignment-2"
 authors = [{ name = "Ashrith Sagar", email = "ashrithy@iisc.ac.in" }]
 readme = "../README.md"
-requires-python = ">=3.10"
-dependencies = [
-    "matplotlib>=3.10.5",
-    "numpy>=2.2.6",
-    "rich>=14.1.0",
-    "scipy>=1.15.3",
-    "tqdm>=4.67.1",
-]
+requires-python = "==3.10.*"
+dependencies = ["matplotlib>=3.10.5", "numpy>=2.2.6", "scipy>=1.15.3"]
 
 [dependency-groups]
-dev = [
-    "jupyter>=1.1.1",
-]
+dev = ["jupyter>=1.1.1"]
