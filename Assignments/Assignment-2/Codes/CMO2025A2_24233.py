@@ -135,24 +135,22 @@ def CG_SOLVE(
 
     for k in range(maxiter):
         Ap: Vector = np.asarray(A @ p)
-        alpha_k: float = float(r @ r) / float(p @ Ap)
-
+        r_normsq: float = float(r @ r)
+        alpha_k: float = r_normsq / float(p @ Ap)
         x += alpha_k * p
+
         r_new: Vector = r - alpha_k * Ap
+        beta_k: float = float(r_new @ r_new) / r_normsq
+        p = r_new + beta_k * p
 
         residual_norm: float = float(np.linalg.norm(r_new))
         residuals.append(residual_norm)
-        if log_directions and k + 1 < maxiter:
+        if log_directions:
             residual_list.append(r_new.copy())
+            directions.append(p.copy())
 
         if residual_norm < tol:
             break
-
-        beta_k: float = float(r_new @ r_new) / float(r @ r)
-        p = r_new + beta_k * p
-
-        if log_directions and k + 1 < maxiter:
-            directions.append(p.copy())
 
         r = r_new
 
