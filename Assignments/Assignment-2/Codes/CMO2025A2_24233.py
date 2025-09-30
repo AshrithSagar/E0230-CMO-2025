@@ -186,12 +186,30 @@ def GS_ORTHOGONALISE(P: List[Vector], Q: Matrix) -> List[Vector]:
     return D
 
 
+@overload
 def CG_SOLVE_FAST(
     A: Matrix | LinearOperator,
     b: Vector,
+    log_directions: Literal[False],
+    tol: float = ...,
+    maxiter: int = ...,
+) -> Tuple[Vector, int, List[float]]: ...
+@overload
+def CG_SOLVE_FAST(
+    A: Matrix | LinearOperator,
+    b: Vector,
+    log_directions: Literal[True],
+    tol: float = ...,
+    maxiter: int = ...,
+) -> Tuple[Vector, int, List[float], List[Vector], List[Vector]]: ...
+
+
+def CG_SOLVE_FAST(
+    A: Matrix | LinearOperator,
+    b: Vector,
+    log_directions: bool = False,
     tol: float = 1e-6,
     maxiter: int = 10_000,
-    log_directions: bool = False,
 ) -> Union[
     Tuple[Vector, int, List[float]],
     Tuple[Vector, int, List[float], List[Vector], List[Vector]],
@@ -202,10 +220,10 @@ def CG_SOLVE_FAST(
     Parameters:
         A (NDArray or LinearOperator): SPD matrix from oracle.
         b (NDArray): Right-hand side vector.
-        tol (float, optional): Convergence tolerance. Defaults to 1e-6.
-        maxiter (int, optional): Maximum number of iterations. Defaults to 10_000.
         log_directions (bool, optional): Boolean flag. Defaults to False.
             When set to True, the function must additionally return the first `m` residuals and search directions.
+        tol (float, optional): Convergence tolerance. Defaults to 1e-6.
+        maxiter (int, optional): Maximum number of iterations. Defaults to 10_000.
 
     Returns:
         x (NDArray): Approximate solution vector.
@@ -216,6 +234,48 @@ def CG_SOLVE_FAST(
         residual_list (list[NDArray]): First `m` residuals {r_0,...,r_(m-1)}.
         directions (list[NDArray]): First `m` CG search directions {p_0,...,p_(m-1)}.
     """
+
+    residuals: List[float] = []
+    residual_list: List[Vector] = []
+    directions: List[Vector] = []
+
+    # Initialise x0
+    k: int = 0
+    x: Vector = np.zeros_like(b)
+
+    r: Vector = b - np.asarray(A @ x)
+    p: Vector = r.copy()
+
+    residuals.append(float(np.linalg.norm(r)))
+    if log_directions:
+        residual_list.append(r.copy())
+        directions.append(p.copy())
+
+    for k in range(maxiter):
+        Ap: Vector = np.asarray(A @ p)
+        r_normsq: float = float(r @ r)
+        alpha_k: float = r_normsq / float(p @ Ap)
+        x += alpha_k * p
+
+        r_new: Vector = r - alpha_k * Ap
+        beta_k: float = float(r_new @ r_new) / r_normsq
+        p = r_new + beta_k * p
+
+        residual_norm: float = float(np.linalg.norm(r_new))
+        residuals.append(residual_norm)
+        if log_directions:
+            residual_list.append(r_new.copy())
+            directions.append(p.copy())
+
+        if residual_norm < tol:
+            break
+
+        r = r_new
+
+    if log_directions:
+        return x, k + 1, residuals, residual_list, directions
+    else:
+        return x, k + 1, residuals
 
 
 def NEWTON_SOLVE(
