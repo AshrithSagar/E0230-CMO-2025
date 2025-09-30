@@ -87,15 +87,15 @@ def CD_SOLVE(
 
 @overload
 def CG_SOLVE(
-    A: Matrix | LinearOperator,
+    A: Union[Matrix, LinearOperator],
     b: Vector,
-    log_directions: Literal[False],
+    log_directions: Literal[False] = ...,
     tol: float = ...,
     maxiter: int = ...,
 ) -> Tuple[Vector, int, List[float]]: ...
 @overload
 def CG_SOLVE(
-    A: Matrix | LinearOperator,
+    A: Union[Matrix, LinearOperator],
     b: Vector,
     log_directions: Literal[True],
     tol: float = ...,
@@ -104,7 +104,7 @@ def CG_SOLVE(
 
 
 def CG_SOLVE(
-    A: Matrix | LinearOperator,
+    A: Union[Matrix, LinearOperator],
     b: Vector,
     log_directions: bool = False,
     tol: float = 1e-6,
@@ -205,15 +205,15 @@ def GS_ORTHOGONALISE(P: List[Vector], Q: Matrix) -> List[Vector]:
 
 @overload
 def CG_SOLVE_FAST(
-    A: Matrix | LinearOperator,
+    A: Union[Matrix, LinearOperator],
     b: Vector,
-    log_directions: Literal[False],
+    log_directions: Literal[False] = ...,
     tol: float = ...,
     maxiter: int = ...,
 ) -> Tuple[Vector, int, List[float]]: ...
 @overload
 def CG_SOLVE_FAST(
-    A: Matrix | LinearOperator,
+    A: Union[Matrix, LinearOperator],
     b: Vector,
     log_directions: Literal[True],
     tol: float = ...,
@@ -222,7 +222,7 @@ def CG_SOLVE_FAST(
 
 
 def CG_SOLVE_FAST(
-    A: Matrix | LinearOperator,
+    A: Union[Matrix, LinearOperator],
     b: Vector,
     log_directions: bool = False,
     tol: float = 1e-6,
@@ -441,6 +441,9 @@ def question_1():
 
 def question_2():
     A, b = f5(SRN)
+
+    x1, iters1, res1 = CG_SOLVE(A, b)
+    x2, iters2, res2 = CG_SOLVE_FAST(A, b)
 
 
 def question_3():
