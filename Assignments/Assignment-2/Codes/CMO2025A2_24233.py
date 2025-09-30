@@ -22,6 +22,9 @@ def CD_SOLVE(
     """
     Conjugate Direction Method.
 
+    `f(x) = 0.5 x'Ax - b'x`\\
+    `x^* = argmin_x f(x) => A x^* = b`
+
     Parameters:
         A (NDArray): SPD matrix from oracle.
         b (NDArray): Right-hand side vector.
@@ -29,15 +32,40 @@ def CD_SOLVE(
         maxiter (int, optional): Maximum number of iterations. Defaults to 100.
 
     Returns:
-        x (NDArray): Final iterate after Conjugate Descent.
-        alphas (list[float]): List of step sizes `alpha_k`.
-        numerators (list[float]): List of values `-grad_f(x_k)' u_k`.
+        x (NDArray): Final iterate after Conjugate Descent.\\
+        alphas (list[float]): List of step sizes `alpha_k`.\\
+        numerators (list[float]): List of values `-grad_f(x_k)' u_k`.\\
         lambdas (list[float]): Corresponding eigenvalues `lambda_k`.
     """
 
     # Initialise x0
     if x0 is None:
         x0 = np.zeros_like(b)
+
+    alphas: list[float] = []
+    numerators: list[float] = []
+    lambdas: list[float] = []
+
+    x: Vector = x0.copy()
+    r: Vector = b - A @ x  # r_k = -grad_f(x_k)
+    for k in range(maxiter):
+        # Generate u_k = e_k for initial search direction
+        u = np.zeros_like(b)
+        u[k] = 1.0
+
+        Au: Vector = A @ u
+        numerator: float = float(r @ u)
+        lambda_k: float = float(u @ Au)
+        alpha_k: float = numerator / lambda_k
+
+        x += alpha_k * u
+        r -= alpha_k * Au
+
+        alphas.append(alpha_k)
+        numerators.append(-numerator)
+        lambdas.append(lambda_k)
+
+    return x, alphas, numerators, lambdas
 
 
 def CG_SOLVE(
