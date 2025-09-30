@@ -172,6 +172,19 @@ def GS_ORTHOGONALISE(P: List[Vector], Q: Matrix) -> List[Vector]:
         D (List[Vector]): The Q-orthogonalised vectors {d_0,...,d_(m-1)}.
     """
 
+    m: int = len(P)
+    D: List[Vector] = []
+
+    for i in range(m):
+        p_i: Vector = P[i].copy()
+        for j in range(i):
+            d_j: Vector = D[j]
+            coeff: float = float((p_i @ (Q @ d_j)) / (d_j @ (Q @ d_j)))
+            p_i -= coeff * d_j
+        D.append(p_i)
+
+    return D
+
 
 def CG_SOLVE_FAST(
     A: Matrix | LinearOperator,
