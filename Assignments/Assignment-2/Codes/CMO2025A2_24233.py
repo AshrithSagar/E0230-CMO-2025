@@ -1,7 +1,7 @@
 # ---------- CMO 2025 Assignment 2 ----------
 
 # ---------- Imports ----------
-from typing import Callable
+from typing import Callable, List, Literal, Tuple, Union, overload
 
 import numpy as np
 from numpy.typing import NDArray
@@ -18,7 +18,7 @@ def CD_SOLVE(
     b: Vector,
     x0: Vector | None = None,
     maxiter: int = 100,
-) -> tuple[Vector, list[float], list[float], list[float]]:
+) -> Tuple[Vector, List[float], List[float], List[float]]:
     """
     Conjugate Direction Method.
 
@@ -33,18 +33,18 @@ def CD_SOLVE(
 
     Returns:
         x (NDArray): Final iterate after Conjugate Descent.\\
-        alphas (list[float]): List of step sizes `alpha_k`.\\
-        numerators (list[float]): List of values `-grad_f(x_k)' u_k`.\\
-        lambdas (list[float]): Corresponding eigenvalues `lambda_k`.
+        alphas (List[float]): List of step sizes `alpha_k`.\\
+        numerators (List[float]): List of values `-grad_f(x_k)' u_k`.\\
+        lambdas (List[float]): Corresponding eigenvalues `lambda_k`.
     """
 
     # Initialise x0
     if x0 is None:
         x0 = np.zeros_like(b)
 
-    alphas: list[float] = []
-    numerators: list[float] = []
-    lambdas: list[float] = []
+    alphas: List[float] = []
+    numerators: List[float] = []
+    lambdas: List[float] = []
 
     x: Vector = x0.copy()
     r: Vector = b - A @ x  # r_k = -grad_f(x_k)
@@ -68,40 +68,58 @@ def CD_SOLVE(
     return x, alphas, numerators, lambdas
 
 
+@overload
 def CG_SOLVE(
     A: Matrix | LinearOperator,
     b: Vector,
+    log_directions: Literal[False],
+    tol: float = ...,
+    maxiter: int = ...,
+) -> Tuple[Vector, int, List[float]]: ...
+@overload
+def CG_SOLVE(
+    A: Matrix | LinearOperator,
+    b: Vector,
+    log_directions: Literal[True],
+    tol: float = ...,
+    maxiter: int = ...,
+) -> Tuple[Vector, int, List[float], List[Vector], List[Vector]]: ...
+
+
+def CG_SOLVE(
+    A: Matrix | LinearOperator,
+    b: Vector,
+    log_directions: bool = False,
     tol: float = 1e-6,
     maxiter: int = 10_000,
-    log_directions: bool = False,
-) -> (
-    tuple[Vector, int, list[float]]
-    | tuple[Vector, int, list[float], list[Vector], list[Vector]]
-):
+) -> Union[
+    Tuple[Vector, int, List[float]],
+    Tuple[Vector, int, List[float], List[Vector], List[Vector]],
+]:
     """
     Standard Conjugate Gradient Method.
 
     Parameters:
         A (NDArray or LinearOperator): SPD matrix from oracle.
         b (NDArray): Right-hand side vector.
-        tol (float, optional): Convergence tolerance. Defaults to 1e-6.
-        maxiter (int, optional): Maximum number of iterations. Defaults to 10_000.
         log_directions (bool, optional): Boolean flag. Defaults to False.
             When set to True, the function must additionally return the first `m` residuals and search directions.
+        tol (float, optional): Convergence tolerance. Defaults to 1e-6.
+        maxiter (int, optional): Maximum number of iterations. Defaults to 10_000.
 
     Returns:
         x (NDArray): Approximate solution vector.\\
         iters (int): Number of iterations taken.\\
-        residuals (list[float]): Residual norms `||r_k||_2` at each iteration.
+        residuals (List[float]): Residual norms `||r_k||_2` at each iteration.
 
         In addition, if log_directions is set to True, then also return\\
         residual_list (list[NDArray]): First `m` residuals {r_0,...,r_(m-1)}.\\
         directions (list[NDArray]): First `m` CG search directions {p_0,...,p_(m-1)}.
     """
 
-    residuals: list[float] = []
-    residual_list: list[Vector] = []
-    directions: list[Vector] = []
+    residuals: List[float] = []
+    residual_list: List[Vector] = []
+    directions: List[Vector] = []
 
     # Initialise x0
     k: int = 0
@@ -144,16 +162,16 @@ def CG_SOLVE(
         return x, k + 1, residuals
 
 
-def GS_ORTHOGONALISE(P: list[Vector], Q: Matrix) -> list[Vector]:
+def GS_ORTHOGONALISE(P: List[Vector], Q: Matrix) -> List[Vector]:
     """
     Gram-Schmidt orthogonalisation.
 
     Parameters:
-        P (list[Vector]): A list (or array) of vectors {p_0,...,p_(m-1)} to be orthogonalised.
+        P (List[Vector]): A list (or array) of vectors {p_0,...,p_(m-1)} to be orthogonalised.
         Q (NDArray): SPD matrix (here use `A` from oracle).
 
     Returns:
-        D (list[Vector]): The Q-orthogonalised vectors {d_0,...,d_(m-1)}.
+        D (List[Vector]): The Q-orthogonalised vectors {d_0,...,d_(m-1)}.
     """
 
 
@@ -163,10 +181,10 @@ def CG_SOLVE_FAST(
     tol: float = 1e-6,
     maxiter: int = 10_000,
     log_directions: bool = False,
-) -> (
-    tuple[Vector, int, list[float]]
-    | tuple[Vector, int, list[float], list[Vector], list[Vector]]
-):
+) -> Union[
+    Tuple[Vector, int, List[float]],
+    Tuple[Vector, int, List[float], List[Vector], List[Vector]],
+]:
     """
     Improved Conjugate Gradient Method.
 
@@ -181,7 +199,7 @@ def CG_SOLVE_FAST(
     Returns:
         x (NDArray): Approximate solution vector.
         iters (int): Number of iterations taken.
-        residuals (list[float]): Residual norms `||r_k||_2` at each iteration.
+        residuals (List[float]): Residual norms `||r_k||_2` at each iteration.
 
         In addition, if log_directions is set to True, then
         residual_list (list[NDArray]): First `m` residuals {r_0,...,r_(m-1)}.
@@ -195,7 +213,7 @@ def NEWTON_SOLVE(
     x0: Vector,
     tol: float = 1e-8,
     maxiter: int = 100,
-) -> tuple[Vector, int, list[Vector]]:
+) -> Tuple[Vector, int, List[Vector]]:
     """
     Newton's Method.
 
@@ -249,7 +267,7 @@ def PROJ_BOX(
     """
 
 
-def SEPARATE_HYPERPLANE() -> tuple[Vector, float, tuple[Vector, Vector]]:
+def SEPARATE_HYPERPLANE() -> Tuple[Vector, float, Tuple[Vector, Vector]]:
     """
     Separating hyperplane (geometry / classification).
 
@@ -260,7 +278,7 @@ def SEPARATE_HYPERPLANE() -> tuple[Vector, float, tuple[Vector, Vector]]:
     """
 
 
-def CHECK_FARKAS() -> tuple[bool]:
+def CHECK_FARKAS() -> Tuple[bool]:
     """
     Farkas lemma / infeasibility check.
 
