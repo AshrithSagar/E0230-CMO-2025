@@ -1,15 +1,31 @@
 # ---------- CMO 2025 Assignment 2 ----------
 
 # ---------- Imports ----------
+import os
+import sys
 from typing import Callable, List, Literal, Tuple, Union, overload
 
+import matplotlib.pyplot as plt
 import numpy as np
-from numpy.typing import NDArray
+import numpy.typing as npt
 from scipy.sparse.linalg import LinearOperator
 
+sys.path.insert(0, os.path.abspath("oracle_CMO2025A2_py310"))
+from oracle_CMO2025A2_py310.oracle_final_CMOA2 import f2, f5  # type: ignore
+
 # Type aliases
-type Vector = NDArray[np.float64]
-type Matrix = NDArray[np.float64]
+Vector = npt.NDArray[np.float64]
+Matrix = npt.NDArray[np.float64]
+
+# Oracle signatures
+f2: Callable[[int, bool], Tuple[Matrix, Vector]]
+f5: Callable[[int], Tuple[LinearOperator, Vector]]
+
+
+# ---------- Setup ----------
+SRN: int = 24233
+"""The 5-digit Student Registration Number (SRN) for the assignment."""
+assert isinstance(SRN, int) and len(str(SRN)) == 5, "SRN must be a 5-digit integer."
 
 
 # ---------- Implementations ----------
@@ -39,6 +55,7 @@ def CD_SOLVE(
     """
 
     # Initialise x0
+    dim: int = b.shape[0]
     if x0 is None:
         x0 = np.zeros_like(b)
 
@@ -48,7 +65,7 @@ def CD_SOLVE(
 
     x: Vector = x0.copy()
     r: Vector = b - A @ x  # r_k = -grad_f(x_k)
-    for k in range(maxiter):
+    for k in range(min(maxiter, dim)):
         # Generate u_k = e_k for initial search direction
         u = np.zeros_like(b)
         u[k] = 1.0
@@ -406,3 +423,41 @@ def rosenbrock_hess(x: Vector) -> Matrix:
     hess[1, 0] = hess[0, 1]  # Symmetric
     hess[1, 1] = 2 * b
     return hess
+
+
+# ---------- Questions ----------
+def question_1():
+    A, b = f2(SRN, True)
+
+    # Conjugate Descent
+    x_cd, alphas, nums, lambdas = CD_SOLVE(A, b)
+
+    # Conjugate Gradient with logging
+    x, iters, residuals, r_list, p_list = CG_SOLVE(A, b, log_directions=True)
+
+    # Gram-Schmidt orthogonalisation
+    D = GS_ORTHOGONALISE(p_list, A)
+
+
+def question_2():
+    A, b = f5(SRN)
+
+
+def question_3():
+    pass
+
+
+def question_4():
+    pass
+
+
+# ---------- Main ----------
+if __name__ == "__main__":
+    print(f"{SRN = }")
+
+    question_1()
+    question_2()
+    question_3()
+    question_4()
+
+    plt.show()
