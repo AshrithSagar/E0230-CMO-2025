@@ -427,16 +427,62 @@ def rosenbrock_hess(x: Vector) -> Matrix:
 
 # ---------- Questions ----------
 def question_1():
+    print("\nQuestion 1:")
     A, b = f2(SRN, True)
 
+    ## Q1 Part 1
     # Conjugate Descent
     x_cd, alphas, nums, lambdas = CD_SOLVE(A, b)
+    print("\nPart 1:")
+    print("(alpha_k, -grad_f(x_k)' @ u_k, lambda_k) for first 7 iterations:")
+    for k in range(8):
+        print(f"k={k}: ({alphas[k]:.6f}, {nums[k]:.6f}, {lambdas[k]:.6f})")
 
+    ## Q1 Part 2
     # Conjugate Gradient with logging
     x, iters, residuals, r_list, p_list = CG_SOLVE(A, b, log_directions=True)
+    print("\nPart 2:")
+    print(f"Number of directions computed: m = {iters + 1}")
+    print("CG search directions:")
+    for i, pk in enumerate(p_list):
+        print(f"p_{i} = {pk}")
 
     # Gram-Schmidt orthogonalisation
     D = GS_ORTHOGONALISE(p_list, A)
+    print("Gram-Schmidt Q-orthogonalised vectors:")
+    for i, dk in enumerate(D):
+        print(f"d_{i} = {dk}")
+
+    ## Q1 Part 3
+    # Constructing Matrix M
+    D_tilde: List[Vector] = []
+    for k in range(len(D)):
+        dk: Vector = D[k]
+        dk_tilde: Vector = dk / np.sqrt(dk @ (A @ dk))
+        D_tilde.append(dk_tilde)
+    M = np.zeros((len(D_tilde), len(D_tilde)))
+    for i in range(len(D_tilde)):
+        for j in range(len(D_tilde)):
+            di_tilde = D_tilde[i]
+            dj_tilde = D_tilde[j]
+            M[i, j] = float(di_tilde @ (A @ dj_tilde))
+    print("\nPart 3:")
+    print(f"M = {M}")
+    print(f"Eigenvalues of M: {np.linalg.eigvals(M)}")
+    print(f"M close to I: {np.allclose(M, np.eye(len(D_tilde)), atol=1e-15)}")
+
+    ## Q1 Part 4
+    # `A`-inner-product cosine similarities
+    cos_theta_list: List[float] = []
+    for k in range(len(p_list)):
+        pk: Vector = p_list[k]
+        dk: Vector = D[k]
+        q_cosine: float = float(
+            (pk @ (A @ dk)) / (np.sqrt(pk @ (A @ pk)) * np.sqrt(dk @ (A @ dk)))
+        )
+        cos_theta_list.append(q_cosine)
+    print("\nPart 4:")
+    print(f"List of cosine similarities: {cos_theta_list}")
 
 
 def question_2():
