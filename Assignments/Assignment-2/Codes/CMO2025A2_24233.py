@@ -8,6 +8,7 @@ from typing import Callable, List, Literal, Tuple, Union, overload
 import matplotlib.pyplot as plt
 import numpy as np
 import numpy.typing as npt
+from matplotlib.colors import LogNorm
 from scipy.sparse.linalg import LinearOperator
 
 sys.path.insert(0, os.path.abspath("oracle_CMO2025A2_py310"))
@@ -243,12 +244,12 @@ def CG_SOLVE_FAST(
         maxiter (int, optional): Maximum number of iterations. Defaults to 10_000.
 
     Returns:
-        x (NDArray): Approximate solution vector.
-        iters (int): Number of iterations taken.
+        x (NDArray): Approximate solution vector.\\
+        iters (int): Number of iterations taken.\\
         residuals (List[float]): Residual norms `||r_k||_2` at each iteration.
 
-        In addition, if log_directions is set to True, then
-        residual_list (list[NDArray]): First `m` residuals {r_0,...,r_(m-1)}.
+        In addition, if log_directions is set to True, then also return\\
+        residual_list (list[NDArray]): First `m` residuals {r_0,...,r_(m-1)}.\\
         directions (list[NDArray]): First `m` CG search directions {p_0,...,p_(m-1)}.
     """
 
@@ -317,6 +318,29 @@ def NEWTON_SOLVE(
         iters (int): Number of iterations performed.
         trajectory (list[NDArray]): List of iterates (for plotting Newton paths).
     """
+
+    x: Vector = x0.astype(np.float64).copy()
+    trajectory: List[Vector] = [x.copy()]
+
+    k: int = 0
+    for k in range(maxiter):
+        grad: Vector = f_grad(x)
+        hess: Matrix = f_hess(x)
+
+        try:
+            hess_inv: Matrix = np.asarray(np.linalg.inv(hess), dtype=np.float64)
+            delta_x: Vector = np.asarray(-hess_inv @ grad, dtype=np.float64)
+        except np.linalg.LinAlgError:
+            print("Hessian is singular or not invertible.")
+            break
+
+        x += delta_x
+        trajectory.append(x.copy())
+
+        if np.linalg.norm(grad) < tol:
+            break
+
+    return x, k + 1, trajectory
 
 
 def PROJ_CIRCLE(
@@ -497,7 +521,7 @@ def question_2():
     plt.figure()
     plt.semilogy(range(len(res1)), res1, marker="o")
     plt.title("Conjugate Gradient Residual Norms")
-    plt.xlabel("Iteration k")
+    plt.xlabel(r"Iteration $k$")
     plt.ylabel(r"Residual Norm $\|r_k\|_2$")
     plt.grid(True)
 
@@ -510,14 +534,65 @@ def question_2():
     plt.semilogy(range(len(res1)), res1, marker="o", label="CG_SOLVE")
     plt.semilogy(range(len(res2)), res2, marker="x", label="CG_SOLVE_FAST")
     plt.title("Conjugate Gradient vs Improved Conjugate Gradient Residual Norms")
-    plt.xlabel("Iteration k")
+    plt.xlabel(r"Iteration $k$")
     plt.ylabel(r"Residual Norm $\|r_k\|_2$")
     plt.legend()
     plt.grid(True)
 
 
 def question_3():
-    pass
+    print("\nQuestion 3:")
+
+    ## Q3 Part 1
+    x0s: List[Vector] = [
+        np.array([2, 2]),
+        np.array([5, 5]),
+        np.array([-10, -4]),
+        np.array([50, 60]),
+    ]
+    xs: List[Vector] = []
+    trajectories: List[List[Vector]] = []
+    for x0 in x0s:
+        x, iters, trajectory = NEWTON_SOLVE(
+            f_grad=rosenbrock_grad, f_hess=rosenbrock_hess, x0=x0
+        )
+        xs.append(x)
+        trajectories.append(trajectory)
+
+    # Plot of error `||x_k - x^*||_2` vs iteration `k` for each starting point
+    plt.figure()
+    x_star = np.array([1.0, 1.0])
+    for i, trajectory in enumerate(trajectories):
+        errors = [np.linalg.norm(xk - x_star) for xk in trajectory]
+        plt.semilogy(range(len(errors)), errors, marker="o", label=f"x0={x0s[i]}")
+    plt.title("Newton's Method Error Norms")
+    plt.xlabel(r"Iteration $k$")
+    plt.ylabel(r"Error Norm $\|x_k - x^*\|_2$")
+    plt.legend()
+    plt.grid(True)
+    print("Plot generated for Newton's Method error norms.")
+
+    # Four separate contour plots with Newton paths
+    x_min, x_max = -10, 10
+    y_min, y_max = -10, 10
+    x_vals = np.linspace(x_min, x_max, 400)
+    y_vals = np.linspace(y_min, y_max, 400)
+    X, Y = np.meshgrid(x_vals, y_vals)
+    Z = rosenbrock(np.array([X, Y]))
+    levels = np.logspace(-1, 3, 100)
+    for i, trajectory in enumerate(trajectories):
+        plt.figure()
+        plt.contour(X, Y, Z, levels=levels, norm=LogNorm(), cmap="jet")
+        traj_array = np.array(trajectory)
+        plt.plot(traj_array[:, 0], traj_array[:, 1], marker="o", color="black")
+        plt.plot(1, 1, marker="*", color="red", markersize=15)  # Global minimum
+        plt.title(f"Newton's Method Path from x0={x0s[i]}")
+        plt.xlabel(r"$x_1$")
+        plt.ylabel(r"$x_2$")
+        plt.xlim(x_min, x_max)
+        plt.ylim(y_min, y_max)
+        plt.grid(True)
+        print(f"Plot generated for Newton's Method path for x0={x0s[i]}.")
 
 
 def question_4():
