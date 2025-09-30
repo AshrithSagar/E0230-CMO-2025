@@ -486,10 +486,34 @@ def question_1():
 
 
 def question_2():
+    print("\nQuestion 2:")
     A, b = f5(SRN)
 
+    ## Q2 Part 1
     x1, iters1, res1 = CG_SOLVE(A, b)
+    print(f"CG_SOLVE took {iters1} iterations.")
+
+    # Plot of residual norms `||r_k||_2` vs iteration `k`
+    plt.figure()
+    plt.semilogy(range(len(res1)), res1, marker="o")
+    plt.title("Conjugate Gradient Residual Norms")
+    plt.xlabel("Iteration k")
+    plt.ylabel(r"Residual Norm $\|r_k\|_2$")
+    plt.grid(True)
+
+    ## Q2 Part 2
     x2, iters2, res2 = CG_SOLVE_FAST(A, b)
+    print(f"CG_SOLVE_FAST took {iters2} iterations.")
+
+    # Comparision plot of residual norms `||r_k||_2` vs iteration `k` between CG_SOLVE and CG_SOLVE_FAST
+    plt.figure()
+    plt.semilogy(range(len(res1)), res1, marker="o", label="CG_SOLVE")
+    plt.semilogy(range(len(res2)), res2, marker="x", label="CG_SOLVE_FAST")
+    plt.title("Conjugate Gradient vs Improved Conjugate Gradient Residual Norms")
+    plt.xlabel("Iteration k")
+    plt.ylabel(r"Residual Norm $\|r_k\|_2$")
+    plt.legend()
+    plt.grid(True)
 
 
 def question_3():
