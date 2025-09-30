@@ -280,7 +280,7 @@ def CG_SOLVE_FAST(
 
 def NEWTON_SOLVE(
     f_grad: Callable[[Vector], Vector],
-    f_hess: Callable[[Vector], Vector],
+    f_hess: Callable[[Vector], Matrix],
     x0: Vector,
     tol: float = 1e-8,
     maxiter: int = 100,
@@ -362,3 +362,47 @@ def CHECK_FARKAS() -> Tuple[bool]:
         Diagnostic info (objective value, solver status).
     """
     pass
+
+
+def rosenbrock(x: Vector) -> float:
+    """
+    The Rosenbrock function.\\
+    `f(x) = (a - x_1)^2 + b (x_2 - x_1^2)^2`
+
+    Parameters:
+        x (NDArray): Input point (NumPy array of length 2).
+
+    Returns:
+        f (float): Function value.
+    """
+    a, b = 1, 100
+    return (a - x[0]) ** 2 + b * (x[1] - x[0] ** 2) ** 2
+
+
+def rosenbrock_grad(x: Vector) -> Vector:
+    """
+    Gradient of the Rosenbrock function.\\
+    `grad_f(x) = [  -2(a - x_1) - 4b x_1(x_2 - x_1^2),   2b(x_2 - x_1^2) ]'`
+    """
+    a, b = 1, 100
+    grad = np.zeros_like(x)
+    grad[0] = -2 * (a - x[0]) - 4 * b * x[0] * (x[1] - x[0] ** 2)
+    grad[1] = 2 * b * (x[1] - x[0] ** 2)
+    return grad
+
+
+def rosenbrock_hess(x: Vector) -> Matrix:
+    """
+    Hessian of the Rosenbrock function.\\
+    `hess_f(x) = [
+        [   2 - 4b(x_2 - 3x_1^2),  -4b x_1 ],
+        [   -4b x_1,              2b      ]
+    ]`
+    """
+    _a, b = 1, 100
+    hess = np.zeros((2, 2))
+    hess[0, 0] = 2 - 4 * b * (x[1] - 3 * x[0] ** 2)
+    hess[0, 1] = -4 * b * x[0]
+    hess[1, 0] = hess[0, 1]  # Symmetric
+    hess[1, 1] = 2 * b
+    return hess
