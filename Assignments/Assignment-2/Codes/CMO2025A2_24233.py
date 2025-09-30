@@ -90,14 +90,58 @@ def CG_SOLVE(
             When set to True, the function must additionally return the first `m` residuals and search directions.
 
     Returns:
-        x (NDArray): Approximate solution vector.
-        iters (int): Number of iterations taken.
+        x (NDArray): Approximate solution vector.\\
+        iters (int): Number of iterations taken.\\
         residuals (list[float]): Residual norms `||r_k||_2` at each iteration.
 
-        In addition, if log_directions is set to True, then
-        residual_list (list[NDArray]): First `m` residuals {r_0,...,r_(m-1)}.
+        In addition, if log_directions is set to True, then also return\\
+        residual_list (list[NDArray]): First `m` residuals {r_0,...,r_(m-1)}.\\
         directions (list[NDArray]): First `m` CG search directions {p_0,...,p_(m-1)}.
     """
+
+    residuals: list[float] = []
+    residual_list: list[Vector] = []
+    directions: list[Vector] = []
+
+    # Initialise x0
+    k: int = 0
+    x: Vector = np.zeros_like(b)
+
+    r: Vector = b - np.asarray(A @ x)
+    p: Vector = r.copy()
+
+    residuals.append(float(np.linalg.norm(r)))
+    if log_directions:
+        residual_list.append(r.copy())
+        directions.append(p.copy())
+
+    for k in range(maxiter):
+        Ap: Vector = np.asarray(A @ p)
+        alpha_k: float = float(r @ r) / float(p @ Ap)
+
+        x += alpha_k * p
+        r_new: Vector = r - alpha_k * Ap
+
+        residual_norm: float = float(np.linalg.norm(r_new))
+        residuals.append(residual_norm)
+        if log_directions and k + 1 < maxiter:
+            residual_list.append(r_new.copy())
+
+        if residual_norm < tol:
+            break
+
+        beta_k: float = float(r_new @ r_new) / float(r @ r)
+        p = r_new + beta_k * p
+
+        if log_directions and k + 1 < maxiter:
+            directions.append(p.copy())
+
+        r = r_new
+
+    if log_directions:
+        return x, k + 1, residuals, residual_list, directions
+    else:
+        return x, k + 1, residuals
 
 
 def GS_ORTHOGONALISE(P: list[Vector], Q: Matrix) -> list[Vector]:
