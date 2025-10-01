@@ -8,7 +8,9 @@ from typing import Callable, List, Literal, Tuple, Union, overload
 import matplotlib.pyplot as plt
 import numpy as np
 import numpy.typing as npt
+from matplotlib.axes import Axes
 from matplotlib.colors import LogNorm
+from matplotlib.patches import Circle, Rectangle
 from scipy.sparse.linalg import LinearOperator
 
 sys.path.insert(0, os.path.abspath("oracle_CMO2025A2_py310"))
@@ -360,11 +362,19 @@ def PROJ_CIRCLE(
         y_proj (NDArray): Projection of `y` on the closed Euclidean ball (NumPy array of length 2).
     """
 
+    direction: Vector = y - center
+    distance: float = float(np.linalg.norm(direction))
+    if distance <= radius:
+        return y.copy()
+    else:
+        y_proj: Vector = center + (radius / distance) * direction
+        return y_proj
+
 
 def PROJ_BOX(
     y: Vector,
-    center: Vector = np.array([0.0, 0.0]),
-    radius: float = 5.0,
+    low: Vector = np.array([-3.0, 0.0]),
+    high: Vector = np.array([3.0, 4.0]),
 ) -> Vector:
     """
     Projection onto box.
@@ -375,8 +385,11 @@ def PROJ_BOX(
         high (NDArray, optional): Upper corner of box. Defaults to np.array([3.0, 4.0]).
 
     Returns:
-        y_proj (NDArray): Projection of `y` on the closed Euclidean ball (NumPy array of length 2).
+        y_proj (NDArray): Projection of `y` on the box (NumPy array of length 2).
     """
+
+    y_proj: Vector = np.minimum(np.maximum(y, low), high)
+    return y_proj
 
 
 def SEPARATE_HYPERPLANE() -> Tuple[Vector, float, Tuple[Vector, Vector]]:
@@ -596,7 +609,34 @@ def question_3():
 
 
 def question_4():
-    pass
+    print("\nQuestion 4:")
+
+    ## Q4 Part 1
+    points: List[Vector] = [
+        np.array([6.0, 6.0]),
+        np.array([2.0, 3.0]),
+        np.array([-4.0, -1.0]),
+    ]
+
+    ax: Axes
+    fig, ax = plt.subplots()
+    circle = Circle((0, 0), 5, color="lightblue", alpha=0.5)
+    ax.add_artist(circle)
+    ax.add_patch(Rectangle((-3, 0), 6, 4, color="orange", alpha=0.5))
+    ax.set_xlim(-7, 7)
+    ax.set_ylim(-7, 7)
+    ax.set_aspect("equal")
+    ax.set_title(r"Projections onto Circle ($C_1$) and Box ($C_2$)")
+    for p in points:
+        for proj in [PROJ_CIRCLE(p), PROJ_BOX(p)]:
+            ax.plot(*p, "ro")
+            ax.plot(*proj, "go")
+            ax.arrow(*p, *(proj - p), head_width=0.2, color="gray", linestyle="--")
+    ax.legend([r"Circle ($C_1$)", r"Box ($C_2$)", "Original point", "Projected point"])
+    ax.set_xlabel(r"$x_1$")
+    ax.set_ylabel(r"$x_2$")
+    plt.grid(True)
+    print("Plot generated for projections onto circle and box.")
 
 
 # ---------- Main ----------
