@@ -3,8 +3,9 @@
 # ---------- Imports ----------
 import os
 import sys
-from typing import Callable, List, Literal, Tuple, Union, overload
+from typing import Callable, List, Literal, Optional, Tuple, Union, overload
 
+import cvxpy as cp
 import matplotlib.pyplot as plt
 import numpy as np
 import numpy.typing as npt
@@ -416,7 +417,7 @@ def SEPARATE_HYPERPLANE() -> Tuple[Vector, float, Tuple[Vector, Vector]]:
     return n, c, (a_closest, b_closest)
 
 
-def CHECK_FARKAS() -> Tuple[bool]:
+def CHECK_FARKAS() -> Tuple[bool, Optional[Vector], dict]:
     """
     Farkas lemma / infeasibility check.
 
@@ -428,7 +429,38 @@ def CHECK_FARKAS() -> Tuple[bool]:
 
         Diagnostic info (objective value, solver status).
     """
-    pass
+    A: Matrix = np.array([[1, 1], [-1, 0], [0, -1]], dtype=np.float64)
+    b: Vector = np.array([-1, 0, 0], dtype=np.float64)
+
+    # Primal feasibility problem
+    x = cp.Variable(2)
+    constraints: List[cp.Constraint] = [A[i] @ x <= b[i] for i in range(len(b))]
+    obj = cp.Minimize(0)
+    prob = cp.Problem(obj, constraints)
+    prob.solve()
+    if prob.status in ["infeasible", "infeasible_inaccurate"]:
+        # Extract dual multipliers
+        y_vals: List[float] = []
+        for c in constraints:
+            if c.dual_value is not None:
+                val = c.dual_value
+                if isinstance(val, (np.ndarray, list)):
+                    val = val[0]
+                if val is not None:
+                    y_vals.append(float(val))
+                else:
+                    y_vals.append(0.0)  # Fallback
+            else:
+                y_vals.append(0.0)  # Fallback
+        y: Vector = np.array(y_vals, dtype=np.float64)
+        y: Vector = np.maximum(y, 0)  # Ensure nonnegativity
+        # Normalize certificate
+        if np.linalg.norm(A.T @ y) < 1e-6 and b @ y < -1e-6:
+            return False, y, {"status": prob.status, "bTy": b @ y, "ATy": A.T @ y}
+        else:
+            return False, None, {"status": prob.status, "dual_failed": True}
+    else:
+        return True, None, {"status": prob.status}
 
 
 def rosenbrock(x: Vector) -> float:
@@ -651,6 +683,7 @@ def question_4():
     ax.set_ylabel(r"$x_2$")
     plt.grid(True)
     plt.tight_layout()
+    print("\nPart 1:")
     print("Plot generated for projections onto circle and box.")
 
     ## Q4 Part 2
@@ -690,7 +723,16 @@ def question_4():
     plt.xlabel(r"$x_1$")
     plt.ylabel(r"$x_2$")
     plt.tight_layout()
+    print("\nPart 2:")
     print("Plot generated for separating hyperplane between two groups.")
+
+    ## Q4 Part 3
+    # Farkas lemma in a supply-chain model
+    print("\nPart 3:")
+    feasible, y_cert, info = CHECK_FARKAS()
+    print("Is feasible:", feasible)
+    print("Certificate y:", y_cert)
+    print("Diagnostics:", info)
 
 
 # ---------- Main ----------
