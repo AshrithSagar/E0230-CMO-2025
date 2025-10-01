@@ -262,10 +262,30 @@ def CG_SOLVE_FAST(
 
     # Initialise x0
     k: int = 0
+    dim: int = b.shape[0]
     x: Vector = np.zeros_like(b)
 
+    # Preconditioner M_inv: ~diag(A)^(-1/2)
+    if isinstance(A, np.ndarray):
+        diag_A: Vector = np.diag(A)
+    else:
+        diag_A: Vector = np.empty(dim)
+        for i in range(dim):
+            e_i = np.zeros(dim)
+            e_i[i] = 1.0
+            diag_A[i] = np.asarray(A @ e_i)[i]
+    diag_A: Vector = np.maximum(diag_A, 1e-15)
+    M_inv_diag = 1.0 / np.sqrt(diag_A)
+    M_inv = LinearOperator(
+        shape=(dim, dim),
+        dtype=np.float64,
+        matvec=lambda v: M_inv_diag * v,  # type: ignore
+    )
+
     r: Vector = b - np.asarray(A @ x)
-    p: Vector = r.copy()
+    z: Vector = np.asarray(M_inv @ r)
+    rTz: float = float(r @ z)
+    p: Vector = z.copy()
 
     residuals.append(float(np.linalg.norm(r)))
     if log_directions:
@@ -274,24 +294,23 @@ def CG_SOLVE_FAST(
 
     for k in range(maxiter):
         Ap: Vector = np.asarray(A @ p)
-        r_normsq: float = float(r @ r)
-        alpha_k: float = r_normsq / float(p @ Ap)
-        x += alpha_k * p
+        alpha_k: float = rTz / float(p @ Ap)
+        rTz_prev: float = rTz
+        x: Vector = x + alpha_k * p
+        r: Vector = r - alpha_k * Ap
 
-        r_new: Vector = r - alpha_k * Ap
-        beta_k: float = float(r_new @ r_new) / r_normsq
-        p = r_new + beta_k * p
-
-        residual_norm: float = float(np.linalg.norm(r_new))
-        residuals.append(residual_norm)
+        r_norm: float = float(np.linalg.norm(r))
+        residuals.append(r_norm)
         if log_directions:
-            residual_list.append(r_new.copy())
+            residual_list.append(r.copy())
             directions.append(p.copy())
-
-        if residual_norm < tol:
+        if r_norm < tol:
             break
 
-        r = r_new
+        z: Vector = np.asarray(M_inv @ r)
+        rTz: float = float(r @ z)
+        beta_k: float = rTz / rTz_prev
+        p: Vector = z + beta_k * p
 
     if log_directions:
         return x, k + 1, residuals, residual_list, directions
@@ -594,7 +613,7 @@ def question_2():
     # Comparision plot of residual norms `||r_k||_2` vs iteration `k` between CG_SOLVE and CG_SOLVE_FAST
     plt.figure()
     plt.semilogy(range(len(res1)), res1, marker="o", label="CG_SOLVE")
-    plt.semilogy(range(len(res2)), res2, marker="x", label="CG_SOLVE_FAST")
+    plt.semilogy(range(len(res2)), res2, marker="o", label="CG_SOLVE_FAST")
     plt.title("Conjugate Gradient vs Improved Conjugate Gradient Residual Norms")
     plt.xlabel(r"Iteration $k$")
     plt.ylabel(r"Residual Norm $\|r_k\|_2$")
