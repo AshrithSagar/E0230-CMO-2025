@@ -350,11 +350,10 @@ def NEWTON_SOLVE(
         hess: Matrix = f_hess(x)
 
         try:
-            hess_inv: Matrix = np.asarray(np.linalg.inv(hess), dtype=np.float64)
-            delta_x: Vector = np.asarray(-hess_inv @ grad, dtype=np.float64)
-        except np.linalg.LinAlgError:
-            print("Hessian is singular or not invertible.")
-            break
+            delta_x: Vector = np.asarray(np.linalg.solve(hess, -grad), dtype=np.float64)
+        except np.linalg.LinAlgError:  # Fallback
+            print("[WARN] Hessian is singular or not invertible. Using pseudo-inverse.")
+            delta_x: Vector = np.asarray(-np.linalg.pinv(hess) @ grad, dtype=np.float64)
 
         x += delta_x
         trajectory.append(x.copy())
