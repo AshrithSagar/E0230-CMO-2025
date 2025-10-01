@@ -463,6 +463,7 @@ def CHECK_FARKAS() -> Tuple[bool, Optional[Vector], dict]:
         return True, None, {"status": prob.status}
 
 
+# ---------- Helpers ----------
 def rosenbrock(x: Vector) -> float:
     """
     The Rosenbrock function.\\
@@ -509,34 +510,35 @@ def rosenbrock_hess(x: Vector) -> Matrix:
 
 # ---------- Questions ----------
 def question_1():
-    print("\nQuestion 1:")
+    print("\n\033[1m\033[4mQuestion-1\033[0m:")
     A, b = f2(SRN, True)
 
     ## Q1 Part 1
     # Conjugate Descent
+    print("\033[4mPart-1\033[0m:")
     x_cd, alphas, nums, lambdas = CD_SOLVE(A, b)
-    print("\nPart 1:")
     print("(alpha_k, -grad_f(x_k)' @ u_k, lambda_k) for first 7 iterations:")
     for k in range(8):
         print(f"k={k}: ({alphas[k]:.6f}, {nums[k]:.6f}, {lambdas[k]:.6f})")
 
     ## Q1 Part 2
     # Conjugate Gradient with logging
+    print("\n\033[4mPart-2\033[0m:")
     x, iters, residuals, r_list, p_list = CG_SOLVE(A, b, log_directions=True)
-    print("\nPart 2:")
     print(f"Number of directions computed: m = {iters + 1}")
-    print("CG search directions:")
+    print("\nCG search directions:")
     for i, pk in enumerate(p_list):
         print(f"p_{i} = {pk}")
 
     # Gram-Schmidt orthogonalisation
     D = GS_ORTHOGONALISE(p_list, A)
-    print("Gram-Schmidt Q-orthogonalised vectors:")
+    print("\nGram-Schmidt Q-orthogonalised vectors:")
     for i, dk in enumerate(D):
         print(f"d_{i} = {dk}")
 
     ## Q1 Part 3
     # Constructing Matrix M
+    print("\n\033[4mPart-3\033[0m:")
     D_tilde: List[Vector] = []
     for k in range(len(D)):
         dk: Vector = D[k]
@@ -548,13 +550,13 @@ def question_1():
             di_tilde = D_tilde[i]
             dj_tilde = D_tilde[j]
             M[i, j] = float(di_tilde @ (A @ dj_tilde))
-    print("\nPart 3:")
     print(f"M = {M}")
     print(f"Eigenvalues of M: {np.linalg.eigvals(M)}")
     print(f"M close to I: {np.allclose(M, np.eye(len(D_tilde)), atol=1e-15)}")
 
     ## Q1 Part 4
     # `A`-inner-product cosine similarities
+    print("\n\033[4mPart-4\033[0m:")
     cos_theta_list: List[float] = []
     for k in range(len(p_list)):
         pk: Vector = p_list[k]
@@ -563,15 +565,15 @@ def question_1():
             (pk @ (A @ dk)) / (np.sqrt(pk @ (A @ pk)) * np.sqrt(dk @ (A @ dk)))
         )
         cos_theta_list.append(q_cosine)
-    print("\nPart 4:")
     print(f"List of cosine similarities: {cos_theta_list}")
 
 
 def question_2():
-    print("\nQuestion 2:")
+    print("\n\033[1m\033[4mQuestion-2\033[0m:")
     A, b = f5(SRN)
 
     ## Q2 Part 1
+    print("\033[4mPart-1\033[0m:")
     x1, iters1, res1 = CG_SOLVE(A, b)
     print(f"CG_SOLVE took {iters1} iterations.")
 
@@ -582,8 +584,10 @@ def question_2():
     plt.xlabel(r"Iteration $k$")
     plt.ylabel(r"Residual Norm $\|r_k\|_2$")
     plt.grid(True)
+    print("Plot generated for Conjugate Gradient residual norms.")
 
     ## Q2 Part 2
+    print("\n\033[4mPart-2\033[0m:")
     x2, iters2, res2 = CG_SOLVE_FAST(A, b)
     print(f"CG_SOLVE_FAST took {iters2} iterations.")
 
@@ -596,12 +600,14 @@ def question_2():
     plt.ylabel(r"Residual Norm $\|r_k\|_2$")
     plt.legend()
     plt.grid(True)
+    print("Plot generated for Improved Conjugate Gradient residual norms.")
 
 
 def question_3():
-    print("\nQuestion 3:")
+    print("\n\033[1m\033[4mQuestion-3\033[0m:")
 
     ## Q3 Part 1
+    print("\033[4mPart-1\033[0m:")
     x0s: List[Vector] = [
         np.array([2, 2]),
         np.array([5, 5]),
@@ -628,7 +634,7 @@ def question_3():
     plt.ylabel(r"Error Norm $\|x_k - x^*\|_2$")
     plt.legend()
     plt.grid(True)
-    print("Plot generated for Newton's Method error norms.")
+    print("Plot generated for Newton's Method error norms.\n")
 
     # Four separate contour plots with Newton paths
     x_min, x_max = -10, 10
@@ -654,10 +660,11 @@ def question_3():
 
 
 def question_4():
-    print("\nQuestion 4:")
+    print("\n\033[1m\033[4mQuestion-4\033[0m:")
 
     ## Q4 Part 1
     # Projections in a navigation problem
+    print("\033[4mPart-1\033[0m:")
     points: List[Vector] = [
         np.array([6.0, 6.0]),
         np.array([2.0, 3.0]),
@@ -683,11 +690,11 @@ def question_4():
     ax.set_ylabel(r"$x_2$")
     plt.grid(True)
     plt.tight_layout()
-    print("\nPart 1:")
     print("Plot generated for projections onto circle and box.")
 
     ## Q4 Part 2
     # Separating hyperplane in a classification story
+    print("\n\033[4mPart-2\033[0m:")
     n, c, (a_closest, b_closest) = SEPARATE_HYPERPLANE()
     fig, ax = plt.subplots(figsize=(12, 6))
 
@@ -723,12 +730,11 @@ def question_4():
     plt.xlabel(r"$x_1$")
     plt.ylabel(r"$x_2$")
     plt.tight_layout()
-    print("\nPart 2:")
     print("Plot generated for separating hyperplane between two groups.")
 
     ## Q4 Part 3
     # Farkas lemma in a supply-chain model
-    print("\nPart 3:")
+    print("\n\033[4mPart-3\033[0m:")
     feasible, y_cert, info = CHECK_FARKAS()
     print("Is feasible:", feasible)
     print("Certificate y:", y_cert)
