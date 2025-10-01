@@ -21,15 +21,68 @@
 
 \usepackage[preprint]{jmlr2e}
 
-\usepackage{amsmath, booktabs, enumitem}
+\usepackage{amsmath, cancel, mathcommand, mathtools}
+\usepackage{booktabs, enumitem, microtype, xparse}
 \usepackage[linesnumbered,ruled,vlined]{algorithm2e}
 
 % Definitions of handy macros can go here
 
-\newcommand{\dataset}{{\cal D}}
-\newcommand{\fracpartial}[2]{\frac{\partial #1}{\partial  #2}}
+\newcommand{\dataset}{{\cal{D}}}
+\newcommand{\fracpartial}[2]{\frac{\partial#1}{\partial#2}}
 
-\newcommand{\argmin}{\mathop{\mathrm{argmin}}}
+\newcommand{\R}{{\mathbb{R}}}
+
+\newcommand{\set}[1]{{\left\{#1\right\}}}
+\newcommand{\given}{\;\middle|\;}
+\newcommand\spanset[1]{{\mathrm{span}\set{#1}}}
+
+\NewDocumentCommand{\pbrac}{om}{{\IfNoValueTF{#1}{\left\lparen#2\right\rparen}{#1\lparen#2#1\rparen}}}
+\NewDocumentCommand{\bbrac}{om}{{\IfNoValueTF{#1}{\left\lbrack#2\right\rbrack}{#1\lbrack#2#1\rbrack}}}
+
+\NewDocumentCommand{\abs}{om}{{\IfNoValueTF{#1}{\left\lvert#2\right\rvert}{#1\lvert#2#1\rvert}}}
+\NewDocumentCommand{\norm}{om}{{\IfNoValueTF{#1}{\left\lVert#2\right\rVert}{#1\lVert#2#1\rVert}}}
+
+\newcommand{\dotp}[2]{{{#1}^\top#2}}
+\newcommand{\outp}[2]{{#1{#2}^\top}}
+\ExplSyntaxOn{}
+\NewDocumentCommand{\qf}{mmo}{
+    \IfValueTF{#3}{
+        \str_if_eq:nnT {#1} {#3} {
+            \PackageWarning{macros}{Argument 3 not needed}
+        }
+        {#1}^\top#2\,#3
+    }{
+        {#1}^\top#2\,#1
+    }
+}
+\ExplSyntaxOff{}
+
+\newcommand{\inv}[1]{{{#1}^{-1}}}
+\newcommand{\rank}[1]{\func{\mathrm{rank}}{#1}}
+\newcommand{\diag}[1]{\func{\mathrm{diag}}{#1}}
+
+\newcommand{\func}[2]{{#1\!\left\lparen#2\right\rparen}}
+\newcommand{\grad}[2]{{\nabla\!\func{#1}{#2}}}
+\newcommand{\hess}[2]{{\nabla^2\!\func{#1}{#2}}}
+\newcommand{\hessinv}[2]{\inv{\left[\hess{#1}{#2}\right]}}
+
+\LoopCommands{{argmin}{argmax}}[#1]{\newmathcommand#2{\mathop{\mathrm{#1}}}}
+\LoopCommands{{minimize}{maximize}}[#1]{\DeclareMathOperator*{#2}{#1}}
+\DeclareMathOperator{\subjectto}{subject~to}
+
+\newcommand{\SD}[1][d]{{\mathcal{S}_{#1}}}
+\newcommand{\PSD}[1][d]{{\mathcal{S}^{+}_{#1}}}
+\newcommand{\PD}[1][d]{{\mathcal{S}^{++}_{#1}}}
+
+\LoopCommands{xyzphedbruv}[#1]{\declaremathcommandPIE#2{{\mathbf{#1}}##1##2\IfEmptyTF{##3}{}{^{(\GetExponent{##3})}}}}
+
+\LoopCommands{IQABUV}[#1]{\newmathcommand#2{{\mathbf{#1}}}}
+\newcommand{\Qinv}{\inv{\Q}}
+
+\newcommand{\xstar}{{{\mathbf{x}}^\ast}}
+
+\newcommand{\half}{{\frac{1}{2}}}
+\newcommand{\zero}{{\mathbf{0}}}
 
 % Heading arguments are {volume}{year}{pages}{date submitted}{date published}{paper id}{author-full-names}
 
@@ -40,8 +93,8 @@
 
 \title{CMO Assignment 2}
 
-\author{\name Ashrith Sagar Yedlapalli \email ashrithy@iisc.ac.in \\
-\addr 24233}
+\author{\name{Ashrith Sagar Yedlapalli} \email{ashrithy@iisc.ac.in} \\
+\addr{24233}}
 
 \maketitle
 
