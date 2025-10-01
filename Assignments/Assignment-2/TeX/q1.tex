@@ -70,3 +70,28 @@ For \( j \leq k \), we  as follows
 Thus, \( \d_{k+1} \) is \( \Q \)--conjugate to \( \d_j \) for all \( j \leq k \), and the inductive step holds.
 
 Hence, the vectors \( \set{\d_k} \) produced by the above recursion are \( \Q \)--conjugate.
+
+\subsection*{(b) \( \Q = \I \) case}
+
+\( \Q \)--conjugacy reduces to orthogonality for \( \Q = \I \), and the above recursion reduces to the classical Gram-Schmidt orthogonalisation process.
+\begin{equation*}
+    \d_{k+1}
+    =
+    \p_{k+1}
+    - \sum_{i = 0}^{k} \frac{\dotp{\p_{k+1}}{\d_i}}{\dotp{\d_i}{\d_i}} \d_i
+\end{equation*}
+
+\subsection*{(c) Conjugate descent method}
+
+\( \pbrac[\big]{\alpha_k, -\dotp{\grad{f}{\x_k}}{\u_k}, \lambda_k} \) for the first 7 iterations of \texttt{CD\_SOLVE}:
+
+\begin{lstlisting}[firstnumber=0]
+(-0.007849, 0.333892, 42.539809)
+(-0.005127, 0.208773, 40.720898)
+(0.006767, -0.262146, 38.741209)
+(0.035189, -1.522430, 43.263869)
+(0.012739, -0.454336, 35.665719)
+(-0.010511, 0.430271, 40.934903)
+(-0.027399, 0.860928, 31.421874)
+(-0.025252, 1.112964, 44.074390)
+\end{lstlisting}

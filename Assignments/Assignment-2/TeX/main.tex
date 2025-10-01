@@ -22,7 +22,7 @@
 \usepackage[preprint]{jmlr2e}
 
 \usepackage{amsmath, cancel, mathcommand, mathtools}
-\usepackage{booktabs, enumitem, microtype, xparse}
+\usepackage{booktabs, enumitem, listings, microtype, xparse}
 \usepackage[linesnumbered,ruled,vlined]{algorithm2e}
 
 % Definitions of handy macros can go here
@@ -83,6 +83,15 @@
 
 \newcommand{\half}{{\frac{1}{2}}}
 \newcommand{\zero}{{\mathbf{0}}}
+
+\lstset{
+    basicstyle=\ttfamily\small,
+    numbers=left,
+    numberstyle=\tiny,
+    numbersep=7pt,
+    columns=fullflexible,
+    breaklines=true
+}
 
 % Heading arguments are {volume}{year}{pages}{date submitted}{date published}{paper id}{author-full-names}
 
