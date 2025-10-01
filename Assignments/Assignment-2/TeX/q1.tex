@@ -1,3 +1,72 @@
-\section*{Question 1}
+\section*{Question 1: Part 1}
 
-\paragraph{Problem:}
+\paragraph{Given:}
+\( f: \R^d \to \R \)
+\begin{equation*}
+    \func{f}{\x}
+    =
+    \half \qf{\x}{\Q}
+    - \dotp{\b}{\x},
+    \quad \Q \in \PD, \b \in \R^d
+\end{equation*}
+
+\( \Q \)-Gram-Schmidt recursion:
+\begin{equation}
+    \d_{k+1}
+    =
+    \p_{k+1}
+    - \sum_{i = 0}^{k} \frac{\qf{\p_{k+1}}{\Q}[\d_i]}{\qf{\d_i}{\Q}} \d_i
+\end{equation}
+
+\subsection*{(a) \( \Q \)--conjugacy of \( \set{\d_k} \)}
+
+Yes, the vectors produced by the above recursion are \( \Q \)--conjugate, which can be shown by induction.
+
+\paragraph{Base case:}
+\( k = 0 \)
+\begin{align*}
+    \implies
+    \d_1
+    & =
+    \p_1
+    - \frac{\qf{\p_1}{\Q}[\d_0]}{\qf{\d_0}{\Q}} \d_0
+    \\
+    \implies
+    \qf{\d_1}{\Q}[\d_0]
+    & =
+    \qf{\p_1}{\Q}[\d_0]
+    - \frac{\qf{\p_1}{\Q}[\d_0]}{\cancel{\qf{\d_0}{\Q}}} \cancel{\qf{\d_0}{\Q}}
+    =
+    \qf{\p_1}{\Q}[\d_0]
+    - \qf{\p_1}{\Q}[\d_0]
+    =
+    0
+\end{align*}
+
+Thus, \( \d_1 \) is \( \Q \)--conjugate to \( \d_0 \), and the base case holds.
+
+\paragraph{Inductive step:}
+Assume that \( \d_i \) is \( \Q \)--conjugate to \( \d_j \) for all \( i, j \leq k \), \( i \neq j \).
+We need to show that \( \d_{k+1} \) is \( \Q \)--conjugate to \( \d_j \) for all \( j \leq k \).
+
+For \( j \leq k \), we  as follows
+\begin{align*}
+    \implies
+    \qf{\d_{k+1}}{\Q}[\d_j]
+    & =
+    \qf{\p_{k+1}}{\Q}[\d_j]
+    - \sum_{i = 0}^{k} \frac{\qf{\p_{k+1}}{\Q}[\d_i]}{\qf{\d_i}{\Q}} \qf{\d_i}{\Q}[\d_j]
+    \\ & =
+    \qf{\p_{k+1}}{\Q}[\d_j]
+    - \frac{\qf{\p_{k+1}}{\Q}[\d_j]}{\cancel{\qf{\d_j}{\Q}}} \cancel{\qf{\d_j}{\Q}}
+    - \sum_{\substack{i = 0 \\ i \neq j}}^{k} \frac{\qf{\p_{k+1}}{\Q}[\d_i]}{\qf{\d_i}{\Q}} \cancelto{0}{\qf{\d_i}{\Q}[\d_j]}
+    \\ & =
+    \qf{\p_{k+1}}{\Q}[\d_j]
+    - \qf{\p_{k+1}}{\Q}[\d_j]
+    - 0
+    = 0
+\end{align*}
+
+Thus, \( \d_{k+1} \) is \( \Q \)--conjugate to \( \d_j \) for all \( j \leq k \), and the inductive step holds.
+
+Hence, the vectors \( \set{\d_k} \) produced by the above recursion are \( \Q \)--conjugate.
