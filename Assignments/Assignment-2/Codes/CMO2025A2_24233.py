@@ -402,6 +402,19 @@ def SEPARATE_HYPERPLANE() -> Tuple[Vector, float, Tuple[Vector, Vector]]:
         a_closest, b_closest (tuple[NDArray, NDArray]): The closest points in `C_A` and `C_B` used to construct the hyperplane.
     """
 
+    a_closest = np.array([1.0, 0.0])
+    b_closest = np.array([3.0, 0.0])
+
+    # Normal vector
+    n = b_closest - a_closest
+    n = n / np.linalg.norm(n)
+
+    # Offset
+    m: Vector = (a_closest + b_closest) / 2  # Midpoint
+    c: float = float(n @ m)
+
+    return n, c, (a_closest, b_closest)
+
 
 def CHECK_FARKAS() -> Tuple[bool]:
     """
@@ -612,6 +625,7 @@ def question_4():
     print("\nQuestion 4:")
 
     ## Q4 Part 1
+    # Projections in a navigation problem
     points: List[Vector] = [
         np.array([6.0, 6.0]),
         np.array([2.0, 3.0]),
@@ -619,7 +633,7 @@ def question_4():
     ]
 
     ax: Axes
-    fig, ax = plt.subplots()
+    fig, ax = plt.subplots(figsize=(7, 7))
     circle = Circle((0, 0), 5, color="lightblue", alpha=0.5)
     ax.add_artist(circle)
     ax.add_patch(Rectangle((-3, 0), 6, 4, color="orange", alpha=0.5))
@@ -636,7 +650,47 @@ def question_4():
     ax.set_xlabel(r"$x_1$")
     ax.set_ylabel(r"$x_2$")
     plt.grid(True)
+    plt.tight_layout()
     print("Plot generated for projections onto circle and box.")
+
+    ## Q4 Part 2
+    # Separating hyperplane in a classification story
+    n, c, (a_closest, b_closest) = SEPARATE_HYPERPLANE()
+    fig, ax = plt.subplots(figsize=(12, 6))
+
+    # C_A
+    circle = Circle((0, 0), 1, color="blue", alpha=0.3, label=r"Group A ($C_A$)")
+    ax.add_artist(circle)
+
+    # C_B
+    y = np.linspace(-2, 2, 100)
+    ax.fill_betweenx(y, 3, 5, color="red", alpha=0.3, label=r"Group B ($C_B$)")
+
+    # Closest points
+    ax.plot(*a_closest, "bo", label="Closest point in C_A")
+    ax.plot(*b_closest, "ro", label="Closest point in C_B")
+
+    # Separating hyperplane: n^T x = c
+    # Solve for x2 given x1: n1 * x1 + n2 * x2 = c => x2 = (c - n1 * x1) / n2
+    x_vals = np.linspace(-1.5, 4, 300)
+    if abs(n[1]) > 1e-6:
+        y_vals = (c - n[0] * x_vals) / n[1]
+        ax.plot(x_vals, y_vals, "k--", label="Separating Hyperplane")
+    else:
+        # vertical line x = c / n[0]
+        x_hyper = c / n[0]
+        ax.axvline(x=x_hyper, color="k", linestyle="--", label="Separating Hyperplane")
+
+    ax.set_xlim(-2, 5)
+    ax.set_ylim(-2, 2)
+    ax.set_aspect("equal")
+    ax.set_title("Separating Hyperplane between Group A and Group B")
+    ax.grid(True)
+    ax.legend()
+    plt.xlabel(r"$x_1$")
+    plt.ylabel(r"$x_2$")
+    plt.tight_layout()
+    print("Plot generated for separating hyperplane between two groups.")
 
 
 # ---------- Main ----------
