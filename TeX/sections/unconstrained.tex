@@ -2474,7 +2474,7 @@ Choose the update so that
     =
     \A_k
     + \beta \, \outp{\v}{\v},
-    \quad \beta \in \R_{>0},
+    \quad \beta \in \R,
     \; \v \in \R^d
 \end{equation*}
 
@@ -2505,7 +2505,7 @@ One such solution to the above equation is
     }
 \end{equation*}
 
-Hence, we have the update as
+Hence, we have the rank-1 update as
 \begin{equation*}
     \boxed{
         \A_{k+1}
@@ -2525,7 +2525,7 @@ Hence, we have the update as
     }
 \end{equation*}
 
-We have \( \A_{k+1} \succ \zero \) if \( \A_k \succ \zero \) and \( \beta > 0 \).
+Note that \( \A_{k+1} \succ \zero \) if \( \A_k \succ \zero \) and \( \beta > 0 \), but \( \beta > 0 \) does not necessarily hold true.
 
 \section{Rank-2 update (DFP)}\label{sec:dfp}
 
@@ -2536,7 +2536,7 @@ Choose the update so that
     \A_k
     + \beta_1 \, \outp{\u}{\u}
     + \beta_2 \, \outp{\v}{\v},
-    \quad \beta_1, \beta_2 \in \R_{>0},
+    \quad \beta_1, \beta_2 \in \R,
     \; \u, \v \in \R^d
 \end{equation*}
 
@@ -2593,7 +2593,7 @@ One such solution to the above equation is
     }
 \end{align*}
 
-Hence, we have the update as
+Hence, we have the DFP update as
 \begin{equation*}
     \boxed{
         \A_{k+1}
@@ -2608,6 +2608,8 @@ Hence, we have the update as
         {\A_k \outp{\boldsymbol{\gamma}_k}{\boldsymbol{\gamma}_k} \A_k}
         {\qf{\boldsymbol{\gamma}_k}{\A_k}}
     }
+    \triangleq
+    \A_k^{\text{DFP}}
 \end{equation*}
 
 \section{Broyden family}
@@ -2623,7 +2625,7 @@ Choose the update so that
         + \outp{\A_k \, \boldsymbol{\gamma}_k}{\boldsymbol{\delta}_k}
     }
     + \beta_3 \, \A_k \outp{\boldsymbol{\gamma}_k}{\boldsymbol{\gamma}_k} \A_k,
-    \quad \beta_1, \beta_2, \beta_3 \in \R_{>0}
+    \quad \beta_1, \beta_2, \beta_3 \in \R
 \end{equation*}
 
 \begin{align*}
@@ -2685,4 +2687,15 @@ One such solution to the above system is
     }
 \end{equation*}
 
-Observe that for \( \phi = 1 \), we get the DFP update~\psecref{sec:dfp}, and for \( \phi = 0 \), we get the rank-1 update~\psecref{sec:rank-1-update}.
+Observe that for \( \phi = 0 \), we get the DFP update~\psecref{sec:dfp}.
+
+The Broyden family of updates is given by
+\begin{equation*}
+    \boxed{
+        \A_{k+1}
+        =
+        \A_k^{\text{DFP}}
+        +
+        \phi \, \boldsymbol{\delta}_k \dotp{\boldsymbol{\gamma}_k}{\A_k}
+    }
+\end{equation*}
