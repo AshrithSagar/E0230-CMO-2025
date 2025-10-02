@@ -2416,3 +2416,273 @@ Since \( \set{\v_i}_{i = 1}^{d} \) forms an orthonormal basis for \( \R^d \), we
     \end{equation*}
     where \( \kappa(\Q) = \frac{\lambda_d}{\lambda_1} \) is the condition number of \( \Q \).
 \end{corollary}
+
+\chapter{Quasi-Newton methods}
+
+From Taylor's theorem~\psecref{sec:multivariate-taylor-theorem}, we have
+\begin{equation*}
+    \grad{f}{\y}
+    =
+    \grad{f}{\x}
+    + \hess{f}{\x} \, \pbrac{\y - \x}
+    + \smalloh{\norm{\y - \x}_2}
+\end{equation*}
+
+For \( \x^{k+1} \) close to \( \x^k \), we have
+\begin{equation*}
+    \grad{f}{\x^{k+1}}
+    \approx
+    \grad{f}{\x^k}
+    + \hess{f}{\x^k} \, \pbrac{\x^{k+1} - \x^k}
+\end{equation*}
+
+Consider the update
+\begin{align*}
+    \x^{k+1}
+    & =
+    \x^k + \alpha_k \, \u_k,
+    \quad \alpha_k > 0
+    \\
+    \u_k
+    & =
+    - \A_k \, \grad{f}{\x^k},
+    \quad \A_k \succ \zero
+\end{align*}
+
+\paragraph{Quasi-Newton condition:}
+\begin{equation*}
+    \boxed{
+        \A_{k+1} \, \boldsymbol{\gamma}_k
+        =
+        \boldsymbol{\delta}_k
+    },
+    \quad
+    \boldsymbol{\gamma}_k
+    \triangleq
+    \grad{f}{\x^{k+1}} - \grad{f}{\x^k},
+    \quad
+    \boldsymbol{\delta}_k
+    \triangleq
+    \x^{k+1} - \x^k
+\end{equation*}
+
+\section{Rank-1 update}\label{sec:rank-1-update}
+
+Choose the update so that
+\begin{equation*}
+    \A_{k+1}
+    =
+    \A_k
+    + \beta \, \outp{\v}{\v},
+    \quad \beta \in \R_{>0},
+    \; \v \in \R^d
+\end{equation*}
+
+\begin{equation*}
+    \because
+    \boldsymbol{\delta}_k
+    =
+    \A_{k+1} \, \boldsymbol{\gamma}_k
+    \implies
+    \boldsymbol{\delta}_k
+    - \A_k \, \boldsymbol{\gamma}_k
+    =
+    \beta \, \outp{\v}{\v} \, \boldsymbol{\gamma}_k
+    =
+    \beta \pbrac{\dotp{\v}{\boldsymbol{\gamma}_k}} \, \v
+\end{equation*}
+One such solution to the above equation is
+\begin{equation*}
+    \boxed{
+        \v
+        =
+        \boldsymbol{\delta}_k
+        - \A_k \, \boldsymbol{\gamma}_k,
+        \qquad
+        \beta
+        =
+        \frac{1}{\dotp{\v}{\boldsymbol{\gamma}_k}}
+    }
+\end{equation*}
+
+Hence, we have the update as
+\begin{equation*}
+    \boxed{
+        \A_{k+1}
+        =
+        \A_k
+        +
+        \frac{
+            \outp
+            {\pbrac{\boldsymbol{\delta}_k - \A_k \, \boldsymbol{\gamma}_k}}
+            {\pbrac{\boldsymbol{\delta}_k - \A_k \, \boldsymbol{\gamma}_k}}
+        }
+        {
+            \dotp
+            {\pbrac{\boldsymbol{\delta}_k - \A_k \, \boldsymbol{\gamma}_k}}
+            {\boldsymbol{\gamma}_k}
+        }
+    }
+\end{equation*}
+
+We have \( \A_{k+1} \succ \zero \) if \( \A_k \succ \zero \) and \( \beta > 0 \).
+
+\section{Rank-2 update (DFP)}\label{sec:dfp}
+
+Choose the update so that
+\begin{equation*}
+    \A_{k+1}
+    =
+    \A_k
+    + \beta_1 \, \outp{\u}{\u}
+    + \beta_2 \, \outp{\v}{\v},
+    \quad \beta_1, \beta_2 \in \R_{>0},
+    \; \u, \v \in \R^d
+\end{equation*}
+
+\begin{equation*}
+    \because
+    \boldsymbol{\delta}_k
+    =
+    \A_{k+1} \, \boldsymbol{\gamma}_k
+    \implies
+    \boldsymbol{\delta}_k
+    - \A_k \, \boldsymbol{\gamma}_k
+    =
+    \beta_1 \pbrac{\dotp{\u}{\boldsymbol{\gamma}_k}} \, \u
+    +
+    \beta_2 \pbrac{\dotp{\v}{\boldsymbol{\gamma}_k}} \, \v
+\end{equation*}
+One such solution to the above equation is
+\begin{align*}
+    &
+    \u
+    =
+    \boldsymbol{\delta}_k,
+    \quad
+    \v
+    =
+    \A_k \, \boldsymbol{\gamma}_k,
+    \qquad
+    \beta_1 \pbrac{\dotp{\u}{\boldsymbol{\gamma}_k}}
+    =
+    1,
+    \quad
+    \beta_2 \pbrac{\dotp{\v}{\boldsymbol{\gamma}_k}}
+    =
+    -1
+    \\
+    \implies
+    &
+    \boxed{
+        \u
+        =
+        \boldsymbol{\delta}_k,
+        \quad
+        \v
+        =
+        \A_k \, \boldsymbol{\gamma}_k,
+        \qquad
+        \beta_1
+        =
+        \frac{1}{\dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}},
+        \quad
+        \beta_2
+        =
+        -\frac{1}{\qf{\boldsymbol{\gamma}_k}{\A_k}}
+    }
+\end{align*}
+
+Hence, we have the update as
+\begin{equation*}
+    \boxed{
+        \A_{k+1}
+        =
+        \A_k
+        +
+        \frac
+        {\outp{\boldsymbol{\delta}_k}{\boldsymbol{\delta}_k}}
+        {\dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}}
+        -
+        \frac
+        {\A_k \outp{\boldsymbol{\gamma}_k}{\boldsymbol{\gamma}_k} \A_k}
+        {\qf{\boldsymbol{\gamma}_k}{\A_k}}
+    }
+\end{equation*}
+
+\section{Broyden family}
+
+Choose the update so that
+\begin{equation*}
+    \A_{k+1}
+    =
+    \A_k
+    + \beta_1 \, \outp{\boldsymbol{\delta}_k}{\boldsymbol{\delta}_k}
+    + \beta_2 \, \pbrac{
+        \boldsymbol{\delta}_k \dotp{\boldsymbol{\gamma}_k}{\A_k}
+        + \outp{\A_k \, \boldsymbol{\gamma}_k}{\boldsymbol{\delta}_k}
+    }
+    + \beta_3 \, \A_k \outp{\boldsymbol{\gamma}_k}{\boldsymbol{\gamma}_k} \A_k,
+    \quad \beta_1, \beta_2, \beta_3 \in \R_{>0}
+\end{equation*}
+
+\begin{align*}
+    \because
+    \boldsymbol{\delta}_k
+    & =
+    \A_{k+1} \, \boldsymbol{\gamma}_k
+    \\
+    \implies
+    \boldsymbol{\delta}_k
+    - \A_k \, \boldsymbol{\gamma}_k
+    & =
+    \beta_1 \outp{\boldsymbol{\delta}_k}{\boldsymbol{\delta}_k} \boldsymbol{\gamma}_k
+    + \beta_2 \pbrac{
+        \boldsymbol{\delta}_k \dotp{\boldsymbol{\gamma}_k}{\A_k} \boldsymbol{\gamma}_k
+        + \A_k \, \boldsymbol{\gamma}_k \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}
+    }
+    + \beta_3 \, \A_k \outp{\boldsymbol{\gamma}_k}{\boldsymbol{\gamma}_k} \A_k \boldsymbol{\gamma}_k
+    \\ & =
+    \pbrac{
+        \beta_1 \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}
+        + \beta_2 \qf{\boldsymbol{\gamma}_k}{\A_k}
+    } \boldsymbol{\delta}_k
+    + \pbrac{
+        \beta_2 \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}
+        + \beta_3 \qf{\boldsymbol{\gamma}_k}{\A_k}
+    } \A_k \, \boldsymbol{\gamma}_k
+\end{align*}
+
+\begin{align*}
+    \implies
+    \beta_1 \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}
+    + \beta_2 \qf{\boldsymbol{\gamma}_k}{\A_k}
+    & = 1
+    \\
+    \beta_2 \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}
+    + \beta_3 \qf{\boldsymbol{\gamma}_k}{\A_k}
+    & = -1
+\end{align*}
+which is a system of 2 linear equations in 3 unknowns \( \beta_1, \beta_2, \beta_3 \), and hence has infinitely many solutions.
+
+One such solution to the above system is
+\begin{equation*}
+    \boxed{
+        \beta_1
+        =
+        \frac{1}{\dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}}
+        \pbrac{1 + \phi \, \frac{\qf{\boldsymbol{\gamma}_k}{\A_k}}{\dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}}},
+        \quad
+        \beta_2
+        =
+        -\frac{\phi}{\dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}},
+        \quad
+        \beta_3
+        =
+        -\frac{\pbrac{1 - \phi}}{\qf{\boldsymbol{\gamma}_k}{\A_k}},
+        \quad
+        \; \phi \in [0, 1]
+    }
+\end{equation*}
+
+Observe that for \( \phi = 1 \), we get the DFP update~\psecref{sec:dfp}, and for \( \phi = 0 \), we get the rank-1 update~\psecref{sec:rank-1-update}.
