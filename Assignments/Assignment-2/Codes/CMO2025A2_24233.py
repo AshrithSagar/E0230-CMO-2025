@@ -40,7 +40,7 @@ def CD_SOLVE(
     maxiter: int = 100,
 ) -> Tuple[Vector, List[float], List[float], List[float]]:
     """
-    Conjugate Direction Method.
+    Conjugate Descent Method.
 
     `f(x) = 0.5 x'Ax - b'x`\\
     `x^* = argmin_x f(x) => A x^* = b`
@@ -63,27 +63,24 @@ def CD_SOLVE(
     if x0 is None:
         x0 = np.zeros_like(b)
 
+    eigvals, eigvecs = np.linalg.eig(A)
+
     alphas: List[float] = []
     numerators: List[float] = []
     lambdas: List[float] = []
 
     x: Vector = x0.copy()
-    r: Vector = b - A @ x  # r_k = -grad_f(x_k)
     for k in range(min(maxiter, dim)):
-        # Generate u_k = e_k for initial search direction
-        u = np.zeros_like(b)
-        u[k] = 1.0
+        u = eigvecs[:, k]
+        lambda_k = eigvals[k]
 
-        Au: Vector = A @ u
+        r: Vector = b - A @ x  # r_k = -grad_f(x_k)
         numerator: float = float(r @ u)
-        lambda_k: float = float(u @ Au)
-        alpha_k: float = numerator / lambda_k
+        alpha: float = numerator / lambda_k
+        x += alpha * u
 
-        x += alpha_k * u
-        r -= alpha_k * Au
-
-        alphas.append(alpha_k)
-        numerators.append(-numerator)
+        alphas.append(alpha)
+        numerators.append(numerator)
         lambdas.append(lambda_k)
 
     return x, alphas, numerators, lambdas
