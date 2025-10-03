@@ -90,7 +90,8 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
 \begin{definition}{Global minimum}{global-minimum}
     The point \( \xstar \in \R^d \) is a \textbf{global minimum} of the function \( f: D \subseteq \R^d \to \R \) if
     \begin{equation*}
-        \func{f}{\xstar} \leq \func{f}{\x}, \quad \forall \x \in D
+        \func{f}{\xstar} \leq \func{f}{\x},
+        \quad \forall \x \in D
     \end{equation*}
 \end{definition}
 
@@ -99,7 +100,8 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
 \begin{definition}{Strict global minimum}{}
     The point \( \xstar \in \R^d \) is a \textbf{strict global minimum} of the function \( f: D \subseteq \R^d \to \R \) if
     \begin{equation*}
-        \func{f}{\xstar} < \func{f}{\x}, \quad \forall \x \in D \setminus \set{\xstar}
+        \func{f}{\xstar} < \func{f}{\x},
+        \quad \forall \x \in D \setminus \set{\xstar}
     \end{equation*}
 \end{definition}
 
@@ -108,14 +110,16 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
 \begin{definition}{Local minimum}{local-minimum}
     The point \( \xstar \in \R^d \) is a \textbf{local minimum} of the function \( f: \R^d \to \R \) if there exists a \( \delta > 0 \) such that for all \( \x \) in the \( \delta \)-neighborhood of \( \xstar \), we have \( \func{f}{\xstar} \leq \func{f}{\x} \), i.e.,
     \begin{equation*}
-        \func{f}{\xstar} \leq \func{f}{\x}, \quad \forall \x \in B_{\delta}(\xstar)
+        \func{f}{\xstar} \leq \func{f}{\x},
+        \quad \forall \x \in B_{\delta}(\xstar)
     \end{equation*}
 \end{definition}
 
 \begin{corollary}{First-order variational inequality condition}{first-order-variational-inequality-condition}
     For a function \( f \in \C^1 \), if \( \xstar \) is a local minimum of \( f \), then there exists a \( \delta > 0 \) such that
     \begin{equation*}
-        \dotp{\grad{f}{\xstar}}{(\x - \xstar)} \geq 0, \quad \forall \x \in B_{\delta}(\xstar)
+        \dotp{\grad{f}{\xstar}}{(\x - \xstar)} \geq 0,
+        \quad \forall \x \in B_{\delta}(\xstar)
     \end{equation*}
 \end{corollary}
 
@@ -125,8 +129,8 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
         \func{f}{\x}
         =
         \func{f}{\xstar}
-        + \dotp{\grad{f}{\xstar}}{(\x - \xstar)}
-        , \quad \forall \x \in B_{\delta_1}(\xstar)
+        + \dotp{\grad{f}{\xstar}}{(\x - \xstar)},
+        \quad \forall \x \in B_{\delta_1}(\xstar)
     \end{equation*}
     Since \( \xstar \) is a local minimum, there exists a \( \delta_2 > 0 \) by~\pdefref{def:local-minimum} such that
     \begin{equation*}
@@ -141,14 +145,14 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
         \func{f}{\x}
         =
         \func{f}{\xstar}
-        + \dotp{\grad{f}{\xstar}}{(\x - \xstar)}
-        , \quad \forall \x \in B_{\delta}(\xstar)
+        + \dotp{\grad{f}{\xstar}}{(\x - \xstar)},
+        \quad \forall \x \in B_{\delta}(\xstar)
         \\
         \implies
         0
         & \leq
-        \dotp{\grad{f}{\xstar}}{(\x - \xstar)}
-        , \quad \forall \x \in B_{\delta}(\xstar)
+        \dotp{\grad{f}{\xstar}}{(\x - \xstar)},
+        \quad \forall \x \in B_{\delta}(\xstar)
     \end{align*}
 \end{proof}
 
@@ -207,14 +211,15 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
         =
         \func{f}{\xstar}
         + \cancel{\dotp{\grad{f}{\xstar}}{(\x - \xstar)}}
-        + \half \qf{(\x - \xstar)}{\hess{f}{\xstar}}
-        , \quad \forall \x \in B_{\delta_1}(\xstar)
+        + \half \qf{(\x - \xstar)}{\hess{f}{\xstar}},
+        \quad \forall \x \in B_{\delta_1}(\xstar)
     \end{equation*}
     Since \( \xstar \) is a local minimum, there exists a \( \delta_2 > 0 \) by~\pdefref{def:local-minimum} such that
     \begin{equation*}
         \func{f}{\xstar}
         \leq
-        \func{f}{\x}, \quad \forall \x \in B_{\delta_2}(\xstar)
+        \func{f}{\x},
+        \quad \forall \x \in B_{\delta_2}(\xstar)
     \end{equation*}
     Setting \( \delta = \min(\delta_1, \delta_2) > 0 \), we have
     \begin{align*}
@@ -223,14 +228,14 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
         \func{f}{\x}
         =
         \func{f}{\xstar}
-        + \half \qf{(\x - \xstar)}{\hess{f}{\xstar}}
-        , \quad \forall \x \in B_{\delta}(\xstar)
+        + \half \qf{(\x - \xstar)}{\hess{f}{\xstar}},
+        \quad \forall \x \in B_{\delta}(\xstar)
         \\
         \implies
         0
         & \leq
-        \qf{(\x - \xstar)}{\hess{f}{\xstar}}
-        , \quad \forall \x \in B_{\delta}(\xstar)
+        \qf{(\x - \xstar)}{\hess{f}{\xstar}},
+        \quad \forall \x \in B_{\delta}(\xstar)
     \end{align*}
     Setting \( \x = \xstar + t \p, \; t \in (0, \delta / \norm{\p}) \), we can see that \( \x \in B_{\delta}(\xstar) \) for all \( \p \in \R^d \setminus \set{\zero} \).
     \begin{equation*}
@@ -239,8 +244,8 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
         \leq
         \qf{(t \p)}{\hess{f}{\xstar}}
         =
-        t^2 \qf{\p}{\hess{f}{\xstar}}
-        , \quad \forall t \in (0, \delta / \norm{\p}),
+        t^2 \qf{\p}{\hess{f}{\xstar}},
+        \quad \forall t \in (0, \delta / \norm{\p}),
         \; \p \in \R^d \setminus \set{\zero}
     \end{equation*}
     This is possible only if \( \qf{\p}{\hess{f}{\xstar}} \geq 0, \; \forall \p \in \R^d \setminus \set{\zero} \implies \hess{f}{\xstar} \succeq \zero \).
@@ -263,14 +268,14 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
     \begin{align*}
         \func{f}{\y}
         & \geq
-        \func{f}{\xstar} + \cancel{ \dotp{\grad{f}{\xstar}}{(\y - \xstar)} }
-        , \quad \forall \y \in D
+        \func{f}{\xstar} + \cancel{ \dotp{\grad{f}{\xstar}}{(\y - \xstar)} },
+        \quad \forall \y \in D
         \\
         \implies
         \func{f}{\y}
         & \geq
-        \func{f}{\xstar}
-        , \quad \forall \y \in D
+        \func{f}{\xstar},
+        \quad \forall \y \in D
     \end{align*}
     which is the definition of a global minimum~\pdefref{def:global-minimum}.
 \end{proof}
@@ -334,9 +339,8 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
 \begin{corollary}{Monotonicity of gradient \( \iff \) Convexity}{}
     For a function \( f \in \C^1 \) with a convex domain \( D \), \( f \) is convex on \( D \) iff
     \begin{equation*}
-        \dotp{\big( \grad{f}{\x} - \grad{f}{\y} \big)}{\big( \x - \y \big)} \geq 0
-        , \quad
-        \forall \x, \y \in D
+        \dotp{\big( \grad{f}{\x} - \grad{f}{\y} \big)}{\big( \x - \y \big)} \geq 0,
+        \quad \forall \x, \y \in D
     \end{equation*}
 \end{corollary}
 
@@ -346,21 +350,20 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
     \begin{align*}
         \func{f}{\y}
         & \geq
-        \func{f}{\x} + {\grad{f}{\x}}^\top (\y - \x)
-        , \quad
-        \forall \x, \y \in D
+        \func{f}{\x} + {\grad{f}{\x}}^\top (\y - \x),
+        \quad \forall \x, \y \in D
         \\
         \func{f}{\x}
         & \geq
-        \func{f}{\y} + {\grad{f}{\y}}^\top (\x - \y)
-        , \quad
-        \forall \x, \y \in D
+        \func{f}{\y} + {\grad{f}{\y}}^\top (\x - \y),
+        \quad \forall \x, \y \in D
     \end{align*}
     Adding the two inequalities, we get
     \begin{equation*}
-        0 \geq {\big( \grad{f}{\x} - \grad{f}{\y} \big)}^\top (\y - \x)
-        , \quad
-        \forall \x, \y \in D
+        0
+        \geq
+        \dotp{\pbrac[\big]{\grad{f}{\x} - \grad{f}{\y}}}{\pbrac{\y - \x}},
+        \quad \forall \x, \y \in D
     \end{equation*}
     which is equivalent to the desired result.
 
@@ -400,9 +403,9 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
 \begin{theorem}{Second-order condition for convexity}{second-order-condition-for-convexity}
     For a function \( f \in \C^2 \) with a convex domain \( D \), \( f \) is convex on \( D \) iff
     \begin{equation*}
-        \hess{f}{\x} \succeq \zero
-        , \quad
-        \forall \x \in D
+        \hess{f}{\x}
+        \succeq \zero,
+        \quad \forall \x \in D
     \end{equation*}
 \end{theorem}
 
@@ -410,24 +413,23 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
     \( (\Rightarrow) \)
     The first-order condition for convexity can be rewritten as
     \begin{equation*}
-        \func{f}{\y} - \func{f}{\x} - {\grad{f}{\x}}^\top (\y - \x) \geq 0
-        , \quad
-        \forall \x, \y \in D
+        \func{f}{\y} - \func{f}{\x} - {\grad{f}{\x}}^\top (\y - \x)
+        \geq 0,
+        \quad \forall \x, \y \in D
     \end{equation*}
     Using Taylor's theorem, we have
     \begin{equation*}
         \func{f}{\y} - \func{f}{\x} - {\grad{f}{\x}}^\top (\y - \x)
         =
-        \half {(\y - \x)}^\top \hess{f}{\boldsymbol{\xi}} (\y - \x)
-        , \quad
-        \boldsymbol{\xi} = (1 - t) \x + t \y, \; t \in (0, 1)
+        \half {(\y - \x)}^\top \hess{f}{\boldsymbol{\xi}} (\y - \x),
+        \quad \boldsymbol{\xi} = (1 - t) \x + t \y, \; t \in (0, 1)
     \end{equation*}
     for some \( t \in (0, 1) \).
     Therefore, we have
     \begin{equation*}
-        {(\y - \x)}^\top \hess{f}{\boldsymbol{\xi}} (\y - \x) \geq 0
-        , \quad
-        \forall \x, \y \in D
+        {(\y - \x)}^\top \hess{f}{\boldsymbol{\xi}} (\y - \x)
+        \geq 0,
+        \quad \forall \x, \y \in D
     \end{equation*}
     which implies \( \hess{f}{\x} \succeq \zero, \; \forall \x \in D \).
     (Note: \( \boldsymbol{\xi} \in D \) since \( D \) is convex.)
@@ -437,16 +439,15 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
     \begin{equation*}
         \func{f}{\y} - \func{f}{\x} - {\grad{f}{\x}}^\top (\y - \x)
         =
-        \half {(\y - \x)}^\top \hess{f}{\boldsymbol{\xi}} (\y - \x)
-        , \quad
-        \boldsymbol{\xi} = (1 - t) \x + t \y, \; t \in (0, 1)
+        \half {(\y - \x)}^\top \hess{f}{\boldsymbol{\xi}} (\y - \x),
+        \quad \boldsymbol{\xi} = (1 - t) \x + t \y, \; t \in (0, 1)
     \end{equation*}
     for some \( t \in (0, 1) \).
     Since \( \hess{f}{\x} \succeq \zero, \; \forall \x \in D \), we have
     \begin{equation*}
-        \func{f}{\y} - \func{f}{\x} - {\grad{f}{\x}}^\top (\y - \x) \geq 0
-        , \quad
-        \forall \x, \y \in D
+        \func{f}{\y} - \func{f}{\x} - {\grad{f}{\x}}^\top (\y - \x)
+        \geq 0,
+        \quad \forall \x, \y \in D
     \end{equation*}
     which is the first-order condition for convexity, and thereby \( f \) is convex.
 \end{proof}
@@ -460,7 +461,8 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
         \leq
         \lambda \func{f}{\x} + (1 - \lambda) \func{f}{\y}
         - \frac{\mu}{2} \lambda (1 - \lambda) \norm{\x - \y}^2,
-        \quad \forall \x, \y \in \R^n, \; \lambda \in [0, 1]
+        \quad \forall \x, \y \in \R^n,
+        \; \lambda \in [0, 1]
     \end{equation*}
 \end{definition}
 
@@ -519,9 +521,8 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
         \\ & =
         \func{f}{\x} + {\grad{f}{\x}}^\top (\y - \x) + \frac{\mu}{2} \Big( \norm{\y}^2 - \cancel{ \norm{\x}^2 } - 2 \dotp{\x}{\y} + \cancel{2} \norm{\x}^2 \Big)
         \\ & =
-        \func{f}{\x} + {\grad{f}{\x}}^\top (\y - \x) + \frac{\mu}{2} \norm{\y - \x}^2
-        , \quad
-        \forall \x, \y \in D
+        \func{f}{\x} + {\grad{f}{\x}}^\top (\y - \x) + \frac{\mu}{2} \norm{\y - \x}^2,
+        \quad \forall \x, \y \in D
     \end{align*}
 \end{proof}
 
@@ -532,9 +533,8 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
     \begin{equation*}
         \hess{f}{\x}
         \succeq
-        \mu \I
-        , \quad
-        \forall \x \in D
+        \mu \I,
+        \quad \forall \x \in D
     \end{equation*}
     i.e., the Hessian \( \hess{f}{\x} \) is positive definite with all eigenvalues at least \( \mu \), for all \( \x \in D \).
 \end{corollary}
