@@ -547,12 +547,18 @@ def question_1():
     print("\nCG search directions:")
     for i, pk in enumerate(p_list):
         print(f"p_{i} = {pk}")
+    filename = f"plist_{SRN}.txt"
+    np.savetxt(filename, p_list)
+    print(f"Saved CG search directions to '{filename}'.")
 
     # Gram-Schmidt orthogonalisation
     D = GS_ORTHOGONALISE(p_list, A)
     print("\nGram-Schmidt Q-orthogonalised vectors:")
     for i, dk in enumerate(D):
         print(f"d_{i} = {dk}")
+    filename = f"dlist_{SRN}.txt"
+    np.savetxt(filename, D)
+    print(f"Saved Q-orthogonalised vectors to '{filename}'.")
 
     ## Q1 Part 3
     # Constructing Matrix M
