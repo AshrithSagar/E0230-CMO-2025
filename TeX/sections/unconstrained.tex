@@ -94,14 +94,63 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
     \end{equation*}
 \end{definition}
 
+\subsection{Strict global minimum}
+
+\begin{definition}{Strict global minimum}{}
+    The point \( \xstar \in \R^d \) is a \textbf{strict global minimum} of the function \( f: D \subseteq \R^d \to \R \) if
+    \begin{equation*}
+        \func{f}{\xstar} < \func{f}{\x}, \quad \forall \x \in D \setminus \set{\xstar}
+    \end{equation*}
+\end{definition}
+
 \subsection{Local minimum}
 
-\begin{definition}{Local minimum}{}
+\begin{definition}{Local minimum}{local-minimum}
     The point \( \xstar \in \R^d \) is a \textbf{local minimum} of the function \( f: \R^d \to \R \) if there exists a \( \delta > 0 \) such that for all \( \x \) in the \( \delta \)-neighborhood of \( \xstar \), we have \( \func{f}{\xstar} \leq \func{f}{\x} \), i.e.,
     \begin{equation*}
         \func{f}{\xstar} \leq \func{f}{\x}, \quad \forall \x \in B_{\delta}(\xstar)
     \end{equation*}
 \end{definition}
+
+\begin{corollary}{First-order variational inequality condition}{first-order-variational-inequality-condition}
+    For a function \( f \in \C^1 \), if \( \xstar \) is a local minimum of \( f \), then there exists a \( \delta > 0 \) such that
+    \begin{equation*}
+        \dotp{\grad{f}{\xstar}}{(\x - \xstar)} \geq 0, \quad \forall \x \in B_{\delta}(\xstar)
+    \end{equation*}
+\end{corollary}
+
+\begin{proof}
+    Since \( f \in \C^1 \), from Taylor's theorem~\psecref{sec:multivariate-taylor-theorem}, there exists a \( \delta_1 > 0 \) such that
+    \begin{equation*}
+        \func{f}{\x}
+        =
+        \func{f}{\xstar}
+        + \dotp{\grad{f}{\xstar}}{(\x - \xstar)}
+        , \quad \forall \x \in B_{\delta_1}(\xstar)
+    \end{equation*}
+    Since \( \xstar \) is a local minimum, there exists a \( \delta_2 > 0 \) by~\pdefref{def:local-minimum} such that
+    \begin{equation*}
+        \func{f}{\xstar}
+        \leq
+        \func{f}{\x}, \quad \forall \x \in B_{\delta_2}(\xstar)
+    \end{equation*}
+    Setting \( \delta = \min(\delta_1, \delta_2) > 0 \), we have
+    \begin{align*}
+        \func{f}{\xstar}
+        & \leq
+        \func{f}{\x}
+        =
+        \func{f}{\xstar}
+        + \dotp{\grad{f}{\xstar}}{(\x - \xstar)}
+        , \quad \forall \x \in B_{\delta}(\xstar)
+        \\
+        \implies
+        0
+        & \leq
+        \dotp{\grad{f}{\xstar}}{(\x - \xstar)}
+        , \quad \forall \x \in B_{\delta}(\xstar)
+    \end{align*}
+\end{proof}
 
 \subsection{Strict local minimum}
 
@@ -113,7 +162,7 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
     \end{equation*}
 \end{definition}
 
-\section{Necessary and sufficient conditions}
+\section{Optimality conditions}
 
 \subsection{First-order necessary condition for a local minimum}
 
@@ -121,11 +170,81 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
     For a function \( f \in \C^{1} \), if \( \xstar \) is a local minimum of \( f \), then \( \grad{f}{\xstar} = \zero \).
 \end{theorem}
 
+\begin{proof}
+    From the first-order variational inequality condition~\pcorref{cor:first-order-variational-inequality-condition}, there exists a \( \delta > 0 \) such that
+    \begin{equation*}
+        \dotp{\grad{f}{\xstar}}{(\x - \xstar)}
+        \geq 0,
+        \quad \forall \x \in B_{\delta}(\xstar)
+    \end{equation*}
+    Setting \( \x = \xstar + t \e_i, \; t \in (-\delta, \delta) \), we can see that \( \x \in B_{\delta}(\xstar) \) for all \( i \in \set{1, 2, \ldots, d} \).
+    \begin{equation*}
+        \implies
+        \dotp{\grad{f}{\xstar}}{(\x - \xstar)}
+        =
+        \dotp{\grad{f}{\xstar}}{\pbrac{t \e_i}}
+        =
+        t \pbrac{\dotp{\grad{f}{\xstar}}{\e_i}}
+        \geq 0,
+        \quad \forall t \in (-\delta, \delta),
+        \; i \in \set{1, 2, \ldots, d}
+    \end{equation*}
+    This is possible only if \( \dotp{\grad{f}{\xstar}}{\e_i} = 0 = \bbrac{\grad{f}{\xstar}}_i, \; \forall i \in \set{1, 2, \ldots, d} \implies \grad{f}{\xstar} = \zero \).
+\end{proof}
+
 \subsection{Second-order necessary condition for a local minimum}
 
 \begin{theorem}{Second-order necessary condition for a local minimum}{}
     For a function \( f \in \C^{2} \), if \( \xstar \) is a local minimum of \( f \), then \( \grad{f}{\xstar} = \zero, \; \hess{f}{\xstar} \succeq \zero \).
 \end{theorem}
+
+\begin{proof}
+    \( \because \C^2 \subseteq \C^1 \), by the first-order necessary condition for optimality~\pthmref{thm:first-order-necessary-condition-for-a-local-minimum}, \( \grad{f}{\xstar} = \zero \).
+
+    Since \( f \in \C^{2} \), from Taylor's theorem~\psecref{sec:multivariate-taylor-theorem}, there exists a \( \delta_1 > 0 \) such that
+    \begin{equation*}
+        \func{f}{\x}
+        =
+        \func{f}{\xstar}
+        + \cancel{\dotp{\grad{f}{\xstar}}{(\x - \xstar)}}
+        + \half \qf{(\x - \xstar)}{\hess{f}{\xstar}}
+        , \quad \forall \x \in B_{\delta_1}(\xstar)
+    \end{equation*}
+    Since \( \xstar \) is a local minimum, there exists a \( \delta_2 > 0 \) by~\pdefref{def:local-minimum} such that
+    \begin{equation*}
+        \func{f}{\xstar}
+        \leq
+        \func{f}{\x}, \quad \forall \x \in B_{\delta_2}(\xstar)
+    \end{equation*}
+    Setting \( \delta = \min(\delta_1, \delta_2) > 0 \), we have
+    \begin{align*}
+        \func{f}{\xstar}
+        & \leq
+        \func{f}{\x}
+        =
+        \func{f}{\xstar}
+        + \half \qf{(\x - \xstar)}{\hess{f}{\xstar}}
+        , \quad \forall \x \in B_{\delta}(\xstar)
+        \\
+        \implies
+        0
+        & \leq
+        \qf{(\x - \xstar)}{\hess{f}{\xstar}}
+        , \quad \forall \x \in B_{\delta}(\xstar)
+    \end{align*}
+    Setting \( \x = \xstar + t \p, \; t \in (0, \delta / \norm{\p}) \), we can see that \( \x \in B_{\delta}(\xstar) \) for all \( \p \in \R^d \setminus \set{\zero} \).
+    \begin{equation*}
+        \implies
+        0
+        \leq
+        \qf{(t \p)}{\hess{f}{\xstar}}
+        =
+        t^2 \qf{\p}{\hess{f}{\xstar}}
+        , \quad \forall t \in (0, \delta / \norm{\p}),
+        \; \p \in \R^d \setminus \set{\zero}
+    \end{equation*}
+    This is possible only if \( \qf{\p}{\hess{f}{\xstar}} \geq 0, \; \forall \p \in \R^d \setminus \set{\zero} \implies \hess{f}{\xstar} \succeq \zero \).
+\end{proof}
 
 \subsection{Second-order sufficient condition for a strict local minimum}
 
@@ -918,6 +1037,8 @@ Without further assumptions on \( f \), nothing can be said about \( \xstar \) b
 The `global' refers to the fact that the initial point \( \x^0 \) is arbitrary, and not about the limit point.
 
 \chapter{Second-order methods}
+
+\section{Newton's method}
 
 \begin{equation*}
     \x^{k+1}
