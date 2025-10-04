@@ -2609,7 +2609,166 @@ Consider the update
     \x^{k+1} - \x^k
 \end{equation*}
 
-\section{Symmetric Rank-1 (SR1) update}\label{sec:rank-1-update}
+\begin{table}[htbp]
+    \centering
+    \caption{
+        Quasi-Newton methods.
+        \quad
+        \(
+            \boldsymbol{\gamma}_k
+            \triangleq
+            \grad{f}{\x^{k+1}} - \grad{f}{\x^k},
+            \quad
+            \boldsymbol{\delta}_k
+            \triangleq
+            \x^{k+1} - \x^k
+        \)
+    }
+    \begin{tabular}{lll}
+        \toprule
+        \textbf{Method}
+        &
+        Inverse Hessian approximation \( \A_{k+1} = \)
+        &
+        Hessian approximation \( \B_{k+1} = \)
+        \\
+        \midrule
+        SR1~\psecref{sec:sr1}
+        &
+        \(
+            \displaystyle
+            \A_k
+            +
+            \frac{
+                \outp
+                {\pbrac{\boldsymbol{\delta}_k - \A_k \, \boldsymbol{\gamma}_k}}
+                {\pbrac{\boldsymbol{\delta}_k - \A_k \, \boldsymbol{\gamma}_k}}
+            }
+            {
+                \dotp
+                {\pbrac{\boldsymbol{\delta}_k - \A_k \, \boldsymbol{\gamma}_k}}
+                {\boldsymbol{\gamma}_k}
+            }
+        \)
+        &
+        \(
+            \displaystyle
+            \B_k
+            +
+            \frac{
+                \outp
+                {\pbrac{\boldsymbol{\gamma}_k - \B_k \, \boldsymbol{\delta}_k}}
+                {\pbrac{\boldsymbol{\gamma}_k - \B_k \, \boldsymbol{\delta}_k}}
+            }
+            {
+                \dotp
+                {\pbrac{\boldsymbol{\gamma}_k - \B_k \, \boldsymbol{\delta}_k}}
+                {\boldsymbol{\delta}_k}
+            }
+        \)
+        \\
+        \midrule
+        DFP~\psecref{sec:dfp}
+        &
+        \(
+            \displaystyle
+            \A_k
+            +
+            \frac
+            {\outp{\boldsymbol{\delta}_k}{\boldsymbol{\delta}_k}}
+            {\dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}}
+            -
+            \frac
+            {\A_k \outp{\boldsymbol{\gamma}_k}{\boldsymbol{\gamma}_k} \A_k}
+            {\qf{\boldsymbol{\gamma}_k}{\A_k}}
+        \)
+        &
+        \(
+            \displaystyle
+            \pbrac{
+                \I
+                -
+                \frac
+                {\outp{\boldsymbol{\gamma}_k}{\boldsymbol{\delta}_k}}
+                {\dotp{\boldsymbol{\gamma}_k}{\boldsymbol{\delta}_k}}
+            }
+            \B_k
+            \pbrac{
+                \I
+                -
+                \frac
+                {\outp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}}
+                {\dotp{\boldsymbol{\gamma}_k}{\boldsymbol{\delta}_k}}
+            }
+            +
+            \frac
+            {\outp{\boldsymbol{\gamma}_k}{\boldsymbol{\gamma}_k}}
+            {\dotp{\boldsymbol{\gamma}_k}{\boldsymbol{\delta}_k}}
+        \)
+        \\
+        \midrule
+        BFGS
+        &
+        \(
+            \displaystyle
+            \pbrac{
+                \I
+                -
+                \frac
+                {\outp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}}
+                {\dotp{\boldsymbol{\gamma}_k}{\boldsymbol{\delta}_k}}
+            }
+            \A_k
+            \pbrac{
+                \I
+                -
+                \frac
+                {\outp{\boldsymbol{\gamma}_k}{\boldsymbol{\delta}_k}}
+                {\dotp{\boldsymbol{\gamma}_k}{\boldsymbol{\delta}_k}}
+            }
+            +
+            \frac
+            {\outp{\boldsymbol{\delta}_k}{\boldsymbol{\delta}_k}}
+            {\dotp{\boldsymbol{\gamma}_k}{\boldsymbol{\delta}_k}}
+        \)
+        &
+        \(
+            \displaystyle
+            \B_k
+            +
+            \frac
+            {\outp{\boldsymbol{\gamma}_k}{\boldsymbol{\gamma}_k}}
+            {\dotp{\boldsymbol{\gamma}_k}{\boldsymbol{\delta}_k}}
+            -
+            \frac
+            {\outp{\pbrac{\B_k \boldsymbol{\delta}_k}}{\pbrac{\B_k \boldsymbol{\delta}_k}}}
+            {\qf{\boldsymbol{\delta}_k}{\B_k}}
+        \)
+        \\
+        \midrule
+        Broyden family
+        &
+        \(
+            \displaystyle
+            (1 - \varphi_k) \, \A_{k+1}^{\text{BFGS}}
+            +
+            \varphi_k \, \A_{k+1}^{\text{DFP}},
+            \quad \varphi \in [0, 1]
+        \)
+        &
+        \(
+            \displaystyle
+            (1 - \varphi_k) \, \B_{k+1}^{\text{BFGS}}
+            +
+            \varphi_k \, \B_{k+1}^{\text{DFP}},
+            \quad \varphi \in [0, 1]
+        \)
+        \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\section{Symmetric Rank-1 (SR1) update}\label{sec:sr1}
 
 Choose the update so that
 \begin{equation*}
@@ -2755,6 +2914,10 @@ Hence, we have the DFP update as
     \triangleq
     \A_k^{\text{DFP}}
 \end{equation*}
+
+The DFP update guarantees positive definiteness of \( \A_{k+1} \) if \( \A_k \succ \zero \) and \( \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k} > 0 \).
+
+The condition \( \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k} > 0 \) is known as the \textit{curvature condition}, and is satisfied if \( f \) is strongly convex and \( \alpha_k \) is chosen using exact line search or an inexact line search that satisfies the Wolfe conditions.
 
 \section{Broyden family}
 
