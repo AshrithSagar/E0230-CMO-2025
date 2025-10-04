@@ -1486,6 +1486,28 @@ Thereby, we have \( \hess{f}{\x^k} \succ \zero \) throughout the iterations, ens
     Any set of non-zero mutually orthogonal vectors are linearly independent.
 \end{corollary}
 
+\begin{theorem}{}{}
+    The eigenvectors of \( \Q \) are mutually \( \Q \)--conjugate.
+\end{theorem}
+
+\begin{proof}
+    Let \( \set{ \lambda_i }_{i = 1}^d, \set{ \v_i }_{i = 1}^d, \; \lambda_i > 0 \) be the eigenvalues and eigenvectors of \( \Q \in \PD \), as in~\psecref{sec:spectral-decomposition-theorem}.
+    \begin{equation*}
+        \implies
+        \qf{\v_i}{\Q}[\v_j]
+        =
+        \dotp{\v_i}{(\lambda_j \v_j)}
+        =
+        \lambda_j \dotp{\v_i}{\v_j}
+        =
+        0,
+        \quad \because
+        \dotp{\v_i}{\v_j} = 0,
+        \quad \forall i, j \in \set{1, 2, \ldots, d},
+        \; i \neq j
+    \end{equation*}
+\end{proof}
+
 \section{Conjugate direction methods}
 
 \begin{algorithm}[H]
