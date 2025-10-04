@@ -2609,7 +2609,7 @@ Consider the update
     \x^{k+1} - \x^k
 \end{equation*}
 
-\section{Rank-1 update}\label{sec:rank-1-update}
+\section{Symmetric Rank-1 (SR1) update}\label{sec:rank-1-update}
 
 Choose the update so that
 \begin{equation*}
@@ -2668,7 +2668,8 @@ Hence, we have the rank-1 update as
     }
 \end{equation*}
 
-Note that \( \A_{k+1} \succ \zero \) if \( \A_k \succ \zero \) and \( \beta > 0 \), but \( \beta > 0 \) does not necessarily hold true.
+Note that \( \A_{k+1} \succ \zero \) if \( \A_k \succ \zero \) and \( \beta > 0 \), but \( \beta > 0 \) does not necessarily hold true.\\
+The SR1 update does not guarantee positive definiteness of \( \A_{k+1} \).
 
 \section{Rank-2 update (DFP)}\label{sec:dfp}
 
