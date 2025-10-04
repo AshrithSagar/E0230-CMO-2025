@@ -1,0 +1,42 @@
+
+\part{Constrained optimisation}
+
+\chapter{Introduction}
+
+\section{Farkas' lemma}
+
+\begin{theorem}{Farkas' lemma}{}
+    For \( \A \in \R^{m \times n}, \, \b \in \R^m \), exactly one of the following statements is true:
+    \begin{enumerate}
+        \item \( \exists \x \in \R^n \text{ such that } \A \x = \b \text{ and } \x \geq 0 \).
+
+        \item \( \exists \y \in \R^m \text{ such that } \dotp{\A}{\y} \geq 0 \text{ and } \dotp{\b}{\y} < 0 \).
+    \end{enumerate}
+\end{theorem}
+
+\begin{proof}
+    Suppose both statements are true.
+    Then, we have a contradiction since this implies
+    \begin{equation*}
+        \dotp{\b}{\y}
+        =
+        \dotp{\pbrac{\A \x}}{\y}
+        =
+        \dotp{\x}{\dotp{\A}{\y}} \geq 0
+    \end{equation*}
+
+    Now, suppose the first statement is false.
+    Then, consider the closed convex cone \( \func{C}{\A} \triangleq \set{\A \x \given \x \geq 0} \), which does not contain \( \b \).
+    By the separating hyperplane theorem, there exists a hyperplane that separates \( \func{C}{\A} \) and \( \b \).
+    Thus, there exists \( \y \in \R^m, \; c \in \R \) such that
+    \begin{equation*}
+        \dotp{\pbrac{\A \x}}{\y}
+        =
+        \dotp{\x}{\dotp{\A}{\y}}
+        \geq c
+        > \dotp{\b}{\y},
+        \quad \forall \x \geq 0
+    \end{equation*}
+    Since this holds \( \forall \x \geq 0, \; c > 0, \) we must have \( \dotp{\A}{\y} \geq 0 \),
+    Thus, the second statement is true.
+\end{proof}
