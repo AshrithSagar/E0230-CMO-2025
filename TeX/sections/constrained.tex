@@ -3,12 +3,24 @@
 
 \chapter{Introduction}
 
+\section{Constrained optimisation problem}\label{sec:constrained-optimisation-problem}
+
+A \textbf{constrained optimisation problem} is of the form
+\begin{align*}
+    \minimize_{\x} \quad & \func{f}{\x} \\
+    \subjectto \quad
+    & \func{g_i}{\x} \leq 0, \quad i \in \set{1, 2, \ldots, m} \\
+    & \func{h_j}{\x} = 0, \quad j \in \set{1, 2, \ldots, p}
+\end{align*}
+
+The functions \( g_i \) are called \textbf{inequality constraints} and the functions \( h_j \) are called \textbf{equality constraints}.
+
 \section{Separating hyperplane theorem}
 
 \begin{theorem}{Separating hyperplane theorem}{separating-hyperplane-theorem}
-    Let \( C, D \subseteq \R^n \) be non-empty, disjoint, closed, convex sets.
+    Let \( C, D \subseteq \R^d \) be non-empty, disjoint, closed, convex sets.
     If one of the sets is compact, then there exists a hyperplane that separates them.
-    That is, there exists \( \b \in \R^n \setminus \set{\zero}, \; c \in \R \) such that
+    That is, there exists \( \b \in \R^d \setminus \set{\zero}, \; c \in \R \) such that
     \begin{equation*}
         \dotp{\b}{\x}
         \leq c
@@ -99,3 +111,39 @@
     Since this holds \( \forall \x \geq 0, \; c > 0, \) we must have \( \dotp{\A}{\y} \geq 0 \),
     Thus, the second statement is true.
 \end{proof}
+
+\section{Karush-Kuhn-Tucker (KKT) conditions}
+
+Consider the constrained optimisation problem as in~\psecref{sec:constrained-optimisation-problem} where \( f, g_i, h_j \) are differentiable functions.
+Let \( \xstar \) be a local minimum and suppose that the gradients of the active constraints at \( \xstar \) are linearly independent.
+Then, there exist \( \lambda_i \geq 0, \; i \in \set{1, 2, \ldots, m}, \ \mu_j \in \R, \; j \in \set{1, 2, \ldots, p} \) such that
+\begin{align*}
+    \partial \func{f}{\xstar}
+    & +
+    \sum_{i = 1}^{m} \lambda_i \, \partial \func{g_i}{\xstar}
+    +
+    \sum_{j = 1}^{p} \mu_j \, \partial \func{h_j}{\xstar}
+    \ni \zero
+    \tag{Stationarity}
+    \\ &
+    \begin{aligned}
+        \func{g_i}{\xstar}
+        & \leq 0,
+        \quad i \in \set{1, 2, \ldots, m}
+        \\
+        \func{h_j}{\xstar}
+        & = 0,
+        \quad j \in \set{1, 2, \ldots, p}
+    \end{aligned}
+    \tag{Primal feasibility}
+    \\
+    \lambda_i
+    & \geq 0,
+    \quad i \in \set{1, 2, \ldots, m}
+    \tag{Dual feasibility}
+    \\
+    \lambda_i \, \func{g_i}{\xstar}
+    & = 0,
+    \quad i \in \set{1, 2, \ldots, m}
+    \tag{Complementary slackness}
+\end{align*}
