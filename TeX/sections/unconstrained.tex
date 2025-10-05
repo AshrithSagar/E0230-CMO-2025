@@ -2919,6 +2919,160 @@ The DFP update guarantees positive definiteness of \( \A_{k+1} \) if \( \A_k \su
 
 The condition \( \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k} > 0 \) is known as the \textit{curvature condition}, and is satisfied if \( f \) is strongly convex and \( \alpha_k \) is chosen using exact line search or an inexact line search that satisfies the Wolfe conditions.
 
+\begin{theorem}{DFP positive definiteness}{}
+    If \( \A_0 \succ \zero \) and \( \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k} > 0, \; \forall k \), then the DFP update preserves positive definiteness, i.e.,\\
+    If \( \A_k \succ \zero \) and \( \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k} > 0 \), then \( \A_{k+1} \succ \zero \).
+\end{theorem}
+
+\begin{proof}
+    Since \( \A_k \succ \zero \), we have the Cholesky decomposition \( \A_k = \outp{\mathbf{L}_k}{\mathbf{L}_k} \), where \( \mathbf{L}_k \) is a lower triangular matrix with positive diagonal entries.
+    Setting \( \a = \dotp{\mathbf{L}_k}{\z}, \; \b = \dotp{\mathbf{L}_k}{\boldsymbol{\gamma}_k} \), where \( \z \in \R^d \setminus \set{\zero} \), we have
+    \begin{align*}
+        \implies
+        \qf{\z}{\A_{k+1}}
+        & =
+        \qf{\z}{\A_k}
+        +
+        \qf{\z}{
+            \frac
+            {\outp{\boldsymbol{\delta}_k}{\boldsymbol{\delta}_k}}
+            {\dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}}
+        }
+        -
+        \qf{\z}{
+            \frac
+            {\A_k \outp{\boldsymbol{\gamma}_k}{\boldsymbol{\gamma}_k} \A_k}
+            {\qf{\boldsymbol{\gamma}_k}{\A_k}}
+        }
+        \\ & =
+        \qf{\z}{\outp{\mathbf{L}_k}{\mathbf{L}_k}}
+        +
+        \frac
+        {\pbrac{\dotp{\boldsymbol{\delta}_k}{\z}}^2}
+        {\dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}}
+        -
+        \qf{\z}{
+            \frac
+            {\outp{\mathbf{L}_k}{\mathbf{L}_k} \outp{\boldsymbol{\gamma}_k}{\boldsymbol{\gamma}_k} \outp{\mathbf{L}_k}{\mathbf{L}_k}}
+            {\qf{\boldsymbol{\gamma}_k}{\outp{\mathbf{L}_k}{\mathbf{L}_k}}}
+        }
+        =
+        \frac
+        {\pbrac{\dotp{\boldsymbol{\delta}_k}{\z}}^2}
+        {\dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}}
+        +
+        \bbrac{
+            \dotp{\a}{\a}
+            -
+            \frac{\pbrac{\dotp{\a}{\b}}^2}{\dotp{\b}{\b}}
+        }
+    \end{align*}
+
+    From Cauchy-Schwarz inequality~\psecref{sec:cauchy-schwarz-inequality}, we have
+    \begin{equation*}
+        \dotp{\a}{\a}
+        -
+        \frac{\pbrac{\dotp{\a}{\b}}^2}{\dotp{\b}{\b}}
+        \geq 0,
+        \quad \forall \a, \b \in \R^d,
+        \; \b \neq \zero,
+        \quad
+        \text{with equality iff } \a = \lambda \b,
+        \; \lambda \in \R
+    \end{equation*}
+
+    Since \( \mathbf{L}_k^\top \) is invertible, and thereby it's nullspace is \( \set{\zero} \), which implies \( \b = \zero \iff \boldsymbol{\gamma}_k = \zero \).\\
+    But \( \boldsymbol{\gamma}_k = \zero \implies \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k} = 0 \), a contradiction.
+    Thus, \( \boldsymbol{\gamma}_k \neq \zero \), and thereby \( \b \neq \zero \).
+
+    In the equality case, we have that \( \a = \lambda \b, \; \lambda \in \R \), and since \( \mathbf{L}_k^\top \) is invertible, thereby
+    \begin{align*}
+        \a
+        =
+        \lambda \b
+        &
+        \iff
+        \dotp{\mathbf{L}_k}{\z}
+        =
+        \lambda
+        \dotp{\mathbf{L}_k}{\boldsymbol{\gamma}_k}
+        \iff
+        \z
+        =
+        \lambda \boldsymbol{\gamma}_k
+        \\
+        \text{Now, }
+        \because
+        \z
+        &
+        \neq
+        \zero,
+        \;
+        \boldsymbol{\gamma}_k
+        \neq
+        \zero
+        \implies
+        \lambda
+        \neq
+        0
+        \\
+        \implies
+        \dotp{\boldsymbol{\delta}_k}{\z}
+        & =
+        \lambda
+        \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}
+        \neq 0,
+        \quad
+        \because
+        \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k} > 0,
+        \; \lambda \neq 0
+        \\
+        \implies
+        \qf{\z}{\A_{k+1}}
+        & =
+        \overbrace{
+            \frac
+            {\pbrac{\dotp{\boldsymbol{\delta}_k}{\z}}^2}
+            {\dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}}
+        }^{> 0}
+        +
+        \overbrace{
+            \bbrac{
+                \dotp{\a}{\a}
+                -
+                \frac{\pbrac{\dotp{\a}{\b}}^2}{\dotp{\b}{\b}}
+            }
+        }^{= 0}
+        > 0,
+        \quad \forall \z \in \spanset{\boldsymbol{\gamma}_k} \setminus \set{\zero}
+    \end{align*}
+
+    In the strict inequality case, we have \( \z \notin \spanset{\boldsymbol{\gamma}_k} \), thereby
+    \begin{equation*}
+        \qf{\z}{\A_{k+1}}
+        =
+        \overbrace{
+            \frac
+            {\pbrac{\dotp{\boldsymbol{\delta}_k}{\z}}^2}
+            {\dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}}
+        }^{\geq 0}
+        +
+        \overbrace{
+            \bbrac{
+                \dotp{\a}{\a}
+                -
+                \frac{\pbrac{\dotp{\a}{\b}}^2}{\dotp{\b}{\b}}
+            }
+        }^{> 0}
+        > 0,
+        \quad \forall \z \notin \spanset{\boldsymbol{\gamma}_k}
+    \end{equation*}
+
+    Combining both the cases, we have \( \qf{\z}{\A_{k+1}} > 0, \; \forall \z \in \R^d \setminus \set{\zero} \implies \A_{k+1} \succ \zero \).
+
+    Thus, the DFP update preserves positive definiteness.
+\end{proof}
+
 \section{Broyden family}
 
 Choose the update so that
