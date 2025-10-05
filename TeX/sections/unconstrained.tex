@@ -2997,7 +2997,111 @@ One such solution to the above system is
 Observe that for \( \phi = 0 \), we get the DFP update~\psecref{sec:dfp}.
 
 The Broyden family of updates is given by
+\begin{align*}
+    \A_{k+1}
+    & =
+    \A_k
+    +
+    \frac{1}{\dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}}
+    \pbrac{1 + \phi \, \frac{\qf{\boldsymbol{\gamma}_k}{\A_k}}{\dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}}}
+    \, \outp{\boldsymbol{\delta}_k}{\boldsymbol{\delta}_k}
+    \\ & \qquad -
+    \frac{\phi}{\dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}}
+    \, \pbrac{
+        \boldsymbol{\delta}_k \dotp{\boldsymbol{\gamma}_k}{\A_k}
+        + \outp{\A_k \, \boldsymbol{\gamma}_k}{\boldsymbol{\delta}_k}
+    }
+    -
+    \frac{\pbrac{1 - \phi}}{\qf{\boldsymbol{\gamma}_k}{\A_k}}
+    \, \A_k \outp{\boldsymbol{\gamma}_k}{\boldsymbol{\gamma}_k} \A_k
+    \\ & =
+    \pbrac{
+        \A_k
+        +
+        \frac
+        {\outp{\boldsymbol{\delta}_k}{\boldsymbol{\delta}_k}}
+        {\dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}}
+        -
+        \frac
+        {\A_k \outp{\boldsymbol{\gamma}_k}{\boldsymbol{\gamma}_k} \A_k}
+        {\qf{\boldsymbol{\gamma}_k}{\A_k}}
+    }
+    \\ & \qquad +
+    \phi \, \pbrac{
+        \frac
+        {\qf{\boldsymbol{\gamma}_k}{\A_k}}
+        {\dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}}
+        \frac
+        {\outp{\boldsymbol{\delta}_k}{\boldsymbol{\delta}_k}}
+        {\dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}}
+        -
+        \frac
+        {
+            \boldsymbol{\delta}_k \dotp{\boldsymbol{\gamma}_k}{\A_k}
+            +
+            \outp{\A_k \, \boldsymbol{\gamma}_k}{\boldsymbol{\delta}_k}
+        }
+        {\dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}}
+        +
+        \frac
+        {\A_k \outp{\boldsymbol{\gamma}_k}{\boldsymbol{\gamma}_k} \A_k}
+        {\qf{\boldsymbol{\gamma}_k}{\A_k}}
+    }
+\end{align*}
+\begin{align*}
+    &
+    \implies
+    \frac{
+        \A_{k+1}
+        -
+        \A_k^{\text{DFP}}
+    }{\phi}
+    =
+    \frac
+    {\qf{\boldsymbol{\gamma}_k}{\A_k}}
+    {\dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}}
+    \frac
+    {\outp{\boldsymbol{\delta}_k}{\boldsymbol{\delta}_k}}
+    {\dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}}
+    -
+    \frac
+    {
+        \boldsymbol{\delta}_k \dotp{\boldsymbol{\gamma}_k}{\A_k}
+        +
+        \outp{\A_k \, \boldsymbol{\gamma}_k}{\boldsymbol{\delta}_k}
+    }
+    {\dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}}
+    +
+    \frac
+    {\A_k \outp{\boldsymbol{\gamma}_k}{\boldsymbol{\gamma}_k} \A_k}
+    {\qf{\boldsymbol{\gamma}_k}{\A_k}}
+    \\ & =
+    \frac
+    {
+        \qf{\boldsymbol{\gamma}_k}{\A_k}
+        \outp{\boldsymbol{\delta}_k}{\boldsymbol{\delta}_k}
+        \qf{\boldsymbol{\gamma}_k}{\A_k}
+        -
+        \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}
+        \qf{\boldsymbol{\gamma}_k}{\A_k}
+        \pbrac{
+            \boldsymbol{\delta}_k \dotp{\boldsymbol{\gamma}_k}{\A_k}
+            +
+            \outp{\A_k \, \boldsymbol{\gamma}_k}{\boldsymbol{\delta}_k}
+        }
+        +
+        \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}
+        \A_k \outp{\boldsymbol{\gamma}_k}{\boldsymbol{\gamma}_k} \A_k
+        \dotp{\boldsymbol{\gamma}_k}{\boldsymbol{\delta}_k}
+    }
+    {
+        \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}
+        \qf{\boldsymbol{\gamma}_k}{\A_k}
+        \dotp{\boldsymbol{\gamma}_k}{\boldsymbol{\delta}_k}
+    }
+\end{align*}
 \begin{equation*}
+    \implies
     \boxed{
         \A_{k+1}
         =
