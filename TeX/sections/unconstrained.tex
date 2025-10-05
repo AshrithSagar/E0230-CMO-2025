@@ -1036,335 +1036,6 @@ The sequence asymptotically approaches a \textbf{stationary point} \( \xstar \),
 Without further assumptions on \( f \), nothing can be said about \( \xstar \) being a local or global minimum, maximum, or a saddle point.
 The `global' refers to the fact that the initial point \( \x^0 \) is arbitrary, and not about the limit point.
 
-\chapter{Second-order methods}
-
-\section{Newton's method}
-
-\begin{equation*}
-    \x^{k+1}
-    =
-    \x^k - \hessinv{f}{\x} \grad{f}{\x^k},
-    \qquad
-    \hess{f}{\x^k} \succ \zero
-\end{equation*}
-
-\paragraph{Newton direction:}
-Refers to the descent direction
-\begin{equation*}
-    \p^k = -\hessinv{f}{\x^k} \grad{f}{\x^k},
-    \qquad \hess{f}{\x^k} \succ \zero
-\end{equation*}
-
-This satisfies the condition for descent direction since
-\begin{align*}
-    \hess{f}{\x^k}
-    &
-    \succ \zero
-    \implies
-    \hessinv{f}{\x^k}
-    \succ \zero
-    \\
-    \implies
-    \dotp{\grad{f}{\x^k}}{\p^k}
-    & =
-    - {\left( \grad{f}{\x^k} \right)}^\top \hessinv{f}{\x^k} \grad{f}{\x^k}
-    < 0
-\end{align*}
-
-From the fundamental theorem of calculus~\psecref{sec:fundamental-theorem-of-calculus}, with \( \func{g}{t} \triangleq \grad{f}{\x + t(\y - \x)}, \; t \in [0, 1] \), we have
-\begin{equation*}
-    \func{g}{1} - \func{g}{0}
-    =
-    \int_{0}^{1} \func{g'}{t} \, dt
-    \implies
-    \boxed{
-        \grad{f}{\y} - \grad{f}{\x}
-        =
-        \int_{0}^{1} \hess{f}{\x + t(\y - \x)} (\y - \x) \, dt,
-        \quad \forall \x, \y \in \R^d
-    }
-\end{equation*}
-
-For a stationary point \( \xstar \), i.e., \( \grad{f}{\xstar} = \zero \), we have
-\begin{equation*}
-    \implies
-    \grad{f}{\x}
-    =
-    \int_{0}^{1} \hess{f}{\xstar + t(\x - \xstar)} (\x - \xstar) \, dt,
-    \quad \forall \x \in \R^d
-\end{equation*}
-
-Suppose \( \hess{f}{\xstar} \succ \zero \), ensuring that \( \xstar \) is a local minimum.
-\begin{equation*}
-    \implies
-    \exists l > 0 \text{ such that } \hess{f}{\xstar} \succeq l \, \I
-\end{equation*}
-
-Assuming \( f \in \C^2_M \), we have
-\begin{equation*}
-    \boxed{
-        \norm{\hess{f}{\y} - \hess{f}{\x}}
-        \leq
-        M \norm{\y - \x},
-        \quad \forall \x, \y \in \R^d
-    }
-\end{equation*}
-
-From Taylor's theorem, we have
-\begin{equation*}
-    \func{f}{\y}
-    =
-    \func{f}{\x}
-    + \dotp{\grad{f}{\x}}{(\y - \x)}
-    + \half \qf{(\y - \x)}{\hess{f}{\x}}
-    + \smalloh{\norm{\y - \x}^2},
-    \quad \forall \x, \y \in \R^d
-\end{equation*}
-
-Taking the derivative with respect to \( \y \) on both sides, we have
-\begin{equation*}
-    \implies
-    \grad{f}{\y}
-    =
-    \grad{f}{\x}
-    + \hess{f}{\x} (\y - \x)
-    + \smalloh{\norm{\y - \x}},
-    \quad \forall \x, \y \in \R^d
-\end{equation*}
-
-\begin{align*}
-    \implies
-    \norm{
-        \grad{f}{\y}
-        - \grad{f}{\x}
-        - \hess{f}{\x} (\y - \x)
-    }
-    & =
-    \norm{
-        \int_{0}^{1} \Big( \hess{f}{\x + t(\y - \x)} - \hess{f}{\x} \Big) (\y - \x) \, dt
-    }
-    \\ & \leq
-    \int_{0}^{1} \norm{
-        \Big( \hess{f}{\x + t(\y - \x)} - \hess{f}{\x} \Big) (\y - \x)
-    } \, dt
-    \\ & \leq
-    \int_{0}^{1}
-    \norm{\hess{f}{\x + t(\y - \x)} - \hess{f}{\x}}
-    \norm{\y - \x}
-    \, dt
-    \\ & \leq
-    \int_{0}^{1}
-    M \norm{\cancel{\x} + t(\y - \x) - \cancel{\x}}
-    \norm{\y - \x}
-    \, dt
-    \\ & =
-    \int_{0}^{1}
-    M
-    \norm{\y - \x}^2
-    \, t
-    \, dt
-    =
-    M
-    \norm{\y - \x}^2
-    \int_{0}^{1}
-    t
-    \, dt
-    =
-    \frac{M}{2}
-    \norm{\y - \x}^2
-\end{align*}
-\begin{equation*}
-    \implies
-    \boxed{
-        \norm{
-            \grad{f}{\y}
-            - \grad{f}{\x}
-            - \hess{f}{\x} (\y - \x)
-        }
-        \leq
-        \frac{M}{2} \norm{\y - \x}^2,
-        \quad \forall \x, \y \in \R^d
-    }
-\end{equation*}
-
-Now, since \( - \norm{\A} \, \I \preceq \A \preceq \norm{\A} \, \I, \quad \forall \A \in \SD \), we have
-\begin{align*}
-    - \norm{\hess{f}{\y} - \hess{f}{\x}} \, \I
-    \preceq
-    \hess{f}{\y} - \hess{f}{\x}
-    \preceq
-    \norm{\hess{f}{\y} - \hess{f}{\x}} \, \I,
-    \quad \forall \x, \y \in \R^d
-    \\
-    \implies
-    - M \norm{\y - \x} \, \I
-    \preceq
-    \hess{f}{\y} - \hess{f}{\x}
-    \preceq
-    M \norm{\y - \x} \, \I,
-    \quad \forall \x, \y \in \R^d
-    \\
-    \implies
-    \boxed{
-        \hess{f}{\x} - M \norm{\y - \x} \, \I
-        \preceq
-        \hess{f}{\y}
-        \preceq
-        \hess{f}{\x} + M \norm{\y - \x} \, \I,
-        \quad \forall \x, \y \in \R^d
-    }
-\end{align*}
-
-Let \( r_k \triangleq \norm{\x^k - \xstar} \).
-Then, we have
-\begin{align*}
-    \implies
-    &
-    \hess{f}{\xstar} - M r_k \, \I
-    \preceq
-    \hess{f}{\x^k}
-    \preceq
-    \hess{f}{\xstar} + M r_k \, \I
-    \\
-    \implies
-    &
-    (l - M r_k) \, \I
-    \preceq
-    \hess{f}{\x^k}
-    \\
-    \therefore
-    \quad
-    &
-    \text{If }
-    (l - M r_k) > 0
-    \implies
-    \hess{f}{\x^k}
-    \succ
-    \zero
-    \\
-    \text{i.e.,}
-    \quad
-    &
-    \text{If }
-    \boxed{
-        r_k < \frac{l}{M}
-    }
-    \implies
-    \hess{f}{\x^k}
-    \succ
-    \zero
-    \\
-    \text{Also, }
-    \quad
-    &
-    (l - M r_k) \, \I
-    \preceq
-    \hess{f}{\x^k}
-    \implies
-    \frac{1}{(l - M r_k)} \, \I
-    \succeq
-    \hessinv{f}{\x^k}
-    \\
-    \text{i.e.,}
-    \quad
-    &
-    \hessinv{f}{\x^k}
-    \preceq
-    \frac{1}{(l - M r_k)} \, \I
-    \implies
-    \boxed{
-        \norm{\hessinv{f}{\x^k}}
-        \leq
-        \frac{1}{(l - M r_k)}
-    }
-\end{align*}
-
-Now,
-\begin{align*}
-    r_{k+1}
-    & =
-    \norm{\x^{k+1} - \xstar}
-    =
-    \norm{\left( \x^k - \hessinv{f}{\x^k} \grad{f}{\x^k} \right) - \xstar}
-    \\ & =
-    \norm{\x^k - \xstar - \hessinv{f}{\x^k} \grad{f}{\x^k}}
-    \\ & =
-    \norm{\hessinv{f}{\x^k} \Big( \hess{f}{\x^k} (\x^k - \xstar) - \grad{f}{\x^k} \Big)}
-    \\ & \leq
-    \norm{\hessinv{f}{\x^k}} \,
-    \norm{\hess{f}{\x^k} (\x^k - \xstar) - \grad{f}{\x^k}}
-\end{align*}
-\begin{align*}
-    \implies
-    &
-    \norm{\hess{f}{\x^k} (\x^k - \xstar) - \grad{f}{\x^k}}
-    \\ & =
-    \norm{\hess{f}{\x^k} (\x^k - \xstar) - \int_{0}^{1} \hess{f}{\xstar + t(\x^k - \xstar)} (\x^k - \xstar) \, dt}
-    \\ & =
-    \norm{\int_{0}^{1} \hess{f}{\x^k} (\x^k - \xstar)  \, dt - \int_{0}^{1} \hess{f}{\xstar + t(\x^k - \xstar)} (\x^k - \xstar) \, dt}
-    \\ & =
-    \norm{\int_{0}^{1} \Big( \hess{f}{\x^k} - \hess{f}{\xstar + t(\x^k - \xstar)} \Big) (\x^k - \xstar) \, dt}
-    \\ & \leq
-    \int_{0}^{1} \norm{\Big( \hess{f}{\x^k} - \hess{f}{\xstar + t(\x^k - \xstar)} \Big) (\x^k - \xstar)} \, dt
-    \\ & \leq
-    \int_{0}^{1} \norm[\Big]{\hess{f}{\x^k} - \hess{f}{\xstar + t(\x^k - \xstar)}} \, \norm{\x^k - \xstar} \, dt
-    \\ & \leq
-    \int_{0}^{1} M \norm[\Big]{\x^k - \xstar - t(\x^k - \xstar)} \, \norm{\x^k - \xstar} \, dt
-    \\ & =
-    \int_{0}^{1} M (1 - t) \norm{\x^k - \xstar}^2 \, dt
-    \\ & =
-    M
-    \norm{\x^k - \xstar}^2
-    \int_{0}^{1} (1 - t) \, dt
-    =
-    \frac{M}{2}
-    r_k^2
-\end{align*}
-\begin{equation*}
-    \implies
-    \boxed{
-        r_{k+1}
-        \leq
-        \frac{M}{2}
-        \norm{\hessinv{f}{\x^k}}
-        r_k^2
-    }
-    \implies
-    r_{k+1}
-    \leq
-    \frac{M}{2 (l - M r_k)}
-    r_k^2
-\end{equation*}
-
-Thereby, rate of convergence for Newton's method is quadratic.
-
-Now, we want \( r_{k+1} < r_k \) to ensure successive iterates converge to \( \xstar \), thereby we get
-\begin{equation*}
-    \frac{M}{2 (l - M r_k)}
-    r_k^2
-    <
-    r_k
-    \implies
-    M r_k
-    <
-    2 l - 2 M r_k
-    \implies
-    3 M r_k
-    <
-    2 l
-    \implies
-    \boxed{
-        r_k
-        <
-        \frac{2 l}{3 M}
-    }
-\end{equation*}
-
-Note that \( \displaystyle r_k < \frac{2 l}{3 M} \implies r_k < \frac{l}{M} \), ensuring \( \hess{f}{\x^k} \succ \zero \).
-
-Thereby, if we start with \( \displaystyle \boxed{ r_0 < \frac{2 l}{3 M} } \), then since \( \displaystyle r_k < r_{k - 1} < \cdots < r_1 < r_0 < \frac{2 l}{3 M} \), this ensures that \( \displaystyle r_k < \frac{2 l}{3 M} \).
-Thereby, we have \( \hess{f}{\x^k} \succ \zero \) throughout the iterations, ensuring that \( \p^k \) is a descent direction, thereby the algorithm converges to the local minimum \( \xstar \).
-
 \chapter{Conjugate gradient methods}
 
 \section{\texorpdfstring{\( \Q \)--conjugacy}{Q-conjugacy}}
@@ -2559,6 +2230,335 @@ Since \( \set{\v_i}_{i = 1}^{d} \) forms an orthonormal basis for \( \R^d \), we
     \end{equation*}
     where \( \kappa(\Q) = \frac{\lambda_d}{\lambda_1} \) is the condition number of \( \Q \).
 \end{corollary}
+
+\chapter{Second-order methods}
+
+\section{Newton's method}
+
+\begin{equation*}
+    \x^{k+1}
+    =
+    \x^k - \hessinv{f}{\x} \grad{f}{\x^k},
+    \qquad
+    \hess{f}{\x^k} \succ \zero
+\end{equation*}
+
+\paragraph{Newton direction:}
+Refers to the descent direction
+\begin{equation*}
+    \p^k = -\hessinv{f}{\x^k} \grad{f}{\x^k},
+    \qquad \hess{f}{\x^k} \succ \zero
+\end{equation*}
+
+This satisfies the condition for descent direction since
+\begin{align*}
+    \hess{f}{\x^k}
+    &
+    \succ \zero
+    \implies
+    \hessinv{f}{\x^k}
+    \succ \zero
+    \\
+    \implies
+    \dotp{\grad{f}{\x^k}}{\p^k}
+    & =
+    - {\left( \grad{f}{\x^k} \right)}^\top \hessinv{f}{\x^k} \grad{f}{\x^k}
+    < 0
+\end{align*}
+
+From the fundamental theorem of calculus~\psecref{sec:fundamental-theorem-of-calculus}, with \( \func{g}{t} \triangleq \grad{f}{\x + t(\y - \x)}, \; t \in [0, 1] \), we have
+\begin{equation*}
+    \func{g}{1} - \func{g}{0}
+    =
+    \int_{0}^{1} \func{g'}{t} \, dt
+    \implies
+    \boxed{
+        \grad{f}{\y} - \grad{f}{\x}
+        =
+        \int_{0}^{1} \hess{f}{\x + t(\y - \x)} (\y - \x) \, dt,
+        \quad \forall \x, \y \in \R^d
+    }
+\end{equation*}
+
+For a stationary point \( \xstar \), i.e., \( \grad{f}{\xstar} = \zero \), we have
+\begin{equation*}
+    \implies
+    \grad{f}{\x}
+    =
+    \int_{0}^{1} \hess{f}{\xstar + t(\x - \xstar)} (\x - \xstar) \, dt,
+    \quad \forall \x \in \R^d
+\end{equation*}
+
+Suppose \( \hess{f}{\xstar} \succ \zero \), ensuring that \( \xstar \) is a local minimum.
+\begin{equation*}
+    \implies
+    \exists l > 0 \text{ such that } \hess{f}{\xstar} \succeq l \, \I
+\end{equation*}
+
+Assuming \( f \in \C^2_M \), we have
+\begin{equation*}
+    \boxed{
+        \norm{\hess{f}{\y} - \hess{f}{\x}}
+        \leq
+        M \norm{\y - \x},
+        \quad \forall \x, \y \in \R^d
+    }
+\end{equation*}
+
+From Taylor's theorem, we have
+\begin{equation*}
+    \func{f}{\y}
+    =
+    \func{f}{\x}
+    + \dotp{\grad{f}{\x}}{(\y - \x)}
+    + \half \qf{(\y - \x)}{\hess{f}{\x}}
+    + \smalloh{\norm{\y - \x}^2},
+    \quad \forall \x, \y \in \R^d
+\end{equation*}
+
+Taking the derivative with respect to \( \y \) on both sides, we have
+\begin{equation*}
+    \implies
+    \grad{f}{\y}
+    =
+    \grad{f}{\x}
+    + \hess{f}{\x} (\y - \x)
+    + \smalloh{\norm{\y - \x}},
+    \quad \forall \x, \y \in \R^d
+\end{equation*}
+
+\begin{align*}
+    \implies
+    \norm{
+        \grad{f}{\y}
+        - \grad{f}{\x}
+        - \hess{f}{\x} (\y - \x)
+    }
+    & =
+    \norm{
+        \int_{0}^{1} \Big( \hess{f}{\x + t(\y - \x)} - \hess{f}{\x} \Big) (\y - \x) \, dt
+    }
+    \\ & \leq
+    \int_{0}^{1} \norm{
+        \Big( \hess{f}{\x + t(\y - \x)} - \hess{f}{\x} \Big) (\y - \x)
+    } \, dt
+    \\ & \leq
+    \int_{0}^{1}
+    \norm{\hess{f}{\x + t(\y - \x)} - \hess{f}{\x}}
+    \norm{\y - \x}
+    \, dt
+    \\ & \leq
+    \int_{0}^{1}
+    M \norm{\cancel{\x} + t(\y - \x) - \cancel{\x}}
+    \norm{\y - \x}
+    \, dt
+    \\ & =
+    \int_{0}^{1}
+    M
+    \norm{\y - \x}^2
+    \, t
+    \, dt
+    =
+    M
+    \norm{\y - \x}^2
+    \int_{0}^{1}
+    t
+    \, dt
+    =
+    \frac{M}{2}
+    \norm{\y - \x}^2
+\end{align*}
+\begin{equation*}
+    \implies
+    \boxed{
+        \norm{
+            \grad{f}{\y}
+            - \grad{f}{\x}
+            - \hess{f}{\x} (\y - \x)
+        }
+        \leq
+        \frac{M}{2} \norm{\y - \x}^2,
+        \quad \forall \x, \y \in \R^d
+    }
+\end{equation*}
+
+Now, since \( - \norm{\A} \, \I \preceq \A \preceq \norm{\A} \, \I, \quad \forall \A \in \SD \), we have
+\begin{align*}
+    - \norm{\hess{f}{\y} - \hess{f}{\x}} \, \I
+    \preceq
+    \hess{f}{\y} - \hess{f}{\x}
+    \preceq
+    \norm{\hess{f}{\y} - \hess{f}{\x}} \, \I,
+    \quad \forall \x, \y \in \R^d
+    \\
+    \implies
+    - M \norm{\y - \x} \, \I
+    \preceq
+    \hess{f}{\y} - \hess{f}{\x}
+    \preceq
+    M \norm{\y - \x} \, \I,
+    \quad \forall \x, \y \in \R^d
+    \\
+    \implies
+    \boxed{
+        \hess{f}{\x} - M \norm{\y - \x} \, \I
+        \preceq
+        \hess{f}{\y}
+        \preceq
+        \hess{f}{\x} + M \norm{\y - \x} \, \I,
+        \quad \forall \x, \y \in \R^d
+    }
+\end{align*}
+
+Let \( r_k \triangleq \norm{\x^k - \xstar} \).
+Then, we have
+\begin{align*}
+    \implies
+    &
+    \hess{f}{\xstar} - M r_k \, \I
+    \preceq
+    \hess{f}{\x^k}
+    \preceq
+    \hess{f}{\xstar} + M r_k \, \I
+    \\
+    \implies
+    &
+    (l - M r_k) \, \I
+    \preceq
+    \hess{f}{\x^k}
+    \\
+    \therefore
+    \quad
+    &
+    \text{If }
+    (l - M r_k) > 0
+    \implies
+    \hess{f}{\x^k}
+    \succ
+    \zero
+    \\
+    \text{i.e.,}
+    \quad
+    &
+    \text{If }
+    \boxed{
+        r_k < \frac{l}{M}
+    }
+    \implies
+    \hess{f}{\x^k}
+    \succ
+    \zero
+    \\
+    \text{Also, }
+    \quad
+    &
+    (l - M r_k) \, \I
+    \preceq
+    \hess{f}{\x^k}
+    \implies
+    \frac{1}{(l - M r_k)} \, \I
+    \succeq
+    \hessinv{f}{\x^k}
+    \\
+    \text{i.e.,}
+    \quad
+    &
+    \hessinv{f}{\x^k}
+    \preceq
+    \frac{1}{(l - M r_k)} \, \I
+    \implies
+    \boxed{
+        \norm{\hessinv{f}{\x^k}}
+        \leq
+        \frac{1}{(l - M r_k)}
+    }
+\end{align*}
+
+Now,
+\begin{align*}
+    r_{k+1}
+    & =
+    \norm{\x^{k+1} - \xstar}
+    =
+    \norm{\left( \x^k - \hessinv{f}{\x^k} \grad{f}{\x^k} \right) - \xstar}
+    \\ & =
+    \norm{\x^k - \xstar - \hessinv{f}{\x^k} \grad{f}{\x^k}}
+    \\ & =
+    \norm{\hessinv{f}{\x^k} \Big( \hess{f}{\x^k} (\x^k - \xstar) - \grad{f}{\x^k} \Big)}
+    \\ & \leq
+    \norm{\hessinv{f}{\x^k}} \,
+    \norm{\hess{f}{\x^k} (\x^k - \xstar) - \grad{f}{\x^k}}
+\end{align*}
+\begin{align*}
+    \implies
+    &
+    \norm{\hess{f}{\x^k} (\x^k - \xstar) - \grad{f}{\x^k}}
+    \\ & =
+    \norm{\hess{f}{\x^k} (\x^k - \xstar) - \int_{0}^{1} \hess{f}{\xstar + t(\x^k - \xstar)} (\x^k - \xstar) \, dt}
+    \\ & =
+    \norm{\int_{0}^{1} \hess{f}{\x^k} (\x^k - \xstar)  \, dt - \int_{0}^{1} \hess{f}{\xstar + t(\x^k - \xstar)} (\x^k - \xstar) \, dt}
+    \\ & =
+    \norm{\int_{0}^{1} \Big( \hess{f}{\x^k} - \hess{f}{\xstar + t(\x^k - \xstar)} \Big) (\x^k - \xstar) \, dt}
+    \\ & \leq
+    \int_{0}^{1} \norm{\Big( \hess{f}{\x^k} - \hess{f}{\xstar + t(\x^k - \xstar)} \Big) (\x^k - \xstar)} \, dt
+    \\ & \leq
+    \int_{0}^{1} \norm[\Big]{\hess{f}{\x^k} - \hess{f}{\xstar + t(\x^k - \xstar)}} \, \norm{\x^k - \xstar} \, dt
+    \\ & \leq
+    \int_{0}^{1} M \norm[\Big]{\x^k - \xstar - t(\x^k - \xstar)} \, \norm{\x^k - \xstar} \, dt
+    \\ & =
+    \int_{0}^{1} M (1 - t) \norm{\x^k - \xstar}^2 \, dt
+    \\ & =
+    M
+    \norm{\x^k - \xstar}^2
+    \int_{0}^{1} (1 - t) \, dt
+    =
+    \frac{M}{2}
+    r_k^2
+\end{align*}
+\begin{equation*}
+    \implies
+    \boxed{
+        r_{k+1}
+        \leq
+        \frac{M}{2}
+        \norm{\hessinv{f}{\x^k}}
+        r_k^2
+    }
+    \implies
+    r_{k+1}
+    \leq
+    \frac{M}{2 (l - M r_k)}
+    r_k^2
+\end{equation*}
+
+Thereby, rate of convergence for Newton's method is quadratic.
+
+Now, we want \( r_{k+1} < r_k \) to ensure successive iterates converge to \( \xstar \), thereby we get
+\begin{equation*}
+    \frac{M}{2 (l - M r_k)}
+    r_k^2
+    <
+    r_k
+    \implies
+    M r_k
+    <
+    2 l - 2 M r_k
+    \implies
+    3 M r_k
+    <
+    2 l
+    \implies
+    \boxed{
+        r_k
+        <
+        \frac{2 l}{3 M}
+    }
+\end{equation*}
+
+Note that \( \displaystyle r_k < \frac{2 l}{3 M} \implies r_k < \frac{l}{M} \), ensuring \( \hess{f}{\x^k} \succ \zero \).
+
+Thereby, if we start with \( \displaystyle \boxed{ r_0 < \frac{2 l}{3 M} } \), then since \( \displaystyle r_k < r_{k - 1} < \cdots < r_1 < r_0 < \frac{2 l}{3 M} \), this ensures that \( \displaystyle r_k < \frac{2 l}{3 M} \).
+Thereby, we have \( \hess{f}{\x^k} \succ \zero \) throughout the iterations, ensuring that \( \p^k \) is a descent direction, thereby the algorithm converges to the local minimum \( \xstar \).
 
 \chapter{Quasi-Newton methods}
 
