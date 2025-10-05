@@ -18,33 +18,34 @@ The functions \( g_i \) are called \textbf{inequality constraints} and the funct
 \section{Separating hyperplane theorem}
 
 \begin{theorem}{Separating hyperplane theorem}{separating-hyperplane-theorem}
-    Let \( C, D \subseteq \R^d \) be non-empty, disjoint, closed, convex sets.
+    Let \( \C, \D \subseteq \R^d \) be non-empty, disjoint, closed, convex sets.
     If one of the sets is compact, then there exists a hyperplane that separates them.
     That is, there exists \( \b \in \R^d \setminus \set{\zero}, \; c \in \R \) such that
+    \vspace{-0.5em}
     \begin{equation*}
         \dotp{\b}{\x}
         \leq c
         <
         \dotp{\b}{\y},
         \quad
-        \forall \x \in C,
-        \; \forall \y \in D
+        \forall \x \in \C,
+        \; \forall \y \in \D
     \end{equation*}
 \end{theorem}
 
 \begin{proof}
-    Since one of the sets is compact, there exists \( \x_0 \in C, \; \y_0 \in D \) such that
+    Since one of the sets is compact, there exists \( \x_0 \in \C, \; \y_0 \in \D \) such that
     \begin{equation*}
         \norm{\x_0 - \y_0}
         =
-        \min_{\x \in C, \, \y \in D} \norm{\x - \y}
+        \min_{\x \in \C, \, \y \in \D} \norm{\x - \y}
         >
         0
     \end{equation*}
     Let \( \b = \y_0 - \x_0, \; c = \dotp{\b}{\pbrac{\x_0 + \y_0}/2} \).
-    We will show that this hyperplane separates \( C, D \).
+    We will show that this hyperplane separates \( \C, \D \).
 
-    Suppose there exists \( \x' \in C \) such that \( \dotp{\b}{\x'} > c \).
+    Suppose there exists \( \x' \in \C \) such that \( \dotp{\b}{\x'} > c \).
     Then,
     \begin{align*}
         &
@@ -70,8 +71,8 @@ The functions \( g_i \) are called \textbf{inequality constraints} and the funct
         =
         4 \norm{\y_0 - \x_0}^2
     \end{align*}
-    This is a contradiction since \( \x', \x_0 \in C, \; \y_0 \in D \) and \( C, D \) are disjoint.
-    Thus, \( \dotp{\b}{\x} \leq c, \; \forall \x \in C \).
+    This is a contradiction since \( \x', \x_0 \in \C, \; \y_0 \in \D \) and \( \C, \D \) are disjoint.
+    Thus, \( \dotp{\b}{\x} \leq c, \; \forall \x \in \C \).
 \end{proof}
 
 \section{Farkas' lemma}
@@ -97,8 +98,8 @@ The functions \( g_i \) are called \textbf{inequality constraints} and the funct
     \end{equation*}
 
     Now, suppose the first statement is false.
-    Then, consider the closed convex cone \( \func{C}{\A} \triangleq \set{\A \x \given \x \geq 0} \), which does not contain \( \b \).
-    By the separating hyperplane theorem~\pthmref{thm:separating-hyperplane-theorem}, there exists a hyperplane that separates \( \func{C}{\A} \) and \( \b \).
+    Then, consider the closed convex cone \( \func{\C}{\A} \triangleq \set{\A \x \given \x \geq 0} \), which does not contain \( \b \).
+    By the separating hyperplane theorem~\pthmref{thm:separating-hyperplane-theorem}, there exists a hyperplane that separates \( \func{\C}{\A} \) and \( \b \).
     Thus, there exists \( \y \in \R^m, \; c \in \R \) such that
     \begin{equation*}
         \dotp{\pbrac{\A \x}}{\y}

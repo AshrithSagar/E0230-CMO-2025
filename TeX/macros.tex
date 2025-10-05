@@ -50,7 +50,7 @@
 \newcommand{\PSD}[1][d]{{\mathcal{S}^{+}_{#1}}}
 \newcommand{\PD}[1][d]{{\mathcal{S}^{++}_{#1}}}
 
-\newcommand{\C}{{\mathcal{C}}}
+\LoopCommands{CD}[#1]{\newmathcommand#2{{\mathcal{#1}}}}
 
 \LoopCommands{xyzheapbruv}[#1]{\declaremathcommandPIE#2{{\mathbf{#1}}##1##2\IfEmptyTF{##3}{}{^{(\GetExponent{##3})}}}}
 
