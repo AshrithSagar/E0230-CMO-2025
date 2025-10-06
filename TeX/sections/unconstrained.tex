@@ -2807,7 +2807,7 @@ Consider the update
 
 \section{Symmetric Rank-1 (SR1) update}\label{sec:sr1}
 
-Choose the update so that
+Choose the update so that \( \A_k \) is symmetric, and
 \begin{equation*}
     \A_{k+1}
     =
@@ -2817,21 +2817,36 @@ Choose the update so that
     \; \v \in \R^d
 \end{equation*}
 
-\begin{equation*}
+\begin{align*}
     \because
     \boldsymbol{\delta}_k
     =
     \A_{k+1} \, \boldsymbol{\gamma}_k
+    & =
+    \A_k \, \boldsymbol{\gamma}_k
+    + \beta \, \outp{\v}{\v} \, \boldsymbol{\gamma}_k
+    \\
     \implies
     \boldsymbol{\delta}_k
     - \A_k \, \boldsymbol{\gamma}_k
-    =
-    \beta \, \outp{\v}{\v} \, \boldsymbol{\gamma}_k
-    =
+    & =
     \beta \pbrac{\dotp{\v}{\boldsymbol{\gamma}_k}} \, \v
-\end{equation*}
+\end{align*}
+
 One such solution to the above equation is
-\begin{equation*}
+\begin{align*}
+    &
+    \v
+    =
+    \boldsymbol{\delta}_k
+    - \A_k \, \boldsymbol{\gamma}_k,
+    \qquad
+    \beta \pbrac{\dotp{\v}{\boldsymbol{\gamma}_k}}
+    =
+    1
+    \\
+    \implies
+    &
     \boxed{
         \v
         =
@@ -2840,12 +2855,16 @@ One such solution to the above equation is
         \qquad
         \beta
         =
-        \frac{1}{\dotp{\v}{\boldsymbol{\gamma}_k}}
+        \frac{1}{
+            \dotp{\pbrac{\boldsymbol{\delta}_k
+            - \A_k \, \boldsymbol{\gamma}_k}}
+            {\boldsymbol{\gamma}_k}
+        }
     }
-\end{equation*}
+\end{align*}
 
-Hence, we have the rank-1 update as
-\begin{equation*}
+Hence, we have the SR1 update as
+\begin{equation}\label{eq:sr1}
     \boxed{
         \A_{k+1}
         =
@@ -2855,21 +2874,36 @@ Hence, we have the rank-1 update as
             \outp
             {\pbrac{\boldsymbol{\delta}_k - \A_k \, \boldsymbol{\gamma}_k}}
             {\pbrac{\boldsymbol{\delta}_k - \A_k \, \boldsymbol{\gamma}_k}}
-        }
-        {
+        }{
             \dotp
             {\pbrac{\boldsymbol{\delta}_k - \A_k \, \boldsymbol{\gamma}_k}}
             {\boldsymbol{\gamma}_k}
         }
     }
-\end{equation*}
+\end{equation}
 
 Note that \( \A_{k+1} \succ \zero \) if \( \A_k \succ \zero \) and \( \beta > 0 \), but \( \beta > 0 \) does not necessarily hold true.\\
 The SR1 update does not guarantee positive definiteness of \( \A_{k+1} \).
 
-\section{Rank-2 update (DFP)}\label{sec:dfp}
+Since the denominator in~\peqref{eq:sr1} can be very small or zero, we only use the SR1 update when
+\begin{equation*}
+    \abs{
+        \dotp
+        {\pbrac{\boldsymbol{\delta}_k - \A_k \, \boldsymbol{\gamma}_k}}
+        {\boldsymbol{\gamma}_k}
+    }
+    \geq
+    \rho
+    \, \norm{\boldsymbol{\delta}_k - \A_k \, \boldsymbol{\gamma}_k}
+    \, \norm{\boldsymbol{\gamma}_k},
+    \quad
+    \text{for some small }
+    \rho \in (0, 1)
+\end{equation*}
 
-Choose the update so that
+\section{Davidon-Fletcher-Powell (DFP) update}\label{sec:dfp}
+
+Choose the update so that \( \A_k \) is symmetric, and
 \begin{equation*}
     \A_{k+1}
     =
@@ -2880,19 +2914,25 @@ Choose the update so that
     \; \u, \v \in \R^d
 \end{equation*}
 
-\begin{equation*}
+\begin{align*}
     \because
     \boldsymbol{\delta}_k
     =
     \A_{k+1} \, \boldsymbol{\gamma}_k
+    & =
+    \A_k \, \boldsymbol{\gamma}_k
+    + \beta_1 \, \outp{\u}{\u} \, \boldsymbol{\gamma}_k
+    + \beta_2 \, \outp{\v}{\v} \, \boldsymbol{\gamma}_k
+    \\
     \implies
     \boldsymbol{\delta}_k
     - \A_k \, \boldsymbol{\gamma}_k
-    =
+    & =
     \beta_1 \pbrac{\dotp{\u}{\boldsymbol{\gamma}_k}} \, \u
     +
     \beta_2 \pbrac{\dotp{\v}{\boldsymbol{\gamma}_k}} \, \v
-\end{equation*}
+\end{align*}
+
 One such solution to the above equation is
 \begin{align*}
     &
@@ -2957,8 +2997,7 @@ The DFP update guarantees positive definiteness of \( \A_{k+1} \) if \( \A_k \su
 The condition \( \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k} > 0 \) is known as the \textit{curvature condition}, and is satisfied if \( f \) is strongly convex and \( \alpha_k \) is chosen using exact line search or an inexact line search that satisfies the Wolfe conditions.
 
 \begin{theorem}{DFP positive definiteness}{}
-    If \( \A_0 \succ \zero \) and \( \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k} > 0, \; \forall k \), then the DFP update preserves positive definiteness, i.e.,\\
-    If \( \A_k \succ \zero \) and \( \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k} > 0 \), then \( \A_{k+1} \succ \zero \).
+    If \( \A_0 \) is symmetric positive-definite and \( \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k} > 0, \; \forall k \), then the DFP update preserves positive definiteness, i.e., if \( \A_k \succ \zero \) and \( \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k} > 0 \), then \( \A_{k+1} \succ \zero \).
 \end{theorem}
 
 \begin{proof}
@@ -3110,9 +3149,13 @@ The condition \( \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k} > 0 \) is k
     Thus, the DFP update preserves positive definiteness.
 \end{proof}
 
+\section{Broyden-Fletcher-Goldfarb-Shanno (BFGS) update}
+
+The BFGS update is the dual of the DFP update, i.e., it updates the Hessian approximation \( \B_k \) instead of the inverse Hessian approximation \( \A_k \).
+
 \section{Broyden family}
 
-Choose the update so that
+Choose the update so that \( \A_k \) is symmetric, and
 \begin{equation*}
     \A_{k+1}
     =

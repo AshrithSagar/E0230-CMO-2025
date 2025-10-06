@@ -1240,6 +1240,21 @@ The \textbf{Gram-Schmidt orthonormalisation} process takes a finite, linearly in
     Hence, the statement holds for all \( k \in \set{0, 1, \ldots, n - 1} \).
 \end{proof}
 
+\section{Sherman-Morrison formula}
+
+\begin{theorem}{Sherman-Morrison formula~\citep{wiki}}{sherman-morrison-formula}
+    For any invertible matrix \( \A \in \R^{d \times d} \) and vectors \( \u, \v \in \R^d \), \( \A + \outp{\u}{\v} \) is invertible iff \( 1 + \qf{\v}{\inv{\A}}[\u] \neq 0 \), and we have
+    \begin{equation*}
+        \inv{\bbrac{\A + \outp{\u}{\v}}}
+        =
+        \inv{\A}
+        -
+        \frac
+        {\inv{\A} \outp{\u}{\v} \inv{\A}}
+        {1 + \qf{\v}{\inv{\A}}[\u]}
+    \end{equation*}
+\end{theorem}
+
 \chapter{Inequalities}
 
 \section{AM-GM inequality}
