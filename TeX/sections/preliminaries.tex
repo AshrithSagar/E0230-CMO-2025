@@ -421,7 +421,7 @@ The \textbf{Hessian} of a function \( f: \R^d \to \R \) at a point \( \x = {\lef
 \begin{itemize}
     \item If \( f \) is differentiable at \( x \), then \( f \) is continuous at \( x \).
 
-    \item \( \func{f}{\x} = \half \qf{\x}{\A}, \; \A = \u \v^\top, \; \u, \v \in \R^d, \; \u \neq \v \implies \hess{f}{\x} = \half (\A + \A^\top) = \half (\u \v^\top + \v \u^\top) \).
+    \item \( \displaystyle \func{f}{\x} = \half \qf{\x}{\A}, \; \A = \outp{\u}{\v}, \; \u, \v \in \R^d, \; \u \neq \v \implies \hess{f}{\x} = \half (\A + \A^\top) = \half (\outp{\u}{\v} + \outp{\v}{\u}) \).
 \end{itemize}
 
 \section{Fundamental theorem of calculus}\label{sec:fundamental-theorem-of-calculus}
@@ -957,10 +957,150 @@ The \textbf{condition number} of a matrix \( \A \in \SD \) is given by
 \end{equation*}
 where \( \lambda_{\max}(\A) \) and \( \lambda_{\min}(\A) \) are the largest and smallest eigenvalues of \( \A \) respectively.
 
-\section{Cayley-Hamilton theorem}
+\section{Characteristic polynomial}
+
+The \textbf{characteristic polynomial} of a matrix \( \A \in \mathbb{C}^{d \times d} \) is defined as
+\begin{equation*}
+    p_{\A}(\lambda)
+    =
+    \determinant{\lambda \I - \A}
+    =
+    \sum_{i = 0}^{d} c_i \, \lambda^i,
+    \quad c_i \in \mathbb{C},
+    \; \forall i \in \set{0, 1, \ldots, d}
+\end{equation*}
+
+\subsection{Properties}
+
+\begin{itemize}
+    \item \( p_{\A}(\lambda) \) is a monic polynomial of degree \( d \) in \( \lambda \), i.e., \( c_d = 1 \).
+
+    \item The roots of \( p_{\A}(\lambda) \) are the eigenvalues of \( \A \), \( \set{\lambda_i}_{i = 1}^{d} \).\\
+        \( p_{\A}(\lambda) = 0 \iff \lambda \) is an eigenvalue of \( \A \).
+
+    \item \( p_{\A}(\lambda) = \prod_{i = 1}^{d} (\lambda - \lambda_i) \), if \( \A \) is diagonalisable over \( \mathbb{C} \).
+
+    \item \( c_0 = {(-1)}^{d} \determinant{\A} = {(-1)}^{d} \prod_{i = 1}^{d} \lambda_i \).
+
+    \item \( c_{d-1} = -\trace{\A} = -\sum_{i = 1}^{d} \lambda_i \).
+
+    \item Two similar matrices have the same characteristic polynomial.\\
+        \(
+            \B \sim \A
+            \iff
+            \B = P \A \inv{P}
+            \implies
+            p_{\B}(\lambda) = p_{\A}(\lambda)
+        \).
+
+    \item (Cayley-Hamilton theorem~\psecref{sec:cayley-hamilton-theorem})
+        Every square matrix satisfies its own characteristic equation.\\
+        \(
+            p_{\A}(\lambda)
+            =
+            \sum_{i = 0}^{d} c_i \, \lambda^i
+            \implies
+            p_{\A}(\A)
+            =
+            \sum_{i = 0}^{d} c_i \, \A^i
+            =
+            \zero
+        \).
+
+    \item \( \lambda, \, \v \) is an eigenpair of \( \A \implies \lambda^k, \, \v \) is an eigenpair of \( \A^k, \; k \in \N \).\\
+        \(
+            \A^k \, \v
+            =
+            \A^{k - 1} \pbrac{\A \v}
+            =
+            \A^{k - 1} \pbrac{\lambda \v}
+            =
+            \lambda \, \pbrac{\A^{k - 1} \, \v}
+            =
+            \lambda^2 \, \pbrac{\A^{k - 2} \, \v}
+            =
+            \cdots
+            =
+            \lambda^{k - 1} \pbrac{\A \v}
+            =
+            \lambda^k \, \v
+        \)
+
+    \item
+        \(
+            p_{f(\A)}(\lambda)
+            =
+            \prod_{i = 1}^{d} \pbrac{\lambda - f(\lambda_i)}
+        \),
+        where \( f \) is a polynomial function, i.e.,\\
+        The eigenvalues of \( f(\A) \) are given by \( f(\lambda_i), \; i \in \set{1, 2, \ldots, d} \).
+
+    \item
+        \(
+            p_{\A}(\lambda)
+            =
+            \determinant{\lambda \I - \A}
+            =
+            {(-1)}^{d} \determinant{\A - \lambda \I}
+            =
+            {(-1)}^{d} p_{-\A}(-\lambda)
+        \)
+
+    \item
+        \(
+            \displaystyle
+            p_{\inv{\A}}(\lambda)
+            =
+            {(-1)}^{d} \frac{1}{\determinant{\A}} \, p_{\A}(\inv{\lambda})
+        \),
+        if \( \A \) is invertible.
+\end{itemize}
+
+\section{Minimal polynomial}
+
+The \textbf{minimal polynomial} of a matrix \( \A \in \mathbb{C}^{d \times d} \) is defined as the monic polynomial \( \mu_{\A}(\lambda) \) of least degree such that
+\begin{equation*}
+    \mu_{\A}(\A)
+    =
+    \zero,
+    \qquad \text{where }
+    \mu_{\A}(\lambda)
+    =
+    \sum_{i = 0}^{k} b_i \, \lambda^i,
+    \quad b_i \in \mathbb{C},
+    \; \forall i \in \set{0, 1, \ldots, k},
+    \; b_k = 1
+\end{equation*}
+
+\subsection{Properties}
+
+\begin{itemize}
+    \item \( \mu_{\A}(\lambda) \) is unique for a given square matrix \( \A \).
+
+    \item The roots of \( \mu_{\A}(\lambda) \) are exactly the distinct eigenvalues of \( \A \).
+        The multiplicity of each root \( \lambda \) in \( \mu_{\A}(\lambda) \) equals the size of the largest Jordan block corresponding to \( \lambda \).
+        In contrast, the characteristic polynomial \( p_{\A}(\lambda) \) includes all eigenvalues with their full algebraic multiplicity.
+
+    \item Two similar matrices have the same minimal polynomial.\\
+        \(
+            \B \sim \A
+            \iff
+            \B = P \A \inv{P}
+            \implies
+            \mu_{\B}(\lambda) = \mu_{\A}(\lambda)
+        \).
+
+    \item Any \textbf{annihilating polynomial} of \( \A \) must be a multiple of \( \mu_{\A}(\lambda) \), i.e.,\\
+        if \( f(\A) = \zero \), then \( f(\lambda) \) is a multiple of \( \mu_{\A}(\lambda) \).
+
+    \item (Cayley-Hamilton theorem~\psecref{sec:cayley-hamilton-theorem})
+        \( \mu_{\A}(\lambda) \) always divides \( p_{\A}(\lambda) \).
+\end{itemize}
+
+\section{Cayley-Hamilton theorem}\label{sec:cayley-hamilton-theorem}
 
 \begin{theorem}{Cayley-Hamilton theorem}{}
-    Every square matrix \( \A \in \R^{d \times d} \) satisfies its own characteristic equation, i.e., if \( p(\lambda) = \determinant{\A - \lambda \I} \) is the characteristic polynomial of \( \A \), then \( p(\A) = \zero \).
+    Every square matrix \( \A \in \C^{d \times d} \) satisfies its own characteristic equation, i.e., \( p_{\A}(\A) = \zero \).
 \end{theorem}
 
 \section{Krylov subspace}
