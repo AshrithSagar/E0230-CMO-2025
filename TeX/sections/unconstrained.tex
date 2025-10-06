@@ -63,9 +63,9 @@ The function \( f \) is called the \textbf{objective function}, the point \( \xs
         \hline
 
         \hypertarget{line-point-minimisation}
-        {\( f(t) = \cfrac{1}{2} {\big\Vert \u - t \v \big\Vert}^2, \quad t \in \R, \; \u, \v \in \R^d, \; \v \neq \zero \)}
+        {\( f(t) = \cfrac{1}{2} \norm[\big]{\u - t \v}^2, \quad t \in \R, \; \u, \v \in \R^d, \; \v \neq \zero \)}
         & \( t^\ast = \cfrac{\dotp{\u}{\v}}{\dotp{\v}{\v}} \)
-        & \( f(t^\ast) = \cfrac{1}{2} \left( \norm{\u}^2 - \cfrac{{(\dotp{\u}{\v})}^2}{\dotp{\v}{\v}} \right) \)
+        & \( f(t^\ast) = \cfrac{1}{2} \pbrac{\norm{\u}^2 - \cfrac{{(\dotp{\u}{\v})}^2}{\dotp{\v}{\v}}} \)
         \rule[-20pt]{0pt}{48pt} \\
         \hline
     \end{tabular}
@@ -122,7 +122,7 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
     For a function \( f \in \C^1 \), if \( \xstar \) is a local minimum of \( f \), then there exists a \( \delta > 0 \) such that
     \vspace{-0.5em}
     \begin{equation*}
-        \dotp{\grad{f}{\xstar}}{(\x - \xstar)} \geq 0,
+        \dotp{\grad{f}{\xstar}}{\pbrac{\x - \xstar}} \geq 0,
         \quad \forall \x \in B_{\delta}(\xstar)
     \end{equation*}
 \end{corollary}
@@ -133,7 +133,7 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
         \func{f}{\x}
         =
         \func{f}{\xstar}
-        + \dotp{\grad{f}{\xstar}}{(\x - \xstar)},
+        + \dotp{\grad{f}{\xstar}}{\pbrac{\x - \xstar}},
         \quad \forall \x \in B_{\delta_1}(\xstar)
     \end{equation*}
     Since \( \xstar \) is a local minimum, there exists a \( \delta_2 > 0 \) by~\pdefref{def:local-minimum} such that
@@ -149,13 +149,13 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
         \func{f}{\x}
         =
         \func{f}{\xstar}
-        + \dotp{\grad{f}{\xstar}}{(\x - \xstar)},
+        + \dotp{\grad{f}{\xstar}}{\pbrac{\x - \xstar}},
         \quad \forall \x \in B_{\delta}(\xstar)
         \\
         \implies
         0
         & \leq
-        \dotp{\grad{f}{\xstar}}{(\x - \xstar)},
+        \dotp{\grad{f}{\xstar}}{\pbrac{\x - \xstar}},
         \quad \forall \x \in B_{\delta}(\xstar)
     \end{align*}
 \end{proof}
@@ -182,14 +182,14 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
 \begin{proof}
     From the first-order variational inequality condition~\pcorref{cor:first-order-variational-inequality-condition}, there exists a \( \delta > 0 \) such that
     \begin{equation*}
-        \dotp{\grad{f}{\xstar}}{(\x - \xstar)}
+        \dotp{\grad{f}{\xstar}}{\pbrac{\x - \xstar}}
         \geq 0,
         \quad \forall \x \in B_{\delta}(\xstar)
     \end{equation*}
     Setting \( \x = \xstar + t \e_i, \; t \in (-\delta, \delta) \), we can see that \( \x \in B_{\delta}(\xstar) \) for all \( i \in \set{1, 2, \ldots, d} \).
     \begin{equation*}
         \implies
-        \dotp{\grad{f}{\xstar}}{(\x - \xstar)}
+        \dotp{\grad{f}{\xstar}}{\pbrac{\x - \xstar}}
         =
         \dotp{\grad{f}{\xstar}}{\pbrac{t \e_i}}
         =
@@ -215,8 +215,8 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
         \func{f}{\x}
         =
         \func{f}{\xstar}
-        + \cancel{\dotp{\grad{f}{\xstar}}{(\x - \xstar)}}
-        + \half \qf{(\x - \xstar)}{\hess{f}{\xstar}},
+        + \cancel{\dotp{\grad{f}{\xstar}}{\pbrac{\x - \xstar}}}
+        + \half \qf{\pbrac{\x - \xstar}}{\hess{f}{\xstar}},
         \quad \forall \x \in B_{\delta_1}(\xstar)
     \end{equation*}
     Since \( \xstar \) is a local minimum, there exists a \( \delta_2 > 0 \) by~\pdefref{def:local-minimum} such that
@@ -233,13 +233,13 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
         \func{f}{\x}
         =
         \func{f}{\xstar}
-        + \half \qf{(\x - \xstar)}{\hess{f}{\xstar}},
+        + \half \qf{\pbrac{\x - \xstar}}{\hess{f}{\xstar}},
         \quad \forall \x \in B_{\delta}(\xstar)
         \\
         \implies
         0
         & \leq
-        \qf{(\x - \xstar)}{\hess{f}{\xstar}},
+        \qf{\pbrac{\x - \xstar}}{\hess{f}{\xstar}},
         \quad \forall \x \in B_{\delta}(\xstar)
     \end{align*}
     Setting \( \x = \xstar + t \p, \; t \in (0, \delta / \norm{\p}) \), we can see that \( \x \in B_{\delta}(\xstar) \) for all \( \p \in \R^d \setminus \set{\zero} \).
@@ -348,7 +348,7 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
     For a function \( f \in \C^1 \) with a convex domain \( \D \), \( f \) is convex on \( \D \) iff
     \vspace{-0.5em}
     \begin{equation*}
-        \dotp{\big( \grad{f}{\x} - \grad{f}{\y} \big)}{\big( \x - \y \big)} \geq 0,
+        \dotp{\pbrac[\big]{\grad{f}{\x} - \grad{f}{\y}}}{\pbrac[\big]{\x - \y}} \geq 0,
         \quad \forall \x, \y \in \D
     \end{equation*}
 \end{corollary}
@@ -359,7 +359,7 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
     \begin{align*}
         \func{f}{\y}
         & \geq
-        \func{f}{\x} + {\grad{f}{\x}}^\top (\y - \x),
+        \func{f}{\x} + \dotp{\grad{f}{\x}}{\pbrac{\y - \x}},
         \quad \forall \x, \y \in \D
         \\
         \func{f}{\x}
@@ -385,11 +385,11 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
     \begin{align*}
         \func{g'}{t}
         & =
-        {\big( \nabla f(\x + t (\y - \x)) - \grad{f}{\x} + \grad{f}{\x} \big)}^\top (\y - \x)
+        {\pbrac[\big]{\nabla f(\x + t (\y - \x)) - \grad{f}{\x} + \grad{f}{\x}}}^\top (\y - \x)
         \\ & =
-        {\big( \nabla f(\x + t (\y - \x)) - \grad{f}{\x} \big)}^\top (\y - \x) + {\big( \grad{f}{\x} \big)}^\top (\y - \x)
+        {\pbrac[\big]{\nabla f(\x + t (\y - \x)) - \grad{f}{\x}}}^\top (\y - \x) + {\pbrac[\big]{\grad{f}{\x}}}^\top (\y - \x)
         \geq
-        {\big( \grad{f}{\x} \big)}^\top (\y - \x)
+        {\pbrac[\big]{\grad{f}{\x}}}^\top (\y - \x)
     \end{align*}
     for all \( t \in [0, 1] \).
     Integrating from \( 0 \) to \( 1 \), we get
@@ -400,9 +400,9 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
         =
         \int_{0}^{1} \func{g'}{t} \, dt
         \geq
-        \int_{0}^{1} {\big( \grad{f}{\x} \big)}^\top (\y - \x) \, dt
+        \int_{0}^{1} {\pbrac[\big]{\grad{f}{\x}}}^\top (\y - \x) \, dt
         =
-        {\big( \grad{f}{\x} \big)}^\top (\y - \x)
+        {\pbrac[\big]{\grad{f}{\x}}}^\top (\y - \x)
     \end{equation*}
     for all \( \x, \y \in \D \), which is the first-order condition for convexity, and thereby \( f \) is convex.
 \end{proof}
@@ -423,13 +423,13 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
     \( (\Rightarrow) \)
     The first-order condition for convexity can be rewritten as
     \begin{equation*}
-        \func{f}{\y} - \func{f}{\x} - {\grad{f}{\x}}^\top (\y - \x)
+        \func{f}{\y} - \func{f}{\x} - \dotp{\grad{f}{\x}}{\pbrac{\y - \x}}
         \geq 0,
         \quad \forall \x, \y \in \D
     \end{equation*}
     Using Taylor's theorem, we have
     \begin{equation*}
-        \func{f}{\y} - \func{f}{\x} - {\grad{f}{\x}}^\top (\y - \x)
+        \func{f}{\y} - \func{f}{\x} - \dotp{\grad{f}{\x}}{\pbrac{\y - \x}}
         =
         \half {(\y - \x)}^\top \hess{f}{\boldsymbol{\xi}} (\y - \x),
         \quad \boldsymbol{\xi} = (1 - t) \x + t \y, \; t \in (0, 1)
@@ -447,7 +447,7 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
     \( (\Leftarrow) \)
     From Taylor's theorem, we have
     \begin{equation*}
-        \func{f}{\y} - \func{f}{\x} - {\grad{f}{\x}}^\top (\y - \x)
+        \func{f}{\y} - \func{f}{\x} - \dotp{\grad{f}{\x}}{\pbrac{\y - \x}}
         =
         \half {(\y - \x)}^\top \hess{f}{\boldsymbol{\xi}} (\y - \x),
         \quad \boldsymbol{\xi} = (1 - t) \x + t \y, \; t \in (0, 1)
@@ -455,7 +455,7 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
     for some \( t \in (0, 1) \).
     Since \( \hess{f}{\x} \succeq \zero, \; \forall \x \in \D \), we have
     \begin{equation*}
-        \func{f}{\y} - \func{f}{\x} - {\grad{f}{\x}}^\top (\y - \x)
+        \func{f}{\y} - \func{f}{\x} - \dotp{\grad{f}{\x}}{\pbrac{\y - \x}}
         \geq 0,
         \quad \forall \x, \y \in \D
     \end{equation*}
@@ -478,7 +478,7 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
 \end{definition}
 
 \begin{corollary}{}{}
-    A function \( f: \D \subseteq \R^n \to \R \) on a convex domain \( \D \) is strongly convex with parameter \( \mu > 0 \) iff the function \( \func{g}{\x} := \left( \func{f}{\x} - \frac{\mu}{2} \norm{\x}^2 \right) \) is convex on \( \D \).
+    A function \( f: \D \subseteq \R^n \to \R \) on a convex domain \( \D \) is strongly convex with parameter \( \mu > 0 \) iff the function \( \func{g}{\x} := \pbrac{\func{f}{\x} - \frac{\mu}{2} \norm{\x}^2} \) is convex on \( \D \).
 \end{corollary}
 
 \begin{proof}
@@ -486,9 +486,9 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
     \begin{align*}
         \lambda (1 - \lambda) \norm{\x - \y}^2
         & =
-        \lambda (1 - \lambda) \Big( \norm{\y}^2 + \norm{\x}^2 - 2 \dotp{\x}{\y} \Big)
+        \lambda (1 - \lambda) \pbrac[\Big]{\norm{\y}^2 + \norm{\x}^2 - 2 \dotp{\x}{\y}}
         \\ & =
-        \lambda \norm{\y}^2 + \lambda \norm{\x}^2 - \lambda^2 \norm{\y}^2 - \norm{\lambda \x}^2 - 2 {(\lambda \x)}^\top \big( (1 - \lambda) \y \big)
+        \lambda \norm{\y}^2 + \lambda \norm{\x}^2 - \lambda^2 \norm{\y}^2 - \norm{\lambda \x}^2 - 2 {(\lambda \x)}^\top \pbrac[\big]{(1 - \lambda) \y}
         \\ & =
         \lambda \norm{\y}^2 + \lambda \norm{\x}^2 - \lambda^2 \norm{\y}^2 - \norm{\lambda \x + (1 - \lambda) \y}^2 + {(1 - \lambda)}^2 \norm{\y}^2
         \\ & =
@@ -506,7 +506,7 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
     \begin{equation*}
         \func{f}{\y}
         \geq
-        \func{f}{\x} + {\grad{f}{\x}}^\top (\y - \x) + \frac{\mu}{2} \norm{\y - \x}^2,
+        \func{f}{\x} + \dotp{\grad{f}{\x}}{\pbrac{\y - \x}} + \frac{\mu}{2} \norm{\y - \x}^2,
         \quad \forall \x, \y \in \D
     \end{equation*}
 \end{corollary}
@@ -518,22 +518,22 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
     \begin{align*}
         \func{g}{\y}
         & \geq
-        \func{g}{\x} + {\grad{g}{\x}}^\top (\y - \x),
+        \func{g}{\x} + \dotp{\grad{g}{\x}}{\pbrac{\y - \x}},
         \quad \forall \x, \y \in \D
         \\
         \implies
         \func{f}{\y} - \frac{\mu}{2} \norm{\y}^2
         & \geq
-        \func{f}{\x} - \frac{\mu}{2} \norm{\x}^2 + {\big( \grad{f}{\x} - \mu \x \big)}^\top (\y - \x)
+        \func{f}{\x} - \frac{\mu}{2} \norm{\x}^2 + {\pbrac[\big]{\grad{f}{\x} - \mu \x}}^\top (\y - \x)
         \\
         \implies
         \func{f}{\y}
         & \geq
-        \func{f}{\x} + {\grad{f}{\x}}^\top (\y - \x) + \frac{\mu}{2} \Big( \norm{\y}^2 - \norm{\x}^2 - 2 \dotp{\x}{(\y - \x)} \Big)
+        \func{f}{\x} + \dotp{\grad{f}{\x}}{\pbrac{\y - \x}} + \frac{\mu}{2} \pbrac[\Big]{\norm{\y}^2 - \norm{\x}^2 - 2 \dotp{\x}{(\y - \x)}}
         \\ & =
-        \func{f}{\x} + {\grad{f}{\x}}^\top (\y - \x) + \frac{\mu}{2} \Big( \norm{\y}^2 - \cancel{ \norm{\x}^2 } - 2 \dotp{\x}{\y} + \cancel{2} \norm{\x}^2 \Big)
+        \func{f}{\x} + \dotp{\grad{f}{\x}}{\pbrac{\y - \x}} + \frac{\mu}{2} \pbrac[\Big]{\norm{\y}^2 - \cancel{ \norm{\x}^2 } - 2 \dotp{\x}{\y} + \cancel{2} \norm{\x}^2}
         \\ & =
-        \func{f}{\x} + {\grad{f}{\x}}^\top (\y - \x) + \frac{\mu}{2} \norm{\y - \x}^2,
+        \func{f}{\x} + \dotp{\grad{f}{\x}}{\pbrac{\y - \x}} + \frac{\mu}{2} \norm{\y - \x}^2,
         \quad \forall \x, \y \in \D
     \end{align*}
 \end{proof}
@@ -567,7 +567,7 @@ Consider the unconstrained strongly convex quadratic minimisation problem
 \begin{align*}
     \min_{\x \in \R^d} \func{f}{\x},
     \quad \text{where }
-    \func{f}{\x} = \left( \half \qf{\x}{\Q} + \dotp{\h}{\x} + c \right),
+    \func{f}{\x} = \pbrac{\half \qf{\x}{\Q} + \dotp{\h}{\x} + c},
     \quad \Q \succ \zero, \text{i.e.}, \Q \in \mathbf{S}_d^{++},
     \quad \h \in \R^d,
     \quad c \in \R
@@ -598,9 +598,9 @@ An \( n \)-th order oracle provides information up to the \( n \)-th derivative 
 \begin{itemize}
     \item \textbf{Zero-order oracle:} Given \( \x \in \R^d \), returns the function value \( \func{f}{\x} \in \R \).
 
-    \item \textbf{First-order oracle:} Given \( \x \in \R^d \), returns a tuple \( \big( \func{f}{\x}, \grad{f}{\x} \big) \in (\R, \R^d) \).
+    \item \textbf{First-order oracle:} Given \( \x \in \R^d \), returns a tuple \( \pbrac[\big]{\func{f}{\x}, \grad{f}{\x}} \in (\R, \R^d) \).
 
-    \item \textbf{Second-order oracle:} Given \( \x \in \R^d \), returns a tuple \( \big( \func{f}{\x}, \grad{f}{\x}, \hess{f}{\x} \big) \in (\R, \R^d, \R^{d \times d}) \).
+    \item \textbf{Second-order oracle:} Given \( \x \in \R^d \), returns a tuple \( \pbrac[\big]{\func{f}{\x}, \grad{f}{\x}, \hess{f}{\x}} \in (\R, \R^d, \R^{d \times d}) \).
 \end{itemize}
 
 \section{Iterative algorithm template}
@@ -679,7 +679,7 @@ Choose the step length \( \alpha_k \) in line search~\psecref{sec:line-search} b
 \begin{equation*}
     \alpha_k = \argmin_{\alpha \geq 0} g_k(\alpha),
     \qquad \text{where } \;
-    g_k(\alpha) \triangleq f\left( \x^k + \alpha \p^k \right)
+    g_k(\alpha) \triangleq f\pbrac{\x^k + \alpha \p^k}
 \end{equation*}
 
 \section{Strongly convex quadratic minimisation problem}
@@ -694,8 +694,8 @@ To find the optimal step length \( \alpha_k \), consider
     & \triangleq
     \func{f}{\x^k + \alpha \p^k}
     \\ & =
-    \half \qf{\left( \x^k + \alpha \p^k \right)}{\Q}
-    + \dotp{\h}{\!\left( \x^k + \alpha \p^k \right)}
+    \half \qf{\pbrac{\x^k + \alpha \p^k}}{\Q}
+    + \dotp{\h}{\pbrac{\x^k + \alpha \p^k}}
     + c
     \\ & =
     \half \qf{\x^k}{\Q}
@@ -705,15 +705,15 @@ To find the optimal step length \( \alpha_k \), consider
     + \alpha \dotp{\h}{\p^k}
     + c
     \\ & =
-    \alpha^2 \left( \half \qf{\p^k}{\Q} \right)
-    + \alpha \left( \qf{\x^k}{\Q}[\p^k] + \dotp{\h}{\p^k} \right)
-    + \left( \half \qf{\x^k}{\Q} + \dotp{\h}{\x^k} + c \right)
+    \alpha^2 \pbrac{\half \qf{\p^k}{\Q}}
+    + \alpha \pbrac{\qf{\x^k}{\Q}[\p^k] + \dotp{\h}{\p^k}}
+    + \pbrac{\half \qf{\x^k}{\Q} + \dotp{\h}{\x^k} + c}
     \\ & =
-    \alpha^2 \underbrace{ \left( \half \qf{\p^k}{\Q} \right) }_{p_k}
-    + \alpha \underbrace{ \left( \dotp{\grad{f}{\x^k}}{\p^k} \right) }_{q_k}
-    + \underbrace{ \Big( \func{f}{\x^k} \Big) }_{r_k}
+    \alpha^2 \underbrace{ \pbrac{\half \qf{\p^k}{\Q}} }_{p_k}
+    + \alpha \underbrace{ \pbrac{\dotp{\grad{f}{\x^k}}{\p^k}} }_{q_k}
+    + \underbrace{ \pbrac[\Big]{\func{f}{\x^k}} }_{r_k}
 \end{align*}
-which is a quadratic function in \( \alpha \) with \( p_k > 0 \; \left( \because \Q \succ \zero \right) \) and \( q_k < 0 \; \left( \because \p^k \in \func{\mathcal{DS}}{\x^k} \right) \).
+which is a quadratic function in \( \alpha \) with \( p_k > 0 \; \pbrac{\because \Q \succ \zero} \) and \( q_k < 0 \; \pbrac{\because \p^k \in \func{\mathcal{DS}}{\x^k}} \).
 
 For the \hyperlink{1D-quadratic}{one-dimensional quadratic} case, we can then compute the minimum point and minimum value as
 \begin{equation*}
@@ -736,7 +736,11 @@ For the \hyperlink{1D-quadratic}{one-dimensional quadratic} case, we can then co
     \boxed{
         \func{f}{\x^{k+1}}
         =
-        \func{f}{\x^k} - \frac{{\left( \dotp{\grad{f}{\x^k}}{\p^k} \right)}^2}{2 \qf{\p^k}{\Q}}
+        \func{f}{\x^k}
+        -
+        \frac
+        {\pbrac{\dotp{\grad{f}{\x^k}}{\p^k}}^2}
+        {2 \qf{\p^k}{\Q}}
     }
 \end{equation*}
 
@@ -744,11 +748,16 @@ For the choice \( \p^k = -\grad{f}{\x^k} \), we have
 \begin{equation*}
     \alpha_k
     =
-    \frac{\norm{\grad{f}{\x^k}}^2} {\qf{\grad{f}{\x^k}}{\Q}},
+    \frac
+    {\norm{\grad{f}{\x^k}}^2}
+    {\qf{\grad{f}{\x^k}}{\Q}},
     \qquad
     \func{f}{\x^{k+1}}
     =
-    \func{f}{\x^k} - \frac{\norm{\grad{f}{\x^k}}^4}{2 \qf{\grad{f}{\x^k}}{\Q}}
+    \func{f}{\x^k}
+    -
+    \frac{\norm{\grad{f}{\x^k}}^4}
+    {2 \qf{\grad{f}{\x^k}}{\Q}}
 \end{equation*}
 
 \paragraph{Analysis:}
@@ -757,12 +766,12 @@ For a local minimum \( \xstar \), and any \( \p \in \R^d \), we have
 \begin{align*}
     \func{f}{\xstar + \p}
     & =
-    \half \qf{(\xstar + \p)}{\Q} + \dotp{\h}{(\xstar + \p)} + c
+    \half \qf{\pbrac{\xstar + \p}}{\Q} + \dotp{\h}{\pbrac{\xstar + \p}} + c
     \\ & =
     \half \qf{\xstar}{\Q} + \qf{\xstar}{\Q}[\p] + \half \qf{\p}{\Q} + \dotp{\h}{\xstar} + \dotp{\h}{\p} + c
     \\ & =
-    \left( \half \qf{\xstar}{\Q} + \dotp{\h}{\xstar} + c \right)
-    + {\cancel{\left( \Q \xstar + \h \right)}}^\top \p
+    \pbrac{\half \qf{\xstar}{\Q} + \dotp{\h}{\xstar} + c}
+    + \dotp{\cancel{\pbrac{\Q \xstar + \h}}}{\p}
     + \half \qf{\p}{\Q}
     \\ & =
     \func{f}{\xstar} + \half \qf{\p}{\Q}
@@ -770,7 +779,7 @@ For a local minimum \( \xstar \), and any \( \p \in \R^d \), we have
     \implies
     \func{f}{\x}
     & =
-    \func{f}{\xstar} + \half \qf{(\x - \xstar)}{\Q},
+    \func{f}{\xstar} + \half \qf{\pbrac{\x - \xstar}}{\Q},
     \quad \forall \x \in \R^d
 \end{align*}
 
@@ -783,7 +792,7 @@ Now, consider the error at the \( k^{th} \) iteration defined as
     \implies
     E_k
     & =
-    \half \qf{(\x^k - \xstar)}{\Q}
+    \half \qf{\pbrac{\x^k - \xstar}}{\Q}
     \\
     \because
     \grad{f}{\xstar}
@@ -797,21 +806,21 @@ Now, consider the error at the \( k^{th} \) iteration defined as
     & =
     \Q \x^k + \h
     =
-    \Q \left( \x^k - \xstar \right)
+    \Q \pbrac{\x^k - \xstar}
     \\
     \implies
-    \left( \x^k - \xstar \right)
+    \pbrac{\x^k - \xstar}
     & =
     \Qinv \, \grad{f}{\x^k}
     \\
     \implies
     E_k
     & =
-    \half \dotp{\left( \x^k - \xstar \right)}{\grad{f}{\x^k}}
+    \half \dotp{\pbrac{\x^k - \xstar}}{\grad{f}{\x^k}}
     =
-    \half \dotp{\Big( \Qinv \, \grad{f}{\x^k} \Big)}{\grad{f}{\x^k}}
+    \half \dotp{\pbrac[\Big]{\Qinv \, \grad{f}{\x^k}}}{\grad{f}{\x^k}}
     \\ & =
-    \half \qf{\grad{f}{\x^k}}{{\left( \Qinv \right)}^\top}
+    \half \qf{\grad{f}{\x^k}}{\pbrac{\Qinv}^\top}
     =
     \half \qf{\grad{f}{\x^k}}{\Qinv}
 \end{align*}
@@ -822,28 +831,36 @@ Now, the successive error reduction can be computed as
     & =
     \func{f}{\x^k} - \func{f}{\x^{k+1}}
     =
-    \frac{{\left( \dotp{\grad{f}{\x^k}}{\p^k} \right)}^2}{2 \qf{\p^k}{\Q}}
+    \frac
+    {\pbrac{\dotp{\grad{f}{\x^k}}{\p^k}}^2}
+    {2 \qf{\p^k}{\Q}}
     \\
     \implies
     \frac{E_{k} - E_{k+1}}{E_k}
     & =
-    \frac{{\left( \dotp{\grad{f}{\x^k}}{\p^k} \right)}^2}{ {\left( \grad{f}{\x^k} \right)}^\top \Qinv \, \grad{f}{\x^k} \; \qf{\p^k}{\Q}}
+    \frac
+    {\pbrac{\dotp{\grad{f}{\x^k}}{\p^k}}^2}
+    {\qf{\grad{f}{\x^k}}{\Qinv} \; \qf{\p^k}{\Q}}
 \end{align*}
 
 For the choice \( \p^k = -\grad{f}{\x^k} \), we have
 \begin{align*}
     \frac{E_{k} - E_{k+1}}{E_k}
     & =
-    \frac{{\left( {\grad{f}{\x^k}}^\top \left( -\grad{f}{\x^k} \right) \right)}^2}{ {\left( \grad{f}{\x^k} \right)}^\top \Qinv \, \grad{f}{\x^k} \; {\left( -\grad{f}{\x^k} \right)}^\top \Q \left( -\grad{f}{\x^k} \right)}
+    \frac
+    {\bbrac{\dotp{\grad{f}{\x^k}}{\pbrac{-\grad{f}{\x^k}}}}^2}
+    {\qf{\grad{f}{\x^k}}{\Qinv} \; \qf{\pbrac{-\grad{f}{\x^k}}}{\Q}}
     \\ & =
-    \frac{{\Vert \grad{f}{\x^k} \Vert}^4}{ {\left( \grad{f}{\x^k} \right)}^\top \Qinv \, \grad{f}{\x^k} \; {\grad{f}{\x^k}}^\top \Q \grad{f}{\x^k}}
+    \frac
+    {\norm{\grad{f}{\x^k}}^4}
+    {\qf{\grad{f}{\x^k}}{\Qinv} \; \qf{\grad{f}{\x^k}}{\Q}}
 \end{align*}
 
 From Kantorovich inequality~\psecref{sec:kantorovich-inequality}, we have
 \begin{equation*}
-    \frac{\norm{\z}^4}{(\qf{\z}{\Q})(\qf{\z}{\Qinv})}
+    \frac{\norm{\z}^4}{\pbrac{\qf{\z}{\Q}} \, \pbrac{\qf{\z}{\Qinv}}}
     \geq
-    \frac{4 \func{\lambda_{\min}}{\Q} \func{\lambda_{\max}}{\Q}}{{\left( \func{\lambda_{\min}}{\Q} + \func{\lambda_{\max}}{\Q} \right)}^2},
+    \frac{4 \func{\lambda_{\min}}{\Q} \func{\lambda_{\max}}{\Q}}{\pbrac{\func{\lambda_{\min}}{\Q} + \func{\lambda_{\max}}{\Q}}^2},
     \quad \forall \z \in \R^d \setminus \set{\zero}
 \end{equation*}
 where \( \func{\lambda_{\min}}{\Q} \) and \( \func{\lambda_{\max}}{\Q} \) are the minimum and maximum eigenvalues of \( \Q \), respectively.
@@ -852,14 +869,14 @@ Applying this with \( \z = \grad{f}{\x^k} \), we have
 \begin{align*}
     \frac{E_k - E_{k+1}}{E_k}
     & \geq
-    \frac{4 \func{\lambda_{\min}}{\Q} \func{\lambda_{\max}}{\Q}}{{\left( \func{\lambda_{\min}}{\Q} + \func{\lambda_{\max}}{\Q} \right)}^2}
+    \frac{4 \func{\lambda_{\min}}{\Q} \func{\lambda_{\max}}{\Q}}{\pbrac{\func{\lambda_{\min}}{\Q} + \func{\lambda_{\max}}{\Q}}^2}
     \\
     \implies
     \frac{E_{k+1}}{E_k}
     & \leq
-    1 - \frac{4 \func{\lambda_{\min}}{\Q} \func{\lambda_{\max}}{\Q}}{{\left( \func{\lambda_{\min}}{\Q} + \func{\lambda_{\max}}{\Q} \right)}^2}
+    1 - \frac{4 \func{\lambda_{\min}}{\Q} \func{\lambda_{\max}}{\Q}}{\pbrac{\func{\lambda_{\min}}{\Q} + \func{\lambda_{\max}}{\Q}}^2}
     =
-    {\left( \frac{\func{\lambda_{\max}}{\Q} - \func{\lambda_{\min}}{\Q}}{\func{\lambda_{\max}}{\Q} + \func{\lambda_{\min}}{\Q}} \right)}^2
+    \pbrac{\frac{\func{\lambda_{\max}}{\Q} - \func{\lambda_{\min}}{\Q}}{\func{\lambda_{\max}}{\Q} + \func{\lambda_{\min}}{\Q}}}^2
     \triangleq
     \rho
 \end{align*}
@@ -1124,7 +1141,7 @@ The `global' refers to the fact that the initial point \( \x^0 \) is arbitrary, 
     \begin{equation*}
         \qf{\u_l}{\Q}[\z]
         =
-        \qf{\u_l}{\Q}[\left( \sum_{i = 1}^{n} \beta_i \u_i \right)]
+        \qf{\u_l}{\Q}[\pbrac{\sum_{i = 1}^{n} \beta_i \u_i}]
         =
         \sum_{i = 1}^{n} \beta_i \qf{\u_l}{\Q}[\u_i]
         =
@@ -1155,7 +1172,7 @@ The `global' refers to the fact that the initial point \( \x^0 \) is arbitrary, 
     \begin{equation*}
         \qf{\u_l}{\Q}
         =
-        \qf{\left( \sum_{i \neq l} \beta_i \u_i \right)}{\Q}[\u_l]
+        \qf{\pbrac{\sum_{i \neq l} \beta_i \u_i}}{\Q}[\u_l]
         =
         \sum_{i \neq l} \beta_i \qf{\u_i}{\Q}[\u_l]
         =
@@ -1546,9 +1563,9 @@ For a convex quadratic function \( f: \R^d \to \R \), the conjugate gradient met
         & =
         \Q \x^{k+1} + \h
         =
-        \Q \big( \x^k + \alpha_k \u_k \big) + \h
+        \Q \pbrac[\big]{\x^k + \alpha_k \u_k} + \h
         =
-        \left( \Q \x^k + \h \right) + \alpha_k \Q \u_k
+        \pbrac{\Q \x^k + \h} + \alpha_k \Q \u_k
         \\ & =
         \grad{f}{\x^k} + \alpha_k \Q \u_k,
         \quad \forall k \in \set{0, 1, \ldots, d - 1}
@@ -2095,7 +2112,7 @@ Define the polynomial \( P_k^\ast: \bbrac{\;\cdot\;} \to \R \) of degree at most
     \\ & =
     \half \qf{\x}{\Q} - \qf{\x}{\Q}[\xstar] + \half \qf{\xstar}{\Q}
     =
-    \half \qf{(\x - \xstar)}{\Q}
+    \half \qf{\pbrac{\x - \xstar}}{\Q}
 \end{align*}
 \begin{equation*}
     \implies
@@ -2282,7 +2299,7 @@ This satisfies the condition for descent direction since
     \implies
     \dotp{\grad{f}{\x^k}}{\p^k}
     & =
-    - {\left( \grad{f}{\x^k} \right)}^\top \hessinv{f}{\x^k} \grad{f}{\x^k}
+    - \pbrac{\grad{f}{\x^k}}^\top \hessinv{f}{\x^k} \grad{f}{\x^k}
     < 0
 \end{align*}
 
@@ -2305,7 +2322,7 @@ For a stationary point \( \xstar \), i.e., \( \grad{f}{\xstar} = \zero \), we ha
     \implies
     \grad{f}{\x}
     =
-    \int_{0}^{1} \hess{f}{\xstar + t(\x - \xstar)} (\x - \xstar) \, dt,
+    \int_{0}^{1} \hess{f}{\xstar + t\pbrac{\x - \xstar}} \pbrac{\x - \xstar} \, dt,
     \quad \forall \x \in \R^d
 \end{equation*}
 
@@ -2356,11 +2373,11 @@ Taking the derivative with respect to \( \y \) on both sides, we have
     }
     & =
     \norm{
-        \int_{0}^{1} \Big( \hess{f}{\x + t(\y - \x)} - \hess{f}{\x} \Big) (\y - \x) \, dt
+        \int_{0}^{1} \pbrac[\Big]{\hess{f}{\x + t(\y - \x)} - \hess{f}{\x}} (\y - \x) \, dt
     }
     \\ & \leq
     \int_{0}^{1} \norm{
-        \Big( \hess{f}{\x + t(\y - \x)} - \hess{f}{\x} \Big) (\y - \x)
+        \pbrac[\Big]{\hess{f}{\x + t(\y - \x)} - \hess{f}{\x}} (\y - \x)
     } \, dt
     \\ & \leq
     \int_{0}^{1}
@@ -2500,31 +2517,31 @@ Now,
     & =
     \norm{\x^{k+1} - \xstar}
     =
-    \norm{\left( \x^k - \hessinv{f}{\x^k} \grad{f}{\x^k} \right) - \xstar}
+    \norm{\pbrac{\x^k - \hessinv{f}{\x^k} \grad{f}{\x^k}} - \xstar}
     \\ & =
     \norm{\x^k - \xstar - \hessinv{f}{\x^k} \grad{f}{\x^k}}
     \\ & =
-    \norm{\hessinv{f}{\x^k} \Big( \hess{f}{\x^k} (\x^k - \xstar) - \grad{f}{\x^k} \Big)}
+    \norm{\hessinv{f}{\x^k} \pbrac[\Big]{\hess{f}{\x^k} \pbrac{\x^k - \xstar} - \grad{f}{\x^k}}}
     \\ & \leq
     \norm{\hessinv{f}{\x^k}} \,
-    \norm{\hess{f}{\x^k} (\x^k - \xstar) - \grad{f}{\x^k}}
+    \norm{\hess{f}{\x^k} \pbrac{\x^k - \xstar} - \grad{f}{\x^k}}
 \end{align*}
 \begin{align*}
     \implies
     &
-    \norm{\hess{f}{\x^k} (\x^k - \xstar) - \grad{f}{\x^k}}
+    \norm{\hess{f}{\x^k} \pbrac{\x^k - \xstar} - \grad{f}{\x^k}}
     \\ & =
-    \norm{\hess{f}{\x^k} (\x^k - \xstar) - \int_{0}^{1} \hess{f}{\xstar + t(\x^k - \xstar)} (\x^k - \xstar) \, dt}
+    \norm{\hess{f}{\x^k} \pbrac{\x^k - \xstar} - \int_{0}^{1} \hess{f}{\xstar + t\pbrac{\x^k - \xstar}} \pbrac{\x^k - \xstar} \, dt}
     \\ & =
-    \norm{\int_{0}^{1} \hess{f}{\x^k} (\x^k - \xstar)  \, dt - \int_{0}^{1} \hess{f}{\xstar + t(\x^k - \xstar)} (\x^k - \xstar) \, dt}
+    \norm{\int_{0}^{1} \hess{f}{\x^k} \pbrac{\x^k - \xstar}  \, dt - \int_{0}^{1} \hess{f}{\xstar + t\pbrac{\x^k - \xstar}} \pbrac{\x^k - \xstar} \, dt}
     \\ & =
-    \norm{\int_{0}^{1} \Big( \hess{f}{\x^k} - \hess{f}{\xstar + t(\x^k - \xstar)} \Big) (\x^k - \xstar) \, dt}
+    \norm{\int_{0}^{1} \pbrac[\Big]{\hess{f}{\x^k} - \hess{f}{\xstar + t\pbrac{\x^k - \xstar}}} \pbrac{\x^k - \xstar} \, dt}
     \\ & \leq
-    \int_{0}^{1} \norm{\Big( \hess{f}{\x^k} - \hess{f}{\xstar + t(\x^k - \xstar)} \Big) (\x^k - \xstar)} \, dt
+    \int_{0}^{1} \norm{\pbrac[\Big]{\hess{f}{\x^k} - \hess{f}{\xstar + t\pbrac{\x^k - \xstar}}} \pbrac{\x^k - \xstar}} \, dt
     \\ & \leq
-    \int_{0}^{1} \norm[\Big]{\hess{f}{\x^k} - \hess{f}{\xstar + t(\x^k - \xstar)}} \, \norm{\x^k - \xstar} \, dt
+    \int_{0}^{1} \norm[\Big]{\hess{f}{\x^k} - \hess{f}{\xstar + t\pbrac{\x^k - \xstar}}} \, \norm{\x^k - \xstar} \, dt
     \\ & \leq
-    \int_{0}^{1} M \norm[\Big]{\x^k - \xstar - t(\x^k - \xstar)} \, \norm{\x^k - \xstar} \, dt
+    \int_{0}^{1} M \norm[\Big]{\x^k - \xstar - t\pbrac{\x^k - \xstar}} \, \norm{\x^k - \xstar} \, dt
     \\ & =
     \int_{0}^{1} M (1 - t) \norm{\x^k - \xstar}^2 \, dt
     \\ & =

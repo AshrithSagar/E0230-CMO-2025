@@ -3,7 +3,7 @@
 
 \section{Metric space}
 
-A \textbf{metric space} \( (S, d) \) is a set \( S \) together with a \textit{metric/distance function} \( d: S \times S \to \R_{\geq 0} \) that satisfies the following axioms for all \( x, y, z \in S \):
+A \textbf{metric space} \( (\mathcal{S}, d) \) is a set \( \mathcal{S} \) together with a \textit{metric/distance function} \( d: \mathcal{S} \times \mathcal{S} \to \R_{\geq 0} \) that satisfies the following axioms for all \( x, y, z \in \mathcal{S} \):
 \begin{itemize}
     \item \( \func{d}{x, y} = 0 \iff x = y \)
     \item \textit{Symmetry}: \( \func{d}{x, y} = \func{d}{y, x} \)
@@ -257,42 +257,42 @@ A \textbf{neighborhood} of a point \( \x \in \R^d \) is an open ball centered at
 
 \section{Interior point}
 
-A point \( \x \in S \) is an \textbf{interior point} of set \( S \subseteq \R^d \) if there exists a neighborhood of \( \x \) that is entirely contained within \( S \), i.e., there exists an \( r > 0 \) such that \( B_{r}(\x) \subseteq S \).
+A point \( \x \in \mathcal{S} \) is an \textbf{interior point} of set \( \mathcal{S} \subseteq \R^d \) if there exists a neighborhood of \( \x \) that is entirely contained within \( \mathcal{S} \), i.e., there exists an \( r > 0 \) such that \( B_{r}(\x) \subseteq \mathcal{S} \).
 
 \section{Limit point}
 
-A point \( \x \in \R^d \) is a \textbf{limit point} of set \( S \subseteq \R^d \) if every neighborhood of \( \x \) contains at least one point of \( S \) different from \( \x \) itself, i.e., for every \( r > 0 \), there exists a point \( \y \in S \setminus \set{\x} \) such that \( \y \in B_{r}(\x) \).
+A point \( \x \in \R^d \) is a \textbf{limit point} of set \( \mathcal{S} \subseteq \R^d \) if every neighborhood of \( \x \) contains at least one point of \( \mathcal{S} \) different from \( \x \) itself, i.e., for every \( r > 0 \), there exists a point \( \y \in \mathcal{S} \setminus \set{\x} \) such that \( \y \in B_{r}(\x) \).
 \begin{equation*}
-    \forall r > 0, \; B_{r}(\x) \cap (S \setminus \set{\x}) \neq \emptyset
+    \forall r > 0, \; B_{r}(\x) \cap (\mathcal{S} \setminus \set{\x}) \neq \emptyset
 \end{equation*}
 
-Trivially, every interior point of \( S \) is also a limit point of \( S \).
+Trivially, every interior point of \( \mathcal{S} \) is also a limit point of \( \mathcal{S} \).
 
 \section{Open set}
 
-A set \( S \subseteq \R^d \) is \textbf{open} if every point in \( S \) is an interior point of \( S \).
+A set \( \mathcal{S} \subseteq \R^d \) is \textbf{open} if every point in \( \mathcal{S} \) is an interior point of \( \mathcal{S} \).
 
 \section{Closed set}
 
-A set \( S \subseteq \R^d \) is \textbf{closed} if it contains all its limit points, i.e., if \( \x \) is a limit point of \( S \), then \( \x \in S \).
+A set \( \mathcal{S} \subseteq \R^d \) is \textbf{closed} if it contains all its limit points, i.e., if \( \x \) is a limit point of \( \mathcal{S} \), then \( \x \in \mathcal{S} \).
 
 \section{Bounded set}
 
-A set \( S \subseteq \R^d \) is \textbf{bounded} if there exists \( \z \in \R^d, M \in \R \) such that \( \norm{\z - \x} < M, \; \forall \x \in S \).
+A set \( \mathcal{S} \subseteq \R^d \) is \textbf{bounded} if there exists \( \z \in \R^d, M \in \R \) such that \( \norm{\z - \x} < M, \; \forall \x \in \mathcal{S} \).
 
 \section{Infimum}
 
-The \textbf{infimum} (greatest lower bound) of a set \( S \subseteq \R \) is the largest real number \( m \) such that \( m \leq x, \; \forall x \in S \).
+The \textbf{infimum} (greatest lower bound) of a set \( \mathcal{S} \subseteq \R \) is the largest real number \( m \) such that \( m \leq x, \; \forall x \in \mathcal{S} \).
 
 \section{Supremum}
 
-The \textbf{supremum} (least upper bound) of a set \( S \subseteq \R \) is the smallest real number \( M \) such that \( M \geq x, \; \forall x \in S \).
+The \textbf{supremum} (least upper bound) of a set \( \mathcal{S} \subseteq \R \) is the smallest real number \( M \) such that \( M \geq x, \; \forall x \in \mathcal{S} \).
 
 \section{Closure}
 
-The \textbf{closure} of a set \( S \subseteq \R^d \) is the smallest closed set containing \( S \), which can be obtained by adding all limit points of \( S \) to \( S \) itself.
+The \textbf{closure} of a set \( \mathcal{S} \subseteq \R^d \) is the smallest closed set containing \( \mathcal{S} \), which can be obtained by adding all limit points of \( \mathcal{S} \) to \( \mathcal{S} \) itself.
 \begin{equation*}
-    \operatorname{closure}{(S)} = S \cup \set{\text{all limit points of } S}
+    \operatorname{closure}{(\mathcal{S})} = \mathcal{S} \cup \set{\text{all limit points of } \mathcal{S}}
 \end{equation*}
 
 \section{Convergent sequence}
@@ -472,9 +472,9 @@ This tells us that we can evaluate definite integrals using antiderivatives.
 
 \section{Wierstrass extreme value theorem}
 
-If a function \( f: S \to \R \) is continuous on a set \( S \subseteq \R^d \) that is closed and bounded, then \( f \) attains its maximum and minimum values on \( S \), i.e., there exist points \( \x_{\min}, \x_{\max} \in S \) such that
+If a function \( f: \mathcal{S} \to \R \) is continuous on a set \( \mathcal{S} \subseteq \R^d \) that is closed and bounded, then \( f \) attains its maximum and minimum values on \( \mathcal{S} \), i.e., there exist points \( \x_{\min}, \x_{\max} \in \mathcal{S} \) such that
 \begin{equation*}
-    \func{f}{\x_{\min}} \leq \func{f}{\x} \leq \func{f}{\x_{\max}}, \quad \forall \x \in S
+    \func{f}{\x_{\min}} \leq \func{f}{\x} \leq \func{f}{\x_{\max}}, \quad \forall \x \in \mathcal{S}
 \end{equation*}
 
 \section{Taylor's theorem}
@@ -510,7 +510,7 @@ If a function is of class \( \C^k \; \forall k \in \N \), it is said to be of cl
 
     \item If \( f \in \C^k \), then \( f \in \C^{k-1} \), for \( k \geq 1 \).
 
-    \item (Schwarz's theorem) If \( f \in \C^2 \), then \( \hess{f}{\x} \in \mathbf{S}_d\), i.e., \( \hess{f}{\x} \) is symmetric.
+    \item (Schwarz's theorem) If \( f \in \C^2 \), then \( \hess{f}{\x} \in \SD \), i.e., \( \hess{f}{\x} \) is symmetric.
         \begin{equation*}
             \frac{\partial^2 f}{\partial x_i \partial x_j}
             =
@@ -727,7 +727,7 @@ The \textbf{outer product} of two vectors \( \x \in \R^m \) and \( \y \in \R^n \
 \begin{itemize}
     \item \( \rank{\outp{\x}{\y}} = 1, \; \forall \x \in \R^m \setminus \set{\zero}, \; \forall \y \in \R^n \setminus \set{\zero} \).
 
-    \item \( \outp{\x}{\x} \in \mathbf{S}_d^+, \; \forall \x \in \R^d \).
+    \item \( \outp{\x}{\x} \in \PSD, \; \forall \x \in \R^d \).
 
     \item \( \operatorname{spec}(\outp{\x}{\x}) = \set{\norm{\x}_2^2, 0^{(d-1)}} \).
         Eigenvectors: \( \set{\x} \cup \underbrace{ \set{\v \given \dotp{\v}{\x} = 0} }_{\x^\perp} \).
@@ -778,7 +778,7 @@ Without loss of generality, we can assume \( \A \in \SD \) since
 \begin{equation*}
     \qf{\x}{\A}
     =
-    \qf{\x}{{\bbrac{\half \pbrac{\A + \A^\top}}}},
+    \qf{\x}{\bbrac{\half \pbrac{\A + \A^\top}}},
     \quad \forall \A \in \R^{d \times d}, \x \in \R^d
 \end{equation*}
 
@@ -812,7 +812,7 @@ A matrix \( \A \in \R^{d \times d} \) is symmetric if \( \A = \A^\top \), i.e., 
 
 A symmetric matrix \( \A \in \SD \) is \textbf{positive semi-definite} (PSD), denoted as \( \A \succeq \zero \), if
 \begin{equation*}
-    \x^\top \A \x \geq 0,
+    \qf{\x}{\A} \geq 0,
     \quad \forall \x \in \R^d
 \end{equation*}
 
@@ -820,14 +820,14 @@ A symmetric matrix \( \A \in \SD \) is \textbf{positive semi-definite} (PSD), de
 
 A symmetric matrix \( \A \in \SD \) is \textbf{positive definite} (PD), denoted as \( \A \succ \zero \), if
 \begin{equation*}
-    \x^\top \A \x > 0,
+    \qf{\x}{\A} > 0,
     \quad \forall \x \in \R^d \setminus \set{\zero}
 \end{equation*}
 
 \section{Eigenvalues and Eigenvectors}
 
 \begin{equation*}
-    \A\v = \lambda \v
+    \A \v = \lambda \v
 \end{equation*}
 where
 \( \A \in \R^{d \times d} \), \quad
@@ -876,30 +876,30 @@ The set of all eigenvalues of \( \A \) is called the \textbf{spectrum} of \( \A 
     The eigenvectors corresponding to distinct eigenvalues are orthogonal.
     This can be shown using the fact that for any two eigenvectors \( \v_i \) and \( \v_j \) corresponding to distinct eigenvalues \( \lambda_i \) and \( \lambda_j \), we have
     \begin{align*}
-        \v_i^\top \A \v_j
+        \qf{\v_i}{\A}[\v_j]
         & =
-        \v_i^\top (\A \v_j)
+        \dotp{\v_i}{\pbrac{\A \v_j}}
         =
         \lambda_j \dotp{\v_i}{\v_j},
         \qquad \text{Similarly, } \;
-        \v_j^\top \A \v_i
+        \qf{\v_j}{\A}[\v_i]
         =
-        \lambda_i \v_j^\top \v_i
+        \lambda_i \dotp{\v_j}{\v_i}
         \\
-        \text{Now, } \;
-        \v_i^\top \A \v_j
+        \text{Now, }
+        \qf{\v_i}{\A}[\v_j]
         & =
-        \v_i^\top \A^\top \v_j
+        \qf{\v_i}{\A^\top}[\v_j]
         =
-        {(\A \v_i)}^\top \v_j
+        \dotp{\pbrac{\A \v_i}}{\v_j}
         =
-        {(\lambda_i \v_i)}^\top \v_j
+        \dotp{\pbrac{\lambda_i \v_i}}{\v_j}
         =
         \lambda_i \dotp{\v_i}{\v_j}
         =
-        \lambda_i \v_j^\top \v_i
+        \lambda_i \dotp{\v_j}{\v_i}
         =
-        \v_j^\top \A \v_i
+        \qf{\v_j}{\A}[\v_i]
         \\
         \implies
         \lambda_j \dotp{\v_i}{\v_j}
