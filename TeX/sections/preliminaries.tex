@@ -3,7 +3,7 @@
 
 \section{Metric space}
 
-A \textbf{metric space} \( (\mathcal{S}, d) \) is a set \( \mathcal{S} \) together with a \textit{metric/distance function} \( d: \mathcal{S} \times \mathcal{S} \to \R_{\geq 0} \) that satisfies the following axioms for all \( x, y, z \in \mathcal{S} \):
+A \textbf{metric space} \( (\calS, d) \) is a set \( \calS \) together with a \textit{metric/distance function} \( d: \calS \times \calS \to \R_{\geq 0} \) that satisfies the following axioms for all \( x, y, z \in \calS \):
 \begin{itemize}
     \item \( \func{d}{x, y} = 0 \iff x = y \)
     \item \textit{Symmetry}: \( \func{d}{x, y} = \func{d}{y, x} \)
@@ -24,7 +24,7 @@ A \textbf{norm} is a real-valued function \( \eta: V \to \R_{\geq 0} \) that sat
 
 A \textbf{vector norm} is a norm defined on a vector space.
 
-A \textbf{normed vector space} \( (\V, \norm{\,\cdot\,}) \) is a vector space \( \V \) over a field \( \mathbb{F} \) (usually \( \R \) or \( \mathbb{C} \)) equipped with a function \( \norm{\,\cdot\,}: \V \to \R_{\geq 0} \) that satisfies the following properties for all \( \u, \v \in \V \) and \( a \in \mathbb{F} \):
+A \textbf{normed vector space} \( (\V, \norm{\,\cdot\,}) \) is a vector space \( \V \) over a field \( \mathbb{F} \) (usually \( \R \) or \( \CC \)) equipped with a function \( \norm{\,\cdot\,}: \V \to \R_{\geq 0} \) that satisfies the following properties for all \( \u, \v \in \V \) and \( a \in \mathbb{F} \):
 \begin{itemize}
     \item \textit{Non-negativity}: \( \norm{\v} \geq 0 \)
     \item \textit{Definiteness}: \( \norm{\v} = 0 \iff \v = \zero \)
@@ -257,42 +257,42 @@ A \textbf{neighborhood} of a point \( \x \in \R^d \) is an open ball centered at
 
 \section{Interior point}
 
-A point \( \x \in \mathcal{S} \) is an \textbf{interior point} of set \( \mathcal{S} \subseteq \R^d \) if there exists a neighborhood of \( \x \) that is entirely contained within \( \mathcal{S} \), i.e., there exists an \( r > 0 \) such that \( B_{r}(\x) \subseteq \mathcal{S} \).
+A point \( \x \in \calS \) is an \textbf{interior point} of set \( \calS \subseteq \R^d \) if there exists a neighborhood of \( \x \) that is entirely contained within \( \calS \), i.e., there exists an \( r > 0 \) such that \( B_{r}(\x) \subseteq \calS \).
 
 \section{Limit point}
 
-A point \( \x \in \R^d \) is a \textbf{limit point} of set \( \mathcal{S} \subseteq \R^d \) if every neighborhood of \( \x \) contains at least one point of \( \mathcal{S} \) different from \( \x \) itself, i.e., for every \( r > 0 \), there exists a point \( \y \in \mathcal{S} \setminus \set{\x} \) such that \( \y \in B_{r}(\x) \).
+A point \( \x \in \R^d \) is a \textbf{limit point} of set \( \calS \subseteq \R^d \) if every neighborhood of \( \x \) contains at least one point of \( \calS \) different from \( \x \) itself, i.e., for every \( r > 0 \), there exists a point \( \y \in \calS \setminus \set{\x} \) such that \( \y \in B_{r}(\x) \).
 \begin{equation*}
-    \forall r > 0, \; B_{r}(\x) \cap (\mathcal{S} \setminus \set{\x}) \neq \emptyset
+    \forall r > 0, \; B_{r}(\x) \cap (\calS \setminus \set{\x}) \neq \emptyset
 \end{equation*}
 
-Trivially, every interior point of \( \mathcal{S} \) is also a limit point of \( \mathcal{S} \).
+Trivially, every interior point of \( \calS \) is also a limit point of \( \calS \).
 
 \section{Open set}
 
-A set \( \mathcal{S} \subseteq \R^d \) is \textbf{open} if every point in \( \mathcal{S} \) is an interior point of \( \mathcal{S} \).
+A set \( \calS \subseteq \R^d \) is \textbf{open} if every point in \( \calS \) is an interior point of \( \calS \).
 
 \section{Closed set}
 
-A set \( \mathcal{S} \subseteq \R^d \) is \textbf{closed} if it contains all its limit points, i.e., if \( \x \) is a limit point of \( \mathcal{S} \), then \( \x \in \mathcal{S} \).
+A set \( \calS \subseteq \R^d \) is \textbf{closed} if it contains all its limit points, i.e., if \( \x \) is a limit point of \( \calS \), then \( \x \in \calS \).
 
 \section{Bounded set}
 
-A set \( \mathcal{S} \subseteq \R^d \) is \textbf{bounded} if there exists \( \z \in \R^d, M \in \R \) such that \( \norm{\z - \x} < M, \; \forall \x \in \mathcal{S} \).
+A set \( \calS \subseteq \R^d \) is \textbf{bounded} if there exists \( \z \in \R^d, M \in \R \) such that \( \norm{\z - \x} < M, \; \forall \x \in \calS \).
 
 \section{Infimum}
 
-The \textbf{infimum} (greatest lower bound) of a set \( \mathcal{S} \subseteq \R \) is the largest real number \( m \) such that \( m \leq x, \; \forall x \in \mathcal{S} \).
+The \textbf{infimum} (greatest lower bound) of a set \( \calS \subseteq \R \) is the largest real number \( m \) such that \( m \leq x, \; \forall x \in \calS \).
 
 \section{Supremum}
 
-The \textbf{supremum} (least upper bound) of a set \( \mathcal{S} \subseteq \R \) is the smallest real number \( M \) such that \( M \geq x, \; \forall x \in \mathcal{S} \).
+The \textbf{supremum} (least upper bound) of a set \( \calS \subseteq \R \) is the smallest real number \( M \) such that \( M \geq x, \; \forall x \in \calS \).
 
 \section{Closure}
 
-The \textbf{closure} of a set \( \mathcal{S} \subseteq \R^d \) is the smallest closed set containing \( \mathcal{S} \), which can be obtained by adding all limit points of \( \mathcal{S} \) to \( \mathcal{S} \) itself.
+The \textbf{closure} of a set \( \calS \subseteq \R^d \) is the smallest closed set containing \( \calS \), which can be obtained by adding all limit points of \( \calS \) to \( \calS \) itself.
 \begin{equation*}
-    \operatorname{closure}{(\mathcal{S})} = \mathcal{S} \cup \set{\text{all limit points of } \mathcal{S}}
+    \operatorname{closure}{(\calS)} = \calS \cup \set{\text{all limit points of } \calS}
 \end{equation*}
 
 \section{Convergent sequence}
@@ -326,7 +326,7 @@ In \( \R \), every Cauchy sequence is convergent, and every convergent sequence 
 \section{Limits}
 
 \begin{definition}{\( \epsilon \)--\( \delta \) definition of limit of a function}{}
-    The \textbf{limit} of a function \( f: \D \subseteq \R^d \to \R \) at a limit point \( \x_0 \) of \( \D \):
+    The \textbf{limit} of a function \( f: \calD \subseteq \R^d \to \R \) at a limit point \( \x_0 \) of \( \calD \):
     \vspace{-0.5em}
     \begin{equation*}
         \lim_{\x \to \x_0} \func{f}{\x} = L
@@ -335,7 +335,7 @@ In \( \R \), every Cauchy sequence is convergent, and every convergent sequence 
         \exists \delta > 0, \
         \text{s.t.} \
         0 < \norm{\x - \x_0} < \delta, \,
-        \x \in \D
+        \x \in \calD
         \implies
         \abs{\func{f}{\x} - L} < \epsilon
     \end{equation*}
@@ -351,20 +351,20 @@ Alternate notation~\psecref{sec:neighborhood}:
     \forall \epsilon > 0, \
     \exists \delta > 0, \
     \text{s.t.} \
-    \x \in \D \cap B_{\delta}(\x_0) \setminus \set{\x_0}
+    \x \in \calD \cap B_{\delta}(\x_0) \setminus \set{\x_0}
     \implies
     \func{f}{\x} \in B_{\epsilon}(L)
 \end{equation*}
 
 \begin{definition}{Sequence definition of limit of a function}{}
-    Sequence definition of \textbf{limit} of a function \( f: \D \subseteq \R^d \to \R \) at a limit point \( \x_0 \) of \( \D \):
+    Sequence definition of \textbf{limit} of a function \( f: \calD \subseteq \R^d \to \R \) at a limit point \( \x_0 \) of \( \calD \):
     \vspace{-0.5em}
     \begin{equation*}
         \lim_{\x \to \x_0} \func{f}{\x} = L
         \,\iff\,
         \lim_{n \to \infty} \abs{\func{f}{\x_n} - L} = 0
         \,\iff\,
-        \forall \set{\x_n}_{n = 1}^{\infty} \subseteq \D \setminus \set{\x_0},
+        \forall \set{\x_n}_{n = 1}^{\infty} \subseteq \calD \setminus \set{\x_0},
         \; \x_n \to \x_0
         \implies
         \func{f}{\x_n} \to L
@@ -373,7 +373,7 @@ Alternate notation~\psecref{sec:neighborhood}:
 
 \section{Continuity}
 
-For a function \( f: \D \subseteq \R^d \to \R \),
+For a function \( f: \calD \subseteq \R^d \to \R \),
 \begin{equation*}
     \lim_{\x \to \mathbf{c}} \func{f}{\x} = L
     \quad \iff \quad
@@ -381,12 +381,12 @@ For a function \( f: \D \subseteq \R^d \to \R \),
     \exists \delta > 0, \
     \text{s.t.} \
     \abs{\func{f}{\x} - L} < \epsilon, \
-    \forall \x \in \D \cap B_{\delta}(\mathbf{c}) \setminus \set{\mathbf{c}}
+    \forall \x \in \calD \cap B_{\delta}(\mathbf{c}) \setminus \set{\mathbf{c}}
 \end{equation*}
 
 \section{Continuous functions}
 
-A function \( f: \D \subseteq \R^d \to \R \) is \textbf{continuous} at a point \( \x_0 \in \D \) iff
+A function \( f: \calD \subseteq \R^d \to \R \) is \textbf{continuous} at a point \( \x_0 \in \calD \) iff
 \begin{equation*}
     \lim_{\x \to \x_0} \func{f}{\x} = \func{f}{\x_0}
 \end{equation*}
@@ -461,7 +461,7 @@ This tells us that we can evaluate definite integrals using antiderivatives.
 \section{Intermediate value theorem}
 
 \begin{theorem}{Intermediate value theorem~\citep{wiki}}{}
-    Let \( f: \D \subseteq \R \to \R \) be continuous on the closed interval \( [a, b] \subseteq \D \), then \( f \) takes on any given value between \( \func{f}{a} \) and \( \func{f}{b} \) at some point within the interval, i.e.,
+    Let \( f: \calD \subseteq \R \to \R \) be continuous on the closed interval \( [a, b] \subseteq \calD \), then \( f \) takes on any given value between \( \func{f}{a} \) and \( \func{f}{b} \) at some point within the interval, i.e.,
     \vspace{-0.5em}
     \begin{equation*}
         \min \set{\func{f}{a}, \func{f}{b}} \leq N \leq \max \set{\func{f}{a}, \func{f}{b}}
@@ -472,9 +472,9 @@ This tells us that we can evaluate definite integrals using antiderivatives.
 
 \section{Wierstrass extreme value theorem}
 
-If a function \( f: \mathcal{S} \to \R \) is continuous on a set \( \mathcal{S} \subseteq \R^d \) that is closed and bounded, then \( f \) attains its maximum and minimum values on \( \mathcal{S} \), i.e., there exist points \( \x_{\min}, \x_{\max} \in \mathcal{S} \) such that
+If a function \( f: \calS \to \R \) is continuous on a set \( \calS \subseteq \R^d \) that is closed and bounded, then \( f \) attains its maximum and minimum values on \( \calS \), i.e., there exist points \( \x_{\min}, \x_{\max} \in \calS \) such that
 \begin{equation*}
-    \func{f}{\x_{\min}} \leq \func{f}{\x} \leq \func{f}{\x_{\max}}, \quad \forall \x \in \mathcal{S}
+    \func{f}{\x_{\min}} \leq \func{f}{\x} \leq \func{f}{\x_{\max}}, \quad \forall \x \in \calS
 \end{equation*}
 
 \section{Taylor's theorem}
@@ -499,18 +499,18 @@ where the remainder term \( R_{n+1}(x) \) is given by the Lagrange form:
 
 \section{Levels of smoothness}
 
-A function \( f: \R^d \to \R \) is said to be of \textbf{class} \( \C^k \) if all partial derivatives of \( f \) up to and including order \( k \in \N \) exist and are continuous.
+A function \( f: \R^d \to \R \) is said to be of \textbf{class} \( \classC^k \) if all partial derivatives of \( f \) up to and including order \( k \in \N \) exist and are continuous.
 
-If a function is of class \( \C^k \; \forall k \in \N \), it is said to be of class \( \C^{\infty} \) or \textbf{smooth}.
+If a function is of class \( \classC^k \; \forall k \in \N \), it is said to be of class \( \classC^{\infty} \) or \textbf{smooth}.
 
 \subsection{Properties}
 
 \begin{itemize}
-    \item If \( f \in \C^0 \), then \( f \) is continuous.
+    \item If \( f \in \classC^0 \), then \( f \) is continuous.
 
-    \item If \( f \in \C^k \), then \( f \in \C^{k-1} \), for \( k \geq 1 \).
+    \item If \( f \in \classC^k \), then \( f \in \classC^{k-1} \), for \( k \geq 1 \).
 
-    \item (Schwarz's theorem) If \( f \in \C^2 \), then \( \hess{f}{\x} \in \SD \), i.e., \( \hess{f}{\x} \) is symmetric.
+    \item (Schwarz's theorem) If \( f \in \classC^2 \), then \( \hess{f}{\x} \in \SD \), i.e., \( \hess{f}{\x} \) is symmetric.
         \begin{equation*}
             \frac{\partial^2 f}{\partial x_i \partial x_j}
             =
@@ -518,9 +518,9 @@ If a function is of class \( \C^k \; \forall k \in \N \), it is said to be of cl
             \quad \forall i, j = 1, 2, \ldots, d
         \end{equation*}
 
-    \item If \( f, g \in \C^k \), then \( f + g, f \cdot g \in \C^k \).
+    \item If \( f, g \in \classC^k \), then \( f + g, f \cdot g \in \classC^k \).
 
-    \item If \( f \in \C^k \), then \( \frac{\partial f}{\partial x_i} \in \C^{k-1}, \; \forall i = 1, 2, \ldots, d \).
+    \item If \( f \in \classC^k \), then \( \frac{\partial f}{\partial x_i} \in \classC^{k-1}, \; \forall i = 1, 2, \ldots, d \).
 \end{itemize}
 
 \section{Lipschitz}
@@ -535,14 +535,14 @@ A function \( f: \R^d \to \R \) is said to be \( L \)-\textbf{smooth} if it is d
 
 The constant \( L \) is called the \textbf{Lipschitz constant} of the gradient \( \nabla f \).
 
-Here, we denote \( f \in \C^{1}_L \) to mean that \( f \) is \( L \)-smooth and of class \( \C^1 \).
+Here, we denote \( f \in \classC^{1}_L \) to mean that \( f \) is \( L \)-smooth and of class \( \classC^1 \).
 
 \subsection{Properties}
 
 \begin{itemize}
-    \item If \( f \in \C^{2} \), then \( f \in \C^{1}_L \) iff \( \hess{f}{\x} \preceq L \I, \; \forall \x \in \R^d \).
+    \item If \( f \in \classC^{2} \), then \( f \in \classC^{1}_L \) iff \( \hess{f}{\x} \preceq L \I, \; \forall \x \in \R^d \).
 
-    \item If \( f \in \C^{1}_L \), then
+    \item If \( f \in \classC^{1}_L \), then
         \begin{equation*}
             \abs{ \func{f}{\y} - \func{f}{\x} - {\grad{f}{\x}}^\top (\y - \x) }
             \leq
@@ -551,7 +551,7 @@ Here, we denote \( f \in \C^{1}_L \) to mean that \( f \) is \( L \)-smooth and 
         \end{equation*}
 
         \begin{proof}
-            Follows from \( \func{f}{\x} \pm \frac{L}{2} \norm{\x}^2 \) being convex functions, given \( f \in \C^{1}_L \).
+            Follows from \( \func{f}{\x} \pm \frac{L}{2} \norm{\x}^2 \) being convex functions, given \( f \in \classC^{1}_L \).
         \end{proof}
 \end{itemize}
 
@@ -959,14 +959,14 @@ where \( \lambda_{\max}(\A) \) and \( \lambda_{\min}(\A) \) are the largest and 
 
 \section{Characteristic polynomial}
 
-The \textbf{characteristic polynomial} of a matrix \( \A \in \mathbb{C}^{d \times d} \) is defined as
+The \textbf{characteristic polynomial} of a matrix \( \A \in \CC^{d \times d} \) is defined as
 \begin{equation*}
     p_{\A}(\lambda)
     =
     \determinant{\lambda \I - \A}
     =
     \sum_{i = 0}^{d} c_i \, \lambda^i,
-    \quad c_i \in \mathbb{C},
+    \quad c_i \in \CC,
     \; \forall i \in \set{0, 1, \ldots, d}
 \end{equation*}
 
@@ -978,7 +978,7 @@ The \textbf{characteristic polynomial} of a matrix \( \A \in \mathbb{C}^{d \time
     \item The roots of \( p_{\A}(\lambda) \) are the eigenvalues of \( \A \), \( \set{\lambda_i}_{i = 1}^{d} \).\\
         \( p_{\A}(\lambda) = 0 \iff \lambda \) is an eigenvalue of \( \A \).
 
-    \item \( p_{\A}(\lambda) = \prod_{i = 1}^{d} (\lambda - \lambda_i) \), if \( \A \) is diagonalisable over \( \mathbb{C} \).
+    \item \( p_{\A}(\lambda) = \prod_{i = 1}^{d} (\lambda - \lambda_i) \), if \( \A \) is diagonalisable over \( \CC \).
 
     \item \( c_0 = {(-1)}^{d} \determinant{\A} = {(-1)}^{d} \prod_{i = 1}^{d} \lambda_i \).
 
@@ -1058,7 +1058,7 @@ The \textbf{characteristic polynomial} of a matrix \( \A \in \mathbb{C}^{d \time
 
 \section{Minimal polynomial}
 
-The \textbf{minimal polynomial} of a matrix \( \A \in \mathbb{C}^{d \times d} \) is defined as the monic polynomial \( \mu_{\A}(\lambda) \) of least degree such that
+The \textbf{minimal polynomial} of a matrix \( \A \in \CC^{d \times d} \) is defined as the monic polynomial \( \mu_{\A}(\lambda) \) of least degree such that
 \begin{equation*}
     \mu_{\A}(\A)
     =
@@ -1067,7 +1067,7 @@ The \textbf{minimal polynomial} of a matrix \( \A \in \mathbb{C}^{d \times d} \)
     \mu_{\A}(\lambda)
     =
     \sum_{i = 0}^{k} b_i \, \lambda^i,
-    \quad b_i \in \mathbb{C},
+    \quad b_i \in \CC,
     \; \forall i \in \set{0, 1, \ldots, k},
     \; b_k = 1
 \end{equation*}
@@ -1100,14 +1100,14 @@ The \textbf{minimal polynomial} of a matrix \( \A \in \mathbb{C}^{d \times d} \)
 \section{Cayley-Hamilton theorem}\label{sec:cayley-hamilton-theorem}
 
 \begin{theorem}{Cayley-Hamilton theorem}{}
-    Every square matrix \( \A \in \C^{d \times d} \) satisfies its own characteristic equation, i.e., \( p_{\A}(\A) = \zero \).
+    Every square matrix \( \A \in \CC^{d \times d} \) satisfies its own characteristic equation, i.e., \( p_{\A}(\A) = \zero \).
 \end{theorem}
 
 \section{Krylov subspace}
 
 The \textbf{Krylov subspace} of order \( k \) generated by a matrix \( \A \in \R^{d \times d} \) and a vector \( \b \in \R^d \) is defined as
 \begin{align*}
-    \func{\mathcal{K}_k}{\A, \b}
+    \func{\calK_k}{\A, \b}
     & \triangleq
     \spanset{\A^i \, \b}_{i = 0}^{k-1}
     =
@@ -1391,16 +1391,16 @@ The \textbf{Gram-Schmidt orthonormalisation} process takes a finite, linearly in
 \section{Polyak-\L{}ojasiewicz (PL) inequality}
 
 \begin{definition}{Polyak-\L{}ojasiewicz (PL) inequality~\citep{wiki}}{}
-    A function \( f: \D \subseteq \R^n \to \R \) on a convex domain \( \D \) satisfies the \textbf{Polyak-\L{}ojasiewicz (PL) inequality} with parameter \( \mu > 0 \) if
+    A function \( f: \calD \subseteq \R^n \to \R \) on a convex domain \( \calD \) satisfies the \textbf{Polyak-\L{}ojasiewicz (PL) inequality} with parameter \( \mu > 0 \) if
     \vspace{-0.5em}
     \begin{equation*}
         \half \norm[\Big]{\grad{f}{\x}}^2 \geq \mu \left( \func{f}{\x} - f^\ast \right)
-        , \quad \forall \x \in \D
+        , \quad \forall \x \in \calD
     \end{equation*}
 
     \vspace{-0.5em}
-    where \( f^\ast = \inf_{\x \in \D} \func{f}{\x} \).
-    Such an \( f \) is said to be \( \mu \)-\textbf{PL} on \( \D \).
+    where \( f^\ast = \inf_{\x \in \calD} \func{f}{\x} \).
+    Such an \( f \) is said to be \( \mu \)-\textbf{PL} on \( \calD \).
 \end{definition}
 
 \section{Jensen's inequality}

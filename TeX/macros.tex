@@ -2,6 +2,7 @@
 
 \newcommand{\R}{{\mathbb{R}}}
 \newcommand{\N}{{\mathbb{N}}}
+\newcommand{\CC}{{\mathbb{C}}}
 
 \newcommand{\notimplies}{\mathrel{{\ooalign{\hidewidth\(\not{\phantom{=}}\)\hidewidth\cr\(\implies\)}}}}
 
@@ -41,20 +42,21 @@
 \newcommand{\hess}[2]{{\nabla^2\!\func{#1}{#2}}}
 \newcommand{\hessinv}[2]{\inv{\left[\hess{#1}{#2}\right]}}
 
+\newcommand{\SD}[1][d]{{\calS_{#1}}}
+\newcommand{\PSD}[1][d]{{\calS^{+}_{#1}}}
+\newcommand{\PD}[1][d]{{\calS^{++}_{#1}}}
+
+\LoopCommands{CDSOK}[cal#1]{\newmathcommand#2{{\mathcal{#1}}}}
+\newcommand{\classC}{{\calC}}
+
 \LoopCommands{{argmin}{argmax}}[#1]{\newmathcommand#2{\mathop{\mathrm{#1}}}}
 \LoopCommands{{minimize}{maximize}}[#1]{\DeclareMathOperator*{#2}{#1}}
 \DeclareMathOperator{\subjectto}{subject~to}
-\newcommand{\smalloh}[1]{\func{{\scriptstyle\mathcal{O}}}{#1}}
-
-\newcommand{\SD}[1][d]{{\mathcal{S}_{#1}}}
-\newcommand{\PSD}[1][d]{{\mathcal{S}^{+}_{#1}}}
-\newcommand{\PD}[1][d]{{\mathcal{S}^{++}_{#1}}}
-
-\LoopCommands{CD}[#1]{\newmathcommand#2{{\mathcal{#1}}}}
+\newcommand{\smalloh}[1]{\func{{\scriptstyle\calO}}{#1}}
 
 \LoopCommands{xyzheapbruv}[#1]{\declaremathcommandPIE#2{{\mathbf{#1}}##1##2\IfEmptyTF{##3}{}{^{(\GetExponent{##3})}}}}
 
-\LoopCommands{IQABUV}[#1]{\newmathcommand#2{{\mathbf{#1}}}}
+\LoopCommands{IQCABDUV}[#1]{\newmathcommand#2{{\mathbf{#1}}}}
 \newcommand{\Qinv}{\inv{\Q}}
 
 \newcommand{\xstar}{{{\mathbf{x}}^\ast}}

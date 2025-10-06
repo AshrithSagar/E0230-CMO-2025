@@ -77,33 +77,33 @@ Note that \( \because f(t) \geq 0, \; \forall t \in \R \implies f(t^\ast) \geq 0
 
 \subsection{First-order methods}
 
-Assume \( f \in \C^{1} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\grad{f}{\x}}{\p} + \smalloh{\norm{\p}} \).
+Assume \( f \in \classC^1 \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\grad{f}{\x}}{\p} + \smalloh{\norm{\p}} \).
 
 \subsection{Second-order methods}
 
-Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\grad{f}{\x}}{\p} + \half \qf{\p}{\hess{f}{\x}} + \smalloh{\norm{\p}^2} \).
+Assume \( f \in \classC^2 \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\grad{f}{\x}}{\p} + \half \qf{\p}{\hess{f}{\x}} + \smalloh{\norm{\p}^2} \).
 
 \section{Types of minimum}
 
 \subsection{Global minimum}
 
 \begin{definition}{Global minimum}{global-minimum}
-    The point \( \xstar \in \R^d \) is a \textbf{global minimum} of the function \( f: \D \subseteq \R^d \to \R \) if
+    The point \( \xstar \in \R^d \) is a \textbf{global minimum} of the function \( f: \calD \subseteq \R^d \to \R \) if
     \vspace{-0.5em}
     \begin{equation*}
         \func{f}{\xstar} \leq \func{f}{\x},
-        \quad \forall \x \in \D
+        \quad \forall \x \in \calD
     \end{equation*}
 \end{definition}
 
 \subsection{Strict global minimum}
 
 \begin{definition}{Strict global minimum}{}
-    The point \( \xstar \in \R^d \) is a \textbf{strict global minimum} of the function \( f: \D \subseteq \R^d \to \R \) if
+    The point \( \xstar \in \R^d \) is a \textbf{strict global minimum} of the function \( f: \calD \subseteq \R^d \to \R \) if
     \vspace{-0.5em}
     \begin{equation*}
         \func{f}{\xstar} < \func{f}{\x},
-        \quad \forall \x \in \D \setminus \set{\xstar}
+        \quad \forall \x \in \calD \setminus \set{\xstar}
     \end{equation*}
 \end{definition}
 
@@ -119,7 +119,7 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
 \end{definition}
 
 \begin{corollary}{First-order variational inequality condition}{first-order-variational-inequality-condition}
-    For a function \( f \in \C^1 \), if \( \xstar \) is a local minimum of \( f \), then there exists a \( \delta > 0 \) such that
+    For a function \( f \in \classC^1 \), if \( \xstar \) is a local minimum of \( f \), then there exists a \( \delta > 0 \) such that
     \vspace{-0.5em}
     \begin{equation*}
         \dotp{\grad{f}{\xstar}}{\pbrac{\x - \xstar}} \geq 0,
@@ -128,7 +128,7 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
 \end{corollary}
 
 \begin{proof}
-    Since \( f \in \C^1 \), from Taylor's theorem~\psecref{sec:multivariate-taylor-theorem}, there exists a \( \delta_1 > 0 \) such that
+    Since \( f \in \classC^1 \), from Taylor's theorem~\psecref{sec:multivariate-taylor-theorem}, there exists a \( \delta_1 > 0 \) such that
     \begin{equation*}
         \func{f}{\x}
         =
@@ -176,7 +176,7 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
 \subsection{First-order necessary condition for a local minimum}
 
 \begin{theorem}{First-order necessary condition for a local minimum}{first-order-necessary-condition-for-a-local-minimum}
-    For a function \( f \in \C^{1} \), if \( \xstar \) is a local minimum of \( f \), then \( \grad{f}{\xstar} = \zero \).
+    For a function \( f \in \classC^1 \), if \( \xstar \) is a local minimum of \( f \), then \( \grad{f}{\xstar} = \zero \).
 \end{theorem}
 
 \begin{proof}
@@ -204,13 +204,13 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
 \subsection{Second-order necessary condition for a local minimum}
 
 \begin{theorem}{Second-order necessary condition for a local minimum}{}
-    For a function \( f \in \C^{2} \), if \( \xstar \) is a local minimum of \( f \), then \( \grad{f}{\xstar} = \zero, \; \hess{f}{\xstar} \succeq \zero \).
+    For a function \( f \in \classC^2 \), if \( \xstar \) is a local minimum of \( f \), then \( \grad{f}{\xstar} = \zero, \; \hess{f}{\xstar} \succeq \zero \).
 \end{theorem}
 
 \begin{proof}
-    \( \because \C^2 \subseteq \C^1 \), by the first-order necessary condition for optimality~\pthmref{thm:first-order-necessary-condition-for-a-local-minimum}, \( \grad{f}{\xstar} = \zero \).
+    \( \because \classC^2 \subseteq \classC^1 \), by the first-order necessary condition for optimality~\pthmref{thm:first-order-necessary-condition-for-a-local-minimum}, \( \grad{f}{\xstar} = \zero \).
 
-    Since \( f \in \C^{2} \), from Taylor's theorem~\psecref{sec:multivariate-taylor-theorem}, there exists a \( \delta_1 > 0 \) such that
+    Since \( f \in \classC^2 \), from Taylor's theorem~\psecref{sec:multivariate-taylor-theorem}, there exists a \( \delta_1 > 0 \) such that
     \begin{equation*}
         \func{f}{\x}
         =
@@ -259,13 +259,13 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
 \subsection{Second-order sufficient condition for a strict local minimum}
 
 \begin{theorem}{Second-order sufficient condition for a strict local minimum}{}
-    For a function \( f \in \C^{2} \) such that \( \grad{f}{\xstar} = \zero, \; \hess{f}{\xstar} \succ \zero \), then \( \xstar \) is a strict local minimum of \( f \).
+    For a function \( f \in \classC^2 \) such that \( \grad{f}{\xstar} = \zero, \; \hess{f}{\xstar} \succ \zero \), then \( \xstar \) is a strict local minimum of \( f \).
 \end{theorem}
 
 \subsection{First-order sufficient condition for a global minimum under convexity}
 
 \begin{theorem}{First-order sufficient condition for a global minimum under convexity}{first-order-sufficient-condition-for-a-global-minimum-under-convexity}
-    For a convex function \( f \in \C^1 \) with \( \grad{f}{\xstar} = \zero \), then \( \xstar \) is a global minimum of \( f \).
+    For a convex function \( f \in \classC^1 \) with \( \grad{f}{\xstar} = \zero \), then \( \xstar \) is a global minimum of \( f \).
 \end{theorem}
 
 \begin{proof}
@@ -274,13 +274,13 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
         \func{f}{\y}
         & \geq
         \func{f}{\xstar} + \cancel{ \dotp{\grad{f}{\xstar}}{(\y - \xstar)} },
-        \quad \forall \y \in \D
+        \quad \forall \y \in \calD
         \\
         \implies
         \func{f}{\y}
         & \geq
         \func{f}{\xstar},
-        \quad \forall \y \in \D
+        \quad \forall \y \in \calD
     \end{align*}
     which is the definition of a global minimum~\pdefref{def:global-minimum}.
 \end{proof}
@@ -288,23 +288,23 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
 \section{Convexity}
 
 \begin{definition}{Convex set}{}
-    A set \( \mathcal{S} \subseteq \R^n \) is \textbf{convex} if
+    A set \( \calS \subseteq \R^n \) is \textbf{convex} if
     \vspace{-1em}
     \begin{equation*}
-        \lambda \x + (1 - \lambda) \y \in \mathcal{S},
-        \quad \forall \x, \y \in \mathcal{S},
+        \lambda \x + (1 - \lambda) \y \in \calS,
+        \quad \forall \x, \y \in \calS,
         \; \lambda \in [0, 1]
     \end{equation*}
 \end{definition}
 
 \begin{definition}{Convex function}{}
-    A function \( f: \D \subseteq \R^n \to \R \) is \textbf{convex} on a convex set \( \D \) if
+    A function \( f: \calD \subseteq \R^n \to \R \) is \textbf{convex} on a convex set \( \calD \) if
     \vspace{-0.5em}
     \begin{equation*}
         \func{f}{\lambda \x + (1 - \lambda) \y}
         \leq
         \lambda \func{f}{\x} + (1 - \lambda) \func{f}{\y},
-        \quad \forall \x, \y \in \D,
+        \quad \forall \x, \y \in \calD,
         \; \lambda \in [0, 1]
     \end{equation*}
 \end{definition}
@@ -312,13 +312,13 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
 \subsection{First-order condition for convexity}
 
 \begin{theorem}{First-order condition for convexity}{first-order-condition-for-convexity}
-    For a function \( f \in \C^1 \) with a convex domain \( \D \), \( f \) is convex on \( \D \) iff
+    For a function \( f \in \classC^1 \) with a convex domain \( \calD \), \( f \) is convex on \( \calD \) iff
     \vspace{-0.5em}
     \begin{equation*}
         \func{f}{\y}
         \geq
         \func{f}{\x} + \dotp{\grad{f}{\x}}{(\y - \x)},
-        \quad \forall \x, \y \in \D
+        \quad \forall \x, \y \in \calD
     \end{equation*}
 \end{theorem}
 
@@ -329,7 +329,7 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
         \frac{\func{f}{\lambda \x + (1 - \lambda) \y} - \func{f}{\x}}{\lambda}
         \leq
         \func{f}{\y} - \func{f}{\x},
-        \quad \forall \x, \y \in \D,
+        \quad \forall \x, \y \in \calD,
         \; \lambda \in \linterval{0}{1}
     \end{equation*}
     Taking the limit as \( \lambda \to 0^+ \), we have
@@ -339,17 +339,17 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
         \lim_{\lambda \to 0^+} \frac{\func{f}{\lambda \x + (1 - \lambda) \y} - \func{f}{\x}}{\lambda}
         \leq
         \func{f}{\y} - \func{f}{\x},
-        \quad \forall \x, \y \in \D
+        \quad \forall \x, \y \in \calD
     \end{equation*}
     which is the desired result.
 \end{proof}
 
 \begin{corollary}{Monotonicity of gradient \( \iff \) Convexity}{}
-    For a function \( f \in \C^1 \) with a convex domain \( \D \), \( f \) is convex on \( \D \) iff
+    For a function \( f \in \classC^1 \) with a convex domain \( \calD \), \( f \) is convex on \( \calD \) iff
     \vspace{-0.5em}
     \begin{equation*}
         \dotp{\pbrac[\big]{\grad{f}{\x} - \grad{f}{\y}}}{\pbrac[\big]{\x - \y}} \geq 0,
-        \quad \forall \x, \y \in \D
+        \quad \forall \x, \y \in \calD
     \end{equation*}
 \end{corollary}
 
@@ -360,24 +360,24 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
         \func{f}{\y}
         & \geq
         \func{f}{\x} + \dotp{\grad{f}{\x}}{\pbrac{\y - \x}},
-        \quad \forall \x, \y \in \D
+        \quad \forall \x, \y \in \calD
         \\
         \func{f}{\x}
         & \geq
         \func{f}{\y} + {\grad{f}{\y}}^\top (\x - \y),
-        \quad \forall \x, \y \in \D
+        \quad \forall \x, \y \in \calD
     \end{align*}
     Adding the two inequalities, we get
     \begin{equation*}
         0
         \geq
         \dotp{\pbrac[\big]{\grad{f}{\x} - \grad{f}{\y}}}{\pbrac{\y - \x}},
-        \quad \forall \x, \y \in \D
+        \quad \forall \x, \y \in \calD
     \end{equation*}
     which is equivalent to the desired result.
 
     \( (\Leftarrow) \)
-    Define \( \func{g}{t} = f(\x + t (\y - \x)), \;\; t \in [0, 1], \;\; \x, \y \in \D \).
+    Define \( \func{g}{t} = f(\x + t (\y - \x)), \;\; t \in [0, 1], \;\; \x, \y \in \calD \).
 
     Then, \( \func{g}{0} = \func{f}{\x}, \quad \func{g}{1} = \func{f}{\y}, \quad \func{g'}{t} = \dotp{(\grad{f}{\x + t (\y - \x)})}{(\y - \x)} \).
 
@@ -404,18 +404,18 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
         =
         {\pbrac[\big]{\grad{f}{\x}}}^\top (\y - \x)
     \end{equation*}
-    for all \( \x, \y \in \D \), which is the first-order condition for convexity, and thereby \( f \) is convex.
+    for all \( \x, \y \in \calD \), which is the first-order condition for convexity, and thereby \( f \) is convex.
 \end{proof}
 
 \subsection{Second-order condition for convexity}
 
 \begin{theorem}{Second-order condition for convexity}{second-order-condition-for-convexity}
-    For a function \( f \in \C^2 \) with a convex domain \( \D \), \( f \) is convex on \( \D \) iff
+    For a function \( f \in \classC^2 \) with a convex domain \( \calD \), \( f \) is convex on \( \calD \) iff
     \vspace{-0.5em}
     \begin{equation*}
         \hess{f}{\x}
         \succeq \zero,
-        \quad \forall \x \in \D
+        \quad \forall \x \in \calD
     \end{equation*}
 \end{theorem}
 
@@ -425,7 +425,7 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
     \begin{equation*}
         \func{f}{\y} - \func{f}{\x} - \dotp{\grad{f}{\x}}{\pbrac{\y - \x}}
         \geq 0,
-        \quad \forall \x, \y \in \D
+        \quad \forall \x, \y \in \calD
     \end{equation*}
     Using Taylor's theorem, we have
     \begin{equation*}
@@ -439,10 +439,10 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
     \begin{equation*}
         {(\y - \x)}^\top \hess{f}{\boldsymbol{\xi}} (\y - \x)
         \geq 0,
-        \quad \forall \x, \y \in \D
+        \quad \forall \x, \y \in \calD
     \end{equation*}
-    which implies \( \hess{f}{\x} \succeq \zero, \; \forall \x \in \D \).
-    (Note: \( \boldsymbol{\xi} \in \D \) since \( \D \) is convex.)
+    which implies \( \hess{f}{\x} \succeq \zero, \; \forall \x \in \calD \).
+    (Note: \( \boldsymbol{\xi} \in \calD \) since \( \calD \) is convex.)
 
     \( (\Leftarrow) \)
     From Taylor's theorem, we have
@@ -453,11 +453,11 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
         \quad \boldsymbol{\xi} = (1 - t) \x + t \y, \; t \in (0, 1)
     \end{equation*}
     for some \( t \in (0, 1) \).
-    Since \( \hess{f}{\x} \succeq \zero, \; \forall \x \in \D \), we have
+    Since \( \hess{f}{\x} \succeq \zero, \; \forall \x \in \calD \), we have
     \begin{equation*}
         \func{f}{\y} - \func{f}{\x} - \dotp{\grad{f}{\x}}{\pbrac{\y - \x}}
         \geq 0,
-        \quad \forall \x, \y \in \D
+        \quad \forall \x, \y \in \calD
     \end{equation*}
     which is the first-order condition for convexity, and thereby \( f \) is convex.
 \end{proof}
@@ -465,7 +465,7 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
 \section{Strong convexity}
 
 \begin{definition}{Strong convexity}{}
-    A function \( f: \D \subseteq \R^n \to \R \) on a convex domain \( \D \) is \textbf{strongly convex} with parameter \( \mu > 0 \) if
+    A function \( f: \calD \subseteq \R^n \to \R \) on a convex domain \( \calD \) is \textbf{strongly convex} with parameter \( \mu > 0 \) if
     \vspace{-0.5em}
     \begin{equation*}
         \func{f}{\lambda \x + (1 - \lambda) \y}
@@ -478,7 +478,7 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
 \end{definition}
 
 \begin{corollary}{}{}
-    A function \( f: \D \subseteq \R^n \to \R \) on a convex domain \( \D \) is strongly convex with parameter \( \mu > 0 \) iff the function \( \func{g}{\x} := \pbrac{\func{f}{\x} - \frac{\mu}{2} \norm{\x}^2} \) is convex on \( \D \).
+    A function \( f: \calD \subseteq \R^n \to \R \) on a convex domain \( \calD \) is strongly convex with parameter \( \mu > 0 \) iff the function \( \func{g}{\x} := \pbrac{\func{f}{\x} - \frac{\mu}{2} \norm{\x}^2} \) is convex on \( \calD \).
 \end{corollary}
 
 \begin{proof}
@@ -501,13 +501,13 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
 \subsection{First-order condition for strong convexity}
 
 \begin{corollary}{First-order condition for strong convexity}{}
-    For a function \( f \in \C^1 \) with a convex domain \( \D \), \( f \) is strongly convex on \( \D \) with parameter \( \mu > 0 \) iff
+    For a function \( f \in \classC^1 \) with a convex domain \( \calD \), \( f \) is strongly convex on \( \calD \) with parameter \( \mu > 0 \) iff
     \vspace{-0.5em}
     \begin{equation*}
         \func{f}{\y}
         \geq
         \func{f}{\x} + \dotp{\grad{f}{\x}}{\pbrac{\y - \x}} + \frac{\mu}{2} \norm{\y - \x}^2,
-        \quad \forall \x, \y \in \D
+        \quad \forall \x, \y \in \calD
     \end{equation*}
 \end{corollary}
 
@@ -519,7 +519,7 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
         \func{g}{\y}
         & \geq
         \func{g}{\x} + \dotp{\grad{g}{\x}}{\pbrac{\y - \x}},
-        \quad \forall \x, \y \in \D
+        \quad \forall \x, \y \in \calD
         \\
         \implies
         \func{f}{\y} - \frac{\mu}{2} \norm{\y}^2
@@ -534,30 +534,30 @@ Assume \( f \in \C^{2} \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dotp{\
         \func{f}{\x} + \dotp{\grad{f}{\x}}{\pbrac{\y - \x}} + \frac{\mu}{2} \pbrac[\Big]{\norm{\y}^2 - \cancel{ \norm{\x}^2 } - 2 \dotp{\x}{\y} + \cancel{2} \norm{\x}^2}
         \\ & =
         \func{f}{\x} + \dotp{\grad{f}{\x}}{\pbrac{\y - \x}} + \frac{\mu}{2} \norm{\y - \x}^2,
-        \quad \forall \x, \y \in \D
+        \quad \forall \x, \y \in \calD
     \end{align*}
 \end{proof}
 
 \subsection{Second-order condition for strong convexity}
 
 \begin{corollary}{Second-order condition for strong convexity}{}
-    For a function \( f \in \C^2 \) with a convex domain \( \D \), \( f \) is strongly convex on \( \D \) with parameter \( \mu > 0 \) iff
+    For a function \( f \in \classC^2 \) with a convex domain \( \calD \), \( f \) is strongly convex on \( \calD \) with parameter \( \mu > 0 \) iff
     \vspace{-0.5em}
     \begin{equation*}
         \hess{f}{\x}
         \succeq
         \mu \I,
-        \quad \forall \x \in \D
+        \quad \forall \x \in \calD
     \end{equation*}
 
     \vspace{-0.5em}
-    i.e., the Hessian \( \hess{f}{\x} \) is positive definite with all eigenvalues at least \( \mu \), for all \( \x \in \D \).
+    i.e., the Hessian \( \hess{f}{\x} \) is positive definite with all eigenvalues at least \( \mu \), for all \( \x \in \calD \).
 \end{corollary}
 
 \begin{proof}
     Define \( \func{g}{\x} = \func{f}{\x} - \frac{\mu}{2} \norm{\x}^2 \).
     Then, \( \hess{g}{\x} = \hess{f}{\x} - \mu \I \).
-    From the second-order condition for convexity~\pthmref{thm:second-order-condition-for-convexity}, we have that \( g \) is convex iff \( \hess{g}{\x} \succeq \zero, \; \forall \x \in \D \), which is equivalent to the desired result.
+    From the second-order condition for convexity~\pthmref{thm:second-order-condition-for-convexity}, we have that \( g \) is convex iff \( \hess{g}{\x} \succeq \zero, \; \forall \x \in \calD \), which is equivalent to the desired result.
 \end{proof}
 
 \section{Strongly convex quadratic minimisation problem}\label{sec:strongly-convex-quadratic-minimisation-problem}
@@ -1043,7 +1043,7 @@ Determine the largest number \( \alpha_k \) in the sequence \( \set{\beta^m \bar
 \section{Sufficient decrease lemma}
 
 \begin{lemma}{Sufficient decrease lemma}{}
-    Suppose \( f \in \C^{1}_{L} \) is bounded below, then \( \forall \x \in \R^n, \; \alpha \in \linterval[scaled]{0}{\frac{1}{L}} \), the gradient descent update \( \xhat = \x - \alpha \grad{f}{\x} \) yields a sufficient decrease in the function value:
+    Suppose \( f \in \classC^1_{L} \) is bounded below, then \( \forall \x \in \R^n, \; \alpha \in \linterval[scaled]{0}{\frac{1}{L}} \), the gradient descent update \( \xhat = \x - \alpha \grad{f}{\x} \) yields a sufficient decrease in the function value:
     \vspace{-0.5em}
     \begin{equation*}
         \func{f}{\xhat}
@@ -1217,7 +1217,7 @@ The `global' refers to the fact that the initial point \( \x^0 \) is arbitrary, 
 \begin{algorithm}[H]
     \caption{
         Conjugate direction algorithm for unconstrained minimisation
-        of a differentiable function \( f : \R^d \to \R \), \( f \in \C^1 \).
+        of a differentiable function \( f : \R^d \to \R \), \( f \in \classC^1 \).
     }
     \SetAlgoLined{}
     \KwIn{
@@ -1790,7 +1790,7 @@ For a convex quadratic function \( f: \R^d \to \R \), the conjugate gradient met
     \begin{equation*}
         \u_k
         \in
-        \mathcal{K}_k(\Q, \nabla f(\x^0))
+        \calK_k(\Q, \nabla f(\x^0))
         =
         \spanset{\Q^i \, \grad{f}{\x^0}}_{i = 0}^{k - 1}
     \end{equation*}
@@ -2332,7 +2332,7 @@ Suppose \( \hess{f}{\xstar} \succ \zero \), ensuring that \( \xstar \) is a loca
     \exists l > 0 \text{ such that } \hess{f}{\xstar} \succeq l \, \I
 \end{equation*}
 
-Assuming \( f \in \C^2_M \), we have
+Assuming \( f \in \classC^2_M \), we have
 \begin{equation*}
     \boxed{
         \norm{\hess{f}{\y} - \hess{f}{\x}}
