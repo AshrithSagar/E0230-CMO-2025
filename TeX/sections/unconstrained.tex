@@ -1388,7 +1388,7 @@ For a convex quadratic function \( f: \R^d \to \R \), the conjugate direction me
         =
         - \hessinv{g}{\zero} \grad{g}{\zero}
         \\ & =
-        - \inv{\left[ \qf{\U^{(k)}}{\Q} \right]} \dotp{\U^{(k)}}{\grad{f}{\x^0}}
+        - \inv{\bbrac{\qf{\U^{(k)}}{\Q}}} \dotp{\U^{(k)}}{\grad{f}{\x^0}}
         \\
         \implies
         {\gamma^{(k)}}^\ast_i
@@ -2196,6 +2196,8 @@ The preconditioned conjugate gradient method can be interpreted as applying the 
     \hat{\Q} \triangleq \inv{\C} \Q \C^{-\top} \in \PD,
     \; \hat{\h} \triangleq \inv{\C} \h \in \R^d
 \end{align*}
+
+NW~\cite{Nocedal2006} provide an equivalent formulation, except that they take a non-singular matrix \( \C \) and construct \( \M = \C^\top \C \), instead of factorising \( \M \) as \( \outp{\C}{\C} \), given a symmetric positive definite preconditioner \( \M \).
 
 \section{Polynomial optimisation perspective}
 

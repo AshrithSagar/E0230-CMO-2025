@@ -37,7 +37,7 @@ A \textbf{normed vector space} \( (\V, \norm{\,\cdot\,}) \) is a vector space \(
 \begin{equation*}
     \norm{\x}_p
     =
-    {\left( \sum_{i = 1}^{d} \abs{x_i}^p \right)}^{\frac{1}{p}},
+    \pbrac{\sum_{i = 1}^{d} \abs{x_i}^p}^{\frac{1}{p}},
     \quad p \geq 1
 \end{equation*}
 
@@ -225,13 +225,13 @@ The \textbf{spectral radius} of a matrix \( \A \in \R^{d \times d} \) with eigen
 \begin{itemize}
     \item \( \rho(\A) = \rho(\A^\top) \)
 
-    \item \( \rho(\A^k) = {\left[ \rho(\A) \right]}^k, \quad k \in \N \)
+    \item \( \rho(\A^k) = {\bbrac{\rho(\A)}}^k, \quad k \in \N \)
 
     \item \( \rho(\inv{\A}) = \frac{1}{\rho(\A)}, \quad \text{if } \A \text{ is invertible} \)
 
     \item \( \rho(\A) \leq \norm{\A}, \quad \forall \text{ matrix norms } \norm{\,\cdot\,} \)
 
-    \item (Gelfand's formula) \( \rho(\A) = \lim_{k \to \infty} {\left( \norm{\A^k} \right)}^{\frac{1}{k}}, \quad \forall \text{ matrix norms } \norm{\,\cdot\,} \)
+    \item (Gelfand's formula) \( \rho(\A) = \lim_{k \to \infty} \pbrac{\norm{\A^k}}^{\frac{1}{k}}, \quad \forall \text{ matrix norms } \norm{\,\cdot\,} \)
 
     \item \( \rho(\A) \leq \norm{\A^k}^{\frac{1}{k}}, \quad \forall k \in \N, \; \forall \text{ sub-multiplicative matrix norms } \norm{\,\cdot\,} \)
 
@@ -398,13 +398,13 @@ The \textbf{derivative} of a function \( f: \R \to \R \) at a point \( x \in \R 
     f'(x) = \lim_{h \to 0} \frac{\func{f}{x + h} - \func{f}{x}}{h}
 \end{equation*}
 
-The \textbf{gradient} of a function \( f: \R^d \to \R \) at a point \( \x = {\left(x_1, x_2, \ldots, x_d\right)}^\top \in \R^d \) is defined as
+The \textbf{gradient} of a function \( f: \R^d \to \R \) at a point \( \x = \bbrac{x_1, x_2, \ldots, x_d}^\top \in \R^d \) is defined as
 \begin{equation*}
-    \grad{f}{\x} = {\left( \frac{\partial f}{\partial x_1}(\x), \frac{\partial f}{\partial x_2}(\x), \ldots, \frac{\partial f}{\partial x_d}(\x) \right)}^\top
+    \grad{f}{\x} = \pbrac{\frac{\partial f}{\partial x_1}(\x), \frac{\partial f}{\partial x_2}(\x), \ldots, \frac{\partial f}{\partial x_d}(\x)}^\top
     \in \R^d
 \end{equation*}
 
-The \textbf{Hessian} of a function \( f: \R^d \to \R \) at a point \( \x = {\left(x_1, x_2, \ldots, x_d\right)}^\top \in \R^d \) is defined as
+The \textbf{Hessian} of a function \( f: \R^d \to \R \) at a point \( \x = \bbrac{x_1, x_2, \ldots, x_d}^\top \in \R^d \) is defined as
 \begin{equation*}
     \hess{f}{\x} =
     \begin{bmatrix}
@@ -693,7 +693,7 @@ The \textbf{dot product} (or inner product) of two vectors \( \x, \y \in \R^d \)
 
     \item \textit{Distributive}: \( \dotp{\x}{(\y + \z)} = \dotp{\x}{\y} + \dotp{\x}{\z}, \; \forall \x, \y, \z \in \R^d \).
 
-    \item \textit{Associative}: \( \dotp{(a \x)}{\y} = \dotp{\x}{(a \y)} = a \left( \dotp{\x}{\y} \right), \; \forall \x, \y \in \R^d, \; a \in \R \).
+    \item \textit{Associative}: \( \dotp{(a \x)}{\y} = \dotp{\x}{(a \y)} = a \pbrac{\dotp{\x}{\y}}, \; \forall \x, \y \in \R^d, \; a \in \R \).
 
     \item \textit{Definiteness}: \( \dotp{\x}{\x} = \norm{\x}_2^2 \geq 0, \; \forall \x \in \R^d, \; \text{and } \dotp{\x}{\x} = 0 \iff \x = \zero \).
 
@@ -1400,7 +1400,7 @@ The \textbf{Gram-Schmidt orthonormalisation} process takes a finite, linearly in
     \begin{equation*}
         \inv{\bbrac{\A - \B}}
         =
-        \sum_{i = 0}^{\infty} {\left( \inv{\A} \B \right)}^i \inv{\A}
+        \sum_{i = 0}^{\infty} \pbrac{\inv{\A} \B}^i \inv{\A}
     \end{equation*}
 \end{corollary}
 
@@ -1434,7 +1434,7 @@ The \textbf{Gram-Schmidt orthonormalisation} process takes a finite, linearly in
         \qquad
         \inv{\bbrac{\I - \inv{\A} \B}}
         =
-        \sum_{i = 0}^{\infty} {\left( \inv{\A} \B \right)}^i
+        \sum_{i = 0}^{\infty} \pbrac{\inv{\A} \B}^i
     \end{equation*}
 \end{proof}
 
@@ -1522,10 +1522,10 @@ The \textbf{Gram-Schmidt orthonormalisation} process takes a finite, linearly in
     \begin{equation*}
         \frac{1}{n} \sum_{i = 1}^{n} a_i
         \geq
-        {\left( \prod_{i = 1}^{n} a_i \right)}^{\frac{1}{n}}
+        \pbrac{\prod_{i = 1}^{n} a_i}^{\frac{1}{n}}
         \qquad \text{i.e.,} \quad
         \overbrace{
-            \left( \frac{a_1 + a_2 + \cdots + a_n}{n} \right)
+            \pbrac{\frac{a_1 + a_2 + \cdots + a_n}{n}}
         }^{\text{Arithmetic Mean (AM)}}
         \geq
         \overbrace{
@@ -1539,6 +1539,51 @@ The \textbf{Gram-Schmidt orthonormalisation} process takes a finite, linearly in
 
 \begin{proof}
     Can be shown by mathematical induction.
+    \( n = 1 \) holds trivially.
+
+    For \( n = 2 \), we have
+    \begin{equation*}
+        \frac{a_1 + a_2}{2}
+        \geq
+        \sqrt{a_1 a_2}
+        \iff
+        \pbrac{a_1 - a_2}^2 \geq 0
+    \end{equation*}
+    The equality holds iff \( a_1 = a_2 \).
+
+    \paragraph{P\'olya's proof:}
+    Consider \( f: \R \to \R, \; f(x) = e^{x - 1} - x \). Then we have \( f'(x) = e^{x - 1} - 1 \) and \( f''(x) = e^{x - 1} > 0, \; \forall x \in \R \).
+    Also, \( f(1) = 0, \; f'(1) = 0, \; f''(x) > 0, \; \forall x \in \R \), i.e., \( f(x) \) is strictly convex and has a global minimum at \( x = 1 \implies f(x) \geq 0, \; \forall x \in \R \implies \boxed{x \leq e^{x - 1}, \; \forall x \in \R} \), with equality iff \( x = 1 \).
+    Let \( \bar{a} \triangleq \frac{1}{n} \sum_{i = 1}^{n} a_i \) denote the arithmetic mean of \( \set{a_i}_{i = 1}^{n} \).
+    Then, we have
+    \begin{align*}
+        \implies
+        \frac{1}{\bar{a}^n} \prod_{i = 1}^{n} a_i
+        & =
+        \prod_{i = 1}^{n} \pbrac{\frac{a_i}{\bar{a}}}
+        \leq
+        \prod_{i = 1}^{n} \exp{\pbrac{\frac{a_i}{\bar{a}} - 1}}
+        =
+        \exp{\pbrac{\sum_{i = 1}^{n} \frac{a_i}{\bar{a}} - n}}
+        =
+        \exp{\pbrac{\frac{n \cancel{\bar{a}}}{\cancel{\bar{a}}} - n}}
+        =
+        \exp{(0)}
+        =
+        1
+        \\ &
+        \implies
+        \prod_{i = 1}^{n} a_i
+        \leq
+        \bar{a}^n
+        \implies
+        \pbrac{\prod_{i = 1}^{n} a_i}^{\frac{1}{n}}
+        \leq
+        \bar{a}
+        =
+        \frac{1}{n} \sum_{i = 1}^{n} a_i
+    \end{align*}
+    with equality iff \( \displaystyle \pbrac{\frac{a_i}{\bar{a}}} = 1, \; \forall i \in \set{1, 2, \ldots, n} \), i.e., \( a_1 = a_2 = \cdots = a_n \).
 \end{proof}
 
 \section{Cauchy-Schwarz inequality}\label{sec:cauchy-schwarz-inequality}
@@ -1577,10 +1622,10 @@ The \textbf{Gram-Schmidt orthonormalisation} process takes a finite, linearly in
     Let \( p_i \geq 0, \; 0 < x_{\min} \leq x_i \leq x_{\max}, \; \forall i \in \set{1, 2, \ldots, n} \), then we have
     \vspace{-0.5em}
     \begin{equation*}
-        \left( \sum_{i = 1}^{n} p_i x_i \right) \left( \sum_{i = 1}^{n} \frac{p_i}{x_i} \right)
+        \pbrac{\sum_{i = 1}^{n} p_i x_i} \pbrac{\sum_{i = 1}^{n} \frac{p_i}{x_i}}
         \leq
         \frac{{(x_{\max} + x_{\min})}^2}{4 x_{\max} x_{\min}}
-        {\left( \sum_{i = 1}^{n} p_i \right)}^2
+        \pbrac{\sum_{i = 1}^{n} p_i}^2
     \end{equation*}
 
     \vspace{-0.5em}
@@ -1604,7 +1649,7 @@ The \textbf{Gram-Schmidt orthonormalisation} process takes a finite, linearly in
     \begin{align*}
         \qf{\x}{\Q}
         & =
-        {\left( \sum_{i = 1}^{d} c_i \v_i \right)}^\top \Q \left( \sum_{j = 1}^{d} c_j \v_j \right)
+        \pbrac{\sum_{i = 1}^{d} c_i \v_i}^\top \Q \pbrac{\sum_{j = 1}^{d} c_j \v_j}
         =
         \sum_{i = 1}^{d} \sum_{j = 1}^{d} c_i c_j \qf{\v_i}{\Q}[\v_j]
         \\ & =
@@ -1634,10 +1679,10 @@ The \textbf{Gram-Schmidt orthonormalisation} process takes a finite, linearly in
     \end{align*}
     Now, let \( p_i = c_i^2 \) and \( x_i = \lambda_i \) in Kantorovich inequality, we have
     \begin{equation*}
-        \underbrace{ \left( \sum_{i = 1}^{d} c_i^2 \lambda_i \right) }_{\qf{\x}{\Q}}
-        \underbrace{ \left( \sum_{i = 1}^{d} \frac{c_i^2}{\lambda_i} \right) }_{\qf{\x}{\Qinv}}
+        \underbrace{ \pbrac{\sum_{i = 1}^{d} c_i^2 \lambda_i} }_{\qf{\x}{\Q}}
+        \underbrace{ \pbrac{\sum_{i = 1}^{d} \frac{c_i^2}{\lambda_i}} }_{\qf{\x}{\Qinv}}
         \leq
-        \frac{{(\lambda_{\max} + \lambda_{\min})}^2}{4 \lambda_{\max} \lambda_{\min}} \underbrace{ {\left( \sum_{i = 1}^{d} c_i^2 \right)}^2 }_{{(\dotp{\x}{\x})}^2}
+        \frac{{(\lambda_{\max} + \lambda_{\min})}^2}{4 \lambda_{\max} \lambda_{\min}} \underbrace{ \pbrac{\sum_{i = 1}^{d} c_i^2}^2 }_{{(\dotp{\x}{\x})}^2}
         \implies
         \frac{{(\dotp{\x}{\x})}^2}{(\qf{\x}{\Q})(\qf{\x}{\Qinv})}
         \geq
@@ -1651,7 +1696,7 @@ The \textbf{Gram-Schmidt orthonormalisation} process takes a finite, linearly in
     A function \( f: \calD \subseteq \R^n \to \R \) on a convex domain \( \calD \) satisfies the \textbf{Polyak-\L{}ojasiewicz (PL) inequality} with parameter \( \mu > 0 \) if
     \vspace{-0.5em}
     \begin{equation*}
-        \half \norm[\Big]{\grad{f}{\x}}^2 \geq \mu \left( \func{f}{\x} - f^\ast \right)
+        \half \norm[\Big]{\grad{f}{\x}}^2 \geq \mu \pbrac{\func{f}{\x} - f^\ast}
         , \quad \forall \x \in \calD
     \end{equation*}
 
