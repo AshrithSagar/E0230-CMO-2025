@@ -1473,6 +1473,45 @@ The \textbf{Gram-Schmidt orthonormalisation} process takes a finite, linearly in
     We can see that this is a special case of the Sherman-Morrison formula~\psecref{sec:sherman-morrison-formula} for \( d = 1 \), i.e., by setting \( \A = 1, \; \u = u, \; \v = v \).
 \end{proof}
 
+\section{Matrix determinant lemma}\label{sec:matrix-determinant-lemma}
+
+\begin{theorem}{Matrix determinant lemma~\citep{wiki}}{matrix-determinant-lemma}
+    For any invertible matrix \( \A \in \R^{m \times m} \) and matrices \( \B \in \R^{m \times n}, \C \in \R^{n \times m} \), we have
+    \vspace{-0.5em}
+    \begin{equation}\label{eq:matrix-determinant-lemma}
+        \determinant{\A + \B \C}
+        =
+        \determinant{\I + \C \inv{\A} \B}
+        \; \determinant{\A}
+    \end{equation}
+\end{theorem}
+
+\begin{corollary}{{}~\citep{wiki}}{}
+    For any invertible matrices \( \A \in \R^{m \times m}, \C \in \R^{n \times n} \) and matrices \( \B \in \R^{m \times n}, \D \in \R^{n \times m} \), we have
+    \vspace{-0.5em}
+    \begin{equation*}
+        \determinant{\A + \B \C \D}
+        =
+        \determinant{\A}
+        \; \determinant{\C}
+        \; \determinant{\inv{\C} + \D \inv{\A} \B}
+    \end{equation*}
+\end{corollary}
+
+\begin{corollary}{Sylvester's determinant theorem / Weinstein-Aronszajn identity~\citep{wiki}}{}
+    For any matrices \( \A \in \R^{m \times n}, \B \in \R^{n \times m} \), we have
+    \vspace{-0.5em}
+    \begin{equation*}
+        \determinant{\I + \A \B}
+        =
+        \determinant{\I + \B \A}
+    \end{equation*}
+\end{corollary}
+
+\begin{proof}
+    Set \( \A = \I \) in the matrix determinant lemma~\psecref{sec:matrix-determinant-lemma}~\peqref{eq:matrix-determinant-lemma}.
+\end{proof}
+
 \chapter{Inequalities}
 
 \section{AM-GM inequality}
