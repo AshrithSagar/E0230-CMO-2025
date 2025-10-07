@@ -3114,7 +3114,7 @@ Hence, we have the DFP update as
         {\qf{\boldsymbol{\gamma}_k}{\A_k}}
     }
     \triangleq
-    \A_k^{\text{DFP}}
+    \A_{k+1}^{\text{DFP}}
 \end{equation*}
 
 The DFP update guarantees positive definiteness of \( \A_{k+1} \) if \( \A_k \succ \zero \) and \( \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k} > 0 \).
@@ -3407,65 +3407,26 @@ The Broyden family of updates is given by
         {\qf{\boldsymbol{\gamma}_k}{\A_k}}
     }
 \end{align*}
-\begin{align*}
-    &
-    \implies
-    \frac{
-        \A_{k+1}
-        -
-        \A_k^{\text{DFP}}
-    }{\phi}
-    =
-    \frac
-    {\qf{\boldsymbol{\gamma}_k}{\A_k}}
-    {\dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}}
-    \frac
-    {\outp{\boldsymbol{\delta}_k}{\boldsymbol{\delta}_k}}
-    {\dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}}
-    -
-    \frac
-    {
-        \boldsymbol{\delta}_k \dotp{\boldsymbol{\gamma}_k}{\A_k}
-        +
-        \outp{\A_k \, \boldsymbol{\gamma}_k}{\boldsymbol{\delta}_k}
-    }
-    {\dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}}
-    +
-    \frac
-    {\A_k \outp{\boldsymbol{\gamma}_k}{\boldsymbol{\gamma}_k} \A_k}
-    {\qf{\boldsymbol{\gamma}_k}{\A_k}}
-    \\ & =
-    \frac
-    {
-        \qf{\boldsymbol{\gamma}_k}{\A_k}
-        \outp{\boldsymbol{\delta}_k}{\boldsymbol{\delta}_k}
-        \qf{\boldsymbol{\gamma}_k}{\A_k}
-        -
-        \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}
-        \qf{\boldsymbol{\gamma}_k}{\A_k}
-        \pbrac{
-            \boldsymbol{\delta}_k \dotp{\boldsymbol{\gamma}_k}{\A_k}
-            +
-            \outp{\A_k \, \boldsymbol{\gamma}_k}{\boldsymbol{\delta}_k}
-        }
-        +
-        \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}
-        \A_k \outp{\boldsymbol{\gamma}_k}{\boldsymbol{\gamma}_k} \A_k
-        \dotp{\boldsymbol{\gamma}_k}{\boldsymbol{\delta}_k}
-    }
-    {
-        \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}
-        \qf{\boldsymbol{\gamma}_k}{\A_k}
-        \dotp{\boldsymbol{\gamma}_k}{\boldsymbol{\delta}_k}
-    }
-\end{align*}
 \begin{equation*}
     \implies
     \boxed{
         \A_{k+1}
         =
-        \A_k^{\text{DFP}}
+        \A_{k+1}^{\text{DFP}}
         +
-        \phi \, \boldsymbol{\delta}_k \dotp{\boldsymbol{\gamma}_k}{\A_k}
+        \phi \, \outp{\v}{\v},
+        \quad
+        \v
+        =
+        \sqrt{\qf{\boldsymbol{\gamma}_k}{\A_k}}
+        \bbrac{
+            \frac
+            {\boldsymbol{\delta}_k}
+            {\dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}}
+            -
+            \frac
+            {\A_k \outp{\boldsymbol{\gamma}_k}{\boldsymbol{\gamma}_k} \A_k}
+            {\qf{\boldsymbol{\gamma}_k}{\A_k}}
+        }
     }
 \end{equation*}
