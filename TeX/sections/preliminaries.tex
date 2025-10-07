@@ -1588,7 +1588,7 @@ The \textbf{Gram-Schmidt orthonormalisation} process takes a finite, linearly in
 
 \section{Cauchy-Schwarz inequality}\label{sec:cauchy-schwarz-inequality}
 
-\begin{theorem}{Cauchy-Schwarz inequality}{}
+\begin{theorem}{Cauchy-Schwarz inequality / Cauchy-Bunyakovsky-Schwarz inequality}{}
     For any vectors \( \x, \y \in \R^d \), we have
     \vspace{-1em}
     \begin{equation*}
@@ -1603,6 +1603,65 @@ The \textbf{Gram-Schmidt orthonormalisation} process takes a finite, linearly in
     Follows in the \hyperlink{line-point-minimisation}{problem} of minimising the distance between a point and a line in \( \R^d \).
 \end{proof}
 
+\begin{theorem}{Lagrange's identity~\citep{wiki}}{}
+    For any vectors \( \x = \bbrac{x_1, x_2, \ldots, x_d}^\top, \; \y = \bbrac{y_1, y_2, \ldots, y_d}^\top \in \R^d \), we have
+    \vspace{-0.5em}
+    \begin{equation}\label{eq:lagranges-identity}
+        \underbrace{
+            \pbrac{\sum_{i = 1}^{d} x_i^2}
+        }_{\norm{\x}_2^2}
+        \underbrace{
+            \pbrac{\sum_{i = 1}^{d} y_i^2}
+        }_{\norm{\y}_2^2}
+        -
+        \underbrace{
+            \pbrac{\sum_{i = 1}^{d} x_i y_i}^2
+        }_{\pbrac{\dotp{\x}{\y}}^2}
+        =
+        \half
+        \sum_{i = 1}^{d}
+        \sum_{j = 1}^{d}
+        \pbrac{x_i y_j - x_j y_i}^2
+    \end{equation}
+
+    \vspace{-1.5em}
+\end{theorem}
+
+\begin{proof}
+    \begin{align*}
+        &
+        \half
+        \sum_{i = 1}^{d}
+        \sum_{j = 1}^{d}
+        \pbrac{x_i y_j - x_j y_i}^2
+        =
+        \half
+        \sum_{i = 1}^{d}
+        \sum_{j = 1}^{d}
+        \pbrac{x_i^2 y_j^2 + x_j^2 y_i^2 - 2 x_i y_i x_j y_j}
+        \\ & =
+        \half
+        \bbrac{
+            \sum_{i = 1}^{d} x_i^2
+            \sum_{j = 1}^{d} y_j^2
+            +
+            \sum_{j = 1}^{d} x_j^2
+            \sum_{i = 1}^{d} y_i^2
+            -
+            2
+            \pbrac{\sum_{i = 1}^{d} x_i y_i}
+            \pbrac{\sum_{j = 1}^{d} x_j y_j}
+        }
+        =
+        \pbrac{\sum_{i = 1}^{d} x_i^2}
+        \pbrac{\sum_{i = 1}^{d} y_i^2}
+        -
+        \pbrac{\sum_{i = 1}^{d} x_i y_i}^2
+    \end{align*}
+\end{proof}
+
+Note that the right-hand side of Lagrange's identity~\peqref{eq:lagranges-identity} is always non-negative, which provides an alternative proof of the Cauchy-Schwarz inequality~\psecref{sec:cauchy-schwarz-inequality}.
+
 \section{H{\"o}lder's inequality}
 
 \begin{theorem}{H{\"o}lder's inequality~\citep{wiki}}{}
@@ -1615,6 +1674,8 @@ The \textbf{Gram-Schmidt orthonormalisation} process takes a finite, linearly in
     \vspace{-0.5em}
     with equality iff \( \exists c > 0 \) such that \( \abs{x_i}^p = c \abs{y_i}^q, \; \forall i = 1, 2, \ldots, d \).
 \end{theorem}
+
+Note that the Cauchy-Schwarz inequality~\psecref{sec:cauchy-schwarz-inequality} is a special case of H{\"o}lder's inequality for \( p = q = 2 \).
 
 \section{Kantorovich inequality}\label{sec:kantorovich-inequality}
 
@@ -1633,12 +1694,15 @@ The \textbf{Gram-Schmidt orthonormalisation} process takes a finite, linearly in
 \end{theorem}
 
 \begin{corollary}{Kantorovich inequality for real symmetric positive definite matrices~\citep{Luenberger1984}}{}
-    For any \( \Q \in \PD \), with smallest eigenvalue \( \lambda_{\min} \) and largest eigenvalue \( \lambda_{\max} \), and for any \( \x \in \R^d \setminus \set{\zero} \), we have
+    For any real symmetric positive-definite matrix \( \Q \in \PD \), with smallest eigenvalue \( \lambda_{\min} \) and largest eigenvalue \( \lambda_{\max} \), and for any \( \x \in \R^d \setminus \set{\zero} \), we have
+    \vspace{-0.5em}
     \begin{equation*}
         \frac{{(\dotp{\x}{\x})}^2}{(\qf{\x}{\Q})(\qf{\x}{\Qinv})}
         \geq
         \frac{4 \lambda_{\max} \lambda_{\min}}{{(\lambda_{\max} + \lambda_{\min})}^2}
     \end{equation*}
+
+    \vspace{-0.5em}
     with equality iff \( \x \) is an eigenvector of \( \Q \) corresponding to either \( \lambda_{\min} \) or \( \lambda_{\max} \).
 \end{corollary}
 
