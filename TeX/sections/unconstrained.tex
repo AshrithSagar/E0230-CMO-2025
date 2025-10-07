@@ -608,7 +608,7 @@ An \( n \)-th order oracle provides information up to the \( n \)-th derivative 
 \begin{algorithm}[H]
     \caption{
         Iterative algorithm template for unconstrained minimisation
-    }
+    }\label{alg:iterative-algorithm-template}
     \SetAlgoLined{}
     \KwIn{
         First-order oracle for the objective function \( \func{f}{\x} \);
@@ -633,7 +633,7 @@ An \( n \)-th order oracle provides information up to the \( n \)-th derivative 
 \begin{algorithm}[H]
     \caption{
         Algorithm template for unconstrained minimisation using line search
-    }
+    }\label{alg:line-search}
     \SetAlgoLined{}
     \KwIn{
         First-order oracle for the objective function \( \func{f}{\x} \);
@@ -934,7 +934,7 @@ Determine the largest number \( \alpha_k \) in the sequence \( \set{\beta^m \bar
 \begin{algorithm}[H]
     \caption{
         Backtracking line search to satisfy the sufficient decrease condition
-    }
+    }\label{alg:backtracking-line-search}
     \SetAlgoLined{}
     \KwIn{
         First-order oracle for the objective function \( \func{f}{\x} \);
@@ -1218,7 +1218,7 @@ The `global' refers to the fact that the initial point \( \x^0 \) is arbitrary, 
     \caption{
         Conjugate direction algorithm for unconstrained minimisation
         of a differentiable function \( f : \R^d \to \R \), \( f \in \classC^1 \).
-    }
+    }\label{alg:conjugate-direction-method}
     \SetAlgoLined{}
     \KwIn{
         First-order oracle for the objective function \( \func{f}{\x} \);
@@ -1257,7 +1257,7 @@ The `global' refers to the fact that the initial point \( \x^0 \) is arbitrary, 
             \half \qf{\x}{\Q} + \dotp{\h}{\x},
             \quad \Q \in \PD, \; \h \in \R^d
         \end{equation*}
-    }
+    }\label{alg:conjugate-direction-method-quadratic}
     \SetAlgoLined{}
     \KwIn{
         First-order oracle for the objective function \( \func{f}{\x} \);
@@ -1425,7 +1425,7 @@ For a convex quadratic function \( f: \R^d \to \R \), the conjugate direction me
 
 \subsection{(Preliminary) conjugate gradient method}
 
-\begin{algorithm}[H]\label{alg:preliminary-conjugate-gradient-method}
+\begin{algorithm}[H]
     \caption{
         {}~\citep{Nocedal2006}
         (Preliminary) Conjugate gradient algorithm for unconstrained minimisation of a strongly convex quadratic function \( f: \R^d \to \R \).
@@ -1436,7 +1436,7 @@ For a convex quadratic function \( f: \R^d \to \R \), the conjugate direction me
             \half \qf{\x}{\Q} + \dotp{\h}{\x},
             \quad \Q \in \PD, \; \h \in \R^d
         \end{equation*}
-    }
+    }\label{alg:preliminary-conjugate-gradient-method}
     \SetAlgoLined{}
     \KwIn{
         First-order oracle for the objective function \( \func{f}{\x} \);
@@ -1800,7 +1800,7 @@ For a convex quadratic function \( f: \R^d \to \R \), the conjugate gradient met
 
 \subsection{(Practical) conjugate gradient method}
 
-\begin{algorithm}[H]\label{alg:practical-conjugate-gradient-method}
+\begin{algorithm}[H]
     \caption{
         {}~\citep{Nocedal2006}
         (Practical) Conjugate gradient algorithm for unconstrained minimisation of a strongly convex quadratic function \( f: \R^d \to \R \).
@@ -1811,7 +1811,7 @@ For a convex quadratic function \( f: \R^d \to \R \), the conjugate gradient met
             \half \qf{\x}{\Q} + \dotp{\h}{\x},
             \quad \Q \in \PD, \; \h \in \R^d
         \end{equation*}
-    }
+    }\label{alg:practical-conjugate-gradient-method}
     \SetAlgoLined{}
     \KwIn{
         First-order oracle for the objective function \( \func{f}{\x} \);
@@ -2080,7 +2080,7 @@ For a convex quadratic function \( f: \R^d \to \R \), the conjugate gradient met
 
 \subsection{Preconditioned conjugate gradient method}
 
-\begin{algorithm}[H]\label{alg:preconditioned-conjugate-gradient-method}
+\begin{algorithm}[H]
     \caption{
         {}~\citep{Nocedal2006}
         Preconditioned conjugate gradient algorithm for unconstrained minimisation of a strongly convex quadratic function \( f: \R^d \to \R \).
@@ -2091,7 +2091,7 @@ For a convex quadratic function \( f: \R^d \to \R \), the conjugate gradient met
             \half \qf{\x}{\Q} + \dotp{\h}{\x},
             \quad \Q \in \PD, \; \h \in \R^d
         \end{equation*}
-    }
+    }\label{alg:preconditioned-conjugate-gradient-method}
     \SetAlgoLined{}
     \KwIn{
         First-order oracle for the objective function \( \func{f}{\x} \);\\
@@ -2397,13 +2397,38 @@ Since \( \set{\v_i}_{i = 1}^{d} \) forms an orthonormal basis for \( \R^d \), we
 
 \section{Newton's method}
 
-\begin{equation*}
-    \x^{k+1}
-    =
-    \x^k - \hessinv{f}{\x} \grad{f}{\x^k},
-    \qquad
-    \hess{f}{\x^k} \succ \zero
-\end{equation*}
+\begin{algorithm}[H]
+    \caption{
+        {}~\citep{Nesterov2004}
+        Newton's method for unconstrained minimisation.
+    }\label{alg:newtons-method}
+    \SetAlgoLined{}
+    \KwIn{
+        Second-order oracle for the objective function \( \func{f}{\x} \);
+        Initial point \( \x^0 \in \R^d \);
+    }
+    \KwOut{
+        Approximate solution to the unconstrained minimisation problem \( \displaystyle \argmin_{\x \in \R^d} \func{f}{\x} \)\;
+    }
+
+    \( k \leftarrow 0 \)\;
+
+    \While{\( \hess{f}{\x^k} \succ \zero \) \emph{ AND } \( \x^k \) is not optimal}{
+        Update the current point:
+        \vspace{-1em}
+        \begin{equation*}
+            \x^{k+1}
+            =
+            \x^k - \hessinv{f}{\x} \grad{f}{\x^k}
+        \end{equation*}
+
+        \vspace{-1em}
+        \( k \leftarrow k + 1 \)\;
+    }
+    \Return{\( \x^k \)\;}
+\end{algorithm}
+
+Newton's method requires the Hessian matrix to be positive definite at every iteration to ensure that the computed direction is indeed a descent direction.
 
 \paragraph{Newton direction:}
 Refers to the descent direction
@@ -2771,6 +2796,37 @@ Consider the update
     \x^{k+1} - \x^k
 \end{equation*}
 
+\begin{algorithm}[H]
+    \caption{
+        {}~\citep{Nesterov2004}
+        Quasi-Newton method for unconstrained minimisation.
+    }\label{alg:quasi-newton-method}
+    \SetAlgoLined{}
+    \KwIn{
+        First-order oracle for the objective function \( \func{f}{\x} \);\\
+        Initial point \( \x^0 \in \R^d \);
+        Initial inverse Hessian approximation \( \A_0 \succ \zero \);
+    }
+    \KwOut{
+        Approximate solution to the unconstrained minimisation problem \( \displaystyle \argmin_{\x \in \R^d} \func{f}{\x} \)\;
+    }
+
+    \( k \leftarrow 0 \)\;
+
+    \While{\( \x^k \) is not optimal}{
+        Compute the search direction: \( \p^k = - \A_k \, \grad{f}{\x^k}, \; \A_k \succ \zero \)\;
+
+        Perform a line search to determine a suitable step size \( \alpha_k > 0 \)\;
+
+        Update the current point: \( \x^{k+1} = \x^k + \alpha_k \, \p^k \)\;
+
+        Update the inverse Hessian approximation \( \A_{k+1} \) using a Quasi-Newton update\;
+
+        \( k \leftarrow k + 1 \)\;
+    }
+    \Return{\( \x^k \)\;}
+\end{algorithm}
+
 \begin{table}[htbp]
     \centering
     \caption{
@@ -2785,7 +2841,7 @@ Consider the update
             \triangleq
             \x^{k+1} - \x^k
         \)
-    }
+    }\label{tab:quasi-newton-methods}
     \begin{tabular}{lll}
         \toprule
         \textbf{Method}
