@@ -1240,10 +1240,209 @@ The \textbf{Gram-Schmidt orthonormalisation} process takes a finite, linearly in
     Hence, the statement holds for all \( k \in \set{0, 1, \ldots, n - 1} \).
 \end{proof}
 
-\section{Sherman-Morrison formula}
+\section{Matrix inversion lemma}\label{sec:matrix-inversion-lemma}
+
+\begin{theorem}{Matrix inversion lemma / Sherman-Morrison-Woodbury formula / Woodbury matrix identity~\citep{wiki}}{matrix-inversion-lemma}
+    For any invertible matrices \( \A \in \R^{m \times m}, \C \in \R^{n \times n} \) and matrices \( \B \in \R^{m \times n}, \D \in \R^{n \times m} \), such that \( \A + \B \C \D \) is invertible, we have
+    \vspace{-0.5em}
+    \begin{equation}\label{eq:matrix-inversion-lemma}
+        \inv{\bbrac{\A + \B \C \D}}
+        =
+        \inv{\A}
+        -
+        \inv{\A} \B
+        \inv{\bbrac{\inv{\C} + \D \inv{\A} \B}} \D
+        \inv{\A}
+    \end{equation}
+\end{theorem}
+
+\begin{proof}
+    Put \( \U = \inv{\A} \B, \; \V = \C \D \) in the reduced case~\pcorref{cor:reduced-matrix-inversion-lemma} to recover~\peqref{eq:matrix-inversion-lemma}.
+    \begin{align*}
+        \implies
+        \inv{\bbrac{\I + \inv{\A} \B \C \D}}
+        & =
+        \I
+        -
+        \inv{\A} \B \inv{\bbrac{\I + \C \D \inv{\A} \B}} \C \D
+        \\
+        \implies
+        \inv{\bbrac{\I + \inv{\A} \B \C \D}} \inv{\A}
+        & =
+        \I \inv{\A}
+        -
+        \inv{\A} \B \inv{\bbrac{\I + \C \D \inv{\A} \B}} \C \D \inv{\A}
+        \\
+        \implies
+        \inv{\bbrac{\A \pbrac{\I + \inv{\A} \B \C \D}}}
+        & =
+        \inv{\A}
+        -
+        \inv{\A} \B \inv{\bbrac{\inv{\C} \pbrac{\I + \C \D \inv{\A} \B}}} \D \inv{\A}
+        \\
+        \implies
+        \inv{\bbrac{\A + \B \C \D}}
+        & =
+        \inv{\A}
+        -
+        \inv{\A} \B \inv{\bbrac{\inv{\C} + \D \inv{\A} \B}} \D \inv{\A}
+    \end{align*}
+\end{proof}
+
+\begin{corollary}{Reduced matrix inversion lemma~\cite{wiki}}{reduced-matrix-inversion-lemma}
+    For any matrices \( \U \in \R^{m \times n}, \V \in \R^{n \times m} \), such that \( \I + \U \V \) is invertible, we have
+    \vspace{-0.5em}
+    \begin{equation*}
+        \inv{\bbrac{\I + \U \V}}
+        =
+        \I
+        -
+        \U \inv{\bbrac{\I + \V \U}} \V
+    \end{equation*}
+\end{corollary}
+
+\begin{proof}
+    We can see that this is a special case of the matrix inversion lemma~\psecref{sec:matrix-inversion-lemma} by setting\\
+    \( \A = \I, \; \B = \U, \; \C = \I, \; \D = \V \) in~\peqref{eq:matrix-inversion-lemma}.
+    We prove this as follows.
+    \begin{align*}
+        \because
+        \I
+        & =
+        \inv{\bbrac{\I + \E}} \bbrac{\I + \E}
+        =
+        \inv{\bbrac{\I + \E}} + \inv{\bbrac{\I + \E}} \E
+        =
+        \inv{\bbrac{\I + \E}} + \E \inv{\bbrac{\I + \E}}
+        \\
+        \implies
+        &
+        \inv{\bbrac{\I + \E}}
+        =
+        \I
+        -
+        \inv{\bbrac{\I + \E}} \E
+        =
+        \I
+        -
+        \E \inv{\bbrac{\I + \E}}
+    \end{align*}
+    \begin{align*}
+        \because
+        \V + \V \U \V
+        & =
+        \bbrac{\I + \V \U} \V
+        =
+        \V \bbrac{\I + \U \V}
+        \\
+        \implies
+        \V \inv{\bbrac{\I + \U \V}}
+        & =
+        \inv{\bbrac{\I + \V \U}} \V
+        \tag{push-through identity}
+    \end{align*}
+    \begin{equation*}
+        \implies
+        \inv{\bbrac{\I + \U \V}}
+        =
+        \I
+        -
+        \U \V \inv{\bbrac{\I + \U \V}}
+        =
+        \I
+        -
+        \U \inv{\bbrac{\I + \V \U}} \V
+    \end{equation*}
+\end{proof}
+
+\begin{corollary}{Inverse of matrix sum~\citep{wiki}}{}
+    If \( \A, \B \in \R^{d \times d} \) are invertible matrices such that \( \A + \B \) is invertible, then
+    \vspace{-0.5em}
+    \begin{align*}
+        \inv{\bbrac{\A + \B}}
+        & =
+        \inv{\A}
+        -
+        \inv{\A}
+        \inv{\bbrac{\inv{\B} + \inv{\A}}}
+        \inv{\A}
+        \\ & =
+        \inv{\A}
+        -
+        \inv{\A}
+        \inv{\bbrac{\A \inv{\B} + \I}}
+        \\ & =
+        \inv{\A}
+        -
+        \inv{\bbrac{\A + \A \inv{\B} \A}}
+        \tag{Hua's identity}
+    \end{align*}
+\end{corollary}
+
+\begin{proof}
+    Set \( m = n \) and \( \B = \I, \; \D = \I \) in the matrix inversion lemma~\psecref{sec:matrix-inversion-lemma}~\peqref{eq:matrix-inversion-lemma}.
+\end{proof}
+
+\begin{corollary}{Inverse of matrix difference~\citep{wiki}}{}
+    If \( \A, \; \A - \B \in \R^{d \times d} \) are invertible matrices, then
+    \vspace{-0.5em}
+    \begin{equation}\label{eq:inverse-of-matrix-difference}
+        \inv{\bbrac{\A - \B}}
+        =
+        \inv{\A}
+        +
+        \inv{\A} \B
+        \inv{\bbrac{\A - \B}}
+    \end{equation}
+
+    Further, if the spectral radius \( \rho(\inv{\A} \B) < 1 \), then
+    \vspace{-0.5em}
+    \begin{equation*}
+        \inv{\bbrac{\A - \B}}
+        =
+        \sum_{i = 0}^{\infty} {\left( \inv{\A} \B \right)}^i \inv{\A}
+    \end{equation*}
+\end{corollary}
+
+\begin{proof}
+    We can see this holds by setting \( m = n \) and \( \B = -\I, \; \D = \I \) in the matrix inversion lemma~\psecref{sec:matrix-inversion-lemma}~\peqref{eq:matrix-inversion-lemma}, but that requires invertibility of \( \B \) in~\peqref{eq:inverse-of-matrix-difference} as well.
+    \begin{align*}
+        \because
+        \bbrac{\I - \inv{\A} \B}
+        & =
+        \inv{\A} \bbrac{\A - \B}
+        \implies
+        \bbrac{\I - \inv{\A} \B} \inv{\bbrac{\A - \B}}
+        =
+        \inv{\A}
+        \\
+        \implies
+        &
+        \inv{\bbrac{\A - \B}}
+        -
+        \inv{\A} \B
+        \inv{\bbrac{\A - \B}}
+        =
+        \inv{\A}
+    \end{align*}
+
+    Also, if \( \rho(\inv{\A} \B) < 1 \), then we have
+    \begin{equation*}
+        \inv{\bbrac{\A - \B}}
+        =
+        \inv{\bbrac{\I - \inv{\A} \B}} \inv{\A},
+        \qquad
+        \inv{\bbrac{\I - \inv{\A} \B}}
+        =
+        \sum_{i = 0}^{\infty} {\left( \inv{\A} \B \right)}^i
+    \end{equation*}
+\end{proof}
+
+\subsection{Sherman-Morrison formula}\label{sec:sherman-morrison-formula}
 
 \begin{theorem}{Sherman-Morrison formula~\citep{wiki}}{sherman-morrison-formula}
     For any invertible matrix \( \A \in \R^{d \times d} \) and vectors \( \u, \v \in \R^d \), \( \A + \outp{\u}{\v} \) is invertible iff \( 1 + \qf{\v}{\inv{\A}}[\u] \neq 0 \), and we have
+    \vspace{-0.5em}
     \begin{equation*}
         \inv{\bbrac{\A + \outp{\u}{\v}}}
         =
@@ -1254,6 +1453,25 @@ The \textbf{Gram-Schmidt orthonormalisation} process takes a finite, linearly in
         {1 + \qf{\v}{\inv{\A}}[\u]}
     \end{equation*}
 \end{theorem}
+
+\begin{proof}
+    We can see that this is a special case of the matrix inversion lemma~\psecref{sec:matrix-inversion-lemma} for \( n = 1 \), i.e., when \( \B, \D \) are vectors, by setting \( \B = \u, \; \C = 1, \; \D = {\v}^\top \) in~\peqref{eq:matrix-inversion-lemma}.
+\end{proof}
+
+\begin{corollary}{Scalar case of Sherman-Morrison formula~\citep{wiki}}{}
+    \begin{equation*}
+        \frac{1}{1 + u v}
+        =
+        1
+        -
+        \frac{u v}{1 + v u},
+        \quad \forall u, v \in \R, \; u v \neq -1
+    \end{equation*}
+\end{corollary}
+
+\begin{proof}
+    We can see that this is a special case of the Sherman-Morrison formula~\psecref{sec:sherman-morrison-formula} for \( d = 1 \), i.e., by setting \( \A = 1, \; \u = u, \; \v = v \).
+\end{proof}
 
 \chapter{Inequalities}
 
