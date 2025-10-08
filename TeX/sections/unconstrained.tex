@@ -3,7 +3,7 @@
 
 \chapter{Introduction}
 
-\section{Optimisation problem}
+\section{Unconstrained optimisation problem}
 
 An \textbf{unconstrained minimisation problem} aims to find a point \( \xstar \in \R^d \) that minimises a function \( f: \R^d \to \R \), i.e.,
 \vspace{-1.5em}
@@ -87,30 +87,30 @@ Assume \( f \in \classC^2 \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dot
 
 \subsection{Global minimum}
 
-\begin{definition}{Global minimum}{global-minimum}
-    The point \( \xstar \in \R^d \) is a \textbf{global minimum} of the function \( f: \calD \subseteq \R^d \to \R \) if
+\begin{definition}{Global minimum}{global-minimum-unconstrained}
+    The point \( \xstar \in \R^d \) is a \textbf{global minimum} of the function \( f: \R^d \to \R \) if
     \vspace{-0.5em}
     \begin{equation*}
         \func{f}{\xstar} \leq \func{f}{\x},
-        \quad \forall \x \in \calD
+        \quad \forall \x \in \R^d
     \end{equation*}
 \end{definition}
 
 \subsection{Strict global minimum}
 
 \begin{definition}{Strict global minimum}{}
-    The point \( \xstar \in \R^d \) is a \textbf{strict global minimum} of the function \( f: \calD \subseteq \R^d \to \R \) if
+    The point \( \xstar \in \R^d \) is a \textbf{strict global minimum} of the function \( f: \R^d \to \R \) if
     \vspace{-0.5em}
     \begin{equation*}
         \func{f}{\xstar} < \func{f}{\x},
-        \quad \forall \x \in \calD \setminus \set{\xstar}
+        \quad \forall \x \in \R^d \setminus \set{\xstar}
     \end{equation*}
 \end{definition}
 
 \subsection{Local minimum}
 
-\begin{definition}{Local minimum}{local-minimum}
-    The point \( \xstar \in \R^d \) is a \textbf{local minimum} of the function \( f: \R^d \to \R \) if there exists a \( \delta > 0 \) such that for all \( \x \) in the \( \delta \)-neighborhood of \( \xstar \), we have \( \func{f}{\xstar} \leq \func{f}{\x} \), i.e.,
+\begin{definition}{Local minimum}{local-minimum-unconstrained}
+    The point \( \xstar \in \R^d \) is a \textbf{local minimum} of the function \( f: \R^d \to \R \) if there exists a \( \delta > 0 \) such that for all \( \x \in \R^d \) in the \( \delta \)-neighborhood of \( \xstar \), we have \( \func{f}{\xstar} \leq \func{f}{\x} \), i.e.,
     \vspace{-0.5em}
     \begin{equation*}
         \func{f}{\xstar} \leq \func{f}{\x},
@@ -163,7 +163,7 @@ Assume \( f \in \classC^2 \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dot
 \subsection{Strict local minimum}
 
 \begin{definition}{Strict local minimum}{}
-    The point \( \xstar \in \R^d \) is a \textbf{strict local minimum} of the function \( f: \R^d \to \R \) if there exists a \( \delta > 0 \) such that for all \( \x \) in the \( \delta \)-neighborhood of \( \xstar \) except \( \xstar \) itself, we have \( \func{f}{\xstar} < \func{f}{\x} \), i.e.,
+    The point \( \xstar \in \R^d \) is a \textbf{strict local minimum} of the function \( f: \R^d \to \R \) if there exists a \( \delta > 0 \) such that for all \( \x \in \R^d \) in the \( \delta \)-neighborhood of \( \xstar \) except \( \xstar \) itself, we have \( \func{f}{\xstar} < \func{f}{\x} \), i.e.,
     \vspace{-0.5em}
     \begin{equation*}
         \func{f}{\xstar} < \func{f}{\x},
@@ -282,7 +282,7 @@ Assume \( f \in \classC^2 \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dot
         \func{f}{\xstar},
         \quad \forall \y \in \calD
     \end{align*}
-    which is the definition of a global minimum~\pdefref{def:global-minimum}.
+    which is the definition of a global minimum~\pdefref{def:global-minimum-unconstrained}.
 \end{proof}
 
 \section{Convexity}

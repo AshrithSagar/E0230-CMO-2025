@@ -3,6 +3,50 @@
 
 \chapter{Introduction}
 
+\section{Types of minimum}
+
+\subsection{Global minimum}
+
+\begin{definition}{Global minimum}{global-minimum-constrained}
+    The point \( \xstar \in \calD \) is a \textbf{global minimum} of the function \( f: \calD \subseteq \R^d \to \R \) if
+    \vspace{-0.5em}
+    \begin{equation*}
+        \func{f}{\xstar} \leq \func{f}{\x},
+        \quad \forall \x \in \calD
+    \end{equation*}
+\end{definition}
+
+\subsection{Strict global minimum}
+
+\begin{definition}{Strict global minimum}{}
+    The point \( \xstar \in \calD \) is a \textbf{strict global minimum} of the function \( f: \calD \subseteq \R^d \to \R \) if
+    \vspace{-0.5em}
+    \begin{equation*}
+        \func{f}{\xstar} < \func{f}{\x},
+        \quad \forall \x \in \calD \setminus \set{\xstar}
+    \end{equation*}
+\end{definition}
+
+\subsection{Local minimum}
+
+\begin{definition}{Local minimum}{local-minimum-constrained}
+    The point \( \xstar \in \calD \) is a \textbf{local minimum} of the function \( f: \calD \subseteq \R^d \to \R \) if there exists a \( \delta > 0 \) such that for all \( \x \in \calD \) in the \( \delta \)-neighborhood of \( \xstar \), we have \( \func{f}{\xstar} \leq \func{f}{\x} \), i.e.,
+    \vspace{-0.5em}
+    \begin{equation*}
+        \func{f}{\xstar} \leq \func{f}{\x},
+        \quad \forall \x \in \calD \cap B_{\delta}(\xstar)
+    \end{equation*}
+\end{definition}
+
+\begin{definition}{Strict local minimum}{}
+    The point \( \xstar \in \calD \) is a \textbf{strict local minimum} of the function \( f: \calD \subseteq \R^d \to \R \) if there exists a \( \delta > 0 \) such that for all \( \x \in \calD \) in the \( \delta \)-neighborhood of \( \xstar \) except \( \xstar \) itself, we have \( \func{f}{\xstar} < \func{f}{\x} \), i.e.,
+    \vspace{-0.5em}
+    \begin{equation*}
+        \func{f}{\xstar} < \func{f}{\x},
+        \quad \forall \x \in \calD \cap B_{\delta}(\xstar) \setminus \set{\xstar}
+    \end{equation*}
+\end{definition}
+
 \section{Constrained optimisation problem}\label{sec:constrained-optimisation-problem}
 
 A \textbf{constrained optimisation problem} is of the form
