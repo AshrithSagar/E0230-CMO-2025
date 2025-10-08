@@ -3,6 +3,32 @@
 
 \chapter{Introduction}
 
+\section{Constrained optimisation problem}
+
+A \textbf{constrained minimisation problem} aims to find a point \( \xstar \in \calC \) that minimises a function \( f: \calD \subseteq \R^d \to \R \), i.e.,
+\vspace{-1.5em}
+\begin{align*}
+    &
+    \minimize_{\x \in \calC} \func{f}{\x}
+    \\
+    \func{f}{\xstar}
+    =
+    \min_{\x \in \calC} \func{f}{\x}
+    \quad \iff \quad
+    \xstar
+    & =
+    \argmin_{\x \in \calC} \func{f}{\x}
+    \quad \iff \quad
+    \func{f}{\xstar}
+    \leq
+    \func{f}{\x},
+    \quad \forall \x \in \calC
+\end{align*}
+
+The set \( \calC \subseteq \calD \) is called the \textbf{feasible region} / \textbf{feasible set} / \textbf{solution space}.
+
+If \( \calC = \emptyset \), then the problem is said to be \textbf{infeasible}.
+
 \section{Types of minimum}
 
 \subsection{Global minimum}
@@ -47,9 +73,9 @@
     \end{equation*}
 \end{definition}
 
-\section{Constrained optimisation problem}\label{sec:constrained-optimisation-problem}
+\section{Constrained optimisation problem form}\label{sec:constrained-optimisation-problem-form}
 
-A \textbf{constrained optimisation problem} is of the form
+A constrained optimisation problem can be put into the following form
 \begin{align*}
     \minimize_{\x} \quad & \func{f}{\x} \\
     \subjectto \quad
@@ -169,7 +195,7 @@ Then, there exist \( \lambda_i \geq 0, \; i \in \set{1, 2, \ldots, m}, \ \mu_j \
     +
     \sum_{j = 1}^{p} \mu_j \, \partial \func{h_j}{\xstar}
     \ni \zero
-    \tag{Stationarity}
+    \tag{stationarity}
     \\ &
     \begin{aligned}
         \func{g_i}{\xstar}
@@ -180,15 +206,15 @@ Then, there exist \( \lambda_i \geq 0, \; i \in \set{1, 2, \ldots, m}, \ \mu_j \
         & = 0,
         \quad j \in \set{1, 2, \ldots, p}
     \end{aligned}
-    \tag{Primal feasibility}
+    \tag{primal feasibility}
     \\
     \lambda_i
     & \geq 0,
     \quad i \in \set{1, 2, \ldots, m}
-    \tag{Dual feasibility}
+    \tag{dual feasibility}
     \\
     \lambda_i \, \func{g_i}{\xstar}
     & = 0,
     \quad i \in \set{1, 2, \ldots, m}
-    \tag{Complementary slackness}
+    \tag{complementary slackness}
 \end{align*}
