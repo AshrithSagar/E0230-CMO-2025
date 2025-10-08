@@ -90,6 +90,7 @@ def CG_SOLVE(
     log_directions: Literal[False] = ...,
     tol: float = ...,
     maxiter: int = ...,
+    use_relative_tol: bool = ...,
 ) -> Tuple[Vector, int, List[float]]: ...
 @overload
 def CG_SOLVE(
@@ -98,6 +99,7 @@ def CG_SOLVE(
     log_directions: Literal[True],
     tol: float = ...,
     maxiter: int = ...,
+    use_relative_tol: bool = ...,
 ) -> Tuple[Vector, int, List[float], List[Vector], List[Vector]]: ...
 
 
@@ -107,6 +109,7 @@ def CG_SOLVE(
     log_directions: bool = False,
     tol: float = 1e-6,
     maxiter: int = 10_000,
+    use_relative_tol: bool = False,
 ) -> Union[
     Tuple[Vector, int, List[float]],
     Tuple[Vector, int, List[float], List[Vector], List[Vector]],
@@ -141,6 +144,7 @@ def CG_SOLVE(
     x: Vector = np.zeros_like(b)
 
     r: Vector = b - np.asarray(A @ x)
+    r0_norm: float = float(np.linalg.norm(r))
     p: Vector = r.copy()
 
     residuals.append(float(np.linalg.norm(r)))
@@ -164,8 +168,12 @@ def CG_SOLVE(
             residual_list.append(r_new.copy())
             directions.append(p.copy())
 
-        if residual_norm < tol:
-            break
+        if use_relative_tol:
+            if residual_norm / r0_norm < tol:
+                break
+        else:
+            if residual_norm < tol:
+                break
 
         r = r_new
 
@@ -208,6 +216,7 @@ def CG_SOLVE_FAST(
     log_directions: Literal[False] = ...,
     tol: float = ...,
     maxiter: int = ...,
+    use_relative_tol: bool = ...,
 ) -> Tuple[Vector, int, List[float]]: ...
 @overload
 def CG_SOLVE_FAST(
@@ -216,6 +225,7 @@ def CG_SOLVE_FAST(
     log_directions: Literal[True],
     tol: float = ...,
     maxiter: int = ...,
+    use_relative_tol: bool = ...,
 ) -> Tuple[Vector, int, List[float], List[Vector], List[Vector]]: ...
 
 
@@ -225,6 +235,7 @@ def CG_SOLVE_FAST(
     log_directions: bool = False,
     tol: float = 1e-6,
     maxiter: int = 10_000,
+    use_relative_tol: bool = False,
 ) -> Union[
     Tuple[Vector, int, List[float]],
     Tuple[Vector, int, List[float], List[Vector], List[Vector]],
@@ -277,6 +288,7 @@ def CG_SOLVE_FAST(
     )
 
     r: Vector = b - np.asarray(A @ x)
+    r0_norm: float = float(np.linalg.norm(r))
     z: Vector = np.asarray(M_inv @ r)
     rTz: float = float(r @ z)
     p: Vector = z.copy()
@@ -298,8 +310,13 @@ def CG_SOLVE_FAST(
         if log_directions:
             residual_list.append(r.copy())
             directions.append(p.copy())
-        if r_norm < tol:
-            break
+
+        if use_relative_tol:
+            if r_norm / r0_norm < tol:
+                break
+        else:
+            if r_norm < tol:
+                break
 
         z: Vector = np.asarray(M_inv @ r)
         rTz: float = float(r @ z)
@@ -475,7 +492,7 @@ def question_2():
 
     ## Q2 Part 1
     print("\033[4mPart-1\033[0m:")
-    x1, iters1, res1 = CG_SOLVE(A, b)
+    x1, iters1, res1 = CG_SOLVE(A, b, use_relative_tol=True)
     print(f"CG_SOLVE took {iters1} iterations.")
 
     # Plot of residual norms `||r_k||_2` vs iteration `k`
@@ -489,7 +506,7 @@ def question_2():
 
     ## Q2 Part 2
     print("\n\033[4mPart-2\033[0m:")
-    x2, iters2, res2 = CG_SOLVE_FAST(A, b)
+    x2, iters2, res2 = CG_SOLVE_FAST(A, b, use_relative_tol=True)
     print(f"CG_SOLVE_FAST took {iters2} iterations.")
 
     # Comparision plot of residual norms `||r_k||_2` vs iteration `k` between CG_SOLVE and CG_SOLVE_FAST
