@@ -2827,7 +2827,7 @@ Consider the update
     \Return{\( \x^k \)\;}
 \end{algorithm}
 
-Note that, for the strongly convex quadratic function~\psecref{sec:strongly-convex-quadratic-minimisation-problem}, from Taylor's theorem~\psecref{sec:multivariate-taylor-theorem}, we have
+Note that, for strongly convex quadratic functions~\psecref{sec:strongly-convex-quadratic-minimisation-problem}, from Taylor's theorem~\psecref{sec:multivariate-taylor-theorem}, we have
 \begin{align*}
     \because
     \grad{f}{\y}
@@ -3089,6 +3089,8 @@ Hence, we have the SR1 update as
             {\boldsymbol{\gamma}_k}
         }
     }
+    \triangleq
+    \A_{k+1}^{\text{SR1}}
 \end{equation}
 
 Note that \( \A_{k+1} \succ \zero \) if \( \A_k \succ \zero \) and \( \beta > 0 \), but \( \beta > 0 \) does not necessarily hold true.\\
@@ -3109,6 +3111,158 @@ Since the denominator in~\peqref{eq:sr1} can be very small or zero, we only use 
     \text{for some small }
     \rho \in (0, 1)
 \end{equation*}
+
+\begin{theorem}{}{}
+    For strongly convex quadratic functions~\psecref{sec:strongly-convex-quadratic-minimisation-problem},
+    the iterates generated in the SR1 update \( \set{\x^i}_{i = 0}^k \) satisfy
+    \vspace{-0.5em}
+    \begin{equation*}
+        \A_k \, \boldsymbol{\gamma}_i
+        =
+        \boldsymbol{\delta}_i,
+        \quad \forall i \in \set{0, 1, \ldots, k - 1}
+    \end{equation*}
+\end{theorem}
+
+\begin{proof}
+    By mathematical induction.
+
+    \paragraph{Base case:}
+    For \( k = 1 \), the statement
+    \(
+        \A_1 \, \boldsymbol{\gamma}_0
+        =
+        \boldsymbol{\delta}_0
+    \)
+    holds true by the Quasi-Newton condition~\peqref{eq:quasi-newton-condition}.
+
+    \paragraph{Induction step:}
+    Assume that the statement holds true for \( k = m \), i.e.,
+    \begin{equation*}
+        \A_m \, \boldsymbol{\gamma}_i
+        =
+        \boldsymbol{\delta}_i,
+        \quad \forall i \in \set{0, 1, \ldots, m - 1}
+    \end{equation*}
+    We need to show that the statement holds true for \( k = m + 1 \), i.e.,
+    \begin{equation*}
+        \A_{m + 1} \, \boldsymbol{\gamma}_i
+        =
+        \boldsymbol{\delta}_i,
+        \quad \forall i \in \set{0, 1, \ldots, m}
+    \end{equation*}
+
+    Now, for any \( i \in \set{0, 1, \ldots, m - 1} \), we have
+    \begin{align*}
+        \implies
+        \dotp
+        {\pbrac{\boldsymbol{\delta}_m - \A_m \, \boldsymbol{\gamma}_m}}
+        {\boldsymbol{\gamma}_i}
+        & =
+        \dotp
+        {\boldsymbol{\delta}_m}
+        {\boldsymbol{\gamma}_i}
+        -
+        \dotp
+        {\pbrac{\A_m \, \boldsymbol{\gamma}_m}}
+        {\boldsymbol{\gamma}_i}
+        =
+        \dotp
+        {\boldsymbol{\delta}_m}
+        {\boldsymbol{\gamma}_i}
+        -
+        \qf
+        {\boldsymbol{\gamma}_m}
+        {\A_m}
+        [\boldsymbol{\gamma}_i]
+        =
+        \dotp
+        {\boldsymbol{\delta}_m}
+        {\boldsymbol{\gamma}_i}
+        -
+        \dotp
+        {\boldsymbol{\gamma}_m}
+        {\boldsymbol{\delta}_i}
+        \\ & =
+        \dotp
+        {\boldsymbol{\delta}_m}
+        {\pbrac{\Q \boldsymbol{\delta}_i}}
+        -
+        \dotp
+        {\pbrac{\Q \boldsymbol{\delta}_m}}
+        {\boldsymbol{\delta}_i}
+        =
+        \cancel{
+            \qf
+            {\boldsymbol{\delta}_m}
+            {\Q}
+            [\boldsymbol{\delta}_i]
+        }
+        -
+        \cancel{
+            \qf
+            {\boldsymbol{\delta}_m}
+            {\Q}
+            [\boldsymbol{\delta}_i]
+        }
+        = 0
+    \end{align*}
+    where we used the secant equation~\peqref{eq:secant-equation-quadratic} with \( k = i \) and \( k = m \), and the induction hypothesis.
+
+    \begin{equation*}
+        \implies
+        \boxed{
+            \dotp
+            {\pbrac{\boldsymbol{\delta}_m - \A_m \, \boldsymbol{\gamma}_m}}
+            {\boldsymbol{\gamma}_i}
+            = 0,
+            \quad \forall i \in \set{0, 1, \ldots, m - 1}
+        }
+    \end{equation*}
+    \begin{equation*}
+        \implies
+        \A_{m + 1} \, \boldsymbol{\gamma}_i
+        =
+        \pbrac{
+            \A_m
+            +
+            \frac{
+                \outp
+                {\pbrac{\boldsymbol{\delta}_m - \A_m \, \boldsymbol{\gamma}_m}}
+                {\pbrac{\boldsymbol{\delta}_m - \A_m \, \boldsymbol{\gamma}_m}}
+            }{
+                \dotp
+                {\pbrac{\boldsymbol{\delta}_m - \A_m \, \boldsymbol{\gamma}_m}}
+                {\boldsymbol{\gamma}_m}
+            }
+        } \, \boldsymbol{\gamma}_i
+        =
+        \A_m \, \boldsymbol{\gamma}_i
+        =
+        \boldsymbol{\delta}_i,
+        \quad \forall i \in \set{0, 1, \ldots, m - 1}
+    \end{equation*}
+
+    From the Quasi-Newton condition~\peqref{eq:quasi-newton-condition} for \( k = m \), we have
+    \(
+        \A_{m + 1} \, \boldsymbol{\gamma}_m
+        =
+        \boldsymbol{\delta}_m
+    \).
+
+    Combining with the above result, we finally have
+    \(
+        \quad \therefore
+        \A_{m + 1} \, \boldsymbol{\gamma}_i
+        =
+        \boldsymbol{\delta}_i,
+        \quad \forall i \in \set{0, 1, \ldots, m}
+    \).
+
+    Hence, the induction step holds true.
+
+    Thus, by mathematical induction, the result holds true for all \( k \geq 1 \).
+\end{proof}
 
 \section{Davidon-Fletcher-Powell (DFP) update}\label{sec:dfp}
 
@@ -3359,7 +3513,7 @@ The condition \( \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k} > 0 \) is k
 \end{proof}
 
 \begin{theorem}{}{}
-    For the strongly convex quadratic function~\psecref{sec:strongly-convex-quadratic-minimisation-problem},
+    For strongly convex quadratic functions~\psecref{sec:strongly-convex-quadratic-minimisation-problem},
     the directions generated in the DFP update \( \set{\u^i}_{i = 0}^k \) satisfy
     \vspace{-1em}
     \begin{equation*}
@@ -3367,7 +3521,7 @@ The condition \( \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k} > 0 \) is k
         = 0,
         \quad \forall i \in \set{0, 1, \ldots, k - 1}
     \end{equation*}
-    and the iterates \( \set{\x^i}_{i = 0}^k \) satisfy
+    and the iterates \( \set{\x^i}_{i = 0}^{k+1} \) satisfy
     \vspace{-0.5em}
     \begin{equation*}
         \A_{k+1} \, \boldsymbol{\gamma}_i
