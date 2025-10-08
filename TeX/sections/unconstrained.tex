@@ -3025,7 +3025,6 @@ Choose the update so that \( \A_k \) is symmetric, and
     \quad \beta \in \R,
     \; \v \in \R^d
 \end{equation*}
-
 \begin{align*}
     \because
     \boldsymbol{\delta}_k
@@ -3114,13 +3113,13 @@ Since the denominator in~\peqref{eq:sr1} can be very small or zero, we only use 
 
 \begin{theorem}{}{}
     For strongly convex quadratic functions~\psecref{sec:strongly-convex-quadratic-minimisation-problem},
-    the iterates generated in the SR1 update \( \set{\x^i}_{i = 0}^k \) satisfy
+    the iterates generated in the SR1 update \( \set{\x^i}_{i = 0}^{k+1} \) satisfy
     \vspace{-0.5em}
     \begin{equation*}
-        \A_k \, \boldsymbol{\gamma}_i
+        \A_{k+1} \, \boldsymbol{\gamma}_i
         =
         \boldsymbol{\delta}_i,
-        \quad \forall i \in \set{0, 1, \ldots, k - 1}
+        \quad \forall i \in \set{0, 1, \ldots, k}
     \end{equation*}
 \end{theorem}
 
@@ -3128,7 +3127,7 @@ Since the denominator in~\peqref{eq:sr1} can be very small or zero, we only use 
     By mathematical induction.
 
     \paragraph{Base case:}
-    For \( k = 1 \), the statement
+    For \( k = 0 \), the statement
     \(
         \A_1 \, \boldsymbol{\gamma}_0
         =
@@ -3137,14 +3136,14 @@ Since the denominator in~\peqref{eq:sr1} can be very small or zero, we only use 
     holds true by the Quasi-Newton condition~\peqref{eq:quasi-newton-condition}.
 
     \paragraph{Induction step:}
-    Assume that the statement holds true for \( k = m \), i.e.,
+    Assume that the statement holds true for \( k = m - 1 \), i.e.,
     \begin{equation*}
         \A_m \, \boldsymbol{\gamma}_i
         =
         \boldsymbol{\delta}_i,
         \quad \forall i \in \set{0, 1, \ldots, m - 1}
     \end{equation*}
-    We need to show that the statement holds true for \( k = m + 1 \), i.e.,
+    We need to show that the statement holds true for \( k = m \), i.e.,
     \begin{equation*}
         \A_{m + 1} \, \boldsymbol{\gamma}_i
         =
@@ -3261,7 +3260,7 @@ Since the denominator in~\peqref{eq:sr1} can be very small or zero, we only use 
 
     Hence, the induction step holds true.
 
-    Thus, by mathematical induction, the result holds true for all \( k \geq 1 \).
+    Thus, by mathematical induction, the result holds true for all \( k \geq 0 \).
 \end{proof}
 
 \section{Davidon-Fletcher-Powell (DFP) update}\label{sec:dfp}
@@ -3276,7 +3275,6 @@ Choose the update so that \( \A_k \) is symmetric, and
     \quad \beta_1, \beta_2 \in \R,
     \; \u, \v \in \R^d
 \end{equation*}
-
 \begin{align*}
     \because
     \boldsymbol{\delta}_k
@@ -3513,13 +3511,12 @@ The condition \( \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k} > 0 \) is k
 \end{proof}
 
 \begin{theorem}{}{}
-    For strongly convex quadratic functions~\psecref{sec:strongly-convex-quadratic-minimisation-problem},
-    the directions generated in the DFP update \( \set{\u^i}_{i = 0}^k \) satisfy
+    The DFP update generates a sequence of \( \Q \)--conjugate directions on strongly convex quadratic functions~\psecref{sec:strongly-convex-quadratic-minimisation-problem},i.e., the directions generated in the DFP update \( \set{\u^i}_{i = 0}^{k+1} \) satisfy
     \vspace{-1em}
     \begin{equation*}
-        \qf{\u^k}{\Q}[\u^i]
+        \qf{\u^{k+1}}{\Q}[\u^i]
         = 0,
-        \quad \forall i \in \set{0, 1, \ldots, k - 1}
+        \quad \forall i \in \set{0, 1, \ldots, k}
     \end{equation*}
     and the iterates \( \set{\x^i}_{i = 0}^{k+1} \) satisfy
     \vspace{-0.5em}
@@ -3542,9 +3539,8 @@ The condition \( \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k} > 0 \) is k
         \boldsymbol{\delta}_0
     \)
     holds true by the Quasi-Newton condition~\peqref{eq:quasi-newton-condition}.
-
-    For \( k = 1 \), we have
     \begin{align*}
+        \text{Now, }
         \qf{\u^1}{\Q}[\u^0]
         & =
         \qf{\pbrac{-\A_1 \grad{f}{\x^1}}}{\Q}[\u^0]
@@ -3574,58 +3570,7 @@ The condition \( \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k} > 0 \) is k
         -\dotp{\grad{f}{\x^1}}{\u^0}
         = 0
     \end{align*}
-    where we have used the secant equation~\peqref{eq:secant-equation-quadratic} with \( k = 0 \), the Quasi-Newton condition~\peqref{eq:quasi-newton-condition} for \( k = 0 \), and the expanding subspace theorem~\pthmref{thm:expanding-subspace-theorem} holds since the directions \( \set{\u^i}_{i = 0}^1 \) are mutually \( \Q \)--conjugate.
-
-    \begin{align*}
-        \text{Now, }
-        \dotp{\boldsymbol{\delta}_1}{\boldsymbol{\gamma}_0}
-        & =
-        \qf{\boldsymbol{\delta}_1}{\Q}[\boldsymbol{\delta}_0]
-        =
-        \qf{\pbrac{\alpha_1 \u^1}}{\Q}[\pbrac{\alpha_0 \u^0}]
-        =
-        \alpha_0 \alpha_1
-        \qf{\u^1}{\Q}[\u^0]
-        = 0
-        \\
-        \text{And, }
-        \qf{\boldsymbol{\gamma}_1}{\A_1}[\boldsymbol{\gamma}_0]
-        & =
-        \dotp{\boldsymbol{\gamma}_1}{\boldsymbol{\delta}_0}
-        =
-        \dotp{\pbrac{\Q \u^1}}{\pbrac{\alpha_0 \u^0}}
-        =
-        \alpha_0
-        \qf{\u^1}{\Q}[\u^0]
-        = 0
-        \\
-        \implies
-        \A_2 \, \boldsymbol{\gamma}_0
-        & =
-        \pbrac{
-            \A_1
-            +
-            \frac
-            {\outp{\boldsymbol{\delta}_1}{\boldsymbol{\delta}_1}}
-            {\dotp{\boldsymbol{\delta}_1}{\boldsymbol{\gamma}_1}}
-            -
-            \frac
-            {\A_1 \outp{\boldsymbol{\gamma}_1}{\boldsymbol{\gamma}_1} \A_1}
-            {\qf{\boldsymbol{\gamma}_1}{\A_1}}
-        } \, \boldsymbol{\gamma}_0
-        =
-        \A_1 \, \boldsymbol{\gamma}_0
-        =
-        \boldsymbol{\delta}_0
-    \end{align*}
-    where we have used the secant equation~\peqref{eq:secant-equation-quadratic} and the Quasi-Newton condition~\peqref{eq:quasi-newton-condition} for \( k = 0 \).
-
-    Also, from the Quasi-Newton condition~\peqref{eq:quasi-newton-condition} for \( k = 1 \), we have
-    \(
-        \A_{2} \, \boldsymbol{\gamma}_1
-        =
-        \boldsymbol{\delta}_1
-    \).
+    where we have used the secant equation~\peqref{eq:secant-equation-quadratic} and the Quasi-Newton condition~\peqref{eq:quasi-newton-condition} for \( k = 0 \), and the expanding subspace theorem~\pthmref{thm:expanding-subspace-theorem} holds since the directions \( \u^0, \u^1 \) are \( \Q \)--conjugate.
 
     Hence, the base case holds true.
 
@@ -3685,7 +3630,7 @@ The condition \( \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k} > 0 \) is k
         = 0,
         \quad \forall i \in \set{0, 1, \ldots, m - 1}
     \end{align*}
-    where we have used the secant equation~\peqref{eq:secant-equation-quadratic} with \( k = i \), the induction hypothesis, and the expanding subspace theorem~\pthmref{thm:expanding-subspace-theorem} holds since the directions \( \set{\u^i}_{i = 0}^m \) are mutually \( \Q \)--conjugate.
+    where we have used the secant equation~\peqref{eq:secant-equation-quadratic} with \( k = i \), the induction hypothesis, and the expanding subspace theorem~\pthmref{thm:expanding-subspace-theorem} holds since the directions \( \set{\u^i}_{i = 0}^{m-1} \) are mutually \( \Q \)--conjugate.
 
     Similarly, for any \( i \in \set{0, 1, \ldots, m - 1} \), we have
     \begin{align*}
@@ -3712,7 +3657,17 @@ The condition \( \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k} > 0 \) is k
         = 0
     \end{align*}
     where we used the secant equation~\peqref{eq:secant-equation-quadratic} with \( k = i \), the induction hypothesis, and the result above.
-
+    \begin{equation*}
+        \implies
+        \boxed{
+            \dotp{\boldsymbol{\delta}_m}{\boldsymbol{\gamma}_i}
+            =
+            \qf{\boldsymbol{\gamma}_m}{\A_m}[\boldsymbol{\gamma}_i]
+            =
+            0,
+            \quad \forall i \in \set{0, 1, \ldots, m - 1}
+        }
+    \end{equation*}
     \begin{equation*}
         \implies
         \A_{m + 1} \, \boldsymbol{\gamma}_i
@@ -3753,7 +3708,7 @@ The condition \( \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k} > 0 \) is k
 
     Hence, the induction step holds true.
 
-    Thus, by mathematical induction, the result holds true for all \( k \geq 1 \).
+    Thus, by mathematical induction, the result holds true for all \( k \geq 0 \).
 \end{proof}
 
 \section{Broyden-Fletcher-Goldfarb-Shanno (BFGS) update}
