@@ -33,11 +33,11 @@ assert isinstance(SRN, int) and len(str(SRN)) == 5, "SRN must be a 5-digit integ
 def CD_SOLVE(
     A: Matrix,
     b: Vector,
-    x0: Vector | None = None,
+    x0: Optional[Vector] = None,
     maxiter: int = 100,
 ) -> Tuple[Vector, List[float], List[float], List[float]]:
     """
-    Conjugate Descent Method.
+    Conjugate Direction Method.
 
     `f(x) = 0.5 x'Ax - b'x`\\
     `x^* = argmin_x f(x) => A x^* = b`
@@ -49,7 +49,7 @@ def CD_SOLVE(
         maxiter (int, optional): Maximum number of iterations. Defaults to 100.
 
     Returns:
-        x (NDArray): Final iterate after Conjugate Descent.\\
+        x (NDArray): Final iterate after Conjugate Direction.\\
         alphas (List[float]): List of step sizes `alpha_k`.\\
         numerators (List[float]): List of values `-grad_f(x_k)' u_k`.\\
         lambdas (List[float]): Corresponding eigenvalues `lambda_k`.
@@ -412,9 +412,9 @@ def question_1():
     # Conjugate Descent
     print("\033[4mPart-1\033[0m:")
     x_cd, alphas, nums, lambdas = CD_SOLVE(A, b)
-    print("(alpha_k, -grad_f(x_k)' @ u_k, lambda_k) for first 7 iterations:")
-    for k in range(8):
-        print(f"k={k}: ({alphas[k]:.6f}, {nums[k]:.6f}, {lambdas[k]:.6f})")
+    print("(alpha_k, -grad_f(x_k)^T u_k, lambda_k):")
+    for k, (alpha, numerator, lambda_k) in enumerate(zip(alphas, nums, lambdas)):
+        print(f"k={k}: ({alpha:.6f}, {numerator:.6f}, {lambda_k:.6f})")
 
     ## Q1 Part 2
     # Conjugate Gradient with logging
