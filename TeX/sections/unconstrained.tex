@@ -673,6 +673,105 @@ Choose the descent direction as
     \p^k = - \frac{\grad{f}{\x^k}}{\norm{\grad{f}{\x^k}}}
 \end{equation*}
 
+\begin{table}[htbp]
+    \centering
+    \caption{
+        Line search methods, given a descent direction \( \p^k \)
+    }\label{tab:line-search-methods}
+    \begin{tabular}{rcl}
+        \toprule
+        \textbf{Method}
+        &
+        Condition
+        &
+        Parameters
+        \\
+        \midrule
+        Exact line search~\psecref{sec:exact-line-search}\psecref{sec:exact-line-search-quadratic}
+        &
+        \(
+            \displaystyle
+            \alpha_k
+            =
+            \argmin_{\alpha \geq 0} g_k(\alpha),
+            \qquad
+            \alpha_k
+            =
+            -\frac
+            {\dotp{\grad{f}{\x^k}}{\p^k}}
+            {\qf{\p^k}{\Q}}
+        \)
+        \\
+        \midrule
+        Armijo~\psecref{sec:armijo-condition}
+        &
+        \(
+            \displaystyle
+            \func{f}{\x^k + \alpha_k \p^k}
+            \leq
+            \func{f}{\x^k} + c \alpha_k \dotp{\grad{f}{\x^k}}{\p^k}
+        \)
+        &
+        \( 0 < c < 1 \)
+        \\
+        \midrule
+        Armijo-Goldstein~\psecref{sec:armijo-goldstein-conditions}
+        &
+        \(
+            \displaystyle
+            \begin{aligned}
+                \func{f}{\x^k + \alpha_k \p^k}
+                \leq
+                \func{f}{\x^k} + c \alpha_k \dotp{\grad{f}{\x^k}}{\p^k}
+                \\
+                \func{f}{\x^k + \alpha_k \p^k}
+                \geq
+                \func{f}{\x^k} + (1 - c) \alpha_k \dotp{\grad{f}{\x^k}}{\p^k}
+            \end{aligned}
+        \)
+        &
+        \( 0 < c < \half \)
+        \\
+        \midrule
+        Wolfe~\psecref{sec:wolfe-conditions}
+        &
+        \(
+            \displaystyle
+            \begin{aligned}
+                \func{f}{\x^k + \alpha_k \p^k}
+                \leq
+                \func{f}{\x^k} + c_1 \alpha_k \dotp{\grad{f}{\x^k}}{\p^k}
+                \\
+                \dotp{\grad{f}{\x^k + \alpha_k \p^k}}{\p^k}
+                \geq
+                c_2 \dotp{\grad{f}{\x^k}}{\p^k}
+            \end{aligned}
+        \)
+        &
+        \( 0 < c_1 < c_2 < 1 \)
+        \\
+        \midrule
+        Strong Wolfe~\psecref{sec:strong-wolfe-conditions}
+        &
+        \(
+            \displaystyle
+            \begin{aligned}
+                \func{f}{\x^k + \alpha_k \p^k}
+                \leq
+                \func{f}{\x^k} + c_1 \alpha_k \dotp{\grad{f}{\x^k}}{\p^k}
+                \\
+                \abs{\dotp{\grad{f}{\x^k + \alpha_k \p^k}}{\p^k}}
+                \leq
+                c_2 \abs{\dotp{\grad{f}{\x^k}}{\p^k}}
+            \end{aligned}
+        \)
+        &
+        \( 0 < c_1 < c_2 < 1 \)
+        \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
 \chapter{Exact line search}\label{sec:exact-line-search}
 
 Choose the step length \( \alpha_k \) in line search~\psecref{sec:line-search} by solving the one-dimensional optimisation problem
@@ -682,7 +781,7 @@ Choose the step length \( \alpha_k \) in line search~\psecref{sec:line-search} b
     g_k(\alpha) \triangleq f\pbrac{\x^k + \alpha \p^k}
 \end{equation*}
 
-\section{Strongly convex quadratic minimisation problem}
+\section{Strongly convex quadratic minimisation problem}\label{sec:exact-line-search-quadratic}
 
 Consider the unconstrained strongly convex quadratic minimisation problem~\psecref{sec:strongly-convex-quadratic-minimisation-problem}.
 
@@ -718,11 +817,15 @@ which is a quadratic function in \( \alpha \) with \( p_k > 0 \; \pbrac{\because
 For the \hyperlink{1D-quadratic}{one-dimensional quadratic} case, we can then compute the minimum point and minimum value as
 \begin{equation*}
     \alpha_k
-    = -\frac{q_k}{2 p_k}
+    =
+    -\frac{q_k}{2 p_k}
     \implies
     \boxed{
         \alpha_k
-        = -\frac{\dotp{\grad{f}{\x^k}}{\p^k}}{\qf{\p^k}{\Q}}
+        =
+        -\frac
+        {\dotp{\grad{f}{\x^k}}{\p^k}}
+        {\qf{\p^k}{\Q}}
     }
     > 0
 \end{equation*}
@@ -902,7 +1005,7 @@ The exact line search method~\psecref{sec:exact-line-search} may be computationa
 
 Instead, we can choose the step length \( \alpha_k \) in line search such that it satisfies certain conditions that ensure sufficient decrease in the objective function value.
 
-\section{Sufficient decrease condition (Armijo condition)}
+\section{Sufficient decrease condition (Armijo condition)}\label{sec:armijo-condition}
 
 \begin{definition}{Sufficient decrease condition (Armijo condition)~\citep{Nocedal2006}}{}
     \begin{equation*}
@@ -969,7 +1072,7 @@ Determine the largest number \( \alpha_k \) in the sequence \( \set{\beta^m \bar
     \Return{\( \x^k \)\;}
 \end{algorithm}
 
-\section{Goldstein conditions / Armijo-Goldstein conditions}
+\section{Goldstein conditions / Armijo-Goldstein conditions}\label{sec:armijo-goldstein-conditions}
 
 \begin{definition}{Goldstein conditions / Armijo-Goldstein conditions~\citep{Nocedal2006}}{}
     \vspace*{-1em}
@@ -996,7 +1099,7 @@ Determine the largest number \( \alpha_k \) in the sequence \( \set{\beta^m \bar
     \frac{2 \rho_1 (1 - \rho_2)}{L} \cos^2 \theta^{(k)}
 \end{equation*}
 
-\section{Wolfe conditions}
+\section{Wolfe conditions}\label{sec:wolfe-conditions}
 
 \begin{definition}{Wolfe conditions~\citep{Nocedal2006}}{}
     \vspace*{-1em}
@@ -1020,7 +1123,7 @@ Determine the largest number \( \alpha_k \) in the sequence \( \set{\beta^m \bar
     R = \frac{c_1 (1 - c_2)}{L}
 \end{equation*}
 
-\subsection{Strong Wolfe conditions}
+\subsection{Strong Wolfe conditions}\label{sec:strong-wolfe-conditions}
 
 \begin{definition}{Strong Wolfe conditions~\citep{Nocedal2006}}{}
     \vspace*{-1em}
@@ -2854,6 +2957,7 @@ Note that, for strongly convex quadratic functions~\psecref{sec:strongly-convex-
         \quad \forall k \geq 0
     }
 \end{equation}
+which is known as the \textbf{secant equation}.
 
 \begin{table}[htbp]
     \centering
