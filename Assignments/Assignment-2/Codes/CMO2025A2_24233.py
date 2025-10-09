@@ -489,10 +489,11 @@ def question_1():
     # Conjugate Gradient with logging
     print("\n\033[4mPart-2\033[0m:")
     x, iters, residuals, r_list, p_list = CG_SOLVE(A, b, log_directions=True)
-    print(f"Number of directions computed: m = {iters}")
+    m = iters  # Number of directions computed
+    print(f"Number of directions computed: m = {m}")
     print("\nCG search directions:")
-    for i, pk in enumerate(p_list):
-        print(f"p_{i} = {pk}")
+    for k, pk in enumerate(p_list):
+        print(f"p_{k} = {pk}")
     filename = f"plist_{SRN}.txt"
     np.savetxt(filename, p_list)
     print(f"Saved CG search directions to '{filename}'.")
@@ -500,8 +501,8 @@ def question_1():
     # Gram-Schmidt orthogonalisation
     D = GS_ORTHOGONALISE(p_list, A)
     print("\nGram-Schmidt Q-orthogonalised vectors:")
-    for i, dk in enumerate(D):
-        print(f"d_{i} = {dk}")
+    for k, dk in enumerate(D):
+        print(f"d_{k} = {dk}")
     filename = f"dlist_{SRN}.txt"
     np.savetxt(filename, D)
     print(f"Saved Q-orthogonalised vectors to '{filename}'.")
@@ -509,36 +510,27 @@ def question_1():
     ## Q1 Part 3
     # Constructing Matrix M
     print("\n\033[4mPart-3\033[0m:")
-    D_tilde: List[Vector] = []
-    for k in range(len(D)):
-        dk: Vector = D[k]
-        dk_tilde: Vector = dk / np.sqrt(dk @ (A @ dk))
-        D_tilde.append(dk_tilde)
-    M = np.zeros((len(D_tilde), len(D_tilde)))
-    for i in range(len(D_tilde)):
-        for j in range(len(D_tilde)):
-            di_tilde = D_tilde[i]
-            dj_tilde = D_tilde[j]
-            M[i, j] = float(di_tilde @ (A @ dj_tilde))
+    D_tilde = [dk / np.sqrt(dk @ (A @ dk)) for dk in D]
+    M = np.array([[di @ (A @ dj) for dj in D_tilde] for di in D_tilde])
     print(f"M = {M}")
-    print(f"Eigenvalues of M: {np.linalg.eigvals(M)}")
-    print(f"M close to I: {np.allclose(M, np.eye(len(D_tilde)), atol=1e-15)}")
+    print(f"-> Eigenvalues of M: {np.linalg.eigvals(M)}")
+    print(f"-> M close to I: {np.allclose(M, np.eye(m), atol=1e-15)}")
+    with np.printoptions(suppress=True):
+        print(f"=> M \u2248\n{abs(M)}")
 
     ## Q1 Part 4
     # `A`-inner-product cosine similarities
     print("\n\033[4mPart-4\033[0m:")
-    cos_theta_list: List[float] = []
-    for k in range(len(p_list)):
-        pk: Vector = p_list[k]
-        dk: Vector = D[k]
-        q_cosine: float = float(
-            (pk @ (A @ dk)) / (np.sqrt(pk @ (A @ pk)) * np.sqrt(dk @ (A @ dk)))
-        )
-        cos_theta_list.append(q_cosine)
+    cos_theta_list = [
+        float((pk @ (A @ dk)) / (np.sqrt(pk @ (A @ pk)) * np.sqrt(dk @ (A @ dk))))
+        for pk, dk in zip(p_list, D)
+    ]
     print(f"List of cosine similarities: {cos_theta_list}")
     print(
-        f"All close to 1: {np.allclose(cos_theta_list, np.ones(len(cos_theta_list)), atol=1e-15)}"
+        f"-> All close to 1: {np.allclose(cos_theta_list, np.ones(len(cos_theta_list)), atol=1e-15)}"
     )
+    with np.printoptions(suppress=True):
+        print(f"\u2234 List of cosine similarities: \u2248{np.asarray(cos_theta_list)}")
 
 
 def question_2():
