@@ -28,6 +28,14 @@ SRN: int = 24233
 """The 5-digit Student Registration Number (SRN) for the assignment."""
 assert isinstance(SRN, int) and len(str(SRN)) == 5, "SRN must be a 5-digit integer."
 
+SAVE_FIGS: bool = True
+"""Boolean flag to save the generated plots as PNG files."""
+
+FIGS_DIR: str = "figures"
+"""Directory to save the generated plots."""
+if SAVE_FIGS and not os.path.exists(FIGS_DIR):
+    os.makedirs(FIGS_DIR)
+
 
 # ---------- Implementations ----------
 def CD_SOLVE(
@@ -543,13 +551,17 @@ def question_2():
     print(f"CG_SOLVE took {iters1} iterations.")
 
     # Plot of residual norms `||r_k||_2` vs iteration `k`
-    plt.figure()
+    plt.figure(figsize=(8, 6))
     plt.semilogy(range(len(res1)), res1, marker="o")
     plt.title("Conjugate Gradient Residual Norms")
     plt.xlabel(r"Iteration $k$")
     plt.ylabel(r"Residual Norm $\|r_k\|_2$")
     plt.grid(True)
+    plt.tight_layout()
     print("Plot generated for Conjugate Gradient residual norms.")
+    if SAVE_FIGS:
+        filename = f"Q2-1-CG_residuals_{SRN}.jpeg"
+        plt.savefig(os.path.join(FIGS_DIR, filename))
 
     ## Q2 Part 2
     print("\n\033[4mPart-2\033[0m:")
@@ -557,7 +569,7 @@ def question_2():
     print(f"CG_SOLVE_FAST took {iters2} iterations.")
 
     # Comparision plot of residual norms `||r_k||_2` vs iteration `k` between CG_SOLVE and CG_SOLVE_FAST
-    plt.figure()
+    plt.figure(figsize=(8, 6))
     plt.semilogy(range(len(res1)), res1, marker="o", label="CG_SOLVE")
     plt.semilogy(range(len(res2)), res2, marker="o", label="CG_SOLVE_FAST")
     plt.title("Conjugate Gradient vs Improved Conjugate Gradient Residual Norms")
@@ -565,7 +577,11 @@ def question_2():
     plt.ylabel(r"Residual Norm $\|r_k\|_2$")
     plt.legend()
     plt.grid(True)
+    plt.tight_layout()
     print("Plot generated for Improved Conjugate Gradient residual norms.")
+    if SAVE_FIGS:
+        filename = f"Q2-2-CG_vs_CGFAST_residuals_{SRN}.jpeg"
+        plt.savefig(os.path.join(FIGS_DIR, filename))
 
 
 def question_3():
@@ -589,7 +605,7 @@ def question_3():
         trajectories.append(trajectory)
 
     # Plot of error `||x_k - x^*||_2` vs iteration `k` for each starting point
-    plt.figure()
+    plt.figure(figsize=(8, 6))
     x_star = np.array([1.0, 1.0])
     for i, trajectory in enumerate(trajectories):
         errors = [np.linalg.norm(xk - x_star) for xk in trajectory]
@@ -599,7 +615,11 @@ def question_3():
     plt.ylabel(r"Error Norm $\|x_k - x^*\|_2$")
     plt.legend()
     plt.grid(True)
+    plt.tight_layout()
     print("Plot generated for Newton's Method error norms.\n")
+    if SAVE_FIGS:
+        filename = f"Q3-1a-Newton_error_norms_{SRN}.jpeg"
+        plt.savefig(os.path.join(FIGS_DIR, filename))
 
     # Four separate contour plots with Newton paths
     x_min, x_max = -10, 10
@@ -610,18 +630,30 @@ def question_3():
     Z = rosenbrock(np.array([X, Y]))
     levels = np.logspace(-1, 3, 100)
     for i, trajectory in enumerate(trajectories):
-        plt.figure()
+        plt.figure(figsize=(8, 8))
         plt.contour(X, Y, Z, levels=levels, norm=LogNorm(), cmap="jet")
-        traj_array = np.array(trajectory)
-        plt.plot(traj_array[:, 0], traj_array[:, 1], marker="o", color="black")
-        plt.plot(1, 1, marker="*", color="red", markersize=15)  # Global minimum
+        traj = np.array(trajectory)
+        plt.plot(
+            traj[:, 0],
+            traj[:, 1],
+            marker="o",
+            markersize=3,
+            color="black",
+            label="Newton path",
+        )
+        plt.plot(1, 1, marker="*", color="red", markersize=15, label=f"x*={x_star}")
         plt.title(f"Newton's Method Path from x0={x0s[i]}")
         plt.xlabel(r"$x_1$")
         plt.ylabel(r"$x_2$")
+        plt.legend()
         plt.xlim(x_min, x_max)
         plt.ylim(y_min, y_max)
         plt.grid(True)
+        plt.tight_layout()
         print(f"Plot generated for Newton's Method path for x0={x0s[i]}.")
+        if SAVE_FIGS:
+            filename = f"Q3-1b-Newton_path_{i + 1}_{SRN}.jpeg"
+            plt.savefig(os.path.join(FIGS_DIR, filename))
 
 
 # ---------- Main ----------
@@ -632,4 +664,6 @@ if __name__ == "__main__":
     question_2()
     question_3()
 
-    plt.show()
+    if not SAVE_FIGS:
+        plt.show()
+    plt.close("all")
