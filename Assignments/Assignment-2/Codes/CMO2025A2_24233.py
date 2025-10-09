@@ -55,30 +55,52 @@ def CD_SOLVE(
         lambdas (List[float]): Corresponding eigenvalues `lambda_k`.
     """
 
-    # Initialise x0
     dim: int = b.shape[0]
+
+    # Initialise `x0` to zero vector if not provided
     if x0 is None:
         x0 = np.zeros_like(b)
 
-    eigvals, eigvecs = np.linalg.eig(A)
+    # Since `A` is SPD, use `np.linalg.eigh`
+    # The eigenpairs are sorted in ascending order of eigenvalues
+    eigvals, eigvecs = np.linalg.eigh(A)
 
     alphas: List[float] = []
     numerators: List[float] = []
     lambdas: List[float] = []
 
     x: Vector = x0.copy()
-    for k in range(min(maxiter, dim)):
-        u = eigvecs[:, k]
-        lambda_k = eigvals[k]
 
-        r: Vector = b - A @ x  # r_k = -grad_f(x_k)
-        numerator: float = float(r @ u)
-        alpha: float = numerator / lambda_k
+    # CD converges in atmost `dim` steps
+    k: int = 0
+    for k in range(min(maxiter, dim)):
+        u: Vector = eigvecs[:, k]  # k-th eigenvector
+        lambda_k: float = eigvals[k]  # k-th eigenvalue
+
+        # r_k = -grad_f(x_k) = b - A x_k
+        r: Vector = b - A @ x
+
+        rTu: float = float(r @ u)
+        if rTu < 0:
+            # Ensure `alpha > 0`, since `np.linalg.eigh(A)`
+            # returns arbitrary sign for eigenvectors
+            rTu = -rTu
+            u = -u
+        uTAu: float = float(u @ (A @ u))
+        alpha: float = rTu / uTAu
+
         x += alpha * u
 
+        # Can verify that uTAu and lambda_k are same
+        assert np.allclose(uTAu, lambda_k), "Denominator and eigenvalue mismatch"
+
         alphas.append(alpha)
-        numerators.append(numerator)
+        numerators.append(rTu)
         lambdas.append(lambda_k)
+
+    # Verify that the final iterate is a stationary point
+    if k == dim - 1:
+        assert np.allclose(A @ x - b, np.zeros_like(b)), "grad_f(x_dim) != 0"
 
     return x, alphas, numerators, lambdas
 
