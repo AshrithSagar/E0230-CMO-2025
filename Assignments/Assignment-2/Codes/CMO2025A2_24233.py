@@ -39,19 +39,21 @@ def CD_SOLVE(
     """
     Conjugate Direction Method.
 
-    `f(x) = 0.5 x'Ax - b'x`\\
+    `f(x) = 0.5 x^T A x - b^T x`\\
     `x^* = argmin_x f(x) => A x^* = b`
 
-    Parameters:
+    Parameters
+    -------
         A (NDArray): SPD matrix from oracle.
         b (NDArray): Right-hand side vector.
         x0 (NDArray, optional): Initial point. Defaults to zero vector.
         maxiter (int, optional): Maximum number of iterations. Defaults to 100.
 
-    Returns:
-        x (NDArray): Final iterate after Conjugate Direction.\\
-        alphas (List[float]): List of step sizes `alpha_k`.\\
-        numerators (List[float]): List of values `-grad_f(x_k)' u_k`.\\
+    Returns
+    -------
+        x (NDArray): Final iterate after Conjugate Direction.
+        alphas (List[float]): List of step sizes `alpha_k`.
+        numerators (List[float]): List of values `-grad_f(x_k)^T u_k`.
         lambdas (List[float]): Corresponding eigenvalues `lambda_k`.
     """
 
@@ -139,66 +141,83 @@ def CG_SOLVE(
     """
     Standard Conjugate Gradient Method.
 
-    Parameters:
+    Parameters
+    -------
         A (NDArray or LinearOperator): SPD matrix from oracle.
         b (NDArray): Right-hand side vector.
         log_directions (bool, optional): Boolean flag. Defaults to False.
             When set to True, the function must additionally return the first `m` residuals and search directions.
         tol (float, optional): Convergence tolerance. Defaults to 1e-6.
         maxiter (int, optional): Maximum number of iterations. Defaults to 10_000.
+        use_relative_tol (bool, optional): Boolean flag. Defaults to False.
+            When set to True, the stopping rule becomes `||r_k|| / ||r_0|| < tol`.
 
-    Returns:
-        x (NDArray): Approximate solution vector.\\
-        iters (int): Number of iterations taken.\\
+    Returns
+    -------
+        x (NDArray): Approximate solution vector.
+        iters (int): Number of iterations taken.
         residuals (List[float]): Residual norms `||r_k||_2` at each iteration.
-
-        In addition, if log_directions is set to True, then also return\\
-        residual_list (list[NDArray]): First `m` residuals {r_0,...,r_(m-1)}.\\
+        In addition, if log_directions is set to True, then also return
+        residual_list (list[NDArray]): First `m` residuals {r_0,...,r_(m-1)}.
         directions (list[NDArray]): First `m` CG search directions {p_0,...,p_(m-1)}.
     """
 
-    residuals: List[float] = []
-    residual_list: List[Vector] = []
-    directions: List[Vector] = []
+    residuals: List[float] = []  # ||r_k||_2
+    residual_list: List[Vector] = []  # r_k = -grad_f(x_k) = b - A x_k
+    directions: List[Vector] = []  # p_k
 
-    # Initialise x0
+    ## Initialise for k = 0
     k: int = 0
-    x: Vector = np.zeros_like(b)
+    x: Vector = np.zeros_like(b)  # x_0 -> zero vector
 
-    r: Vector = b - np.asarray(A @ x)
-    r0_norm: float = float(np.linalg.norm(r))
-    p: Vector = r.copy()
+    r: Vector = b.copy()  # r_0 = (b - A x_0) = b
+    rTr: float = float(r @ r)  # r_0' r_0
+    r0_norm: float = float(np.sqrt(rTr))  # ||r_0||_2
 
-    residuals.append(float(np.linalg.norm(r)))
-    if log_directions:
-        residual_list.append(r.copy())
-        directions.append(p.copy())
+    p: Vector = r.copy()  # p_0 = r_0
 
-    for k in range(maxiter):
-        Ap: Vector = np.asarray(A @ p)
-        r_normsq: float = float(r @ r)
-        alpha_k: float = r_normsq / float(p @ Ap)
-        x += alpha_k * p
+    for k in range(maxiter + 1):  # Need +1 to log the 0-th iterate too
+        ## Validate k-th iterate
+        r_norm: float = float(np.sqrt(rTr))  # ||r_k||_2
 
-        r_new: Vector = r - alpha_k * Ap
-        beta_k: float = float(r_new @ r_new) / r_normsq
-        p = r_new + beta_k * p
-
-        residual_norm: float = float(np.linalg.norm(r_new))
-        residuals.append(residual_norm)
+        residuals.append(r_norm)
         if log_directions:
-            residual_list.append(r_new.copy())
+            residual_list.append(r.copy())
             directions.append(p.copy())
 
+        # Stopping condition
+        # If satisfied, break and return for k-th iterate
         if use_relative_tol:
-            if residual_norm / r0_norm < tol:
+            if r_norm / r0_norm < tol:
                 break
         else:
-            if residual_norm < tol:
+            if r_norm < tol:
                 break
+        if k == maxiter:
+            break  # Skip computing (maxiter+1)-th iterate
 
-        r = r_new
+        ## Compute (k+1)-th iterate
+        Ap: Vector = np.asarray(A @ p)  # A p_k
+        pTAp: float = float(p @ Ap)  # p_k' A p_k
+        assert pTAp > 0, "p_k' A p_k <= 0, A not SPD?"
+        if pTAp < 1e-15:
+            print(f"[WARN] p_k' A p_k too small ({pTAp}). Stopping CG early at k={k}.")
+            break
+        alpha: float = rTr / pTAp  # alpha_k = (r_k' r_k) / (p_k' A p_k)
 
+        x += alpha * p  # x_{k+1} = x_k + alpha_k p_k
+        r -= alpha * Ap  # r_{k+1} = r_k - alpha_k A p_k
+
+        rTr_new: float = float(r @ r)  # r_{k+1}' r_{k+1}
+        beta: float = rTr_new / rTr  # beta_k = (r_{k+1}' r_{k+1}) / (r_k' r_k)
+        p = r + beta * p  # p_{k+1} = r_{k+1} + beta_k p_k
+
+        rTr = rTr_new  # Update rTr for next iteration
+
+    # k is the number of completed iterations (0-indexed)
+    # => len(residuals) = len(residual_list) = len(directions) = k + 1
+    # => x contains the k-th iterate, i.e., x_k
+    # => Number of iterations taken = k + 1 (1-indexed)
     if log_directions:
         return x, k + 1, residuals, residual_list, directions
     else:
@@ -209,11 +228,13 @@ def GS_ORTHOGONALISE(P: List[Vector], Q: Matrix) -> List[Vector]:
     """
     Gram-Schmidt orthogonalisation.
 
-    Parameters:
+    Parameters
+    -------
         P (List[Vector]): A list (or array) of vectors {p_0,...,p_(m-1)} to be orthogonalised.
         Q (NDArray): SPD matrix (here use `A` from oracle).
 
-    Returns:
+    Returns
+    -------
         D (List[Vector]): The Q-orthogonalised vectors {d_0,...,d_(m-1)}.
     """
 
@@ -265,21 +286,25 @@ def CG_SOLVE_FAST(
     """
     Improved Conjugate Gradient Method.
 
-    Parameters:
+    Parameters
+    -------
         A (NDArray or LinearOperator): SPD matrix from oracle.
         b (NDArray): Right-hand side vector.
         log_directions (bool, optional): Boolean flag. Defaults to False.
             When set to True, the function must additionally return the first `m` residuals and search directions.
         tol (float, optional): Convergence tolerance. Defaults to 1e-6.
         maxiter (int, optional): Maximum number of iterations. Defaults to 10_000.
+        use_relative_tol (bool, optional): Boolean flag. Defaults to False.
+            When set to True, the stopping rule becomes `||r_k|| / ||r_0|| < tol`.
 
-    Returns:
-        x (NDArray): Approximate solution vector.\\
-        iters (int): Number of iterations taken.\\
+    Returns
+    -------
+        x (NDArray): Approximate solution vector.
+        iters (int): Number of iterations taken.
         residuals (List[float]): Residual norms `||r_k||_2` at each iteration.
 
-        In addition, if log_directions is set to True, then also return\\
-        residual_list (list[NDArray]): First `m` residuals {r_0,...,r_(m-1)}.\\
+        In addition, if log_directions is set to True, then also return
+        residual_list (list[NDArray]): First `m` residuals {r_0,...,r_(m-1)}.
         directions (list[NDArray]): First `m` CG search directions {p_0,...,p_(m-1)}.
     """
 
@@ -361,14 +386,16 @@ def NEWTON_SOLVE(
     """
     Newton's Method.
 
-    Parameters:
+    Parameters
+    -------
         f_grad (Callable): Gradient function of f(x).
         f_hess (Callable): Hessian function of f(x).
         x0 (Vector): Initial point. (NumPy array of length 2).
         tol (float, optional): Convergence tolerance. Defaults to 1e-8.
         maxiter (int, optional): Maximum number of iterations. Defaults to 100.
 
-    Returns:
+    Returns
+    -------
         x (NDArray): Final iterate.
         iters (int): Number of iterations performed.
         trajectory (list[NDArray]): List of iterates (for plotting Newton paths).
@@ -400,13 +427,16 @@ def NEWTON_SOLVE(
 # ---------- Helpers ----------
 def rosenbrock(x: Vector) -> float:
     """
-    The Rosenbrock function.\\
+    The Rosenbrock function.
+
     `f(x) = (a - x_1)^2 + b (x_2 - x_1^2)^2`
 
-    Parameters:
+    Parameters
+    -------
         x (NDArray): Input point (NumPy array of length 2).
 
-    Returns:
+    Returns
+    -------
         f (float): Function value.
     """
     a, b = 1, 100
@@ -416,7 +446,7 @@ def rosenbrock(x: Vector) -> float:
 def rosenbrock_grad(x: Vector) -> Vector:
     """
     Gradient of the Rosenbrock function.\\
-    `grad_f(x) = [  -2(a - x_1) - 4b x_1(x_2 - x_1^2),   2b(x_2 - x_1^2) ]'`
+    `grad_f(x) = [  -2(a - x_1) - 4b x_1(x_2 - x_1^2),   2b(x_2 - x_1^2) ]^T`
     """
     a, b = 1, 100
     grad = np.zeros_like(x)
@@ -429,8 +459,8 @@ def rosenbrock_hess(x: Vector) -> Matrix:
     """
     Hessian of the Rosenbrock function.\\
     `hess_f(x) = [
-        [   2 - 4b(x_2 - 3x_1^2),  -4b x_1 ],
-        [   -4b x_1,              2b      ]
+        [   2 - 4b(x_2 - 3x_1^2),  -4b x_1  ],
+        [   -4b x_1,                2b      ]
     ]`
     """
     _a, b = 1, 100
@@ -459,7 +489,7 @@ def question_1():
     # Conjugate Gradient with logging
     print("\n\033[4mPart-2\033[0m:")
     x, iters, residuals, r_list, p_list = CG_SOLVE(A, b, log_directions=True)
-    print(f"Number of directions computed: m = {iters + 1}")
+    print(f"Number of directions computed: m = {iters}")
     print("\nCG search directions:")
     for i, pk in enumerate(p_list):
         print(f"p_{i} = {pk}")
@@ -506,6 +536,9 @@ def question_1():
         )
         cos_theta_list.append(q_cosine)
     print(f"List of cosine similarities: {cos_theta_list}")
+    print(
+        f"All close to 1: {np.allclose(cos_theta_list, np.ones(len(cos_theta_list)), atol=1e-15)}"
+    )
 
 
 def question_2():
