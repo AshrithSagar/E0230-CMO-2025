@@ -50,3 +50,158 @@ The Jacobi preconditioner is chosen as \( \M = \diag{\A} \), which is easy to co
     \end{bmatrix}
 \end{equation*}
 The fact that the Jacobi preconditioner works well in this case indicates that the diagonal elements of \( \A \) are significant in magnitude compared to the off-diagonal elements, and that scaling the system by these diagonal elements improves the conditioning of the problem, leading to faster convergence.
+
+The algorithms for \texttt{CG\_SOLVE} and \texttt{CG\_SOLVE\_FAST} are given below for reference.
+
+\begin{algorithm}[H]
+    \caption{
+        {}~\citep{Nocedal2006}
+        (Practical) Conjugate gradient algorithm for unconstrained minimisation of a strongly convex quadratic function \( f: \R^d \to \R \).
+        \vspace{-1em}
+        \begin{equation*}
+            \func{f}{\x}
+            =
+            \half \qf{\x}{\Q} + \dotp{\h}{\x},
+            \quad \Q \in \PD, \; \h \in \R^d
+        \end{equation*}
+    }\label{alg:practical-conjugate-gradient-method}
+    \SetAlgoLined{}
+    \KwIn{
+        First-order oracle for the objective function \( \func{f}{\x} \);
+        Initial point \( \x^0 \in \R^d \);
+    }
+    \KwOut{
+        Exact solution to the unconstrained minimisation problem \( \displaystyle \argmin_{\x \in \R^d} \func{f}{\x} \)\;
+    }
+
+    \( k \leftarrow 0 \)\;
+
+    \( \u_0 \leftarrow -\grad{f}{\x^0} \)\;
+
+    \While{\( k < d \) \emph{ AND } \( \x^k \) is not optimal}{
+        Choose step length \( \alpha_k \) as
+        \vspace{-0.5em}
+        \begin{equation*}
+            \alpha_k
+            =
+            \frac{\norm{\grad{f}{\x^k}}_2^2}{\qf{\u_k}{\Q}}
+        \end{equation*}
+
+        \vspace{-0.5em}
+        Update the current point: \( \x^{k+1} = \x^k + \alpha_k \u_k \)\;
+
+        Find the new gradient by using either the first-order oracle or the recurrence relation
+        \vspace{-0.5em}
+        \begin{equation*}
+            \grad{f}{\x^{k+1}}
+            =
+            \grad{f}{\x^k}
+            + \alpha_k \Q \u_k
+        \end{equation*}
+        or the quadratic structure of \( f \)
+        \vspace{-0.5em}
+        \begin{equation*}
+            \grad{f}{\x^{k+1}}
+            =
+            \Q \x^{k+1} + \h
+        \end{equation*}
+
+        Find the next conjugate direction as
+        \vspace{-0.5em}
+        \begin{align*}
+            \u_{k+1}
+            & =
+            -\grad{f}{\x^{k+1}}
+            + \beta_k \u_k,
+            \\
+            \text{where }
+            \beta_k
+            & =
+            \frac{\norm{\grad{f}{\x^{k+1}}}_2^2}{\norm{\grad{f}{\x^k}}_2^2}
+        \end{align*}
+
+        \vspace{-0.5em}
+        \( k \leftarrow k + 1 \)\;
+    }
+    \Return{\( \x^k \)\;}
+\end{algorithm}
+
+\begin{algorithm}[H]
+    \caption{
+        {}~\citep{Nocedal2006}
+        Preconditioned conjugate gradient algorithm for unconstrained minimisation of a strongly convex quadratic function \( f: \R^d \to \R \).
+        \vspace{-1em}
+        \begin{equation*}
+            \func{f}{\x}
+            =
+            \half \qf{\x}{\Q} + \dotp{\h}{\x},
+            \quad \Q \in \PD, \; \h \in \R^d
+        \end{equation*}
+    }\label{alg:preconditioned-conjugate-gradient-method}
+    \SetAlgoLined{}
+    \KwIn{
+        First-order oracle for the objective function \( \func{f}{\x} \);\\
+        Initial point \( \x^0 \in \R^d \);
+        Preconditioner \( \M \in \PD \);
+    }
+    \KwOut{
+        Exact solution to the unconstrained minimisation problem \( \displaystyle \argmin_{\x \in \R^d} \func{f}{\x} \)\;
+    }
+
+    \( k \leftarrow 0 \)\;
+
+    Solve \( \M \, \z_0 = -\grad{f}{\x^0} \)\;
+
+    \( \u_0 \leftarrow \z_0 \)\;
+
+    \While{\( k < d \) \emph{ AND } \( \x^k \) is not optimal}{
+        Choose step length \( \alpha_k \) as
+        \vspace{-0.5em}
+        \begin{equation*}
+            \alpha_k
+            =
+            - \frac{\dotp{\grad{f}{\x^k}}{\z_k}}{\qf{\u_k}{\Q}}
+        \end{equation*}
+
+        \vspace{-0.5em}
+        Update the current point: \( \x^{k+1} = \x^k + \alpha_k \u_k \)\;
+
+        Find the new gradient by using either the first-order oracle or the recurrence relation
+        \vspace{-0.5em}
+        \begin{equation*}
+            \grad{f}{\x^{k+1}}
+            =
+            \grad{f}{\x^k}
+            + \alpha_k \Q \u_k
+        \end{equation*}
+        or the quadratic structure of \( f \)
+        \vspace{-0.5em}
+        \begin{equation*}
+            \grad{f}{\x^{k+1}}
+            =
+            \Q \x^{k+1} + \h
+        \end{equation*}
+
+        Solve \( \M \, \z_{k+1} = -\grad{f}{\x^{k+1}} \)\;
+
+        Find the next conjugate direction as
+        \vspace{-0.5em}
+        \begin{align*}
+            \u_{k+1}
+            & =
+            \z_{k+1}
+            + \beta_k \u_k,
+            \\
+            \text{where }
+            \beta_k
+            & =
+            \frac
+            {\dotp{\grad{f}{\x^{k+1}}}{\z_{k+1}}}
+            {\dotp{\grad{f}{\x^k}}{\z_k}}
+        \end{align*}
+
+        \vspace{-0.5em}
+        \( k \leftarrow k + 1 \)\;
+    }
+    \Return{\( \x^k \)\;}
+\end{algorithm}
