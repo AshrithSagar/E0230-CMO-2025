@@ -8,7 +8,7 @@
     {../Codes/figures/Q3-1a-Newton_error_norms_24233.jpeg}% chktex 8
     \caption{
         Error norm \( \norm{\x_k - \xstar}_2 \) (in log scale) vs iterations \( k \) for \texttt{NEWTON\_SOLVE} with different initial points
-    }
+    }\label{fig:q3.1a-error-norms}
 \end{figure}
 
 \newpage
@@ -27,7 +27,7 @@
                     2 \\ 2
                 \end{bmatrix}
             \)
-        }
+        }\label{fig:q3.1b-contour-1}
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.49\textwidth}
@@ -41,7 +41,7 @@
                     5 \\ 5
                 \end{bmatrix}
             \)
-        }
+        }\label{fig:q3.1b-contour-2}
     \end{subfigure}
     \vskip\baselineskip{}
     \begin{subfigure}[b]{0.49\textwidth}
@@ -55,7 +55,7 @@
                     10 \\ -4
                 \end{bmatrix}
             \)
-        }
+        }\label{fig:q3.1b-contour-3}
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.49\textwidth}
@@ -69,12 +69,23 @@
                     50 \\ 60
                 \end{bmatrix}
             \)
-        }
+        }\label{fig:q3.1b-contour-4}
     \end{subfigure}
     \caption{
         Contour plots of the rosenbrock function with paths taken by \texttt{NEWTON\_SOLVE} from different initial points clipped in the region \( [-10, 10] \times [-10, 10] \)
-    }
+    }\label{fig:q3.1b-contours}
 \end{figure}
 
 \newpage
 \section*{Question 3: Part 2 | Analysis}
+
+As can be seen from the error norms graph~(\autoref{fig:q3.1a-error-norms}), Newton's method converges in very few iterations (4--5) for all initial points tried.
+
+The contour plots~(\autoref{fig:q3.1b-contours}) show that the method takes large steps towards the minimizer \( \xstar \) in each iteration for starting points far away from the minimizer~(\autoref{fig:q3.1b-contour-2},~\ref{fig:q3.1b-contour-3},~\ref{fig:q3.1b-contour-4}).
+As in turns out, all of the different initial points tried converge to the same minimizer
+\(
+    \xstar =
+    \begin{bmatrix}
+        1 & 1
+    \end{bmatrix}^\top
+\), which is the unique global minimizer of the rosenbrock function.
