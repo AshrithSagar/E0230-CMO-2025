@@ -209,18 +209,21 @@ def CG_SOLVE(
         pTAp: float = float(p @ Ap)  # p_k' A p_k
         assert pTAp > 0, "p_k' A p_k <= 0, A not SPD?"
         if pTAp < 1e-15:
-            print(f"[WARN] p_k' A p_k too small ({pTAp}). Stopping CG early at k={k}.")
+            print(f"[WARN] p_k' A p_k too small ({pTAp}). Stopping CG early.")
             break
         alpha: float = rTr / pTAp  # alpha_k = (r_k' r_k) / (p_k' A p_k)
+        if alpha < 0:
+            print(f"[WARN] alpha_k < 0 ({alpha}). Stopping CG early.")
+            break
 
-        x += alpha * p  # x_{k+1} = x_k + alpha_k p_k
-        r -= alpha * Ap  # r_{k+1} = r_k - alpha_k A p_k
+        x: Vector = x + alpha * p  # x_{k+1} = x_k + alpha_k p_k
+        r: Vector = r - alpha * Ap  # r_{k+1} = r_k - alpha_k A p_k
 
         rTr_new: float = float(r @ r)  # r_{k+1}' r_{k+1}
         beta: float = rTr_new / rTr  # beta_k = (r_{k+1}' r_{k+1}) / (r_k' r_k)
-        p = r + beta * p  # p_{k+1} = r_{k+1} + beta_k p_k
+        p: Vector = r + beta * p  # p_{k+1} = r_{k+1} + beta_k p_k
 
-        rTr = rTr_new  # Update rTr for next iteration
+        rTr: float = rTr_new  # Update rTr for next iteration
 
     # k is the number of completed iterations (0-indexed)
     # => len(residuals) = len(residual_list) = len(directions) = k + 1
@@ -316,19 +319,16 @@ def CG_SOLVE_FAST(
         directions (list[NDArray]): First `m` CG search directions {p_0,...,p_(m-1)}.
     """
 
-    residuals: List[float] = []
-    residual_list: List[Vector] = []
-    directions: List[Vector] = []
-
-    # Initialise x0
-    k: int = 0
     dim: int = b.shape[0]
-    x: Vector = np.zeros_like(b)
+
+    residuals: List[float] = []  # ||r_k||_2
+    residual_list: List[Vector] = []  # r_k = -grad_f(x_k) = b - A x_k
+    directions: List[Vector] = []  # p_k
 
     # Preconditioner M_inv: ~diag(A)^(-1/2)
     if isinstance(A, np.ndarray):
         diag_A: Vector = np.diag(A)
-    else:
+    elif isinstance(A, LinearOperator):
         diag_A: Vector = np.empty(dim)
         for i in range(dim):
             e_i = np.zeros(dim)
@@ -342,42 +342,63 @@ def CG_SOLVE_FAST(
         matvec=lambda v: M_inv_diag * v,  # type: ignore
     )
 
-    r: Vector = b - np.asarray(A @ x)
-    r0_norm: float = float(np.linalg.norm(r))
-    z: Vector = np.asarray(M_inv @ r)
-    rTz: float = float(r @ z)
-    p: Vector = z.copy()
+    ## Initialise for k = 0
+    k: int = 0
+    x: Vector = np.zeros_like(b)  # x_0 -> zero vector
 
-    residuals.append(float(np.linalg.norm(r)))
-    if log_directions:
-        residual_list.append(r.copy())
-        directions.append(p.copy())
+    r: Vector = b.copy()  # r_0 = (b - A x_0) = b
+    r0_norm: float = float(np.linalg.norm(r))  # ||r_0||_2
+    z: Vector = np.asarray(M_inv @ r)  # z_0 = M_inv r_0
+    rTz: float = float(r @ z)  # r_0' z_0
 
-    for k in range(maxiter):
-        Ap: Vector = np.asarray(A @ p)
-        alpha_k: float = rTz / float(p @ Ap)
-        rTz_prev: float = rTz
-        x: Vector = x + alpha_k * p
-        r: Vector = r - alpha_k * Ap
+    p: Vector = z.copy()  # p_0 = z_0
 
-        r_norm: float = float(np.linalg.norm(r))
+    for k in range(maxiter + 1):  # Need +1 to log the 0-th iterate too
+        ## Validate k-th iterate
+        r_norm: float = float(np.linalg.norm(r))  # ||r_k||_2
+
         residuals.append(r_norm)
         if log_directions:
             residual_list.append(r.copy())
             directions.append(p.copy())
 
+        # Stopping condition
+        # If satisfied, break and return for k-th iterate
         if use_relative_tol:
             if r_norm / r0_norm < tol:
                 break
         else:
             if r_norm < tol:
                 break
+        if k == maxiter:
+            break  # Skip computing (maxiter+1)-th iterate
 
-        z: Vector = np.asarray(M_inv @ r)
-        rTz: float = float(r @ z)
-        beta_k: float = rTz / rTz_prev
-        p: Vector = z + beta_k * p
+        ## Compute (k+1)-th iterate
+        Ap: Vector = np.asarray(A @ p)  # A p_k
+        pTAp: float = float(p @ Ap)  # p_k' A p_k
+        assert pTAp > 0, "p_k' A p_k <= 0, A not SPD?"
+        if pTAp < 1e-15:
+            print(f"[WARN] p_k' A p_k too small ({pTAp}). Stopping CG early.")
+            break
+        alpha: float = rTz / pTAp  # alpha_k = (r_k' z_k) / (p_k' A p_k)
+        if alpha < 0:
+            print(f"[WARN] alpha_k < 0 ({alpha}). Stopping CG early.")
+            break
 
+        x: Vector = x + alpha * p  # x_{k+1} = x_k + alpha_k p_k
+        r: Vector = r - alpha * Ap  # r_{k+1} = r_k - alpha_k A p_k
+
+        z: Vector = np.asarray(M_inv @ r)  # z_{k+1} = M_inv r_{k+1}
+        rTz_new: float = float(r @ z)  # r_{k+1}' z_{k+1}
+        beta: float = rTz_new / rTz  # beta_k = (r_{k+1}' z_{k+1}) / (r_k' z_k)
+        p: Vector = z + beta * p  # p_{k+1} = z_{k+1} + beta_k p_k
+
+        rTz: float = rTz_new  # Update rTz for next iteration
+
+    # k is the number of completed iterations (0-indexed)
+    # => len(residuals) = len(residual_list) = len(directions) = k + 1
+    # => x contains the k-th iterate, i.e., x_k
+    # => Number of iterations taken = k + 1 (1-indexed)
     if log_directions:
         return x, k + 1, residuals, residual_list, directions
     else:
