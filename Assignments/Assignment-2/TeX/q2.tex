@@ -9,6 +9,8 @@
     }
 \end{figure}
 
+Number of iterations required by \texttt{CG\_SOLVE} to reduce the relative residual norm \( \norm{\r_k}_2 / \norm{\r_0}_2 \) to below \( 10^{-6} \) is \( \boxed{ 30 } \)
+
 \newpage
 \section*{Question 2: Part 2 | Improved Conjugate Gradient method}
 
@@ -20,3 +22,31 @@
         Residual norm \( \norm{\r_k}_2 \) (in log scale) vs iterations \( k \) for \texttt{CG\_SOLVE} and \texttt{CG\_SOLVE\_FAST}
     }
 \end{figure}
+
+Number of iterations required by \texttt{CG\_SOLVE} to reduce the relative residual norm \( \norm{\r_k}_2 / \norm{\r_0}_2 \) to below \( 10^{-6} \) is \( \boxed{ 30 } \), and that required by \texttt{CG\_SOLVE\_FAST} is \( \boxed{ 1 } \).
+
+\paragraph{Method:}
+The \texttt{CG\_SOLVE\_FAST} method uses a preconditioned Conjugate Gradient (PCG) method, with the Jacobi preconditioner.
+The PCG method is similar to the CG method, but it solves the equivalent system \( \M^{-1} \A \x = \M^{-1} \b \), where \( \M \) is the preconditioner matrix, but does so by integrating the preconditioner into the algorithm itself.
+The Jacobi preconditioner is chosen as \( \M = \diag{\A} \), which is easy to compute and invert, i.e.,
+\begin{equation*}
+    \M
+    =
+    \begin{bmatrix}
+        A_{11} & 0      & \cdots & 0      \\
+        0      & A_{22} & \cdots & 0      \\
+        \vdots & \vdots & \ddots & \vdots \\
+        0      & 0      & \cdots & A_{nn}
+    \end{bmatrix},
+    \quad
+    \implies
+    \M^{-1}
+    =
+    \begin{bmatrix}
+        1 / A_{11} & 0          & \cdots & 0          \\
+        0          & 1 / A_{22} & \cdots & 0          \\
+        \vdots     & \vdots     & \ddots & \vdots     \\
+        0          & 0          & \cdots & 1 / A_{nn}
+    \end{bmatrix}
+\end{equation*}
+The fact that the Jacobi preconditioner works well in this case indicates that the diagonal elements of \( \A \) are significant in magnitude compared to the off-diagonal elements, and that scaling the system by these diagonal elements improves the conditioning of the problem, leading to faster convergence.
