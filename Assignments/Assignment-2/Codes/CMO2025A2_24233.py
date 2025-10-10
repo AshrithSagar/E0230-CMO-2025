@@ -225,14 +225,13 @@ def CG_SOLVE(
 
         rTr: float = rTr_new  # Update rTr for next iteration
 
-    # k is the number of completed iterations (0-indexed)
+    # k is the number of completed iterations
     # => len(residuals) = len(residual_list) = len(directions) = k + 1
     # => x contains the k-th iterate, i.e., x_k
-    # => Number of iterations taken = k + 1 (1-indexed)
     if log_directions:
-        return x, k + 1, residuals, residual_list, directions
+        return x, k, residuals, residual_list, directions
     else:
-        return x, k + 1, residuals
+        return x, k, residuals
 
 
 def GS_ORTHOGONALISE(P: List[Vector], Q: Matrix) -> List[Vector]:
@@ -325,17 +324,16 @@ def CG_SOLVE_FAST(
     residual_list: List[Vector] = []  # r_k = -grad_f(x_k) = b - A x_k
     directions: List[Vector] = []  # p_k
 
-    # Preconditioner M_inv: ~diag(A)^(-1/2)
+    # Jacobi Preconditioner M_inv ~= 1/diag(A)
     if isinstance(A, np.ndarray):
         diag_A: Vector = np.diag(A)
     elif isinstance(A, LinearOperator):
-        diag_A: Vector = np.empty(dim)
+        diag_A: Vector = np.empty(dim, dtype=np.float64)
+        eye: Matrix = np.eye(dim, dtype=np.float64)
         for i in range(dim):
-            e_i = np.zeros(dim)
-            e_i[i] = 1.0
-            diag_A[i] = np.asarray(A @ e_i)[i]
+            diag_A[i] = (A @ eye[i])[i]
     diag_A: Vector = np.maximum(diag_A, 1e-15)
-    M_inv_diag = 1.0 / np.sqrt(diag_A)
+    M_inv_diag = 1.0 / diag_A
     M_inv = LinearOperator(
         shape=(dim, dim),
         dtype=np.float64,
@@ -395,14 +393,13 @@ def CG_SOLVE_FAST(
 
         rTz: float = rTz_new  # Update rTz for next iteration
 
-    # k is the number of completed iterations (0-indexed)
+    # k is the number of completed iterations
     # => len(residuals) = len(residual_list) = len(directions) = k + 1
     # => x contains the k-th iterate, i.e., x_k
-    # => Number of iterations taken = k + 1 (1-indexed)
     if log_directions:
-        return x, k + 1, residuals, residual_list, directions
+        return x, k, residuals, residual_list, directions
     else:
-        return x, k + 1, residuals
+        return x, k, residuals
 
 
 def NEWTON_SOLVE(
@@ -518,7 +515,7 @@ def question_1():
     # Conjugate Gradient with logging
     print("\n\033[4mPart-2\033[0m:")
     x, iters, residuals, r_list, p_list = CG_SOLVE(A, b, log_directions=True)
-    m = iters  # Number of directions computed
+    m = iters + 1  # Directions {p_0,...,p_(m-1)}; (m-1) <=> iters
     print(f"Number of directions computed: m = {m}")
     print("\nCG search directions:")
     for k, pk in enumerate(p_list):
