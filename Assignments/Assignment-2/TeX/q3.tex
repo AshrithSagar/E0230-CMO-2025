@@ -1,5 +1,41 @@
 \section*{Question 3: Part 1 | Newton's method}
 
+\paragraph{Given:}
+
+The rosenbrock function \( f: \R^2 \to \R \)
+\begin{equation*}
+    \func{f}{\x}
+    =
+    \pbrac{a - x_1}^2
+    +
+    b \pbrac{x_2 - x_1^2}^2,
+    \qquad
+    \x =
+    \begin{bmatrix}
+        x_1 \\ x_2
+    \end{bmatrix}
+    \in \R^2,
+    \quad a = 1, \; b = 100
+\end{equation*}
+
+Initial points \(
+    \x_0 \in
+    \set{
+        \begin{bmatrix}
+            2 \\ 2
+        \end{bmatrix},
+        \begin{bmatrix}
+            5 \\ 5
+        \end{bmatrix},
+        \begin{bmatrix}
+            10 \\ -4
+        \end{bmatrix},
+        \begin{bmatrix}
+            50 \\ 60
+        \end{bmatrix}
+    }
+\)
+
 \subsection*{Error norms}
 
 \begin{figure}[h!]
@@ -79,6 +115,22 @@
 \newpage
 \section*{Question 3: Part 2 | Analysis}
 
+\paragraph{Which starting points lead to rapid convergence to \( \xstar \)?}
+Particularly, the initial points \( \x_0 =
+    \begin{bmatrix} 2 & 2
+\end{bmatrix}^\top \) and \( \x_0 =
+    \begin{bmatrix} 5 & 5
+\end{bmatrix}^\top \) lead to rapid convergence, as is the case for Newton's method in general when started sufficiently close to the minimizer, in the Newton's region.
+
+\paragraph{Which ones fail or diverge?}
+None of the initial points tried lead to failure or divergence of the method.
+
+\paragraph{Briefly explain why the starting point plays such a crucial role in Newton's method.}
+The starting point plays a crucial role in Newton's method because the method relies on local approximations of the function using its gradient and Hessian at the current point.
+If the starting point is close to the minimizer, the local quadratic approximation is accurate, leading to rapid convergence.
+Additionally, the Hessian must be positive definite at the current point for the Newton step to be a descent direction; if the starting point is in a region where the Hessian is not positive definite, the method may fail to converge.
+
+\paragraph{Result interpretation}
 As can be seen from the error norms graph~(\autoref{fig:q3.1a-error-norms}), Newton's method converges in very few iterations (4--5) for all initial points tried.
 
 The contour plots~(\autoref{fig:q3.1b-contours}) show that the method takes large steps towards the minimizer \( \xstar \) in each iteration for starting points far away from the minimizer~(\autoref{fig:q3.1b-contour-2},~\ref{fig:q3.1b-contour-3},~\ref{fig:q3.1b-contour-4}).
