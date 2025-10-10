@@ -83,17 +83,29 @@ Hence, the vectors \( \set{\d_k} \) produced by the above recursion are \( \Q \)
 
 \subsection*{(c) Conjugate Direction method}
 
-\( \pbrac[\big]{\alpha_k, -\dotp{\grad{f}{\x_k}}{\u_k}, \lambda_k} \) for the first 7 iterations of \texttt{CD\_SOLVE}:
+\( \pbrac[\big]{\alpha_k, \; -\dotp{\grad{f}{\x_k}}{\u_k}, \; \lambda_k} \) for \texttt{CD\_SOLVE}:
 
 \begin{lstlisting}[firstnumber=0]
-(-0.007770, -0.625978, 80.562297)
-(-0.024913, -1.730925, 69.478934)
-(0.004937, 0.312165, 63.235287)
-(-0.017964, -1.075219, 59.852721)
-(0.010861, 0.599837, 55.228448)
-(0.009554, 0.478932, 50.126734)
+(0.053245, 1.065069, 20.003149)
+(0.012860, 0.258370, 20.090807)
+(0.004373, 0.089452, 20.456939)
+(0.040859, 0.857295, 20.981996)
+(0.036780, 0.837768, 22.777787)
+(0.017910, 0.425881, 23.779212)
+(0.008054, 0.203932, 25.320880)
+(0.099460, 2.725643, 27.404502)
+(0.018559, 0.542227, 29.216581)
+(0.021784, 0.671296, 30.815420)
+(0.008129, 0.265031, 32.602272)
+(0.025798, 0.887388, 34.397766)
+(0.021509, 0.793338, 36.883692)
 (0.024803, 1.056225, 42.584542)
-(-0.021509, -0.793338, 36.883692)
+(0.009554, 0.478932, 50.126734)
+(0.010861, 0.599837, 55.228448)
+(0.017964, 1.075219, 59.852721)
+(0.004937, 0.312165, 63.235287)
+(0.024913, 1.730925, 69.478934)
+(0.007770, 0.625978, 80.562297)
 \end{lstlisting}
 
 \section*{Question 1: Part 2 | Conjugate Gradient method}
@@ -102,10 +114,23 @@ Number of directions computed: \( \boxed{ m = 14 } \)
 
 \section*{Question 1: Part 3 | Matrix M}
 
-Eigenvalues of M:\@
+{\scriptsize \(  \M = \)}
+\vspace*{-2em}
+\begin{center}
+    \adjustbox{max width=\textwidth}{
+        \pgfplotstabletypeset[
+            col sep=space,
+            string type,
+            columns/.style={column type={>{$}c<{$}}},
+            every head row/.style={output empty row},
+        ]{../Codes/M_24233.txt}
+    }
+\end{center}
+
+Eigenvalues of \(  \M \):\@
 [1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.]
 
-\( M \approx \I_{14 \times 14} \)
+\( \implies \M \approx \I_{14 \times 14} \)
 
 \section*{Question 1: Part 4 | \( \A \)--inner product cosine similarity}
 

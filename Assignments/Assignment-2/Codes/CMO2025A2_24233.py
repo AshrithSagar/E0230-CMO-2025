@@ -567,6 +567,9 @@ def question_1():
     print("\n\033[4mPart-3\033[0m:")
     D_tilde = [dk / np.sqrt(dk @ (A @ dk)) for dk in D]
     M = np.array([[di @ (A @ dj) for dj in D_tilde] for di in D_tilde])
+    filename = f"M_{SRN}.txt"
+    np.savetxt(filename, M, fmt="%.6e")
+    print(f"Saved Matrix M to '{filename}'.")
     print(f"M = {M}")
     print(f"-> Eigenvalues of M: {np.linalg.eigvals(M)}")
     print(f"-> M close to I: {np.allclose(M, np.eye(m), atol=1e-15)}")
