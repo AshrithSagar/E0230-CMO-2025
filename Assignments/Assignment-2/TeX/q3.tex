@@ -1,3 +1,80 @@
 \section*{Question 3: Part 1 | Newton's method}
 
+\subsection*{Error norms}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\textwidth]
+    {../Codes/figures/Q3-1a-Newton_error_norms_24233.jpeg}% chktex 8
+    \caption{
+        Error norm \( \norm{\x_k - \xstar}_2 \) (in log scale) vs iterations \( k \) for \texttt{NEWTON\_SOLVE} with different initial points
+    }
+\end{figure}
+
+\newpage
+\subsection*{Contour plots}
+
+\begin{figure}[h!]
+    \centering
+    \begin{subfigure}[b]{0.49\textwidth}
+        \includegraphics[width=\textwidth]
+        {../Codes/figures/Q3-1b-Newton_path_1_24233.jpeg}% chktex 8
+        \caption{
+            Initial point
+            \(
+                \x_0 =
+                \begin{bmatrix}
+                    2 \\ 2
+                \end{bmatrix}
+            \)
+        }
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.49\textwidth}
+        \includegraphics[width=\textwidth]
+        {../Codes/figures/Q3-1b-Newton_path_2_24233.jpeg}% chktex 8
+        \caption{
+            Initial point
+            \(
+                \x_0 =
+                \begin{bmatrix}
+                    5 \\ 5
+                \end{bmatrix}
+            \)
+        }
+    \end{subfigure}
+    \vskip\baselineskip{}
+    \begin{subfigure}[b]{0.49\textwidth}
+        \includegraphics[width=\textwidth]
+        {../Codes/figures/Q3-1b-Newton_path_3_24233.jpeg}% chktex 8
+        \caption{
+            Initial point
+            \(
+                \x_0 =
+                \begin{bmatrix}
+                    10 \\ -4
+                \end{bmatrix}
+            \)
+        }
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.49\textwidth}
+        \includegraphics[width=\textwidth]
+        {../Codes/figures/Q3-1b-Newton_path_4_24233.jpeg}% chktex 8
+        \caption{
+            Initial point
+            \(
+                \x_0 =
+                \begin{bmatrix}
+                    50 \\ 60
+                \end{bmatrix}
+            \)
+        }
+    \end{subfigure}
+    \caption{
+        Contour plots of the rosenbrock function with paths taken by \texttt{NEWTON\_SOLVE} from different initial points clipped in the region \( [-10, 10] \times [-10, 10] \)
+    }
+\end{figure}
+
+\newpage
 \section*{Question 3: Part 2 | Analysis}
