@@ -141,3 +141,62 @@ As in turns out, all of the different initial points tried converge to the same 
         1 & 1
     \end{bmatrix}^\top
 \), which is the unique global minimizer of the rosenbrock function.
+
+\newpage
+The algorithm for \texttt{NEWTON\_SOLVE} is given below for reference.
+
+\begin{algorithm}[H]
+    \caption{
+        {}~\citep{Nesterov2004}
+        Newton's method for unconstrained minimisation.
+    }\label{alg:newtons-method}
+    \SetAlgoLined{}
+    \KwIn{
+        Second-order oracle for the objective function \( \func{f}{\x} \);
+        Initial point \( \x^0 \in \R^d \);
+    }
+    \KwOut{
+        Approximate solution to the unconstrained minimisation problem \( \displaystyle \argmin_{\x \in \R^d} \func{f}{\x} \)\;
+    }
+
+    \( k \leftarrow 0 \)\;
+
+    \While{\( \hess{f}{\x^k} \succ \zero \) \emph{ AND } \( \x^k \) is not optimal}{
+        Update the current point:
+        \vspace{-1em}
+        \begin{equation*}
+            \x^{k+1}
+            =
+            \x^k - \hessinv{f}{\x} \grad{f}{\x^k}
+        \end{equation*}
+
+        \vspace{-1em}
+        \( k \leftarrow k + 1 \)\;
+    }
+    \Return{\( \x^k \)\;}
+\end{algorithm}
+
+Newton's method requires the Hessian matrix to be positive definite at every iteration to ensure that the computed direction is indeed a descent direction.
+
+\paragraph{Newton direction:}
+Refers to the descent direction
+\begin{equation*}
+    \p^k = -\hessinv{f}{\x^k} \grad{f}{\x^k},
+    \qquad \hess{f}{\x^k} \succ \zero
+\end{equation*}
+
+This satisfies the condition for descent direction, provided that the Hessian is positive definite, since
+\begin{align*}
+    \hess{f}{\x^k}
+    &
+    \succ \zero
+    \implies
+    \hessinv{f}{\x^k}
+    \succ \zero
+    \\
+    \implies
+    \dotp{\grad{f}{\x^k}}{\p^k}
+    & =
+    - \pbrac{\grad{f}{\x^k}}^\top \hessinv{f}{\x^k} \grad{f}{\x^k}
+    < 0
+\end{align*}
