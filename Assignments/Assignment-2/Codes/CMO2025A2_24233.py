@@ -263,38 +263,6 @@ def GS_ORTHOGONALISE(P: List[Vector], Q: Matrix) -> List[Vector]:
     return D
 
 
-def ichol(A: Union[Matrix, LinearOperator]) -> Matrix:
-    """
-    Incomplete Cholesky factorization `A ~= L L^T`.
-    `A` must be SPD (symmetric positive definite).
-    """
-    dim: int = A.shape[0]
-    L: Matrix = np.zeros((dim, dim))
-
-    for i in range(dim):
-        # Standard basis vector e_i
-        e_i = np.zeros(dim)
-        e_i[i] = 1.0
-
-        # i-th column of A
-        c_i: Vector = np.asarray(A @ e_i, dtype=np.float64)
-
-        # Diagonal elements
-        sum_diag = np.sum(L[i, :i] ** 2)
-        diag_i = c_i[i] - sum_diag
-        if diag_i <= 0:
-            raise np.linalg.LinAlgError(f"Matrix is not SPD at row {i}.")
-        L[i, i] = np.sqrt(diag_i)
-
-        # Off-diagonal elements
-        for j in range(i + 1, dim):
-            if c_i[j] != 0:  # Preserve sparsity
-                sum_lower = np.dot(L[j, :i], L[i, :i])
-                L[j, i] = (c_i[j] - sum_lower) / L[i, i]
-
-    return L
-
-
 @overload
 def CG_SOLVE_FAST(
     A: Union[Matrix, LinearOperator],
@@ -351,21 +319,27 @@ def CG_SOLVE_FAST(
         directions (list[NDArray]): First `m` CG search directions {p_0,...,p_(m-1)}.
     """
 
+    dim: int = b.shape[0]
+
     residuals: List[float] = []  # ||r_k||_2
     residual_list: List[Vector] = []  # r_k = -grad_f(x_k) = b - A x_k
     directions: List[Vector] = []  # p_k
 
-    # Preconditioner M_inv
-    L = ichol(A)
-
-    def preconditioner_solve(x: Vector):
-        y = np.linalg.solve(L, x)  # L y = x
-        z = np.linalg.solve(L.T, y)  # L.T z = y
-        return z
-
+    # Preconditioner M_inv: ~diag(A)^(-1/2)
+    if isinstance(A, np.ndarray):
+        diag_A: Vector = np.diag(A)
+    elif isinstance(A, LinearOperator):
+        diag_A: Vector = np.empty(dim)
+        for i in range(dim):
+            e_i = np.zeros(dim)
+            e_i[i] = 1.0
+            diag_A[i] = np.asarray(A @ e_i)[i]
+    diag_A: Vector = np.maximum(diag_A, 1e-15)
+    M_inv_diag = 1.0 / np.sqrt(diag_A)
     M_inv = LinearOperator(
-        A.shape,
-        matvec=preconditioner_solve,  # type: ignore
+        shape=(dim, dim),
+        dtype=np.float64,
+        matvec=lambda v: M_inv_diag * v,  # type: ignore
     )
 
     ## Initialise for k = 0
