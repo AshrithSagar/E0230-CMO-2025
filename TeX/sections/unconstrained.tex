@@ -2302,6 +2302,32 @@ The preconditioned conjugate gradient method can be interpreted as applying the 
 
 NW~\cite{Nocedal2006} provide an equivalent formulation, except that they take a non-singular matrix \( \C \) and construct \( \M = \C^\top \C \), instead of factorising \( \M \) as \( \outp{\C}{\C} \), given a symmetric positive definite preconditioner \( \M \).
 
+\paragraph{Incomplete Cholesky Factorisation:}
+\(
+    \displaystyle
+    \Q
+    \approx
+    \M
+    =
+    \outp{\mathbf{L}}{\mathbf{L}},
+    \quad
+    \mathbf{L} \in \R^{d \times d} \text{ is lower-triangular}
+\)
+
+\paragraph{Jacobi Preconditioner:}
+\(
+    \displaystyle
+    \Q
+    \approx
+    \M
+    =
+    \diag{\Q}
+    \implies
+    \inv{\M}
+    =
+    \frac{1}{\diag{\Q}}
+\)
+
 \section{Polynomial optimisation perspective}
 
 Define the polynomial \( P_k^\ast: \bbrac{\;\cdot\;} \to \R \) of degree at most \( k \) as

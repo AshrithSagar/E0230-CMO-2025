@@ -5,7 +5,7 @@
 
 A \textbf{metric space} \( (\calS, d) \) is a set \( \calS \) together with a \textit{metric/distance function} \( d: \calS \times \calS \to \R_{\geq 0} \) that satisfies the following axioms for all \( x, y, z \in \calS \):
 \begin{itemize}
-    \item \( \func{d}{x, y} = 0 \iff x = y \)
+    \item \textit{Definiteness}: \( \func{d}{x, y} = 0 \iff x = y \)
     \item \textit{Symmetry}: \( \func{d}{x, y} = \func{d}{y, x} \)
     \item \textit{Triangle inequality}: \( d(x, z) \leq \func{d}{x, y} + \func{d}{y, z} \)
 \end{itemize}
@@ -14,10 +14,10 @@ A \textbf{metric space} \( (\calS, d) \) is a set \( \calS \) together with a \t
 
 A \textbf{norm} is a real-valued function \( \eta: V \to \R_{\geq 0} \) that satisfies
 \begin{itemize}
-    \item \( \func{\eta}{x} \geq 0, \quad \forall x \in V \)
-    \item \( \func{\eta}{x} = 0 \iff x = 0 \)
-    \item \( \func{\eta}{s x} = \abs{s} \, \func{\eta}{x}, \quad \forall x \in V, s \in F \)
-    \item \( \func{\eta}{x + y} \leq \func{\eta}{x} + \func{\eta}{y}, \quad \forall x, y \in V \)
+    \item \textit{Non-negativity}: \( \func{\eta}{x} \geq 0, \quad \forall x \in V \)
+    \item \textit{Definiteness}: \( \func{\eta}{x} = 0 \iff x = 0 \)
+    \item \textit{Homogeneity}: \( \func{\eta}{s x} = \abs{s} \, \func{\eta}{x}, \quad \forall x \in V, s \in F \)
+    \item \textit{Triangle inequality}: \( \func{\eta}{x + y} \leq \func{\eta}{x} + \func{\eta}{y}, \quad \forall x, y \in V \)
 \end{itemize}
 
 \section{Vector norm}
@@ -496,6 +496,25 @@ where the remainder term \( R_{n+1}(x) \) is given by the Lagrange form:
 \end{equation*}
 
 \subsection{Multivariate Taylor's theorem}\label{sec:multivariate-taylor-theorem}
+
+Let \( f: \R^d \to \R \) be \( (n+1) \) times continuously differentiable on an open set containing the line segment between \( \a, \x \in \R^d \).
+Then, for some \( \xi \) between \( 0 \) and \( 1 \),
+\begin{align*}
+    \func{f}{\x}
+    & =
+    \func{f}{\a}
+    + \dotp{\grad{f}{\a}}{\pbrac{\x - \a}}
+    + \frac{1}{2!} \qf{\pbrac{\x - \a}}{\hess{f}{\a}}
+    + \cdots
+    \\ & \quad +
+    \frac{1}{n!} \bbrac{\nabla^{n} \func{f}{\a}} (\x - \a, \ldots, \x - \a) + R_{n+1}(\x)
+    \\ & =
+    \sum_{k = 0}^{n} \frac{1}{k!} \bbrac{\nabla^{k} \func{f}{\a}} (\x - \a, \ldots, \x - \a) + R_{n+1}(\x)
+\end{align*}
+where the remainder term \( R_{n+1}(\x) \) is given by the Lagrange form:
+\begin{equation*}
+    R_{n+1}(\x) = \frac{1}{(n+1)!} \bbrac{\nabla^{n+1} f(\a + \xi (\x - \a))}(\x - \a, \ldots, \x - \a)
+\end{equation*}
 
 \section{Levels of smoothness}
 
