@@ -424,98 +424,6 @@ The \textbf{Hessian} of a function \( f: \R^d \to \R \) at a point \( \x = \bbra
     \item \( \displaystyle \func{f}{\x} = \half \qf{\x}{\A}, \; \A = \outp{\u}{\v}, \; \u, \v \in \R^d, \; \u \neq \v \implies \hess{f}{\x} = \half (\A + \A^\top) = \half (\outp{\u}{\v} + \outp{\v}{\u}) \).
 \end{itemize}
 
-\section{Fundamental theorem of calculus}\label{sec:fundamental-theorem-of-calculus}
-
-\begin{theorem}{First fundamental theorem of calculus~\citep{wiki}}{}
-    Let \( f: [a, b] \to \R \) be a continuous function.
-    Then the function \( F: [a, b] \to \R \) defined by
-    \vspace{-0.5em}
-    \begin{equation*}
-        \func{F}{x} = \int_{a}^{x} \func{f}{t} \, dt
-    \end{equation*}
-
-    \vspace{-0.5em}
-    is continuous on \( [a, b] \), differentiable on \( (a, b) \), and
-    \vspace{-0.5em}
-    \begin{equation*}
-        \func{F'}{x} = \func{f}{x},
-        \quad \forall x \in (a, b)
-    \end{equation*}
-\end{theorem}
-
-This means that the integral of \( f \) defines an antiderivative of \( f \), i.e., an antiderivative of \( f \) can be constructed by integrating \( f \).
-
-\begin{theorem}{Second fundamental theorem of calculus / Newton-Leibniz theorem~\citep{wiki}}{}
-    Let \( f: [a, b] \to \R \) be a continuous function.
-
-    Let \( F \) be any antiderivative of \( f \) on \( [a, b] \), i.e., \( \func{F'}{x} = \func{f}{x}, \; \forall x \in (a, b) \).
-    Then
-    \vspace{-0.5em}
-    \begin{equation*}
-        \int_{a}^{b} \func{f}{x} \, dx = \func{F}{b} - \func{F}{a}
-    \end{equation*}
-\end{theorem}
-
-This tells us that we can evaluate definite integrals using antiderivatives.
-
-\section{Intermediate value theorem}
-
-\begin{theorem}{Intermediate value theorem~\citep{wiki}}{}
-    Let \( f: \calD \subseteq \R \to \R \) be continuous on the closed interval \( [a, b] \subseteq \calD \), then \( f \) takes on any given value between \( \func{f}{a} \) and \( \func{f}{b} \) at some point within the interval, i.e.,
-    \vspace{-0.5em}
-    \begin{equation*}
-        \min \set{\func{f}{a}, \func{f}{b}} \leq N \leq \max \set{\func{f}{a}, \func{f}{b}}
-        \implies
-        \exists c \in [a, b] \text{ such that } \func{f}{c} = N
-    \end{equation*}
-\end{theorem}
-
-\section{Wierstrass extreme value theorem}
-
-If a function \( f: \calS \to \R \) is continuous on a set \( \calS \subseteq \R^d \) that is closed and bounded, then \( f \) attains its maximum and minimum values on \( \calS \), i.e., there exist points \( \x_{\min}, \x_{\max} \in \calS \) such that
-\begin{equation*}
-    \func{f}{\x_{\min}} \leq \func{f}{\x} \leq \func{f}{\x_{\max}}, \quad \forall \x \in \calS
-\end{equation*}
-
-\section{Taylor's theorem}
-
-\subsection{Univariate Taylor's theorem}
-
-Let \( f: \R \to \R \) be \( (n+1) \) times continuously differentiable on an interval containing \( a \) and \( x \).
-Then, for some \( \xi \) between \( a \) and \( x \),
-\begin{align*}
-    \func{f}{x}
-    & =
-    \func{f}{a} + f'(a)(x - a) + \frac{f''(a)}{2!}{(x - a)}^2 + \cdots + \frac{f^{(n)}(a)}{n!}{(x - a)}^n + R_{n+1}(x)
-    \\ & =
-    \sum_{k = 0}^{n} \frac{f^{(k)}(a)}{k!} {(x - a)}^k + R_{n+1}(x)
-\end{align*}
-where the remainder term \( R_{n+1}(x) \) is given by the Lagrange form:
-\begin{equation*}
-    R_{n+1}(x) = \frac{f^{(n+1)}(\xi)}{(n+1)!} {(x - a)}^{n+1}
-\end{equation*}
-
-\subsection{Multivariate Taylor's theorem}\label{sec:multivariate-taylor-theorem}
-
-Let \( f: \R^d \to \R \) be \( (n+1) \) times continuously differentiable on an open set containing the line segment between \( \a, \x \in \R^d \).
-Then, for some \( \xi \) between \( 0 \) and \( 1 \),
-\begin{align*}
-    \func{f}{\x}
-    & =
-    \func{f}{\a}
-    + \dotp{\grad{f}{\a}}{\pbrac{\x - \a}}
-    + \frac{1}{2!} \qf{\pbrac{\x - \a}}{\hess{f}{\a}}
-    + \cdots
-    \\ & \quad +
-    \frac{1}{n!} \bbrac{\nabla^{n} \func{f}{\a}} (\x - \a, \ldots, \x - \a) + R_{n+1}(\x)
-    \\ & =
-    \sum_{k = 0}^{n} \frac{1}{k!} \bbrac{\nabla^{k} \func{f}{\a}} (\x - \a, \ldots, \x - \a) + R_{n+1}(\x)
-\end{align*}
-where the remainder term \( R_{n+1}(\x) \) is given by the Lagrange form:
-\begin{equation*}
-    R_{n+1}(\x) = \frac{1}{(n+1)!} \bbrac{\nabla^{n+1} f(\a + \xi (\x - \a))}(\x - \a, \ldots, \x - \a)
-\end{equation*}
-
 \section{Levels of smoothness}
 
 A function \( f: \R^d \to \R \) is said to be of \textbf{class} \( \classC^k \) if all partial derivatives of \( f \) up to and including order \( k \in \N \) exist and are continuous.
@@ -573,6 +481,94 @@ Here, we denote \( f \in \classC^{1}_L \) to mean that \( f \) is \( L \)-smooth
             Follows from \( \func{f}{\x} \pm \frac{L}{2} \norm{\x}^2 \) being convex functions, given \( f \in \classC^{1}_L \).
         \end{proof}
 \end{itemize}
+
+\section{Fundamental theorem of calculus}\label{sec:fundamental-theorem-of-calculus}
+
+\begin{theorem}{First fundamental theorem of calculus~\citep{wiki}}{}
+    Let \( f: [a, b] \to \R \) be a continuous function.
+    Then the function \( F: [a, b] \to \R \) defined by
+    \vspace{-0.5em}
+    \begin{equation*}
+        \func{F}{x} = \int_{a}^{x} \func{f}{t} \, dt
+    \end{equation*}
+
+    \vspace{-0.5em}
+    is continuous on \( [a, b] \), differentiable on \( (a, b) \), and
+    \vspace{-0.5em}
+    \begin{equation*}
+        \func{F'}{x} = \func{f}{x},
+        \quad \forall x \in (a, b)
+    \end{equation*}
+\end{theorem}
+
+This means that the integral of \( f \) defines an antiderivative of \( f \), i.e., an antiderivative of \( f \) can be constructed by integrating \( f \).
+
+\begin{theorem}{Second fundamental theorem of calculus / Newton-Leibniz theorem~\citep{wiki}}{}
+    Let \( f: [a, b] \to \R \) be a continuous function.
+
+    Let \( F \) be any antiderivative of \( f \) on \( [a, b] \), i.e., \( \func{F'}{x} = \func{f}{x}, \; \forall x \in (a, b) \).
+    Then
+    \vspace{-0.5em}
+    \begin{equation*}
+        \int_{a}^{b} \func{f}{x} \, dx = \func{F}{b} - \func{F}{a}
+    \end{equation*}
+\end{theorem}
+
+This tells us that we can evaluate definite integrals using antiderivatives.
+
+\section{Intermediate value theorem}
+
+\begin{theorem}{Intermediate value theorem~\citep{wiki}}{}
+    Let \( f: \calD \subseteq \R \to \R \) be continuous on the closed interval \( [a, b] \subseteq \calD \), then \( f \) takes on any given value between \( \func{f}{a} \) and \( \func{f}{b} \) at some point within the interval, i.e.,
+    \vspace{-0.5em}
+    \begin{equation*}
+        \min \set{\func{f}{a}, \func{f}{b}} \leq N \leq \max \set{\func{f}{a}, \func{f}{b}}
+        \implies
+        \exists c \in [a, b] \text{ such that } \func{f}{c} = N
+    \end{equation*}
+\end{theorem}
+
+\section{Wierstrass extreme value theorem}
+
+\begin{theorem}{Wierstrass extreme value theorem}{}
+    If a function \( f: \calS \to \R \) is continuous on a set \( \calS \subseteq \R^d \) that is closed and bounded, then \( f \) attains its maximum and minimum values on \( \calS \), i.e., there exist points \( \x_{\min}, \x_{\max} \in \calS \) such that
+    \vspace{-0.5em}
+    \begin{equation*}
+        \func{f}{\x_{\min}} \leq \func{f}{\x} \leq \func{f}{\x_{\max}}, \quad \forall \x \in \calS
+    \end{equation*}
+\end{theorem}
+
+\section{Taylor's theorem}\label{sec:taylor-theorem}
+
+\begin{theorem}{Univariate Taylor's theorem}{}
+    Let \( f: \R \to \R \) be \( k \) times continuously differentiable at the point \( a \in \R \).
+    Then, there exists a function \( R_{n+1}: \R \to \R \) such that
+    Then, for some \( \xi \) between \( a \) and \( x \),
+    \begin{equation*}
+        \func{f}{x}
+        =
+        \sum_{k = 0}^{n} \frac{f^{(k)}(a)}{k!} {(x - a)}^k + R_{n+1}(x)
+    \end{equation*}
+\end{theorem}
+
+\begin{theorem}{Multivariate Taylor's theorem}{}
+    Let \( f: \R^d \to \R \) be \( (n+1) \) times continuously differentiable on an open set containing the line segment between \( \a, \x \in \R^d \).
+    Then, for some \( \xi \) between \( 0 \) and \( 1 \),
+    \begin{align*}
+        \func{f}{\x}
+        & =
+        \func{f}{\a}
+        + \dotp{\grad{f}{\a}}{\pbrac{\x - \a}}
+        + \frac{1}{2!} \qf{\pbrac{\x - \a}}{\hess{f}{\a}}
+        + \cdots
+        \\ & \quad +
+        \frac{1}{n!} \bbrac{\nabla^{n} \func{f}{\a}} (\x - \a, \ldots, \x - \a) + R_{n+1}(\x)
+        \\ & =
+        \sum_{k = 0}^{n} \frac{1}{k!} \bbrac{\nabla^{k} \func{f}{\a}} (\x - \a, \ldots, \x - \a) + R_{n+1}(\x)
+    \end{align*}
+\end{theorem}
+
+\subsection{Forms of the remainder term}
 
 \chapter{Linear algebra}
 

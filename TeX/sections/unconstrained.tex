@@ -128,7 +128,7 @@ Assume \( f \in \classC^2 \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dot
 \end{corollary}
 
 \begin{proof}
-    Since \( f \in \classC^1 \), from Taylor's theorem~\psecref{sec:multivariate-taylor-theorem}, there exists a \( \delta_1 > 0 \) such that
+    Since \( f \in \classC^1 \), from Taylor's theorem~\psecref{sec:taylor-theorem}, there exists a \( \delta_1 > 0 \) such that
     \begin{equation*}
         \func{f}{\x}
         =
@@ -210,7 +210,7 @@ Assume \( f \in \classC^2 \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dot
 \begin{proof}
     \( \because \classC^2 \subseteq \classC^1 \), by the first-order necessary condition for optimality~\pthmref{thm:first-order-necessary-condition-for-a-local-minimum}, \( \grad{f}{\xstar} = \zero \).
 
-    Since \( f \in \classC^2 \), from Taylor's theorem~\psecref{sec:multivariate-taylor-theorem}, there exists a \( \delta_1 > 0 \) such that
+    Since \( f \in \classC^2 \), from Taylor's theorem~\psecref{sec:taylor-theorem}, there exists a \( \delta_1 > 0 \) such that
     \begin{equation*}
         \func{f}{\x}
         =
@@ -1458,7 +1458,7 @@ For a convex quadratic function \( f: \R^d \to \R \), the conjugate direction me
         \quad \forall k \in \set{1, 2, \ldots, d}
     \end{equation*}
 
-    Applying Taylor's theorem~\psecref{sec:multivariate-taylor-theorem} to \( g \) at \( \gamma^{(k)} = \zero \), we have
+    Applying Taylor's theorem~\psecref{sec:taylor-theorem} to \( g \) at \( \gamma^{(k)} = \zero \), we have
     \begin{align*}
         \func{g}{\gamma^{(k)}}
         & =
@@ -2878,7 +2878,7 @@ Thereby, we have \( \hess{f}{\x^k} \succ \zero \) throughout the iterations, ens
 
 \chapter{Quasi-Newton methods}
 
-From Taylor's theorem~\psecref{sec:multivariate-taylor-theorem}, we have
+From Taylor's theorem~\psecref{sec:taylor-theorem}, we have
 \begin{equation*}
     \grad{f}{\y}
     =
@@ -2956,7 +2956,7 @@ Consider the update
     \Return{\( \x^k \)\;}
 \end{algorithm}
 
-Note that, for strongly convex quadratic functions~\psecref{sec:strongly-convex-quadratic-minimisation-problem}, from Taylor's theorem~\psecref{sec:multivariate-taylor-theorem}, we have
+Note that, for strongly convex quadratic functions~\psecref{sec:strongly-convex-quadratic-minimisation-problem}, from Taylor's theorem~\psecref{sec:taylor-theorem}, we have
 \begin{align*}
     \because
     \grad{f}{\y}
