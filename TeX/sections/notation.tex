@@ -83,15 +83,16 @@
 (Landau's notation~\cite{apostol1991calculus})
 A function \( f: \R^d \to \R \) is said to be in \( \smalloh{g(\x)} \) as \( \x \to \x_0 \), for some function \( g: \R^d \to \R \), \( g(\x) \neq 0 \) in a neighborhood of \( \x_0 \), if
 \begin{equation*}
-    f \in \smalloh{g}
-    \quad \iff \quad
+    f \in \smalloh{g},
+    \; \x \to \x_0
+    \;\; \iff \;\;
     \lim_{\x \to \x_0} \frac{f(\x)}{g(\x)} = 0
-    \quad \iff \quad
+    \;\; \iff \;\;
     \forall \epsilon > 0,
     \exists \delta > 0,
     \text{ s.t. }
     \abs{\frac{f(\x)}{g(\x)}} < \epsilon,
-    \quad \forall \x \in B_{\delta}(\x_0) \setminus \set{\x_0}
+    \; \forall \x \in B_{\delta}(\x_0) \setminus \set{\x_0}
 \end{equation*}
 
 \subsection{Properties}

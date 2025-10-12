@@ -540,35 +540,120 @@ This tells us that we can evaluate definite integrals using antiderivatives.
 
 \section{Taylor's theorem}\label{sec:taylor-theorem}
 
-\begin{theorem}{Univariate Taylor's theorem}{}
-    Let \( f: \R \to \R \) be \( k \) times continuously differentiable at the point \( a \in \R \).
-    Then, there exists a function \( R_{n+1}: \R \to \R \) such that
-    Then, for some \( \xi \) between \( a \) and \( x \),
-    \begin{equation*}
-        \func{f}{x}
-        =
-        \sum_{k = 0}^{n} \frac{f^{(k)}(a)}{k!} {(x - a)}^k + R_{n+1}(x)
-    \end{equation*}
-\end{theorem}
-
-\begin{theorem}{Multivariate Taylor's theorem}{}
-    Let \( f: \R^d \to \R \) be \( (n+1) \) times continuously differentiable on an open set containing the line segment between \( \a, \x \in \R^d \).
-    Then, for some \( \xi \) between \( 0 \) and \( 1 \),
+\begin{theorem}{(Univariate) Taylor's theorem~\cite{wiki}}{}
+    Let \( f: \R \to \R \) be \( k \) times differentiable at the point \( a \in \R, \; k \in \N_{\geq 1} \).
+    Then we have
+    \vspace{-0.5em}
     \begin{align*}
-        \func{f}{\x}
+        \func{f}{x}
         & =
-        \func{f}{\a}
-        + \dotp{\grad{f}{\a}}{\pbrac{\x - \a}}
-        + \frac{1}{2!} \qf{\pbrac{\x - \a}}{\hess{f}{\a}}
-        + \cdots
-        \\ & \quad +
-        \frac{1}{n!} \bbrac{\nabla^{n} \func{f}{\a}} (\x - \a, \ldots, \x - \a) + R_{n+1}(\x)
-        \\ & =
-        \sum_{k = 0}^{n} \frac{1}{k!} \bbrac{\nabla^{k} \func{f}{\a}} (\x - \a, \ldots, \x - \a) + R_{n+1}(\x)
+        \func{P_k}{x}
+        +
+        \func{R_k}{x},
+        \\
+        \func{P_k}{x}
+        & \triangleq
+        \sum_{i = 0}^{k}
+        \frac{\func{f^{(i)}}{a}}{i!} \pbrac{x - a}^i
+        \tag{\textbf{\( k \)-th order Taylor polynomial of \( f \) at point \( a \)}}
+        \\
+        \implies
+        \func{R_k}{x}
+        & \in
+        \smalloh{\abs{x - a}^k},
+        \quad x \to a
     \end{align*}
 \end{theorem}
 
-\subsection{Forms of the remainder term}
+\begin{theorem}{(Multivariate) Taylor's theorem~\cite{wiki}}{}
+    Let \( f: \R^d \to \R \) be \( k \) times continuously differentiable at the point \( \a \in \R^d, \; k \in \N_{\geq 1} \).
+    Then there exist functions \( h_{\alpha}: \R^d \to \R, \; \abs{\alpha} = k \) such that
+    \vspace{-0.5em}
+    \begin{equation*}
+        \func{f}{\x}
+        =
+        \sum_{\abs{\alpha} \leq k}
+        \frac
+        {D^{\alpha} \func{f}{\a}}
+        {\alpha!}
+        \pbrac{\x - \a}^{\alpha}
+        +
+        \sum_{\abs{\alpha} = k}
+        \func{h_{\alpha}}{\x}
+        \pbrac{\x - \a}^{\alpha},
+        \quad
+        \lim_{\x \to \a} \func{h_{\alpha}}{\x} = 0
+    \end{equation*}
+\end{theorem}
+
+\subsection{Forms of the remainder}
+
+\subsubsection{Peano form of the remainder}
+
+\begin{equation*}
+    \exists
+    h_k: \R \to \R
+    \text{ such that }
+    \func{f}{x}
+    =
+    \func{P_k}{x}
+    +
+    \func{h_k}{x} \pbrac{x - a}^k,
+    \quad
+    \lim_{x \to a} \func{h_k}{x} = 0
+\end{equation*}
+
+\subsubsection{Mean-value forms of the remainder}
+
+Assumes \( f \) is \( (k+1) \) times differentiable on the open interval between \( a \) and \( x \), with \( f^{(k)} \) continuous on the closed interval between \( a \) and \( x \).
+\begin{align*}
+    \func{R_k}{x}
+    & =
+    \frac
+    {\func{f^{(k+1)}}{\xi_L}}
+    {(k+1)!}
+    \pbrac{x - a}^{k+1},
+    \quad \xi_L \in \R
+    \text{ between } a \text{ and } x
+    \tag{\textbf{Lagrange form}}
+    \\
+    \func{R_k}{x}
+    & =
+    \frac
+    {\func{f^{(k+1)}}{\xi_C}}
+    {k!}
+    \pbrac{x - \xi_C}^k
+    \pbrac{x - a},
+    \quad \xi_C \in \R
+    \text{ between } a \text{ and } x
+    \tag{\textbf{Cauchy form}}
+    \\
+    \func{R_k}{x}
+    & =
+    \frac
+    {\func{f^{(k+1)}}{\xi_S}}
+    {k!}
+    \pbrac{x - \xi_S}^{k + 1 - p}
+    \frac{\pbrac{x - a}^p}{p},
+    \quad p > 0,
+    \; \xi_S \in \R
+    \text{ between } a \text{ and } x
+    \tag{\textbf{Schl\"omilch form}}
+\end{align*}
+Lagrange and Cauchy form are special cases of Schl\"omilch form with \( p = k + 1 \) and \( p = 1 \), respectively.
+
+\subsubsection{Integral form of the remainder}
+
+Assumes \( f^{(k)} \) is absolutely continuous on the closed interval between \( a \) and \( x \), which implies that \( f^{(k+1)} \) exists almost everywhere on the interval and is integrable.
+\begin{equation*}
+    \func{R_k}{x}
+    =
+    \frac{1}{k!}
+    \int_{a}^{x}
+    \func{f^{(k+1)}}{t}
+    \pbrac{x - t}^k
+    \, dt
+\end{equation*}
 
 \chapter{Linear algebra}
 
