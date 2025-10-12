@@ -114,3 +114,45 @@ A function \( f: \R^d \to \R \) is said to be in \( \smalloh{g(\x)} \) as \( \x 
 
     \item \( \alpha > \beta > 0 \implies \norm{\x - \x_0}^\alpha \in \smalloh{\norm{\x - \x_0}^\beta} \text{ as } \x \to \x_0 \).
 \end{itemize}
+
+\section{Multi-index notation}\label{sec:multi-index-notation}
+
+A \( d \)--dimensional multi-index \( \alpha \) is an ordered \( d \)-tuple of non-negative integers, i.e.,
+\begin{equation*}
+    \alpha
+    =
+    (\alpha_1, \alpha_2, \ldots, \alpha_d),
+    \; \alpha_i \in \N,
+    \; i \in \set{1, 2, \ldots, d}
+\end{equation*}
+
+\begin{align*}
+    \abs{\alpha}
+    & =
+    \sum_{i = 1}^{d} \alpha_i
+    =
+    \alpha_1 + \alpha_2 + \cdots + \alpha_d
+    \\
+    \alpha!
+    & =
+    \prod_{i = 1}^{d} \alpha_i!
+    \alpha_1! \cdot \alpha_2! \cdots \alpha_d!
+    \\
+    \x^{\alpha}
+    & =
+    \prod_{i = 1}^{d} x_i^{\alpha_i}
+    =
+    x_1^{\alpha_1} \cdot x_2^{\alpha_2} \cdots x_d^{\alpha_d},
+    \quad \x \in \R^d
+    \\
+    \partial^{\alpha}
+    &
+    =
+    \frac
+    {\partial^{\abs{\alpha}}}
+    {\partial x_1^{\alpha_1} \partial x_2^{\alpha_2} \cdots \partial x_d^{\alpha_d}}
+    =
+    \frac
+    {\partial^{\alpha_1 + \alpha_2 + \cdots + \alpha_d}}
+    {\partial x_1^{\alpha_1} \partial x_2^{\alpha_2} \cdots \partial x_d^{\alpha_d}}
+\end{align*}

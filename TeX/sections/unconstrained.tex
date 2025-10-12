@@ -3997,3 +3997,25 @@ The Broyden family of updates is given by
         }
     }
 \end{equation*}
+
+Thereby, the Broyden family is of the form
+\begin{equation*}
+    \A_{k+1}
+    =
+    \A_k + \phi \B_k \D \B_k^\top,
+    \qquad
+    \B_k
+    =
+    \begin{bmatrix}
+        \boldsymbol{\delta}_k & \A_k \, \boldsymbol{\gamma}_k
+    \end{bmatrix}_{d \times 2},
+    \quad
+    \D
+    =
+    \begin{bmatrix}
+        \beta_1 & \beta_2 \\
+        \beta_3 & \beta_4
+    \end{bmatrix}_{2 \times 2} \in \R^{2 \times 2},
+    \quad
+    \phi \in [0, 1]
+\end{equation*}
