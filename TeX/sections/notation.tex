@@ -117,10 +117,10 @@ A function \( f: \R^d \to \R \) is said to be in \( \smalloh{g(\x)} \) as \( \x 
 
 \section{Multi-index notation}\label{sec:multi-index-notation}
 
-A \( d \)--dimensional multi-index \( \alpha \) is an ordered \( d \)-tuple of non-negative integers, i.e.,
+A \( d \)--dimensional \textbf{multi-index} \( \alpha \) is an ordered \( d \)-tuple of non-negative integers, i.e.,
 \begin{equation*}
     \alpha
-    =
+    \triangleq
     (\alpha_1, \alpha_2, \ldots, \alpha_d),
     \; \alpha_i \in \N,
     \; i \in \set{1, 2, \ldots, d}
@@ -128,26 +128,26 @@ A \( d \)--dimensional multi-index \( \alpha \) is an ordered \( d \)-tuple of n
 
 \begin{align*}
     \abs{\alpha}
-    & =
+    & \triangleq
     \sum_{i = 1}^{d} \alpha_i
     =
     \alpha_1 + \alpha_2 + \cdots + \alpha_d
     \\
     \alpha!
-    & =
+    & \triangleq
     \prod_{i = 1}^{d} \alpha_i!
+    =
     \alpha_1! \cdot \alpha_2! \cdots \alpha_d!
     \\
-    \x^{\alpha}
-    & =
+    {\x}^{\alpha}
+    & \triangleq
     \prod_{i = 1}^{d} x_i^{\alpha_i}
     =
     x_1^{\alpha_1} \cdot x_2^{\alpha_2} \cdots x_d^{\alpha_d},
     \quad \x \in \R^d
     \\
     \partial^{\alpha}
-    &
-    =
+    & \triangleq
     \frac
     {\partial^{\abs{\alpha}}}
     {\partial x_1^{\alpha_1} \partial x_2^{\alpha_2} \cdots \partial x_d^{\alpha_d}}

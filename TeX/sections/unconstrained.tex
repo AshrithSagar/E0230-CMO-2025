@@ -136,7 +136,7 @@ Assume \( f \in \classC^2 \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dot
         + \dotp{\grad{f}{\xstar}}{\pbrac{\x - \xstar}},
         \quad \forall \x \in B_{\delta_1}(\xstar)
     \end{equation*}
-    Since \( \xstar \) is a local minimum, there exists a \( \delta_2 > 0 \) by~\pdefref{def:local-minimum} such that
+    Since \( \xstar \) is a local minimum, there exists a \( \delta_2 > 0 \) by~\pdefref{def:local-minimum-unconstrained} such that
     \begin{equation*}
         \func{f}{\xstar}
         \leq
@@ -162,7 +162,7 @@ Assume \( f \in \classC^2 \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dot
 
 \subsection{Strict local minimum}
 
-\begin{definition}{Strict local minimum}{}
+\begin{definition}{Strict local minimum}{strict-local-minimum-unconstrained}
     The point \( \xstar \in \R^d \) is a \textbf{strict local minimum} of the function \( f: \R^d \to \R \) if there exists a \( \delta > 0 \) such that for all \( \x \in \R^d \) in the \( \delta \)-neighborhood of \( \xstar \) except \( \xstar \) itself, we have \( \func{f}{\xstar} < \func{f}{\x} \), i.e.,
     \vspace{-0.5em}
     \begin{equation*}
@@ -219,7 +219,7 @@ Assume \( f \in \classC^2 \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dot
         + \half \qf{\pbrac{\x - \xstar}}{\hess{f}{\xstar}},
         \quad \forall \x \in B_{\delta_1}(\xstar)
     \end{equation*}
-    Since \( \xstar \) is a local minimum, there exists a \( \delta_2 > 0 \) by~\pdefref{def:local-minimum} such that
+    Since \( \xstar \) is a local minimum, there exists a \( \delta_2 > 0 \) by~\pdefref{def:local-minimum-unconstrained} such that
     \begin{equation*}
         \func{f}{\xstar}
         \leq
@@ -243,17 +243,23 @@ Assume \( f \in \classC^2 \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dot
         \quad \forall \x \in B_{\delta}(\xstar)
     \end{align*}
     Setting \( \x = \xstar + t \p, \; t \in (0, \delta / \norm{\p}) \), we can see that \( \x \in B_{\delta}(\xstar) \) for all \( \p \in \R^d \setminus \set{\zero} \).
-    \begin{equation*}
+    \begin{align*}
         \implies
         0
         \leq
         \qf{(t \p)}{\hess{f}{\xstar}}
-        =
+        & =
         t^2 \qf{\p}{\hess{f}{\xstar}},
         \quad \forall t \in (0, \delta / \norm{\p}),
         \; \p \in \R^d \setminus \set{\zero}
-    \end{equation*}
-    This is possible only if \( \qf{\p}{\hess{f}{\xstar}} \geq 0, \; \forall \p \in \R^d \setminus \set{\zero} \implies \hess{f}{\xstar} \succeq \zero \).
+        \\
+        \implies
+        \qf{\p}{\hess{f}{\xstar}}
+        & \geq 0,
+        \quad \forall \p \in \R^d \setminus \set{\zero}
+        \implies
+        \hess{f}{\xstar} \succeq \zero
+    \end{align*}
 \end{proof}
 
 \subsection{Second-order sufficient condition for a strict local minimum}
@@ -261,6 +267,57 @@ Assume \( f \in \classC^2 \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dot
 \begin{theorem}{Second-order sufficient condition for a strict local minimum}{}
     For a function \( f \in \classC^2 \) such that \( \grad{f}{\xstar} = \zero, \; \hess{f}{\xstar} \succ \zero \), then \( \xstar \) is a strict local minimum of \( f \).
 \end{theorem}
+
+\begin{proof}
+    Since \( f \in \classC^2 \), from Taylor's theorem~\psecref{sec:taylor-theorem}, there exists a \( \delta_1 > 0 \) and \( \xi \in (0, 1) \) such that
+    \begin{equation*}
+        \func{f}{\x}
+        =
+        \func{f}{\xstar}
+        + \cancel{\dotp{\grad{f}{\xstar}}{\pbrac{\x - \xstar}}}
+        + \half \qf{\pbrac{\x - \xstar}}{\hess{f}{\xstar + \xi (\x - \xstar)}},
+        \quad \forall \x \in B_{\delta_1}(\xstar)
+    \end{equation*}
+    Since \( \hess{f}{\xstar} \succ \zero \), and by the continuity of the Hessian, \( \exists \delta_2 > 0 \) such that \( \hess{f}{\z} \succ \zero, \; \forall \z \in B_{\delta_2}(\xstar) \).
+    Setting \( \delta = \min(\delta_1, \delta_2) > 0 \), we have
+    \begin{align*}
+        \func{f}{\x}
+        & =
+        \func{f}{\xstar}
+        + \half \qf{\pbrac{\x - \xstar}}{\hess{f}{\xstar + \xi (\x - \xstar)}},
+        \quad \forall \x \in B_{\delta}(\xstar),
+        \quad \because \delta \leq \delta_1
+        \\
+        \because \;
+        &
+        \xstar + \xi (\x - \xstar)
+        \in
+        B_{\delta}(\xstar),
+        \quad \forall \x \in B_{\delta}(\xstar),
+        \quad \because \xi \in (0, 1)
+        \\
+        \implies
+        &
+        \hess{f}{\xstar + \xi (\x - \xstar)}
+        \succ \zero,
+        \quad \forall \x \in B_{\delta}(\xstar),
+        \quad \because \delta \leq \delta_2
+        \\
+        \implies
+        &
+        \half \qf{\pbrac{\x - \xstar}}{\hess{f}{\xstar + \xi (\x - \xstar)}}
+        > 0,
+        \quad \forall \x \in B_{\delta}(\xstar) \setminus \set{\xstar}
+        \\
+        \implies
+        &
+        \func{f}{\x}
+        >
+        \func{f}{\xstar},
+        \quad \forall \x \in B_{\delta}(\xstar) \setminus \set{\xstar}
+    \end{align*}
+    which is the definition of a strict local minimum~\pdefref{def:strict-local-minimum-unconstrained}.
+\end{proof}
 
 \subsection{First-order sufficient condition for a global minimum under convexity}
 
