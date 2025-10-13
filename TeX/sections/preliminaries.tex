@@ -32,6 +32,31 @@ A \textbf{normed vector space} \( (\V, \norm{\,\cdot\,}) \) is a vector space \(
     \item \textit{Triangle inequality}: \( \norm{\u + \v} \leq \norm{\u} + \norm{\v} \)
 \end{itemize}
 
+\paragraph{Properties}
+
+\begin{itemize}
+    \item (Reverse triangle inequality) \( \abs{\norm{\u} - \norm{\v}} \leq \norm{\u - \v} \)
+
+    \item (Cauchy-Schwarz inequality~\psecref{sec:cauchy-schwarz-inequality}) \( \abs{\dotp{\u}{\v}} \leq \norm{\u} \, \norm{\v} \)
+
+    \item (Parallelogram law) \( \norm{\u + \v}^2 + \norm{\u - \v}^2 = 2 \, (\norm{\u}^2 + \norm{\v}^2) \)
+
+    \item \( \norm{\u - \v}^2 = \norm{\u}^2 + \norm{\v}^2 - 2 \, \dotp{\u}{\v} \)
+
+    \item \( \norm{\u + \v}^2 = \norm{\u}^2 + \norm{\v}^2 + 2 \, \dotp{\u}{\v} \)
+
+    \item (Polarisation identity)
+        \begin{equation*}
+            \dotp{\u}{\v}
+            =
+            \frac{1}{4} \pbrac{\norm{\u + \v}^2 - \norm{\u - \v}^2}
+            =
+            \frac{1}{2} \pbrac{\norm{\u}^2 + \norm{\v}^2 - \norm{\u - \v}^2}
+            =
+            \frac{1}{2} \pbrac{\norm{\u + \v}^2 - \norm{\u}^2 - \norm{\v}^2}
+        \end{equation*}
+\end{itemize}
+
 \subsection{\texorpdfstring{\( L_p \) norm}{Lp norm}}
 
 \begin{equation*}
@@ -179,7 +204,7 @@ For \( \A \in \SD, \norm{\A}_2 = \rho(\A) = \abs{\lambda_{\max}(\A)} \).
     \norm{\operatorname{vec}(\A)}_2
 \end{equation*}
 
-The vector \( \operatorname{vec}(\A) \) is the \textbf{vectorization} of matrix \( \A \), obtained by stacking its columns into a single column vector, i.e.,
+The vector \( \operatorname{vec}(\A) \) is the \textbf{vectorisation} of matrix \( \A \), obtained by stacking its columns into a single column vector, i.e.,
 \begin{equation*}
     \A
     =
@@ -395,16 +420,68 @@ A function \( f: \calD \subseteq \R^d \to \R \) is \textbf{continuous} at a poin
 
 The \textbf{derivative} of a function \( f: \R \to \R \) at a point \( x \in \R \) is defined as
 \begin{equation*}
-    f'(x) = \lim_{h \to 0} \frac{\func{f}{x + h} - \func{f}{x}}{h}
+    \func{\frac{df}{dx}}{x}
+    =
+    \func{f'}{x}
+    \triangleq
+    \lim_{h \to 0} \frac{\func{f}{x + h} - \func{f}{x}}{h}
 \end{equation*}
 
-The \textbf{gradient} of a function \( f: \R^d \to \R \) at a point \( \x = \bbrac{x_1, x_2, \ldots, x_d}^\top \in \R^d \) is defined as
+The \textbf{partial derivative} of a function \( f: \R^d \to \R \) with respect to the \( i^{\text{th}} \) dimension at a point \( \x = \bbrac{x_1, x_2, \ldots, x_d}^\top \in \R^d \) is defined as
 \begin{equation*}
-    \grad{f}{\x} = \pbrac{\frac{\partial f}{\partial x_1}(\x), \frac{\partial f}{\partial x_2}(\x), \ldots, \frac{\partial f}{\partial x_d}(\x)}^\top
+    \func{\frac{\partial f}{\partial x_i}}{\x}
+    \triangleq
+    =
+    \lim_{h \to 0} \frac{\func{f}{x_1, x_2, \ldots, x_i + h, \ldots, x_d} - \func{f}{x_1, x_2, \ldots, x_i, \ldots, x_d}}{h}
+    =
+    \lim_{h \to 0} \frac{\func{f}{\x + h \e_i} - \func{f}{\x}}{h}
+\end{equation*}
+where \( \e_i \) is the \( i^{\text{th}} \) standard basis vector in \( \R^d \).
+
+The \textbf{gradient} \( \nabla\!f: \R^d \to \R^d \) of a function \( f: \R^d \to \R \) at a point \( \x = \bbrac{x_1, x_2, \ldots, x_d}^\top \in \R^d \) where \( f \) is differentiable is given by
+\begin{equation*}
+    \grad{f}{\x}
+    =
+    \begin{bmatrix}
+        \func{\cfrac{\partial f}{\partial x_1}}{\x}
+        &
+        \func{\cfrac{\partial f}{\partial x_2}}{\x}
+        &
+        \cdots
+        &
+        \func{\cfrac{\partial f}{\partial x_d}}{\x}
+    \end{bmatrix}^\top
     \in \R^d
 \end{equation*}
 
-The \textbf{Hessian} of a function \( f: \R^d \to \R \) at a point \( \x = \bbrac{x_1, x_2, \ldots, x_d}^\top \in \R^d \) is defined as
+The \textbf{directional derivative} \( \nabla_{\v} f: \R^d \to \R \) of a function \( f: \R^d \to \R \) along the vector \( \v \in \R^d \) is defined as
+\begin{equation*}
+    \func{\nabla_{\v} f}{\x}
+    \triangleq
+    \lim_{h \to 0} \frac{\func{f}{\x + h \v} - \func{f}{\x}}{h \norm{\v}}
+    =
+    \frac{1}{\norm{\v}}
+    \frac{d}{dt} \func{f}{\x + t \v} \Big|_{t = 0}
+    =
+    \frac{\dotp{\grad{f}{\x}}{\v}}{\norm{\v}}
+\end{equation*}
+
+\paragraph{Properties}
+
+\begin{itemize}
+    \item The gradient \( \grad{f}{\x} \) points in the direction of the steepest ascent of \( f \) at \( \x \), and the negative gradient \( -\grad{f}{\x} \) points in the direction of the steepest descent of \( f \) at \( \x \).
+        \begin{equation*}
+            \argmax_{\v \in \R^d} \func{\nabla_{\v} f}{\x}
+            =
+            \grad{f}{\x},
+            \qquad \qquad
+            \argmin_{\v \in \R^d} \func{\nabla_{\v} f}{\x}
+            =
+            -\grad{f}{\x}
+        \end{equation*}
+\end{itemize}
+
+The \textbf{Hessian} \( \nabla^2\!f: \R^d \to \R^{d \times d} \) of a function \( f: \R^d \to \R \) at a point \( \x = \bbrac{x_1, x_2, \ldots, x_d}^\top \in \R^d \) where \( f \) is twice differentiable is given by
 \begin{equation*}
     \hess{f}{\x} =
     \begin{bmatrix}
