@@ -1,6 +1,11 @@
 """
-base.py\\
+base.py
+=======
 Base templates for algorithms
+
+References
+-------
+- Nocedal, J., & Wright, S. J. (2006). Numerical optimization. Springer.
 """
 
 import math

@@ -1,5 +1,6 @@
 """
-types.py\\
+types.py
+=======
 Type aliases and utility types
 """
 
