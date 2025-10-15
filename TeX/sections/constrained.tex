@@ -85,6 +85,60 @@ A constrained optimisation problem can be put into the following form
 
 The functions \( g_i \) are called \textbf{inequality constraints} and the functions \( h_j \) are called \textbf{equality constraints}.
 
+\section{Projection onto a convex set}
+
+\begin{definition}{Projection onto a convex set}{}
+    The \textbf{projection} \( P_{\calC}: \R^d \to \calC \) of a point \( \x \in \R^d \) onto a non-empty, closed, convex set \( \calC \subseteq \R^d \) is defined as
+    \vspace{-0.5em}
+    \begin{equation*}
+        \func{P_{\calC}}{\x}
+        \triangleq
+        \argmin_{\z \in \calC}
+        \half \norm{\x - \z}^2
+    \end{equation*}
+\end{definition}
+
+From the definition, we can see that the following holds true:
+\begin{itemize}
+    \item The projection always exists since \( \calC \) is non-empty and closed.
+
+    \item The projection is unique since \( \calC \) is convex.
+
+    \item \( \func{P_{\calC}}{\x} \in \calC, \; \forall \x \in \R^d \).
+
+    \item \( \func{P_{\calC}}{\x} \) is the point in \( \calC \) closest to \( \x \).
+
+    \item \( \func{P_{\calC}}{\x} = \x, \; \forall \x \in \calC \).
+\end{itemize}
+
+\begin{theorem}{Characterisation of projection onto a convex set}{}
+    Let \( \calC \subseteq \R^d \) be a non-empty, closed, convex set.
+    The projection \( \func{P_{\calC}}{\x} \) exists and is unique for any \( \x \in \R^d \).
+    Furthermore, \( \z = \func{P_{\calC}}{\x} \) if and only if \( \dotp{\pbrac{\x - \z}}{\pbrac{\y - \z}} \leq 0, \; \forall \y \in \calC \).
+\end{theorem}
+
+\begin{proof}
+    Let \( \z = \func{P_{\calC}}{\x} \).
+    Since \( \calC \) is non-empty and closed, the projection exists.
+    Since \( \calC \) is convex, the projection is unique.
+
+    For any \( \y \in \calC, \; t \in (0, 1) \), we have \( \z + t(\y - \z) \in \calC \).
+    Thus,
+    \begin{align*}
+        &
+        \half \norm{\x - \z}^2
+        \leq
+        \half \norm{\x - (\z + t(\y - \z))}^2
+        =
+        \half \norm{(\x - \z) - t(\y - \z)}^2
+        \\ &
+        0
+        \leq
+        -2t\dotp{\pbrac{\x - \z}}{\pbrac{\y - \z}} + t^2\norm{\y - \z}^2
+    \end{align*}
+    Dividing by \( t > 0 \) and letting \( t \to 0^+ \), we get \( 0 \leq -2\dotp{\pbrac{\x - \z}}{\pbrac{\y - \z}} \), i.e., \( \dotp{\pbrac{\x - \z}}{\pbrac{\y - \z}} \leq 0, \; \forall \y \in \calC. \)
+\end{proof}
+
 \section{Separating hyperplane theorem}
 
 \begin{theorem}{Separating hyperplane theorem}{separating-hyperplane-theorem}
