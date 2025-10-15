@@ -8,9 +8,6 @@ import numpy as np
 
 from .types import floatVec
 
-ORACLE_CACHE: bool = False
-"""Cache the results of the oracle calls."""
-
 
 class FirstOrderOracle:
     """
@@ -19,7 +16,7 @@ class FirstOrderOracle:
     `f(x), f'(x) = oracle(SRN, x)`
     """
 
-    def __init__(self, oracle, dim: int, cache_digits: int = 32):
+    def __init__(self, oracle, dim: int):
         self.oracle = oracle
         """
         The oracle function to be wrapped.
@@ -35,48 +32,29 @@ class FirstOrderOracle:
         This is useful for the 'analytical complexity' of the algorithms.
         """
 
-        self.cache: dict[tuple[float], tuple[float, floatVec]] = {}
-        """Cache the results of the oracle function."""
-
-        self.cache_digits = cache_digits
-        """
-        Number of digits to round `x` for caching results.
-        This is useful to avoid floating-point precision issues when caching results.
-        """
-
     def __call__(self, x: floatVec) -> tuple[float, floatVec]:
-        """Evaluates the oracle function at `x`, using cache if available."""
+        """Evaluates the oracle function at `x`."""
         x = np.asarray(x, dtype=float)
         assert x.shape == (self.dim,), f"x must be of shape ({self.dim},)"
-
-        # Round for stable caching, and hash as a tuple
-        x_key = tuple(np.round(x, self.cache_digits))
-        if ORACLE_CACHE:
-            if x_key in self.cache:
-                return self.cache[x_key]
 
         fx, dfx = self.oracle(x)
         self.call_count += 1
 
-        if ORACLE_CACHE:
-            self.cache[x_key] = (fx, dfx)
-
         return fx, dfx
 
     def reset(self) -> "FirstOrderOracle":
-        """Resets the internal call count and cache."""
+        """Resets the internal call count."""
         self.call_count = 0
-        self.cache.clear()
         return self
 
     @classmethod
-    def from_separate(cls, f_fn, grad_fn, dim: int, cache_digits: int = 32):
+    def from_separate(cls, f_fn, grad_fn, dim: int) -> "FirstOrderOracle":
         """Construct an oracle from separate f(x) and f'(x) functions."""
 
         def oracle(srn: int, x: floatVec) -> tuple[float, floatVec]:
             return f_fn(srn, x), grad_fn(srn, x)
 
-        return cls(oracle, dim=dim, cache_digits=cache_digits)
+        return cls(oracle, dim=dim)
 
 
 class ConvexQuadraticOracle(FirstOrderOracle):

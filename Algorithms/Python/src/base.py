@@ -105,9 +105,6 @@ class IterativeOptimiser:
         self.maxiter = maxiter
         self.tol = tol
 
-        # Set oracle_fn's cache_digits in order of tol
-        oracle_fn.cache_digits = int(-np.log10(tol)) + 1
-
         console = Console()
         console.print(f"[bold blue]{self.name}[/]")
         if show_params:
