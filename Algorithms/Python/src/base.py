@@ -1,5 +1,5 @@
 """
-base.py
+src/base.py
 =======
 Base templates for algorithms
 
@@ -354,6 +354,19 @@ class ExactLineSearchMixin(LineSearchOptimiser):
 
 
 # ---------- Optimiser Implementations ----------
+class SteepestGradientDescent(SteepestDescentDirectionMixin, IterativeOptimiser):
+    """
+    Steepest gradient descent.
+
+    `x_{k+1} = x_k - alpha_k * f'(x_k)`
+    """
+
+    def step(self, x, k, f, grad, oracle_fn):
+        p_k = self.direction(x, grad)
+        alpha_k = 1e-3
+        return x + alpha_k * p_k
+
+
 class SteepestGradientDescentExactLineSearch(
     SteepestDescentDirectionMixin, ExactLineSearchMixin, LineSearchOptimiser
 ):

@@ -1,5 +1,5 @@
 """
-oracle.py
+src/oracle.py
 =======
 Oracle utils
 """
@@ -13,14 +13,14 @@ class FirstOrderOracle:
     """
     A wrapper class around the provided `oracle` function.
 
-    `f(x), f'(x) = oracle(SRN, x)`
+    `f(x), f'(x) = oracle(x)`
     """
 
     def __init__(self, oracle, dim: int):
         self.oracle = oracle
         """
         The oracle function to be wrapped.
-        It should be of the form `f(x), f'(x) = oracle(SRN, x)`.
+        It should be of the form `f(x), f'(x) = oracle(x)`.
         """
 
         self.dim = dim
@@ -51,8 +51,8 @@ class FirstOrderOracle:
     def from_separate(cls, f_fn, grad_fn, dim: int) -> "FirstOrderOracle":
         """Construct an oracle from separate f(x) and f'(x) functions."""
 
-        def oracle(srn: int, x: floatVec) -> tuple[float, floatVec]:
-            return f_fn(srn, x), grad_fn(srn, x)
+        def oracle(x: floatVec) -> tuple[float, floatVec]:
+            return f_fn(x), grad_fn(x)
 
         return cls(oracle, dim=dim)
 

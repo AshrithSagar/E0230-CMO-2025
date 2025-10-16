@@ -3,7 +3,7 @@ name = "E0230-CMO-2025"
 version = "0.1.0"
 description = "Algorithms"
 authors = [{ name = "Ashrith Sagar", email = "ashrithy@iisc.ac.in" }]
-readme = "../README.md"
+readme = "./README.md"
 requires-python = ">=3.13"
 dependencies = [
     "matplotlib>=3.10.5",
@@ -12,7 +12,12 @@ dependencies = [
     "scipy>=1.15.3",
 ]
 
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 [dependency-groups]
-dev = [
-    "jupyter>=1.1.1",
-]
+dev = ["jupyter>=1.1.1"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]
