@@ -3,8 +3,8 @@ tests/test_convex_quadratic.py
 """
 
 import numpy as np
-from src.base import ConjugateGradientMethod
 from src.functions import ConvexQuadratic
+from src.optimisers import ConjugateGradientMethod
 from src.oracle import FirstOrderOracle
 
 

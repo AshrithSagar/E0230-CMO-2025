@@ -3,8 +3,8 @@ tests/test_rosenbrock.py
 """
 
 import numpy as np
-from src.base import SteepestGradientDescent
 from src.functions import Rosenbrock
+from src.optimisers import SteepestGradientDescent
 from src.oracle import FirstOrderOracle
 
 
