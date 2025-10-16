@@ -17,8 +17,8 @@ class AbstractOracle(ABC):
     """An abstract base class for oracles."""
 
     def __init__(self, func: Function):
-        self._func = func
-        """The oracle function `f(x)`."""
+        self._oracle_f = func
+        """The objective function `f(x)`."""
 
         self.dim: int = func.dim
         """The dimension of the input space."""
@@ -46,7 +46,7 @@ class ZeroOrderOracle(AbstractOracle):
     """
 
     def __call__(self, x: floatVec) -> tuple[float]:
-        fx = self._func(x)
+        fx = self._oracle_f.eval(x)
 
         self.call_count += 1
         return ((fx),)
@@ -58,13 +58,15 @@ class FirstOrderOracle(AbstractOracle):
     """
 
     def __init__(self, func: Function):
-        if func._grad is None:
-            raise ValueError("Function must have a gradient for FirstOrderOracle.")
+        if type(func).grad == Function.grad:
+            raise NotImplementedError(
+                f"Function {func.__class__.__name__} must have a `grad` method to use as a {self.__class__.__name__}."
+            )
         super().__init__(func)
 
     def __call__(self, x: floatVec) -> tuple[float, floatVec]:
-        fx = self._func(x)
-        dfx = self._func.gradient(x)
+        fx = self._oracle_f.eval(x)
+        dfx = self._oracle_f.grad(x)
 
         self.call_count += 1
         return fx, dfx
@@ -76,16 +78,20 @@ class SecondOrderOracle(AbstractOracle):
     """
 
     def __init__(self, func: Function):
-        if func._grad is None:
-            raise ValueError("Function must have a gradient for SecondOrderOracle.")
-        if func._hess is None:
-            raise ValueError("Function must have a Hessian for SecondOrderOracle.")
+        if type(func).grad == Function.grad:
+            raise NotImplementedError(
+                f"Function {func.__class__.__name__} must have a `grad` method to use as a {self.__class__.__name__}."
+            )
+        if type(func).hess == Function.hess:
+            raise NotImplementedError(
+                f"Function {func.__class__.__name__} must have a `hess` method to use as a {self.__class__.__name__}."
+            )
         super().__init__(func)
 
     def __call__(self, x: floatVec) -> tuple[float, floatVec, np.ndarray]:
-        fx = self._func(x)
-        dfx = self._func.gradient(x)
-        d2fx = self._func.hessian(x)
+        fx = self._oracle_f.eval(x)
+        dfx = self._oracle_f.grad(x)
+        d2fx = self._oracle_f.hess(x)
 
         self.call_count += 1
         return fx, dfx, d2fx
