@@ -46,6 +46,7 @@ class ZeroOrderOracle(AbstractOracle):
     """
 
     def __call__(self, x: floatVec) -> tuple[float]:
+        self._oracle_f._verify_input(x)
         fx = self._oracle_f.eval(x)
 
         self.call_count += 1
@@ -65,6 +66,7 @@ class FirstOrderOracle(AbstractOracle):
         super().__init__(func)
 
     def __call__(self, x: floatVec) -> tuple[float, floatVec]:
+        self._oracle_f._verify_input(x)
         fx = self._oracle_f.eval(x)
         dfx = self._oracle_f.grad(x)
 
@@ -89,6 +91,7 @@ class SecondOrderOracle(AbstractOracle):
         super().__init__(func)
 
     def __call__(self, x: floatVec) -> tuple[float, floatVec, np.ndarray]:
+        self._oracle_f._verify_input(x)
         fx = self._oracle_f.eval(x)
         dfx = self._oracle_f.grad(x)
         d2fx = self._oracle_f.hess(x)

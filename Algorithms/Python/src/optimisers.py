@@ -21,9 +21,9 @@ from .types import floatVec
 
 
 # ---------- Optimiser Implementations ----------
-class SteepestGradientDescent(SteepestDescentDirectionMixin, LineSearchOptimiser):
+class GradientDescent(SteepestDescentDirectionMixin, LineSearchOptimiser):
     """
-    Steepest gradient descent.
+    Standard gradient descent.
 
     `x_{k+1} = x_k - alpha_k * f'(x_k)`
     """
@@ -45,11 +45,11 @@ class SteepestGradientDescent(SteepestDescentDirectionMixin, LineSearchOptimiser
         return self.lr
 
 
-class SteepestGradientDescentExactLineSearch(
+class GradientDescentExactLineSearch(
     SteepestDescentDirectionMixin, ExactLineSearchMixin, LineSearchOptimiser
 ):
     """
-    Steepest gradient descent with exact line search for convex quadratic functions.
+    Gradient descent with exact line search for convex quadratic functions.
 
     `x_{k+1} = x_k - alpha_k * f'(x_k)`\\
     where `alpha_k = (f'(x_k)^T f'(x_k)) / (f'(x_k)^T Q f'(x_k))`
@@ -58,7 +58,7 @@ class SteepestGradientDescentExactLineSearch(
     pass  # All methods are provided by the mixins
 
 
-class SteepestGradientDescentArmijo(SteepestDescentDirectionMixin, LineSearchOptimiser):
+class GradientDescentArmijo(SteepestDescentDirectionMixin, LineSearchOptimiser):
     """
     Forward-expansion Armijo line search:\\
     Increase alpha until Armijo condition holds (or until safe cap).
@@ -107,7 +107,49 @@ class SteepestGradientDescentArmijo(SteepestDescentDirectionMixin, LineSearchOpt
             return self.alpha_min
 
 
-class SteepestGradientDescentArmijoGoldstein(
+class GradientDescentBacktracking(SteepestDescentDirectionMixin, LineSearchOptimiser):
+    """
+    Standard backtracking Armijo (decreasing alpha).
+    """
+
+    def initialise_state(self):
+        super().initialise_state()
+
+        self.c = float(self.config.get("c", 1e-4))  # Armijo parameter
+        self.beta = float(self.config.get("beta", 0.5))
+        self.alpha_init = float(self.config.get("alpha_init", 1.0))
+        self.alpha_min = float(self.config.get("alpha_min", 1e-14))
+        self.alpha_max = float(self.config.get("alpha_max", 1e6))
+        self.maxiter = int(self.config.get("maxiter", 10))
+
+        assert 0 < self.c < 1, "c must be in (0, 1)"
+
+    def step_length(
+        self,
+        x: floatVec,
+        k: int,
+        f: float,
+        grad: floatVec,
+        oracle_fn: FirstOrderOracle,
+        direction: floatVec,
+    ) -> float:
+        derphi0 = float(grad.T @ direction)
+        # Fallback if directional derivative is non-negative
+        if derphi0 >= 0:
+            return self.alpha_min
+
+        alpha = self.alpha_init
+        for _ in range(self.maxiter):
+            new_f, _ = self._phi_and_derphi(x, alpha, direction, oracle_fn)
+            if new_f <= f + self.c * alpha * derphi0:
+                return alpha
+            alpha *= self.beta
+            if alpha < self.alpha_min:
+                return self.alpha_min
+        return alpha
+
+
+class GradientDescentArmijoGoldstein(
     SteepestDescentDirectionMixin, LineSearchOptimiser
 ):
     """
@@ -180,7 +222,7 @@ class SteepestGradientDescentArmijoGoldstein(
         return 0.5 * (alpha_lo + alpha_hi)
 
 
-class SteepestGradientDescentWolfe(SteepestDescentDirectionMixin, LineSearchOptimiser):
+class GradientDescentWolfe(SteepestDescentDirectionMixin, LineSearchOptimiser):
     """
     Strong Wolfe line search using bracket + zoom (Nocedal & Wright).\\
     `phi(alpha_k) <= phi(0) + c1 * alpha_k * phi'(0)` (Armijo)\\
@@ -284,50 +326,6 @@ class SteepestGradientDescentWolfe(SteepestDescentDirectionMixin, LineSearchOpti
         return 0.5 * (alpha_lo + alpha_hi)
 
 
-class SteepestGradientDescentBacktracking(
-    SteepestDescentDirectionMixin, LineSearchOptimiser
-):
-    """
-    Standard backtracking Armijo (decreasing alpha).
-    """
-
-    def initialise_state(self):
-        super().initialise_state()
-
-        self.c = float(self.config.get("c", 1e-4))  # Armijo parameter
-        self.beta = float(self.config.get("beta", 0.5))
-        self.alpha_init = float(self.config.get("alpha_init", 1.0))
-        self.alpha_min = float(self.config.get("alpha_min", 1e-14))
-        self.alpha_max = float(self.config.get("alpha_max", 1e6))
-        self.maxiter = int(self.config.get("maxiter", 10))
-
-        assert 0 < self.c < 1, "c must be in (0, 1)"
-
-    def step_length(
-        self,
-        x: floatVec,
-        k: int,
-        f: float,
-        grad: floatVec,
-        oracle_fn: FirstOrderOracle,
-        direction: floatVec,
-    ) -> float:
-        derphi0 = float(grad.T @ direction)
-        # Fallback if directional derivative is non-negative
-        if derphi0 >= 0:
-            return self.alpha_min
-
-        alpha = self.alpha_init
-        for _ in range(self.maxiter):
-            new_f, _ = self._phi_and_derphi(x, alpha, direction, oracle_fn)
-            if new_f <= f + self.c * alpha * derphi0:
-                return alpha
-            alpha *= self.beta
-            if alpha < self.alpha_min:
-                return self.alpha_min
-        return alpha
-
-
 class ConjugateDirectionMethod(LineSearchOptimiser):
     """
     Linear conjugate direction method for convex quadratic functions.\\
@@ -343,7 +341,7 @@ class ConjugateDirectionMethod(LineSearchOptimiser):
 
         if self.config.get("directions") is None:
             raise ValueError(f"{self.__class__.__name__} requires directions apriori.")
-        self.directions: floatVec = np.array(self.config.get("directions"), dtype=float)
+        self.directions: list[floatVec] = self.config.get("directions", [])
 
     def direction(
         self, x: floatVec, k: int, f: float, grad: floatVec, oracle_fn: FirstOrderOracle

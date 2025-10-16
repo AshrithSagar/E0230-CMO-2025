@@ -108,7 +108,7 @@ class IterativeOptimiser(ABC):
 
         console = Console()
         console.print(f"[bold blue]{self.name}[/]")
-        if show_params:
+        if show_params and self.config:
             console.print(f"params: {self.config}")
         has_multiple_x0 = len(x0s) > 1
 

@@ -11,6 +11,7 @@ References
 from abc import ABC, abstractmethod
 
 import numpy as np
+from numpy.typing import ArrayLike
 
 from .types import floatMat, floatVec
 
@@ -23,15 +24,20 @@ class Function(ABC):
     """
 
     def __init__(self, dim: int):
-        self.dim = dim
+        self.dim: int = dim
         """Dimension of the input `x` for the function."""
 
-    def _verify_input(self, x: floatVec):
+    def _verify_input(self, x: ArrayLike) -> floatVec:
         """Verify that the input `x` is of the correct shape and type."""
-        x = np.asarray(x, dtype=np.float64)
-        if x.shape != (self.dim,):
-            raise ValueError(f"Input must be of shape ({self.dim},), got {x.shape}.")
-        return x
+        _x: floatVec = np.asarray(x, dtype=np.float64)
+        if _x.shape != (self.dim,):
+            raise ValueError(f"Input must be of shape ({self.dim},), got {_x.shape}.")
+        return _x
+
+    @property
+    def x_star(self) -> floatVec:
+        """The known minimizer of the function, if available."""
+        raise NotImplementedError
 
     @abstractmethod
     def eval(self, x: floatVec) -> float:
@@ -62,6 +68,10 @@ class ConvexQuadratic(Function):
 
         super().__init__(dim=dim)
 
+    @property
+    def x_star(self) -> floatVec:
+        return np.asarray(np.linalg.solve(self.Q, -self.h), dtype=np.float64)
+
     def eval(self, x: floatVec) -> float:
         return float(0.5 * x.T @ self.Q @ x + self.h.T @ x)
 
@@ -76,9 +86,18 @@ class Rosenbrock(Function):
     """The Rosenbrock function"""
 
     def __init__(self, dim: int, a: float = 1.0, b: float = 100.0):
-        self.a = a
-        self.b = b
+        self.a = float(a)
+        self.b = float(b)
         super().__init__(dim=dim)
+
+    @property
+    def x_star(self) -> floatVec:
+        if self.dim == 2:
+            return np.array([self.a, self.a**2])
+        elif self.a == 0.0 or self.a == 1.0:
+            return np.full(self.dim, self.a)
+        else:
+            raise NotImplementedError
 
     def eval(self, x: floatVec) -> float:
         return sum((self.a - x[:-1]) ** 2.0 + self.b * (x[1:] - x[:-1] ** 2.0) ** 2.0)
@@ -112,8 +131,12 @@ class Rastrigin(Function):
     """The Rastrigin function"""
 
     def __init__(self, dim: int, A: float = 10.0):
-        self.A = A
+        self.A = float(A)
         super().__init__(dim=dim)
+
+    @property
+    def x_star(self) -> floatVec:
+        return np.zeros(self.dim)
 
     def eval(self, x: floatVec) -> float:
         return self.A * len(x) + sum(x**2 - self.A * np.cos(2 * np.pi * x))
