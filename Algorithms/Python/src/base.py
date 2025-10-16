@@ -254,8 +254,11 @@ class LineSearchOptimiser(IterativeOptimiser):
     def initialise_state(self):
         super().initialise_state()
         self.step_lengths: list[float] = []
+        self.step_directions: list[floatVec] = []
 
-    def direction(self, x: floatVec, grad: floatVec) -> floatVec:
+    def direction(
+        self, x: floatVec, k: int, f: float, grad: floatVec, oracle_fn: FirstOrderOracle
+    ) -> floatVec:
         """
         Returns the descent direction `p_k` to move towards from `x_k`.\\
         [Required]: This method should be implemented by subclasses to define the specific direction strategy.
@@ -268,8 +271,8 @@ class LineSearchOptimiser(IterativeOptimiser):
         k: int,
         f: float,
         grad: floatVec,
-        direction: floatVec,
         oracle_fn: FirstOrderOracle,
+        direction: floatVec,
     ) -> float:
         """
         Returns step length `alpha_k` to take along the descent direction `p_k`.\\
@@ -278,9 +281,12 @@ class LineSearchOptimiser(IterativeOptimiser):
         raise NotImplementedError
 
     def step(self, x, k, f, grad, oracle_fn):
-        p_k = self.direction(x, grad)
-        alpha_k = self.step_length(x, k, f, grad, p_k, oracle_fn)
+        p_k = self.direction(x, k, f, grad, oracle_fn)
+        self.step_directions.append(p_k)
+
+        alpha_k = self.step_length(x, k, f, grad, oracle_fn, p_k)
         self.step_lengths.append(alpha_k)
+
         return x + alpha_k * p_k
 
     def plot_step_lengths(self):
@@ -307,7 +313,9 @@ class SteepestDescentDirectionMixin(LineSearchOptimiser):
     `p_k = -f'(x_k)`
     """
 
-    def direction(self, x: floatVec, grad: floatVec) -> floatVec:
+    def direction(
+        self, x: floatVec, k: int, f: float, grad: floatVec, oracle_fn: FirstOrderOracle
+    ) -> floatVec:
         return -grad
 
 
@@ -322,36 +330,30 @@ class ExactLineSearchMixin(LineSearchOptimiser):
     def initialise_state(self):
         super().initialise_state()
 
-        Q = self.config.get("Q", None)
-        if Q is None:
-            raise ValueError("Q matrix is required for exact line search.")
-        self.Q: floatVec = np.array(Q, dtype=float)
-
-        self.denom_thresh = float(self.config.get("denom_thresh", 1e-14))
-        self.alpha_min = float(self.config.get("alpha_min", 1e-8))
-
     def step_length(
         self,
         x: floatVec,
         k: int,
         f: float,
         grad: floatVec,
-        direction: floatVec,
         oracle_fn: FirstOrderOracle,
+        direction: floatVec,
     ) -> float:
-        if not isinstance(oracle_fn._func, ConvexQuadratic):
+        if not isinstance(oracle_fn._oracle_f, ConvexQuadratic):
             raise NotImplementedError(
-                "This implementation of exact line search requires a ConvexQuadratic Function."
+                f"This implementation of {self.__class__.__name__} requires a ConvexQuadratic Function."
             )
 
+        Q = oracle_fn._oracle_f.Q
         numer = float(grad.T @ direction)
-        denom = float(direction.T @ self.Q @ direction)
+        denom = float(direction.T @ Q @ direction)
+        alpha = numer / denom
 
-        # Fallback if denominator is too small
-        if abs(denom) < self.denom_thresh:
-            return self.alpha_min
+        if alpha < 0:
+            alpha = -alpha
+            self.step_directions[-1] = -direction
 
-        return -numer / denom
+        return alpha
 
 
 # ---------- Optimiser Implementations ----------
@@ -363,7 +365,7 @@ class SteepestGradientDescent(SteepestDescentDirectionMixin, IterativeOptimiser)
     """
 
     def step(self, x, k, f, grad, oracle_fn):
-        p_k = self.direction(x, grad)
+        p_k = self.direction(x, k, f, grad, oracle_fn)
         alpha_k = 1e-3
         return x + alpha_k * p_k
 
@@ -406,8 +408,8 @@ class SteepestGradientDescentArmijo(SteepestDescentDirectionMixin, LineSearchOpt
         k: int,
         f: float,
         grad: floatVec,
-        direction: floatVec,
         oracle_fn: FirstOrderOracle,
+        direction: floatVec,
     ) -> float:
         derphi0 = float(grad.T @ direction)
         # Fallback if directional derivative is non-negative
@@ -457,8 +459,8 @@ class SteepestGradientDescentArmijoGoldstein(
         k: int,
         f: float,
         grad: floatVec,
-        direction: floatVec,
         oracle_fn: FirstOrderOracle,
+        direction: floatVec,
     ) -> float:
         derphi0 = float(grad.T @ direction)
         # Fallback if directional derivative is non-negative
@@ -530,8 +532,8 @@ class SteepestGradientDescentWolfe(SteepestDescentDirectionMixin, LineSearchOpti
         k: int,
         f: float,
         grad: floatVec,
-        direction: floatVec,
         oracle_fn: FirstOrderOracle,
+        direction: floatVec,
     ) -> float:
         derphi0 = float(grad.T @ direction)
         # Fallback if directional derivative is non-negative
@@ -632,8 +634,8 @@ class SteepestGradientDescentBacktracking(
         k: int,
         f: float,
         grad: floatVec,
-        direction: floatVec,
         oracle_fn: FirstOrderOracle,
+        direction: floatVec,
     ) -> float:
         derphi0 = float(grad.T @ direction)
         # Fallback if directional derivative is non-negative
@@ -651,7 +653,7 @@ class SteepestGradientDescentBacktracking(
         return alpha
 
 
-class ConjugateDirectionMethod(IterativeOptimiser):
+class ConjugateDirectionMethod(LineSearchOptimiser):
     """
     Linear conjugate direction method for convex quadratic functions.\\
     `x_{k+1} = x_k + alpha_k * p_k`\\
@@ -660,70 +662,85 @@ class ConjugateDirectionMethod(IterativeOptimiser):
 
     def initialise_state(self):
         super().initialise_state()
-        self.Q: floatVec = np.array(self.config.get("Q"), dtype=float)
-        if self.Q is None:
-            raise ValueError("Q matrix is required for conjugate direction method.")
-        self.denom_thresh = float(self.config.get("denom_thresh", 1e-14))
-        self.alpha_min = float(self.config.get("alpha_min", 1e-8))
 
-        self.r: floatVec | None = None  # Residual (negative gradient)
-        self.p: floatVec | None = None  # Search direction
-        self.k_prev: int | None = None  # Previous iteration number
+        self.line_search = ExactLineSearchMixin()
+        self.line_search.initialise_state()
 
-    def step(self, x, k, f, grad, oracle_fn):
-        r_k = -grad  # Residual is negative gradient
-        if self.r is None or self.p is None or self.k_prev is None or k == 1:
-            # First iteration or reset
-            p_k = r_k
+        if self.config.get("directions") is None:
+            raise ValueError(f"{self.__class__.__name__} requires directions apriori.")
+        self.directions: floatVec = np.array(self.config.get("directions"), dtype=float)
+
+    def direction(
+        self, x: floatVec, k: int, f: float, grad: floatVec, oracle_fn: FirstOrderOracle
+    ) -> floatVec:
+        if k - 1 < len(self.directions):
+            direction = self.directions[k - 1]
+            self.line_search.step_directions.append(direction)
+            return direction
         else:
-            beta_k = float((r_k.T @ r_k) / (self.r.T @ self.r))
-            p_k = r_k + beta_k * self.p
+            raise IndexError(f"No more directions available for iteration {k}.")
 
-        numer = float(r_k.T @ p_k)
-        denom = float(p_k.T @ self.Q @ p_k)
+    def step_length(
+        self,
+        x: floatVec,
+        k: int,
+        f: float,
+        grad: floatVec,
+        oracle_fn: FirstOrderOracle,
+        direction: floatVec,
+    ) -> float:
+        if not isinstance(oracle_fn._oracle_f, ConvexQuadratic):
+            raise NotImplementedError(
+                f"This implementation of {self.__class__.__name__} requires a ConvexQuadratic Function."
+            )
 
-        # Fallback if denominator is too small
-        if abs(denom) < self.denom_thresh:
-            alpha_k = self.alpha_min
-        else:
-            alpha_k = -numer / denom
-
-        # Update state
-        self.r = r_k
-        self.p = p_k
-        self.k_prev = k
-
-        return x + alpha_k * p_k
+        alpha = self.line_search.step_length(x, k, f, grad, oracle_fn, direction)
+        self.step_directions[-1] = self.line_search.step_directions[-1]
+        return alpha
 
 
-class ConjugateGradientMethod(ConjugateDirectionMethod):
+class ConjugateGradientMethod(LineSearchOptimiser):
     """
     Linear conjugate gradient method for convex quadratic functions.\\
     `x_{k+1} = x_k + alpha_k * p_k`\\
     where `p_k` are conjugate directions and `alpha_k` is the exact line search step length.
     """
 
-    def step(self, x, k, f, grad, oracle_fn):
-        r_k = -grad  # Residual is negative gradient
-        if self.r is None or self.p is None or self.k_prev is None or k == 1:
-            # First iteration or reset
-            p_k = r_k
+    def initialise_state(self):
+        super().initialise_state()
+
+        self.line_search = ExactLineSearchMixin()
+        self.line_search.initialise_state()
+
+        self.rTr_prev: float
+
+    def direction(
+        self, x: floatVec, k: int, f: float, grad: floatVec, oracle_fn: FirstOrderOracle
+    ) -> floatVec:
+        if k == 1:
+            self.rTr_prev = float(grad.T @ grad)
+            direction = -grad
         else:
-            beta_k = float((r_k.T @ r_k) / (self.r.T @ self.r))
-            p_k = r_k + beta_k * self.p
+            beta = float((grad.T @ grad) / self.rTr_prev)
+            direction = grad + beta * self.step_directions[-1]
 
-        numer = float(r_k.T @ p_k)
-        denom = float(p_k.T @ self.Q @ p_k)
+        self.line_search.step_directions.append(direction)
+        return direction
 
-        # Fallback if denominator is too small
-        if abs(denom) < self.denom_thresh:
-            alpha_k = self.alpha_min
-        else:
-            alpha_k = -numer / denom
+    def step_length(
+        self,
+        x: floatVec,
+        k: int,
+        f: float,
+        grad: floatVec,
+        oracle_fn: FirstOrderOracle,
+        direction: floatVec,
+    ) -> float:
+        if not isinstance(oracle_fn._oracle_f, ConvexQuadratic):
+            raise NotImplementedError(
+                f"This implementation of {self.__class__.__name__} requires a ConvexQuadratic Function."
+            )
 
-        # Update state
-        self.r = r_k
-        self.p = p_k
-        self.k_prev = k
-
-        return x + alpha_k * p_k
+        alpha = self.line_search.step_length(x, k, f, grad, oracle_fn, direction)
+        self.step_directions[-1] = self.line_search.step_directions[-1]
+        return alpha
