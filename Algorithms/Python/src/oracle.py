@@ -4,27 +4,24 @@ src/oracle.py
 Oracle utils
 """
 
+from abc import ABC, abstractmethod
+from typing import Tuple
+
 import numpy as np
 
+from .functions import Function
 from .types import floatVec
 
 
-class FirstOrderOracle:
-    """
-    A wrapper class around the provided `oracle` function.
+class AbstractOracle(ABC):
+    """An abstract base class for oracles."""
 
-    `f(x), f'(x) = oracle(x)`
-    """
+    def __init__(self, func: Function):
+        self._func = func
+        """The oracle function `f(x)`."""
 
-    def __init__(self, oracle, dim: int):
-        self.oracle = oracle
-        """
-        The oracle function to be wrapped.
-        It should be of the form `f(x), f'(x) = oracle(x)`.
-        """
-
-        self.dim = dim
-        """Dimension of the input `x` for the oracle function."""
+        self.dim: int = func.dim
+        """The dimension of the input space."""
 
         self.call_count: int = 0
         """
@@ -32,54 +29,63 @@ class FirstOrderOracle:
         This is useful for the 'analytical complexity' of the algorithms.
         """
 
-    def __call__(self, x: floatVec) -> tuple[float, floatVec]:
+    @abstractmethod
+    def __call__(self, x: floatVec) -> Tuple:
         """Evaluates the oracle function at `x`."""
-        x = np.asarray(x, dtype=float)
-        assert x.shape == (self.dim,), f"x must be of shape ({self.dim},)"
+        raise NotImplementedError
 
-        fx, dfx = self.oracle(x)
-        self.call_count += 1
-
-        return fx, dfx
-
-    def reset(self) -> "FirstOrderOracle":
+    def reset(self):
         """Resets the internal call count."""
         self.call_count = 0
         return self
 
-    @classmethod
-    def from_separate(cls, f_fn, grad_fn, dim: int) -> "FirstOrderOracle":
-        """Construct an oracle from separate f(x) and f'(x) functions."""
 
-        def oracle(x: floatVec) -> tuple[float, floatVec]:
-            return f_fn(x), grad_fn(x)
-
-        return cls(oracle, dim=dim)
-
-
-class ConvexQuadraticOracle(FirstOrderOracle):
+class ZeroOrderOracle(AbstractOracle):
     """
-    A wrapper oracle for convex quadratic functions of the form:
-
-    `f(x) = 0.5 * x^T Q x + b^T x`\\
-    `f'(x) = Q x + b`\\
-    where `Q` is a symmetric positive definite matrix and `b` is a vector.
+    `f = oracle(x)`
     """
 
-    def __init__(self, Q: floatVec, b: floatVec):
-        assert Q.shape[0] == Q.shape[1], "Q must be a square matrix."
-        assert Q.shape[0] == b.shape[0], "Dimensions of Q and b must match."
+    def __call__(self, x: floatVec) -> tuple[float]:
+        fx = self._func(x)
 
-        # Check for symmetric positive definite
-        if not np.allclose(Q, Q.T) or np.any(np.linalg.eigvals(Q) <= 0):
-            raise ValueError("Q must be a symmetric positive definite matrix.")
+        self.call_count += 1
+        return ((fx),)
 
-        self.Q: floatVec = Q
-        self.b: floatVec = b
-        super().__init__(self._oracle_fn, dim=Q.shape[1])
 
-    def _oracle_fn(self, _: int, x: floatVec) -> tuple[float, floatVec]:
-        """The oracle function for the convex quadratic."""
-        fx = float(0.5 * x.T @ self.Q @ x + self.b.T @ x)
-        dfx: floatVec = self.Q @ x + self.b
+class FirstOrderOracle(AbstractOracle):
+    """
+    `f(x), f'(x) = oracle(x)`
+    """
+
+    def __init__(self, func: Function):
+        if func._grad is None:
+            raise ValueError("Function must have a gradient for FirstOrderOracle.")
+        super().__init__(func)
+
+    def __call__(self, x: floatVec) -> tuple[float, floatVec]:
+        fx = self._func(x)
+        dfx = self._func.gradient(x)
+
+        self.call_count += 1
         return fx, dfx
+
+
+class SecondOrderOracle(AbstractOracle):
+    """
+    `f(x), f'(x), f''(x) = oracle(x)`
+    """
+
+    def __init__(self, func: Function):
+        if func._grad is None:
+            raise ValueError("Function must have a gradient for SecondOrderOracle.")
+        if func._hess is None:
+            raise ValueError("Function must have a Hessian for SecondOrderOracle.")
+        super().__init__(func)
+
+    def __call__(self, x: floatVec) -> tuple[float, floatVec, np.ndarray]:
+        fx = self._func(x)
+        dfx = self._func.gradient(x)
+        d2fx = self._func.hessian(x)
+
+        self.call_count += 1
+        return fx, dfx, d2fx

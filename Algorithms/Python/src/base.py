@@ -18,7 +18,8 @@ from rich.progress import Progress, TextColumn, TimeElapsedColumn
 from rich.table import Table
 from rich.text import TextType
 
-from .oracle import ConvexQuadraticOracle, FirstOrderOracle
+from .functions import ConvexQuadratic
+from .oracle import FirstOrderOracle
 from .types import floatVec
 from .utils import format_float, format_time, show_solution
 
@@ -338,9 +339,9 @@ class ExactLineSearchMixin(LineSearchOptimiser):
         direction: floatVec,
         oracle_fn: FirstOrderOracle,
     ) -> float:
-        if not isinstance(oracle_fn, ConvexQuadraticOracle):
+        if not isinstance(oracle_fn._func, ConvexQuadratic):
             raise NotImplementedError(
-                "This implementation of exact line search requires a ConvexQuadraticOracle."
+                "This implementation of exact line search requires a ConvexQuadratic Function."
             )
 
         numer = float(grad.T @ direction)
