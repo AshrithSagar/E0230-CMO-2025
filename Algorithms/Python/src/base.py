@@ -10,6 +10,7 @@ References
 
 import math
 import time
+from abc import ABC, abstractmethod
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -26,15 +27,11 @@ from .utils import format_float, format_time, show_solution
 console = Console()
 
 
-LOG_RUNS: bool = False
-"""Log all the runs of the optimisation algorithms in the summary table, not just the best one."""
-
-
 # ---------- Algorithm Templates ----------
-class IterativeOptimiser:
+class IterativeOptimiser(ABC):
     """
     A base template class for iterative optimisation algorithms,
-    particularly used here for the minimisation objective.
+    particularly for the minimisation objective.
 
     `x_{k+1} = ALGO(x_k)`\\
     where `ALGO` is the algorithm-specific step function,
@@ -63,6 +60,7 @@ class IterativeOptimiser:
         """
         pass
 
+    @abstractmethod
     def step(
         self,
         x: floatVec,
@@ -92,6 +90,7 @@ class IterativeOptimiser:
         maxiter: int = 1_000,
         tol: float = 1e-6,
         show_params: bool = True,
+        log_runs: bool = False,
     ):
         """
         Runs the iterative algorithm.
@@ -102,6 +101,7 @@ class IterativeOptimiser:
             maxiter: Maximum number of iterations to perform.
             tol: Tolerance for stopping criterion based on the gradient.
             show_params: Whether to display the configuration parameters of the algorithm.
+            log_runs: Log all the runs over different initial points, not just the best one.
         """
         self.maxiter = maxiter
         self.tol = tol
@@ -174,7 +174,7 @@ class IterativeOptimiser:
                     "time_taken": t,
                 }
             )
-            if LOG_RUNS and has_multiple_x0:
+            if log_runs and has_multiple_x0:
                 title = f"[not italic][bold yellow]Run {idx}:[/]"
                 self._show_run_result(
                     x, fx, dfx, x0, len(history) - 1, oracle_fn.call_count, title
@@ -243,7 +243,7 @@ class IterativeOptimiser:
         show_solution(x, fx, dfx, table=table)
 
 
-class LineSearchOptimiser(IterativeOptimiser):
+class LineSearchOptimiser(IterativeOptimiser, ABC):
     """
     A base template class for line search-based iterative optimisation algorithms.
 
@@ -357,17 +357,28 @@ class ExactLineSearchMixin(LineSearchOptimiser):
 
 
 # ---------- Optimiser Implementations ----------
-class SteepestGradientDescent(SteepestDescentDirectionMixin, IterativeOptimiser):
+class SteepestGradientDescent(SteepestDescentDirectionMixin, LineSearchOptimiser):
     """
     Steepest gradient descent.
 
     `x_{k+1} = x_k - alpha_k * f'(x_k)`
     """
 
-    def step(self, x, k, f, grad, oracle_fn):
-        p_k = self.direction(x, k, f, grad, oracle_fn)
-        alpha_k = 1e-3
-        return x + alpha_k * p_k
+    def initialise_state(self):
+        super().initialise_state()
+
+        self.lr = float(self.config.get("lr", 1e-3))
+
+    def step_length(
+        self,
+        x: floatVec,
+        k: int,
+        f: float,
+        grad: floatVec,
+        oracle_fn: FirstOrderOracle,
+        direction: floatVec,
+    ) -> float:
+        return self.lr
 
 
 class SteepestGradientDescentExactLineSearch(
