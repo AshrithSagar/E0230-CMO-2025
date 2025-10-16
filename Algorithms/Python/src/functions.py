@@ -6,6 +6,7 @@ Optimisation test problems
 References
 -------
 - https://www.sfu.ca/~ssurjano/optimization.html
+- https://en.wikipedia.org/wiki/Test_functions_for_optimization
 """
 
 from abc import ABC, abstractmethod
@@ -36,8 +37,13 @@ class Function(ABC):
 
     @property
     def x_star(self) -> floatVec:
-        """The known minimizer of the function, if available."""
+        """The known minimiser of the function, if available."""
         raise NotImplementedError
+
+    @property
+    def f_star(self) -> float:
+        """The known minimum function value, if available, or try computing using `x_star`."""
+        return self.eval(self.x_star)
 
     @abstractmethod
     def eval(self, x: floatVec) -> float:
@@ -99,6 +105,15 @@ class Rosenbrock(Function):
         else:
             raise NotImplementedError
 
+    @property
+    def f_star(self) -> float:
+        if self.dim == 2:
+            return 0.0
+        elif self.a == 0.0 or self.a == 1.0:
+            return 0.0
+        else:
+            raise NotImplementedError
+
     def eval(self, x: floatVec) -> float:
         return sum((self.a - x[:-1]) ** 2.0 + self.b * (x[1:] - x[:-1] ** 2.0) ** 2.0)
 
@@ -138,6 +153,10 @@ class Rastrigin(Function):
     def x_star(self) -> floatVec:
         return np.zeros(self.dim)
 
+    @property
+    def f_star(self) -> float:
+        return 0.0
+
     def eval(self, x: floatVec) -> float:
         return self.A * len(x) + sum(x**2 - self.A * np.cos(2 * np.pi * x))
 
@@ -146,3 +165,269 @@ class Rastrigin(Function):
 
     def hess(self, x: floatVec) -> floatMat:
         return np.diag(2 + 4 * np.pi**2 * self.A * np.cos(2 * np.pi * x))
+
+
+class Sphere(Function):
+    """The Sphere function"""
+
+    @property
+    def x_star(self) -> floatVec:
+        return np.zeros(self.dim)
+
+    @property
+    def f_star(self) -> float:
+        return 0.0
+
+    def eval(self, x: floatVec) -> float:
+        return np.sum(x**2)
+
+    def grad(self, x: floatVec) -> floatVec:
+        return 2 * x
+
+    def hess(self, x: floatVec) -> floatMat:
+        return 2 * np.eye(self.dim)
+
+
+class Ackley(Function):
+    """The Ackley function"""
+
+    def __init__(self, dim: int, a: float = 20.0, b: float = 0.2, c: float = 2 * np.pi):
+        self.a = float(a)
+        self.b = float(b)
+        self.c = float(c)
+        super().__init__(dim=dim)
+
+    @property
+    def x_star(self) -> floatVec:
+        return np.zeros(self.dim)
+
+    @property
+    def f_star(self) -> float:
+        return 0.0
+
+    def eval(self, x: floatVec) -> float:
+        term1 = -self.a * np.exp(-self.b * np.sqrt(np.sum(x**2) / self.dim))
+        term2 = -np.exp(np.sum(np.cos(self.c * x)) / self.dim)
+        return term1 + term2 + self.a + np.exp(1)
+
+
+class DropWave(Function):
+    """The Drop-Wave function"""
+
+    def __init__(self):
+        super().__init__(dim=2)
+
+    @property
+    def x_star(self) -> floatVec:
+        return np.zeros(self.dim)
+
+    @property
+    def f_star(self) -> float:
+        return -1.0
+
+    def eval(self, x: floatVec) -> float:
+        r2 = sum(x**2)
+        r = np.sqrt(r2)
+        return -(1 + np.cos(12 * r)) / (0.5 * r2 + 2)
+
+
+class Eggholder(Function):
+    """The Eggholder function"""
+
+    def __init__(self):
+        super().__init__(dim=2)
+
+    @property
+    def x_star(self) -> floatVec:
+        return np.array([512.0, 404.2319])
+
+    @property
+    def f_star(self) -> float:
+        return -959.6407
+
+    def eval(self, x: floatVec) -> float:
+        a = x[1] + 47
+        term1 = -a * np.sin(np.sqrt(abs(x[0] / 2 + a)))
+        term2 = -x[0] * np.sin(np.sqrt(abs(x[0] - a)))
+        return term1 + term2
+
+
+class Griewank(Function):
+    """The Griewank function"""
+
+    @property
+    def x_star(self) -> floatVec:
+        return np.zeros(self.dim)
+
+    @property
+    def f_star(self) -> float:
+        return 0.0
+
+    def eval(self, x: floatVec) -> float:
+        sum_term = np.sum(x**2) / 4000
+        prod_term = np.prod(np.cos(x / np.sqrt(np.arange(1, self.dim + 1))))
+        return sum_term - prod_term + 1
+
+
+class Levy(Function):
+    """The Levy function"""
+
+    @property
+    def x_star(self) -> floatVec:
+        return np.ones(self.dim)
+
+    @property
+    def f_star(self) -> float:
+        return 0.0
+
+    def eval(self, x: floatVec) -> float:
+        w = 1 + (x - 1) / 4
+        term1 = np.sin(np.pi * w[0]) ** 2
+        term3 = (w[-1] - 1) ** 2 * (1 + np.sin(2 * np.pi * w[-1]) ** 2)
+        term2 = sum((w[:-1] - 1) ** 2 * (1 + 10 * np.sin(np.pi * w[:-1] + 1) ** 2))
+        return term1 + term2 + term3
+
+
+class Levy13(Function):
+    """The Levy 13 function"""
+
+    def __init__(self):
+        super().__init__(dim=2)
+
+    @property
+    def x_star(self) -> floatVec:
+        return np.ones(self.dim)
+
+    @property
+    def f_star(self) -> float:
+        return 0.0
+
+    def eval(self, x: floatVec) -> float:
+        term1 = np.sin(3 * np.pi * x[0]) ** 2
+        term2 = (x[0] - 1) ** 2 * (1 + np.sin(3 * np.pi * x[1]) ** 2)
+        term3 = (x[1] - 1) ** 2 * (1 + np.sin(2 * np.pi * x[1]) ** 2)
+        return term1 + term2 + term3
+
+
+class Schwefel(Function):
+    """The Schwefel function"""
+
+    @property
+    def x_star(self) -> floatVec:
+        return np.full(self.dim, 420.9687)
+
+    @property
+    def f_star(self) -> float:
+        return 0.0
+
+    def eval(self, x: floatVec) -> float:
+        return 418.9829 * self.dim - sum(x * np.sin(np.sqrt(abs(x))))
+
+
+class Booth(Function):
+    """The Booth function"""
+
+    def __init__(self):
+        super().__init__(dim=2)
+
+    @property
+    def x_star(self) -> floatVec:
+        return np.array([1.0, 3.0])
+
+    @property
+    def f_star(self) -> float:
+        return 0.0
+
+    def eval(self, x: floatVec) -> float:
+        return (x[0] + 2 * x[1] - 7) ** 2 + (2 * x[0] + x[1] - 5) ** 2
+
+
+class Beale(Function):
+    """The Beale function"""
+
+    def __init__(self):
+        super().__init__(dim=2)
+
+    @property
+    def x_star(self) -> floatVec:
+        return np.array([3.0, 0.5])
+
+    @property
+    def f_star(self) -> float:
+        return 0.0
+
+    def eval(self, x: floatVec) -> float:
+        term1 = (1.5 - x[0] + x[0] * x[1]) ** 2
+        term2 = (2.25 - x[0] + x[0] * x[1] ** 2) ** 2
+        term3 = (2.625 - x[0] + x[0] * x[1] ** 3) ** 2
+        return term1 + term2 + term3
+
+
+class Matyas(Function):
+    """The Matyas function"""
+
+    def __init__(self):
+        super().__init__(dim=2)
+
+    @property
+    def x_star(self) -> floatVec:
+        return np.zeros(self.dim)
+
+    @property
+    def f_star(self) -> float:
+        return 0.0
+
+    def eval(self, x: floatVec) -> float:
+        return 0.26 * sum(x**2) - 0.48 * x[0] * x[1]
+
+
+class SumSquares(Function):
+    """The Sum Squares function"""
+
+    @property
+    def x_star(self) -> floatVec:
+        return np.zeros(self.dim)
+
+    @property
+    def f_star(self) -> float:
+        return 0.0
+
+    def eval(self, x: floatVec) -> float:
+        return sum((i + 1) * x[i] ** 2 for i in range(len(x)))
+
+
+class Zakharov(Function):
+    """The Zakharov function"""
+
+    @property
+    def x_star(self) -> floatVec:
+        return np.zeros(self.dim)
+
+    @property
+    def f_star(self) -> float:
+        return 0.0
+
+    def eval(self, x: floatVec) -> float:
+        sum1 = sum(x**2)
+        sum2 = sum(0.5 * (i + 1) * x[i] for i in range(len(x)))
+        return sum1 + sum2**2 + sum2**4
+
+
+class ThreeHumpCamel(Function):
+    """The Three-Hump Camel function"""
+
+    def __init__(self):
+        super().__init__(dim=2)
+
+    @property
+    def x_star(self) -> floatVec:
+        return np.zeros(self.dim)
+
+    @property
+    def f_star(self) -> float:
+        return 0.0
+
+    def eval(self, x: floatVec) -> float:
+        return (
+            2 * x[0] ** 2 - 1.05 * x[0] ** 4 + (x[0] ** 6) / 6 + x[0] * x[1] + x[1] ** 2
+        )
