@@ -32,47 +32,79 @@ from .utils import format_float, format_time, show_solution
 
 console = Console()
 
-
 TStepInfo = TypeVar("TStepInfo", bound="StepInfo")
+"""Generic type for Step classes."""
 
 
 class StepInfo:
+    """
+    A base class for Step information.
+    Encapsulates the state of the algorithm at iteration `k`.
+    """
+
     def __init__(self, x: floatVec, k: int, oracle: AbstractOracle):
         self.x: floatVec = x
+        """The current point `x_k` in the input space."""
+
         self.k: int = k
+        """The current iteration number `k`."""
+
         self.oracle: AbstractOracle = oracle
+        """The oracle function used to evaluate `f`."""
+
+        # Internal values
         self._fx: Optional[float] = None
         self._dfx: Optional[floatVec] = None
         self._d2fx: Optional[floatMat] = None
 
     @property
     def fx(self) -> float:
+        """The function value `f(x_k)` at the current point."""
         if self._fx is None:
             if isinstance(self.oracle, ZeroOrderOracle):
                 (f,) = self.oracle(self.x)
                 self._fx = f
+            elif isinstance(self.oracle, FirstOrderOracle):
+                f, g = self.oracle(self.x)
+                self._fx = f
+                self._dfx = g
+            elif isinstance(self.oracle, SecondOrderOracle):
+                f, g, h = self.oracle(self.x)
+                self._fx = f
+                self._dfx = g
+                self._d2fx = h
             else:
                 raise RuntimeError("Function value not available with this oracle.")
         return self._fx
 
     @property
     def grad(self) -> floatVec:
+        """The gradient `f'(x_k)` at the current point."""
         if self._dfx is None:
             if isinstance(self.oracle, FirstOrderOracle):
-                _, g = self.oracle(self.x)
+                f, g = self.oracle(self.x)
+                self._fx = f
                 self._dfx = g
+            elif isinstance(self.oracle, SecondOrderOracle):
+                f, g, h = self.oracle(self.x)
+                self._fx = f
+                self._dfx = g
+                self._d2fx = h
             else:
                 raise RuntimeError("Gradient not available with this oracle.")
         return self._dfx
 
     @property
     def hess(self) -> floatMat:
+        """The Hessian `f''(x_k)` at the current point."""
         if self._d2fx is None:
             if isinstance(self.oracle, SecondOrderOracle):
-                _, _, h = self.oracle(self.x)
+                f, g, h = self.oracle(self.x)
+                self._fx = f
+                self._dfx = g
                 self._d2fx = h
             else:
-                raise RuntimeError("Hessian not available.")
+                raise RuntimeError("Hessian not available with this oracle.")
         return self._d2fx
 
 
@@ -159,21 +191,20 @@ class IterativeOptimiser(ABC, Generic[TStepInfo]):
         if criteria is None:
             criteria = _crit
             if isinstance(oracle_fn, FirstOrderOracle):
+                # Default criterion for first-order methods, if unspecified
                 _crit.append(GradientNormCriterion(tol=1e-6))
         elif isinstance(criteria, CompositeCriterion):
-            for crit in criteria.criteria:
-                _crit.append(crit)
+            _crit.extend(criteria.criteria)
         elif isinstance(criteria, StoppingCriterion):
             _crit.append(criteria)
         elif isinstance(criteria, Iterable):
-            for crit in criteria:
-                _crit.append(crit)
+            _crit.extend(criteria)
         maxiter: float = float("inf")
         for crit in _crit:
             if isinstance(crit, MaxIterationsCriterion):
                 maxiter = min(maxiter, crit.maxiter)
         if maxiter == float("inf"):
-            maxiter = 1000
+            maxiter = 1000  # Default maxiter, if unspecified
             _crit.append(MaxIterationsCriterion(maxiter))
         maxiter = int(maxiter)
         criteria = CompositeCriterion(_crit)
