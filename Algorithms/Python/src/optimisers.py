@@ -13,10 +13,10 @@ import numpy as np
 from .base import (
     ExactLineSearchMixin,
     LineSearchOptimiser,
+    LineSearchStepInfo,
     SteepestDescentDirectionMixin,
 )
 from .functions import ConvexQuadratic
-from .oracle import FirstOrderOracle
 from .types import floatVec
 
 
@@ -31,9 +31,7 @@ class GradientDescent(SteepestDescentDirectionMixin, LineSearchOptimiser):
         super().reset()
         self.lr = float(self.config.get("lr", 1e-3))
 
-    def step_length(
-        self, x: floatVec, k: int, oracle_fn: FirstOrderOracle, direction: floatVec
-    ) -> float:
+    def step_length(self, info: LineSearchStepInfo) -> float:
         return self.lr
 
 
@@ -69,11 +67,12 @@ class GradientDescentArmijo(SteepestDescentDirectionMixin, LineSearchOptimiser):
 
         assert 0 < self.c < 1, "c must be in (0, 1)"
 
-    def step_length(
-        self, x: floatVec, k: int, oracle_fn: FirstOrderOracle, direction: floatVec
-    ) -> float:
-        f, grad = oracle_fn(x)
-        derphi0 = float(grad.T @ direction)
+    def step_length(self, info: LineSearchStepInfo) -> float:
+        if info.direction is None:
+            raise ValueError("Direction must be provided for line search.")
+        x, d = info.x, info.direction
+        f, grad = info.oracle(x)
+        derphi0 = float(grad.T @ d)
         # Fallback if directional derivative is non-negative
         if derphi0 >= 0:
             return self.alpha_min
@@ -81,11 +80,14 @@ class GradientDescentArmijo(SteepestDescentDirectionMixin, LineSearchOptimiser):
         # Forward expansion
         alpha_prev: float | None = None
         for alpha in np.arange(
-            self.alpha_start, self.alpha_stop + self.alpha_step, self.alpha_step
+            self.alpha_start,
+            self.alpha_stop + self.alpha_step,
+            self.alpha_step,
+            dtype=np.float64,
         ):
-            f_new, _ = self._phi_and_derphi(x, float(alpha), direction, oracle_fn)
+            f_new, _ = self._phi_and_derphi(info, alpha)
             if f_new <= f + self.c * alpha * derphi0:
-                alpha_prev = float(alpha)
+                alpha_prev = alpha
             else:
                 break
         if alpha_prev is not None:
@@ -111,18 +113,19 @@ class GradientDescentBacktracking(SteepestDescentDirectionMixin, LineSearchOptim
 
         assert 0 < self.c < 1, "c must be in (0, 1)"
 
-    def step_length(
-        self, x: floatVec, k: int, oracle_fn: FirstOrderOracle, direction: floatVec
-    ) -> float:
-        f, grad = oracle_fn(x)
-        derphi0 = float(grad.T @ direction)
+    def step_length(self, info: LineSearchStepInfo) -> float:
+        if info.direction is None:
+            raise ValueError("Direction must be provided for line search.")
+        x, d = info.x, info.direction
+        f, grad = info.oracle(x)
+        derphi0 = float(grad.T @ d)
         # Fallback if directional derivative is non-negative
         if derphi0 >= 0:
             return self.alpha_min
 
         alpha = self.alpha_init
         for _ in range(self.maxiter):
-            new_f, _ = self._phi_and_derphi(x, alpha, direction, oracle_fn)
+            new_f, _ = self._phi_and_derphi(info, alpha)
             if new_f <= f + self.c * alpha * derphi0:
                 return alpha
             alpha *= self.beta
@@ -152,18 +155,19 @@ class GradientDescentArmijoGoldstein(
 
         assert 0 < self.c < 0.5, "c must be in (0, 0.5)"
 
-    def step_length(
-        self, x: floatVec, k: int, oracle_fn: FirstOrderOracle, direction: floatVec
-    ) -> float:
-        f, grad = oracle_fn(x)
-        derphi0 = float(grad.T @ direction)
+    def step_length(self, info: LineSearchStepInfo) -> float:
+        if info.direction is None:
+            raise ValueError("Direction must be provided for line search.")
+        x, d = info.x, info.direction
+        f, grad = info.oracle(x)
+        derphi0 = float(grad.T @ d)
         # Fallback if directional derivative is non-negative
         if derphi0 >= 0:
             return self.alpha_min
 
         # If initial alpha already satisfies both, return it
         alpha = self.alpha_init
-        f_new, _ = self._phi_and_derphi(x, alpha, direction, oracle_fn)
+        f_new, _ = self._phi_and_derphi(info, alpha)
         if (f_new <= f + self.c * alpha * derphi0) and (
             f_new >= f + (1 - self.c) * alpha * derphi0
         ):
@@ -173,7 +177,7 @@ class GradientDescentArmijoGoldstein(
         alpha_lo = 0.0
         alpha_hi = alpha
         for _ in range(self.maxiter):
-            phi_hi, _ = self._phi_and_derphi(x, alpha_hi, direction, oracle_fn)
+            phi_hi, _ = self._phi_and_derphi(info, alpha_hi)
             if phi_hi <= f + self.c * alpha_hi * derphi0:
                 break
             alpha_hi *= self.beta
@@ -183,7 +187,7 @@ class GradientDescentArmijoGoldstein(
         # Bisect between alpha_lo and alpha_hi until Goldstein condition hold
         for _ in range(self.maxiter):
             alpha_mid = 0.5 * (alpha_lo + alpha_hi)
-            phi_mid, _ = self._phi_and_derphi(x, alpha_mid, direction, oracle_fn)
+            phi_mid, _ = self._phi_and_derphi(info, alpha_mid)
             if (phi_mid <= f + self.c * alpha_mid * derphi0) and (
                 phi_mid >= f + (1 - self.c) * alpha_mid * derphi0
             ):
@@ -220,11 +224,12 @@ class GradientDescentWolfe(SteepestDescentDirectionMixin, LineSearchOptimiser):
 
         assert 0 < self.c1 < self.c2 < 1, "0 < c1 < c2 < 1 must be satisfied"
 
-    def step_length(
-        self, x: floatVec, k: int, oracle_fn: FirstOrderOracle, direction: floatVec
-    ) -> float:
-        f, grad = oracle_fn(x)
-        derphi0 = float(grad.T @ direction)
+    def step_length(self, info: LineSearchStepInfo) -> float:
+        if info.direction is None:
+            raise ValueError("Direction must be provided for line search.")
+        x, d = info.x, info.direction
+        f, grad = info.oracle(x)
+        derphi0 = float(grad.T @ d)
         # Fallback if directional derivative is non-negative
         if derphi0 >= 0:
             return self.alpha_min
@@ -235,24 +240,20 @@ class GradientDescentWolfe(SteepestDescentDirectionMixin, LineSearchOptimiser):
         alpha_prev = 0.0
 
         for i in range(self.maxiter):
-            phi_a, derphi_a = self._phi_and_derphi(x, alpha, direction, oracle_fn)
+            phi_a, derphi_a = self._phi_and_derphi(info, alpha)
 
             # Check Armijo
             if (phi_a > phi0 + self.c1 * alpha * derphi0) or (
                 i > 0 and phi_a >= phi_prev
             ):
                 # bracket found between alpha_prev and alpha
-                return self._zoom(
-                    oracle_fn, x, direction, alpha_prev, alpha, phi0, derphi0
-                )
+                return self._zoom(info, alpha_prev, alpha, phi0, derphi0)
             # Check strong Wolfe
             if abs(derphi_a) <= self.c2 * abs(derphi0):
                 return alpha
             # If derivative is positive, bracket and zoom
             if derphi_a >= 0:
-                return self._zoom(
-                    oracle_fn, x, direction, alpha, alpha_prev, phi0, derphi0
-                )
+                return self._zoom(info, alpha, alpha_prev, phi0, derphi0)
             # Otherwise increase alpha (extrapolate)
             alpha_prev = alpha
             phi_prev = phi_a
@@ -261,9 +262,7 @@ class GradientDescentWolfe(SteepestDescentDirectionMixin, LineSearchOptimiser):
 
     def _zoom(
         self,
-        oracle_fn: FirstOrderOracle,
-        x: floatVec,
-        d: floatVec,
+        info: LineSearchStepInfo,
         alpha_lo: float,
         alpha_hi: float,
         phi0: float,
@@ -274,10 +273,12 @@ class GradientDescentWolfe(SteepestDescentDirectionMixin, LineSearchOptimiser):
         Zoom procedure as in Nocedal & Wright (uses safe bisection interpolation).
         Returns an alpha that satisfies strong Wolfe (if found), otherwise the best found.
         """
-        phi_lo, _derphi_lo = self._phi_and_derphi(x, alpha_lo, d, oracle_fn)
+        if info.direction is None:
+            raise ValueError("Direction must be provided for line search.")
+        phi_lo, _derphi_lo = self._phi_and_derphi(info, alpha_lo)
         for _ in range(maxiter):
             alpha_j = 0.5 * (alpha_lo + alpha_hi)  # safe midpoint
-            phi_j, derphi_j = self._phi_and_derphi(x, alpha_j, d, oracle_fn)
+            phi_j, derphi_j = self._phi_and_derphi(info, alpha_j)
 
             # Armijo condition
             if (phi_j > phi0 + self.c1 * alpha_j * derphi0) or (phi_j >= phi_lo):
@@ -315,7 +316,8 @@ class ConjugateDirectionMethod(LineSearchOptimiser):
             raise ValueError(f"{self.__class__.__name__} requires directions apriori.")
         self.directions: list[floatVec] = self.config.get("directions", [])
 
-    def direction(self, x: floatVec, k: int, oracle_fn: FirstOrderOracle) -> floatVec:
+    def direction(self, info: LineSearchStepInfo) -> floatVec:
+        k = info.k
         if k < len(self.directions):
             direction = self.directions[k]
             self.line_search.step_directions.append(direction)
@@ -323,15 +325,13 @@ class ConjugateDirectionMethod(LineSearchOptimiser):
         else:
             raise IndexError(f"No more directions available for iteration {k}.")
 
-    def step_length(
-        self, x: floatVec, k: int, oracle_fn: FirstOrderOracle, direction: floatVec
-    ) -> float:
-        if not isinstance(oracle_fn._oracle_f, ConvexQuadratic):
+    def step_length(self, info: LineSearchStepInfo) -> float:
+        if not isinstance(info.oracle._oracle_f, ConvexQuadratic):
             raise NotImplementedError(
                 f"This implementation of {self.__class__.__name__} requires a ConvexQuadratic Function."
             )
 
-        alpha = self.line_search.step_length(x, k, oracle_fn, direction)
+        alpha = self.line_search.step_length(info)
         self.step_directions[-1] = self.line_search.step_directions[-1]
         return alpha
 
@@ -351,8 +351,11 @@ class ConjugateGradientMethod(LineSearchOptimiser):
 
         self.rTr_prev: float
 
-    def direction(self, x: floatVec, k: int, oracle_fn: FirstOrderOracle) -> floatVec:
-        f, grad = oracle_fn(x)
+    def direction(self, info: LineSearchStepInfo) -> floatVec:
+        if info.direction is None:
+            raise ValueError("Direction must be provided for line search.")
+        x, k = info.x, info.k
+        f, grad = info.oracle(x)
         if k == 0:
             self.rTr_prev = float(grad.T @ grad)
             direction = -grad
@@ -363,14 +366,12 @@ class ConjugateGradientMethod(LineSearchOptimiser):
         self.line_search.step_directions.append(direction)
         return direction
 
-    def step_length(
-        self, x: floatVec, k: int, oracle_fn: FirstOrderOracle, direction: floatVec
-    ) -> float:
-        if not isinstance(oracle_fn._oracle_f, ConvexQuadratic):
+    def step_length(self, info: LineSearchStepInfo) -> float:
+        if not isinstance(info.oracle._oracle_f, ConvexQuadratic):
             raise NotImplementedError(
                 f"This implementation of {self.__class__.__name__} requires a ConvexQuadratic Function."
             )
 
-        alpha = self.line_search.step_length(x, k, oracle_fn, direction)
+        alpha = self.line_search.step_length(info)
         self.step_directions[-1] = self.line_search.step_directions[-1]
         return alpha
