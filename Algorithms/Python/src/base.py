@@ -10,7 +10,8 @@ References
 
 import time
 from abc import ABC, abstractmethod
-from typing import Any, Generic, Iterable, Optional, TypedDict, TypeVar, Union
+from dataclasses import dataclass, field
+from typing import Generic, Iterable, Optional, TypedDict, TypeVar, Union
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -36,26 +37,23 @@ TStepInfo = TypeVar("TStepInfo", bound="StepInfo")
 """Generic type for Step classes."""
 
 
+@dataclass
 class StepInfo:
-    """
-    A base class for Step information.
-    Encapsulates the state of the algorithm at iteration `k`.
-    """
+    """A dataclass for the state of the algorithm at iteration `k`."""
 
-    def __init__(self, x: floatVec, k: int, oracle: AbstractOracle):
-        self.x: floatVec = x
-        """The current point `x_k` in the input space."""
+    x: floatVec
+    """The current point `x_k` in the input space."""
 
-        self.k: int = k
-        """The current iteration number `k`."""
+    k: int
+    """The current iteration number `k`."""
 
-        self.oracle: AbstractOracle = oracle
-        """The oracle function used to evaluate `f`."""
+    oracle: AbstractOracle
+    """The oracle function used to evaluate `f`."""
 
-        # Internal values
-        self._fx: Optional[float] = None
-        self._dfx: Optional[floatVec] = None
-        self._d2fx: Optional[floatMat] = None
+    # Internal values
+    _fx: Optional[float] = field(init=False, default=None)
+    _dfx: Optional[floatVec] = field(init=False, default=None)
+    _d2fx: Optional[floatMat] = field(init=False, default=None)
 
     @property
     def fx(self) -> float:
@@ -292,11 +290,10 @@ class IterativeOptimiser(ABC, Generic[TStepInfo]):
         show_solution(x, fx, table=table)
 
 
+@dataclass
 class LineSearchStepInfo(StepInfo):
-    def __init__(self, x: floatVec, k: int, oracle: FirstOrderOracle):
-        super().__init__(x, k, oracle)
-        self.direction: Optional[floatVec] = None
-        self.alpha: Optional[float] = None
+    direction: Optional[floatVec] = None
+    alpha: Optional[float] = None
 
 
 class LineSearchOptimiser(IterativeOptimiser[LineSearchStepInfo]):
