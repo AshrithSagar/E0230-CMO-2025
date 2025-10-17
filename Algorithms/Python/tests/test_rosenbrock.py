@@ -6,6 +6,7 @@ import numpy as np
 from src.functions import Rosenbrock
 from src.optimisers import GradientDescent
 from src.oracle import FirstOrderOracle
+from src.stopping import GradientNormCriterion, MaxIterationsCriterion
 
 
 def test_rosenbrock():
@@ -14,9 +15,13 @@ def test_rosenbrock():
     oracle = FirstOrderOracle(func)
     optimizer = GradientDescent(lr=1e-3)
     x0 = np.zeros(dim)
-    optimizer.run(oracle_fn=oracle, x0s=[x0], maxiter=int(1e6), tol=1e-6)
-    assert np.allclose(optimizer.x_star, func.x_star, atol=1e-4), (
-        f"Expected {func.x_star}, but got {optimizer.x_star}"
+    criteria = [
+        MaxIterationsCriterion(maxiter=int(1e6)),
+        GradientNormCriterion(tol=1e-6),
+    ]
+    info = optimizer.run(oracle_fn=oracle, x0=x0, criteria=criteria)
+    assert np.allclose(info["x_star"], func.x_star, atol=1e-4), (
+        f"Expected {func.x_star}, but got {info['x_star']}"
     )
 
 

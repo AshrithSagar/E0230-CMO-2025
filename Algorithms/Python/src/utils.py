@@ -62,7 +62,6 @@ def format_time(t: float | None) -> str:
 def show_solution(
     x: floatVec,
     fx: float,
-    dfx: floatVec,
     table: Table | None = None,
     title: TextType | None = None,
     console: Console | None = None,
@@ -76,6 +75,4 @@ def show_solution(
         console = Console()
     table.add_row("x*", format_float(x, sep=", "))
     table.add_row("f(x*)", format_float(fx))
-    table.add_row("f'(x*)", format_float(dfx, sep=", ", fprec=6, ffmt="e"))
-    table.add_row("||f'(x*)||", f"{np.linalg.norm(dfx):.6e}")
     console.print(table)

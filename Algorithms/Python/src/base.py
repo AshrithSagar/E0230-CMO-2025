@@ -1,16 +1,16 @@
 """
 src/base.py
 =======
-Base templates for algorithms
+Algorithm base and mixin classes.
 
 References
 -------
 - Nocedal, J., & Wright, S. J. (2006). Numerical optimization. Springer.
 """
 
-import math
 import time
 from abc import ABC, abstractmethod
+from typing import Any, Iterable, Optional, Union
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -20,14 +20,19 @@ from rich.table import Table
 from rich.text import TextType
 
 from .functions import ConvexQuadratic
-from .oracle import FirstOrderOracle
+from .oracle import AbstractOracle, FirstOrderOracle
+from .stopping import (
+    CompositeCriterion,
+    GradientNormCriterion,
+    MaxIterationsCriterion,
+    StoppingCriterion,
+)
 from .types import floatVec
 from .utils import format_float, format_time, show_solution
 
 console = Console()
 
 
-# ---------- Algorithm Templates ----------
 class IterativeOptimiser(ABC):
     """
     A base template class for iterative optimisation algorithms,
@@ -45,39 +50,22 @@ class IterativeOptimiser(ABC):
         self.name = self.__class__.__name__
         """Name of the algorithm, derived from the class name of the optimiser."""
 
-        self.history: list[floatVec] = []
-        self.x_star: floatVec
-        self.fx_star: float
-        self.dfx_star: floatVec
-
-        self.maxiter: int
-        self.tol: float
-
-    def initialise_state(self) -> None:
+    def reset(self) -> None:
         """
-        Initialises the state of the algorithm.\\
+        Resets the internal state of the algorithm before a new run.\\
         [Optional]: This method can be overridden by subclasses to set up any necessary state if needed.
         """
         pass
 
     @abstractmethod
-    def step(
-        self,
-        x: floatVec,
-        k: int,
-        f: float,
-        grad: floatVec,
-        oracle_fn: FirstOrderOracle,
-    ) -> floatVec:
+    def step(self, x: floatVec, k: int, oracle_fn: AbstractOracle) -> floatVec:
         """
         Performs a single step of the algorithm.\\
         [Required]: This method should be implemented by subclasses to define the specific update rule.
         Parameters:
             x: Current value of `x`, i.e., `x_k`.
             k: Current iteration number.
-            f: Current function value `f(x)`, viz. `f(x_k)`.
-            grad: Current gradient `f'(x)`, viz. `f'(x_k)`.
-            oracle_fn: The oracle function to query for `f(x)` and `f'(x)`.
+            oracle_fn: The oracle function to query for `f(x)`.
         Returns:
             The updated value of `x` after the step, viz. `x_{k+1}`.
         """
@@ -85,148 +73,113 @@ class IterativeOptimiser(ABC):
 
     def run(
         self,
-        oracle_fn: FirstOrderOracle,
-        x0s: list[floatVec],
-        maxiter: int = 1_000,
-        tol: float = 1e-6,
+        oracle_fn: AbstractOracle,
+        x0: floatVec,
+        criteria: Optional[
+            Union[StoppingCriterion, CompositeCriterion, Iterable[StoppingCriterion]]
+        ] = None,
         show_params: bool = True,
-        log_runs: bool = False,
-    ):
+    ) -> dict[str, Any]:
         """
         Runs the iterative algorithm.
 
         Parameters:
             oracle_fn: The first-order oracle function to minimise.
-            x0s: Initial guesses for the minimum point.
-            maxiter: Maximum number of iterations to perform.
-            tol: Tolerance for stopping criterion based on the gradient.
+            x0: Initial guess for the minimum point.
+            criteria: List of stopping criteria to determine when to stop the optimisation.
             show_params: Whether to display the configuration parameters of the algorithm.
-            log_runs: Log all the runs over different initial points, not just the best one.
+
+        Returns:
+            A dictionary containing the results of the optimisation run, including:
+            - 'x0': Initial point.
+            - 'x_star': Estimated minimum point.
+            - 'f_star': Function value at the estimated minimum point.
+            - 'n_iters': Number of iterations performed.
+            - 'history': List of `x` values at each iteration.
+            - 'oracle_call_count': Total number of oracle calls made.
+            - 'time_taken': Total time taken for the optimisation run.
         """
-        self.maxiter = maxiter
-        self.tol = tol
 
         console = Console()
         console.print(f"[bold blue]{self.name}[/]")
         if show_params and self.config:
             console.print(f"params: {self.config}")
-        has_multiple_x0 = len(x0s) > 1
 
-        self.runs = []
-        t00 = time.perf_counter()
-        for idx, x0 in enumerate(x0s, start=1):
-            oracle_fn.reset()
-            history = [x0]
-            x = x0
-            self.initialise_state()
+        _crit: list[StoppingCriterion] = []
+        if criteria is None:
+            criteria = _crit
+            if isinstance(oracle_fn, FirstOrderOracle):
+                _crit.append(GradientNormCriterion(tol=1e-6))
+        elif isinstance(criteria, CompositeCriterion):
+            for crit in criteria.criteria:
+                _crit.append(crit)
+        elif isinstance(criteria, StoppingCriterion):
+            _crit.append(criteria)
+        elif isinstance(criteria, Iterable):
+            for crit in criteria:
+                _crit.append(crit)
+        maxiter: float = float("inf")
+        for crit in _crit:
+            if isinstance(crit, MaxIterationsCriterion):
+                maxiter = min(maxiter, crit.maxiter)
+        if maxiter == float("inf"):
+            maxiter = 1000
+            _crit.append(MaxIterationsCriterion(maxiter))
+        maxiter = int(maxiter)
+        criteria = CompositeCriterion(_crit)
 
-            progress = Progress(
-                TextColumn("[progress.description]{task.description}"),
-                TextColumn("iter:{task.completed:04},"),
-                TextColumn("f(x):{task.fields[fx]:.4e},"),
-                TextColumn("||f'(x)||: {task.fields[grad_norm]:.2e},"),
-                TextColumn("Oracle calls: {task.fields[oracle_calls]:04}"),
-                TimeElapsedColumn(),
-                console=console,
-                transient=True,
-            )
-            progress.start()
-            t0 = time.perf_counter()
-            try:
-                task = progress.add_task(
-                    "Run" + f" {idx}" if has_multiple_x0 else "" + ":",
-                    total=maxiter,
-                    fx=float("nan"),
-                    grad_norm=float("nan"),
-                    oracle_calls=0,
-                )
-                for k in range(1, maxiter + 1):
-                    fx, dfx = oracle_fn(x)  # Query the oracle function
-                    grad_norm = np.linalg.norm(dfx)
-                    progress.update(
-                        task,
-                        advance=1,
-                        fx=fx,
-                        grad_norm=grad_norm,
-                        oracle_calls=oracle_fn.call_count,
-                    )
-                    if grad_norm < tol:  # Early exit, if ||f'(x)|| is small enough
-                        break
-                    x = self.step(x, k, fx, dfx, oracle_fn)
-                    history.append(x)
-                fx, dfx = oracle_fn(x)
-            except OverflowError:  # Fallback, in case of non-convergence
-                x = np.full(oracle_fn.dim, np.nan)
-                fx, dfx = float("nan"), np.full(oracle_fn.dim, np.nan)
-            finally:
-                progress.stop()
-            t1 = time.perf_counter()
-            t = t1 - t0
+        k: int = 0
+        x: floatVec = x0
+        history: list[floatVec] = [x0]
+        self.reset()
+        oracle_fn.reset()
+        criteria.reset()
 
-            self.runs.append(
-                {
-                    "x0": x0,
-                    "x_star": x,
-                    "fx_star": fx,
-                    "dfx_star": dfx,
-                    "history": history,
-                    "oracle_call_count": oracle_fn.call_count,
-                    "time_taken": t,
-                }
-            )
-            if log_runs and has_multiple_x0:
-                title = f"[not italic][bold yellow]Run {idx}:[/]"
-                self._show_run_result(
-                    x, fx, dfx, x0, len(history) - 1, oracle_fn.call_count, title
-                )
-                console.print(f"[bright_black]Time taken: {format_time(t)}[/]")
-        t10 = time.perf_counter()
-
-        # Pick best run by lowest ||f'(x^*)||, if tied then prefer lower oracle call count
-        if valid_runs := [
-            r
-            for r in self.runs
-            if not (math.isnan(r["fx_star"]) or np.any(np.isnan(r["dfx_star"])))
-        ]:
-            best = min(
-                valid_runs,
-                key=lambda r: (np.linalg.norm(r["dfx_star"]), r["oracle_call_count"]),
-            )
-            run_idx = next(i for i, run in enumerate(self.runs, start=1) if run is best)
-            self.x_star = best["x_star"]
-            self.fx_star, self.dfx_star = best["fx_star"], best["dfx_star"]
-            self.history = best["history"]
-            x0 = best["x0"]
-            n_iters = len(best["history"]) - 1
-            n_oracle = best["oracle_call_count"]
-        else:
-            run_idx = ""
-            self.x_star = np.full(oracle_fn.dim, np.nan)
-            self.fx_star, self.dfx_star = float("nan"), np.full(oracle_fn.dim, np.nan)
-            self.history = []
-            x0 = np.full(oracle_fn.dim, np.nan)
-            n_iters = ""
-            n_oracle = ""
-
-        title = (
-            f"[not italic][bold green]Best run (Run {run_idx}):[/]"
-            if has_multiple_x0
-            else ""
+        progress = Progress(
+            TextColumn("[progress.description]{task.description}"),
+            TextColumn("iter:{task.completed:04},"),
+            TextColumn("Oracle calls: {task.fields[oracle_calls]:04}"),
+            TimeElapsedColumn(),
+            console=console,
+            transient=True,
         )
-        self._show_run_result(
-            self.x_star, self.fx_star, self.dfx_star, x0, n_iters, n_oracle, title
-        )
-        console.print(f"[bright_black]Time taken: {format_time(t10 - t00)}[/]")
+        progress.start()
+        t0 = time.perf_counter()
+        try:
+            task = progress.add_task("Running...", total=maxiter, oracle_calls=0)
+            for k in range(maxiter):
+                progress.update(task, advance=1, oracle_calls=oracle_fn.call_count)
+                if criteria.check(x, k, oracle_fn):
+                    break
+                x = self.step(x, k, oracle_fn)
+                history.append(x)
+        except OverflowError:  # Fallback, in case of non-convergence
+            x = np.full(oracle_fn.dim, np.nan)
+        finally:
+            progress.stop()
+        t1 = time.perf_counter()
+        t = t1 - t0
 
-    def plot_history(self):
-        """Plots the history of `x` values during the optimisation."""
-        plt.plot(self.history, label=self.name)
+        fx = oracle_fn._oracle_f.eval(x)
+        n_iters = k + 1
+        n_oracle = oracle_fn.call_count
+        info = {
+            "x0": x0,
+            "x_star": x,
+            "f_star": fx,
+            "n_iters": n_iters,
+            "history": history,
+            "oracle_call_count": n_oracle,
+            "time_taken": t,
+        }
+        self._show_run_result(x, fx, x0, n_iters, n_oracle)
+        console.print(f"[bright_black]Time taken: {format_time(t)}[/]")
+        return info
 
     def _show_run_result(
         self,
         x: floatVec,
         fx: float,
-        dfx: floatVec,
         x0: floatVec,
         n_iters: int | str,
         n_oracle: int | str,
@@ -240,10 +193,10 @@ class IterativeOptimiser(ABC):
         table.add_row("Iterations", str(n_iters))
         table.add_row("Oracle calls", str(n_oracle))
         table.add_section()
-        show_solution(x, fx, dfx, table=table)
+        show_solution(x, fx, table=table)
 
 
-class LineSearchOptimiser(IterativeOptimiser, ABC):
+class LineSearchOptimiser(IterativeOptimiser):
     """
     A base template class for line search-based iterative optimisation algorithms.
 
@@ -251,14 +204,12 @@ class LineSearchOptimiser(IterativeOptimiser, ABC):
     where `alpha_k` is the step length along the descent direction `p_k`.
     """
 
-    def initialise_state(self):
-        super().initialise_state()
+    def reset(self):
+        super().reset()
         self.step_lengths: list[float] = []
         self.step_directions: list[floatVec] = []
 
-    def direction(
-        self, x: floatVec, k: int, f: float, grad: floatVec, oracle_fn: FirstOrderOracle
-    ) -> floatVec:
+    def direction(self, x: floatVec, k: int, oracle_fn: FirstOrderOracle) -> floatVec:
         """
         Returns the descent direction `p_k` to move towards from `x_k`.\\
         [Required]: This method should be implemented by subclasses to define the specific direction strategy.
@@ -266,13 +217,7 @@ class LineSearchOptimiser(IterativeOptimiser, ABC):
         raise NotImplementedError
 
     def step_length(
-        self,
-        x: floatVec,
-        k: int,
-        f: float,
-        grad: floatVec,
-        oracle_fn: FirstOrderOracle,
-        direction: floatVec,
+        self, x: floatVec, k: int, oracle_fn: FirstOrderOracle, direction: floatVec
     ) -> float:
         """
         Returns step length `alpha_k` to take along the descent direction `p_k`.\\
@@ -280,11 +225,15 @@ class LineSearchOptimiser(IterativeOptimiser, ABC):
         """
         raise NotImplementedError
 
-    def step(self, x, k, f, grad, oracle_fn):
-        p_k = self.direction(x, k, f, grad, oracle_fn)
+    def step(self, x, k, oracle_fn):
+        assert isinstance(oracle_fn, FirstOrderOracle), (
+            f"{self.__class__.__name__} requires a FirstOrderOracle."
+        )
+
+        p_k = self.direction(x, k, oracle_fn)
         self.step_directions.append(p_k)
 
-        alpha_k = self.step_length(x, k, f, grad, oracle_fn, p_k)
+        alpha_k = self.step_length(x, k, oracle_fn, p_k)
         self.step_lengths.append(alpha_k)
 
         return x + alpha_k * p_k
@@ -313,10 +262,9 @@ class SteepestDescentDirectionMixin(LineSearchOptimiser):
     `p_k = -f'(x_k)`
     """
 
-    def direction(
-        self, x: floatVec, k: int, f: float, grad: floatVec, oracle_fn: FirstOrderOracle
-    ) -> floatVec:
-        return -grad
+    def direction(self, x: floatVec, k: int, oracle_fn: FirstOrderOracle) -> floatVec:
+        fx, dfx = oracle_fn(x)
+        return -dfx
 
 
 class ExactLineSearchMixin(LineSearchOptimiser):
@@ -327,17 +275,8 @@ class ExactLineSearchMixin(LineSearchOptimiser):
     where `Q` is the symmetric positive definite Hessian matrix of the convex quadratic function.
     """
 
-    def initialise_state(self):
-        super().initialise_state()
-
     def step_length(
-        self,
-        x: floatVec,
-        k: int,
-        f: float,
-        grad: floatVec,
-        oracle_fn: FirstOrderOracle,
-        direction: floatVec,
+        self, x: floatVec, k: int, oracle_fn: FirstOrderOracle, direction: floatVec
     ) -> float:
         if not isinstance(oracle_fn._oracle_f, ConvexQuadratic):
             raise NotImplementedError(
@@ -345,6 +284,7 @@ class ExactLineSearchMixin(LineSearchOptimiser):
             )
 
         Q = oracle_fn._oracle_f.Q
+        _, grad = oracle_fn(x)
         numer = float(grad.T @ direction)
         denom = float(direction.T @ Q @ direction)
         alpha = numer / denom
