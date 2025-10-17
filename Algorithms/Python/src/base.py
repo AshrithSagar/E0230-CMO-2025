@@ -10,7 +10,7 @@ References
 
 import time
 from abc import ABC, abstractmethod
-from typing import Any, Generic, Iterable, Optional, TypeVar, Union
+from typing import Any, Generic, Iterable, Optional, TypedDict, TypeVar, Union
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -108,6 +108,27 @@ class StepInfo:
         return self._d2fx
 
 
+class RunInfo(TypedDict):
+    """
+    Dictionary type for storing run information of an optimiser.
+    - 'x0': Initial point.
+    - 'x_star': Estimated minimum point.
+    - 'f_star': Function value at the estimated minimum point.
+    - 'n_iters': Number of iterations performed.
+    - 'history': List of `x` values at each iteration.
+    - 'oracle_call_count': Total number of oracle calls made.
+    - 'time_taken': Total time taken for the optimisation run.
+    """
+
+    x0: floatVec
+    x_star: floatVec
+    f_star: float
+    n_iters: int
+    history: list[floatVec]
+    oracle_call_count: int
+    time_taken: float
+
+
 class IterativeOptimiser(ABC, Generic[TStepInfo]):
     """
     A base template class for iterative optimisation algorithms,
@@ -161,7 +182,7 @@ class IterativeOptimiser(ABC, Generic[TStepInfo]):
             Union[StoppingCriterion, CompositeCriterion, Iterable[StoppingCriterion]]
         ] = None,
         show_params: bool = True,
-    ) -> dict[str, Any]:
+    ) -> RunInfo:
         """
         Runs the iterative algorithm.
 
@@ -172,14 +193,7 @@ class IterativeOptimiser(ABC, Generic[TStepInfo]):
             show_params: Whether to display the configuration parameters of the algorithm.
 
         Returns:
-            A dictionary containing the results of the optimisation run, including:
-            - 'x0': Initial point.
-            - 'x_star': Estimated minimum point.
-            - 'f_star': Function value at the estimated minimum point.
-            - 'n_iters': Number of iterations performed.
-            - 'history': List of `x` values at each iteration.
-            - 'oracle_call_count': Total number of oracle calls made.
-            - 'time_taken': Total time taken for the optimisation run.
+            An instance of `RunInfo` containing details about the optimisation run.
         """
 
         console = Console()
@@ -245,15 +259,15 @@ class IterativeOptimiser(ABC, Generic[TStepInfo]):
         fx = oracle_fn._oracle_f.eval(x)
         n_iters = k + 1
         n_oracle = oracle_fn.call_count
-        info = {
-            "x0": x0,
-            "x_star": x,
-            "f_star": fx,
-            "n_iters": n_iters,
-            "history": history,
-            "oracle_call_count": n_oracle,
-            "time_taken": t,
-        }
+        info = RunInfo(
+            x0=x0,
+            x_star=x,
+            f_star=fx,
+            n_iters=n_iters,
+            history=history,
+            oracle_call_count=n_oracle,
+            time_taken=t,
+        )
         self._show_run_result(x, fx, x0, n_iters, n_oracle)
         console.print(f"[bright_black]Time taken: {format_time(t)}[/]")
         return info
