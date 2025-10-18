@@ -4,17 +4,12 @@ src/oracle.py
 Oracle utils
 """
 
-from abc import ABC, abstractmethod
-from typing import Tuple
-
-import numpy as np
-
 from .functions import Function
 from .types import floatVec
 
 
-class AbstractOracle(ABC):
-    """An abstract base class for oracles."""
+class AbstractOracle:
+    """A base class for oracles."""
 
     def __init__(self, func: Function):
         self._oracle_f = func
@@ -29,72 +24,65 @@ class AbstractOracle(ABC):
         This is useful for the 'analytical complexity' of the algorithms.
         """
 
-    @abstractmethod
-    def __call__(self, x: floatVec) -> Tuple:
-        """Evaluates the oracle function at `x`."""
-        raise NotImplementedError
-
     def reset(self):
-        """Resets the internal call count."""
+        """Resets the internal call counts."""
         self.call_count = 0
         return self
 
 
 class ZeroOrderOracle(AbstractOracle):
-    """
-    `f = oracle(x)`
-    """
-
-    def __call__(self, x: floatVec) -> tuple[float]:
-        self._oracle_f._verify_input(x)
-        fx = self._oracle_f.eval(x)
-
-        self.call_count += 1
-        return ((fx),)
-
-
-class FirstOrderOracle(AbstractOracle):
-    """
-    `f(x), f'(x) = oracle(x)`
-    """
+    """`f = oracle(x)`"""
 
     def __init__(self, func: Function):
-        if type(func).grad == Function.grad:
-            raise NotImplementedError(
-                f"Function {func.__class__.__name__} must have a `grad` method to use as a {self.__class__.__name__}."
-            )
         super().__init__(func)
 
-    def __call__(self, x: floatVec) -> tuple[float, floatVec]:
-        self._oracle_f._verify_input(x)
-        fx = self._oracle_f.eval(x)
-        dfx = self._oracle_f.grad(x)
+        self.eval_call_count: int = 0
+        """Tracks the number of function evaluations."""
 
+    def eval(self, x: floatVec) -> float:
         self.call_count += 1
-        return fx, dfx
+        self.eval_call_count += 1
+        return self._oracle_f.eval(x)
+
+    def reset(self):
+        super().reset()
+        self.eval_call_count = 0
+        return self
 
 
-class SecondOrderOracle(AbstractOracle):
-    """
-    `f(x), f'(x), f''(x) = oracle(x)`
-    """
+class FirstOrderOracle(ZeroOrderOracle):
+    """`f(x), f'(x) = oracle(x)`"""
 
     def __init__(self, func: Function):
-        if type(func).grad == Function.grad:
-            raise NotImplementedError(
-                f"Function {func.__class__.__name__} must have a `grad` method to use as a {self.__class__.__name__}."
-            )
-        if type(func).hess == Function.hess:
-            raise NotImplementedError(
-                f"Function {func.__class__.__name__} must have a `hess` method to use as a {self.__class__.__name__}."
-            )
         super().__init__(func)
+        self.grad_call_count: int = 0
+        """Tracks the number of gradient evaluations."""
 
-    def __call__(self, x: floatVec) -> tuple[float, floatVec, np.ndarray]:
-        self._oracle_f._verify_input(x)
-        fx = self._oracle_f.eval(x)
-        dfx = self._oracle_f.grad(x)
-        d2fx = self._oracle_f.hess(x)
-
+    def grad(self, x: floatVec) -> floatVec:
         self.call_count += 1
-        return fx, dfx, d2fx
+        self.grad_call_count += 1
+        return self._oracle_f.grad(x)
+
+    def reset(self):
+        super().reset()
+        self.grad_call_count = 0
+        return self
+
+
+class SecondOrderOracle(FirstOrderOracle):
+    """`f(x), f'(x), f''(x) = oracle(x)`"""
+
+    def __init__(self, func: Function):
+        super().__init__(func)
+        self.hess_call_count: int = 0
+        """Tracks the number of Hessian evaluations."""
+
+    def hess(self, x: floatVec) -> floatVec:
+        self.call_count += 1
+        self.hess_call_count += 1
+        return self._oracle_f.hess(x)
+
+    def reset(self):
+        super().reset()
+        self.hess_call_count = 0
+        return self

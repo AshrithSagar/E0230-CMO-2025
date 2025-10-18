@@ -20,7 +20,13 @@ from rich.table import Table
 from rich.text import TextType
 
 from .functions import ConvexQuadratic
-from .info import LineSearchStepInfo, RunInfo, StepInfo, TStepInfo
+from .info import (
+    FirstOrderLineSearchStepInfo,
+    RunInfo,
+    SecondOrderLineSearchStepInfo,
+    TLineSearchStepInfo,
+    TStepInfo,
+)
 from .oracle import AbstractOracle, FirstOrderOracle
 from .stopping import (
     CompositeCriterion,
@@ -44,6 +50,8 @@ class IterativeOptimiser(ABC, Generic[TStepInfo]):
     `x_k` is the value at iteration `k`.
     """
 
+    StepInfoClass: type[TStepInfo]
+
     def __init__(self, **kwargs):
         # Initialises the iterative optimiser with configuration parameters.
         self.config = kwargs
@@ -51,21 +59,12 @@ class IterativeOptimiser(ABC, Generic[TStepInfo]):
         self.name = self.__class__.__name__
         """Name of the algorithm, derived from the class name of the optimiser."""
 
-    def _make_step_info(
-        self, x: floatVec, k: int, oracle_fn: AbstractOracle
-    ) -> TStepInfo:
-        """
-        Helper to create StepInfo instances.
-        Can be overridden by subclasses to provide custom StepInfo types.
-        """
-        return StepInfo(x, k, oracle_fn)  # type: ignore
-
-    def reset(self) -> None:
+    def reset(self):
         """
         Resets the internal state of the algorithm before a new run.\\
         [Optional]: This method can be overridden by subclasses to set up any necessary state if needed.
         """
-        pass
+        return self
 
     @abstractmethod
     def step(self, info: TStepInfo) -> floatVec:
@@ -149,7 +148,7 @@ class IterativeOptimiser(ABC, Generic[TStepInfo]):
             task = progress.add_task("Running...", total=maxiter, oracle_calls=0)
             for k in range(maxiter):
                 progress.update(task, advance=1, oracle_calls=oracle_fn.call_count)
-                info = self._make_step_info(x, k, oracle_fn)
+                info = self.StepInfoClass(x, k, oracle_fn)
                 if criteria.check(info):
                     break
                 x = self.step(info)
@@ -197,7 +196,7 @@ class IterativeOptimiser(ABC, Generic[TStepInfo]):
         show_solution(x, fx, table=table)
 
 
-class LineSearchOptimiser(IterativeOptimiser[LineSearchStepInfo]):
+class LineSearchOptimiser(IterativeOptimiser[TLineSearchStepInfo]):
     """
     A base template class for line search-based iterative optimisation algorithms.
 
@@ -205,36 +204,32 @@ class LineSearchOptimiser(IterativeOptimiser[LineSearchStepInfo]):
     where `alpha_k` is the step length along the descent direction `p_k`.
     """
 
-    def _make_step_info(
-        self, x: floatVec, k: int, oracle_fn: AbstractOracle
-    ) -> LineSearchStepInfo:
-        assert isinstance(oracle_fn, FirstOrderOracle)
-        return LineSearchStepInfo(x, k, oracle_fn)
-
     def reset(self):
-        super().reset()
         self.step_lengths: list[float] = []
         self.step_directions: list[floatVec] = []
+        return super().reset()
 
-    def direction(self, info: LineSearchStepInfo) -> floatVec:
+    def direction(self, info: TLineSearchStepInfo) -> floatVec:
         """
         Returns the descent direction `p_k` to move towards from `x_k`.\\
         [Required]: This method should be implemented by subclasses to define the specific direction strategy.
         """
         raise NotImplementedError
 
-    def step_length(self, info: LineSearchStepInfo) -> float:
+    def step_length(self, info: TLineSearchStepInfo) -> float:
         """
         Returns step length `alpha_k` to take along the descent direction `p_k`.\\
         [Required]: This method should be implemented by subclasses to define the specific step length strategy.
         """
         raise NotImplementedError
 
-    def step(self, info: LineSearchStepInfo) -> floatVec:
+    def step(self, info: TLineSearchStepInfo) -> floatVec:
         p_k = self.direction(info)
+        info.direction = p_k
         self.step_directions.append(p_k)
 
         alpha_k = self.step_length(info)
+        info.alpha = alpha_k
         self.step_lengths.append(alpha_k)
 
         return info.x + alpha_k * p_k
@@ -243,20 +238,22 @@ class LineSearchOptimiser(IterativeOptimiser[LineSearchStepInfo]):
         """Plot step lengths vs iterations for the best run."""
         plt.plot(self.step_lengths, marker="o", label=self.name)
 
-    def _phi_and_derphi(self, info: LineSearchStepInfo, alpha: float):
+    def _phi_and_derphi(self, info: FirstOrderLineSearchStepInfo, alpha: float):
         """Computes\\
         `phi(alpha) = f(x + alpha * d)`\\
         `phi'(alpha) = f'(x + alpha * d)^T d`
         """
         if info.direction is None:
             raise ValueError("Direction not set in StepInfo.")
-        x, d = info.x, info.direction
+        x = info.x
+        d = info.direction
         xa = x + alpha * d
-        fa, g_a = info.oracle(xa)
-        return fa, float(g_a.T @ d)
+        fa = info.eval(xa)
+        ga = info.grad(xa)
+        return fa, float(ga.T @ d)
 
 
-class SteepestDescentDirectionMixin(LineSearchOptimiser):
+class SteepestDescentDirectionMixin(LineSearchOptimiser[FirstOrderLineSearchStepInfo]):
     """
     A mixin class that provides the steepest descent direction strategy,
     i.e., the Cauchy direction, which is the negative gradient direction.
@@ -264,11 +261,14 @@ class SteepestDescentDirectionMixin(LineSearchOptimiser):
     `p_k = -f'(x_k)`
     """
 
-    def direction(self, info: LineSearchStepInfo) -> floatVec:
-        return -info.grad
+    StepInfoClass = FirstOrderLineSearchStepInfo
+
+    def direction(self, info: FirstOrderLineSearchStepInfo) -> floatVec:
+        grad = info.dfx
+        return -grad
 
 
-class ExactLineSearchMixin(LineSearchOptimiser):
+class ExactLineSearchMixin(LineSearchOptimiser[FirstOrderLineSearchStepInfo]):
     """
     A mixin class that provides the exact line search step length strategy for convex quadratic functions.
 
@@ -276,27 +276,43 @@ class ExactLineSearchMixin(LineSearchOptimiser):
     where `Q` is the symmetric positive definite Hessian matrix of the convex quadratic function.
     """
 
-    def step_length(self, info: LineSearchStepInfo) -> float:
+    StepInfoClass = FirstOrderLineSearchStepInfo
+
+    def step_length(self, info: FirstOrderLineSearchStepInfo) -> float:
         if not isinstance(info.oracle._oracle_f, ConvexQuadratic):
             raise NotImplementedError(
                 f"This implementation of {self.__class__.__name__} requires a ConvexQuadratic Function."
             )
-        elif not isinstance(info.oracle, FirstOrderOracle):
-            raise NotImplementedError(
-                f"This implementation of {self.__class__.__name__} requires a FirstOrderOracle."
-            )
-        elif info.direction is None:
+        if info.direction is None:
             raise ValueError("Direction not set in StepInfo.")
 
-        x, d = info.x, info.direction
+        d = info.direction
+        grad = info.dfx
         Q = info.oracle._oracle_f.Q
-        _, grad = info.oracle(x)
+
         numer = float(grad.T @ d)
         denom = float(d.T @ Q @ d)
-        alpha = numer / denom
+        alpha = -numer / denom
 
         if alpha < 0:
             alpha = -alpha
             self.step_directions[-1] = -d
 
         return alpha
+
+
+class NewtonDirectionMixin(LineSearchOptimiser[SecondOrderLineSearchStepInfo]):
+    """
+    A mixin class that provides the Newton direction strategy.
+
+    `p_k = - (f''(x_k))^{-1} f'(x_k)`
+    """
+
+    StepInfoClass = SecondOrderLineSearchStepInfo
+
+    def direction(self, info) -> floatVec:
+        grad = info.dfx
+        hess = info.d2fx
+
+        p_k = np.asarray(np.linalg.solve(hess, -grad), dtype=np.float64)
+        return p_k

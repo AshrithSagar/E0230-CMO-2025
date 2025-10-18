@@ -5,15 +5,14 @@ Stopping criteria
 """
 
 from abc import ABC, abstractmethod
-from typing import Iterable
+from typing import Generic, Iterable
 
 import numpy as np
 
-from .info import StepInfo
-from .oracle import FirstOrderOracle, ZeroOrderOracle
+from .info import FirstOrderStepInfo, StepInfo, TStepInfo, ZeroOrderStepInfo
 
 
-class StoppingCriterion(ABC):
+class StoppingCriterion(ABC, Generic[TStepInfo]):
     """An abstract base class to encapsulate various stopping criteria for iterative algorithms."""
 
     def reset(self):
@@ -21,7 +20,7 @@ class StoppingCriterion(ABC):
         pass
 
     @abstractmethod
-    def check(self, info: StepInfo) -> bool:
+    def check(self, info: TStepInfo) -> bool:
         """
         Return True if the stopping criterion is met.
         [Required]: This method should be implemented by subclasses to define the specific stopping condition.
@@ -76,11 +75,8 @@ class GradientNormCriterion(StoppingCriterion):
         self.tol = float(tol)
         """Tolerance for the gradient norm."""
 
-    def check(self, info: StepInfo) -> bool:
-        assert isinstance(info.oracle, FirstOrderOracle), (
-            f"{self.__class__.__name__} requires a FirstOrderOracle."
-        )
-        return bool(np.linalg.norm(info.grad) < self.tol)
+    def check(self, info: FirstOrderStepInfo) -> bool:
+        return bool(np.linalg.norm(info.dfx) < self.tol)
 
 
 class FunctionValueCriterion(StoppingCriterion):
@@ -94,8 +90,5 @@ class FunctionValueCriterion(StoppingCriterion):
         self.tol = float(tol)
         """Tolerance for the function value."""
 
-    def check(self, info: StepInfo) -> bool:
-        assert isinstance(info.oracle, ZeroOrderOracle), (
-            f"{self.__class__.__name__} requires a ZeroOrderOracle."
-        )
+    def check(self, info: ZeroOrderStepInfo) -> bool:
         return bool(info.fx < self.tol)

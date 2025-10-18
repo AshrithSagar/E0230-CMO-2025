@@ -5,17 +5,23 @@ Info structures
 """
 
 from dataclasses import dataclass, field
-from typing import Optional, TypedDict, TypeVar
+from typing import Generic, Optional, TypedDict, TypeVar
 
 from .oracle import AbstractOracle, FirstOrderOracle, SecondOrderOracle, ZeroOrderOracle
 from .types import floatMat, floatVec
 
+TOracle = TypeVar("TOracle", bound=AbstractOracle)
+"""Generic type variable for Oracle subclasses."""
+
 TStepInfo = TypeVar("TStepInfo", bound="StepInfo")
 """Generic type variable for StepInfo subclasses."""
 
+TLineSearchStepInfo = TypeVar("TLineSearchStepInfo", bound="LineSearchStepInfo")
+"""Generic type variable for LineSearchStepInfo subclasses."""
+
 
 @dataclass
-class StepInfo:
+class StepInfo(Generic[TOracle]):
     """A dataclass for the state of the algorithm at iteration `k`."""
 
     x: floatVec
@@ -24,69 +30,111 @@ class StepInfo:
     k: int
     """The current iteration number `k`."""
 
-    oracle: AbstractOracle
+    oracle: TOracle
     """The oracle function used to evaluate `f`."""
 
-    # Internal values
+
+@dataclass
+class ZeroOrderStepInfo(StepInfo[ZeroOrderOracle]):
     _fx: Optional[float] = field(init=False, default=None)
-    _dfx: Optional[floatVec] = field(init=False, default=None)
-    _d2fx: Optional[floatMat] = field(init=False, default=None)
+    """Internal function value at `x_k`."""
 
     @property
     def fx(self) -> float:
         """The function value `f(x_k)` at the current point."""
         if self._fx is None:
-            if isinstance(self.oracle, ZeroOrderOracle):
-                (f,) = self.oracle(self.x)
-                self._fx = f
-            elif isinstance(self.oracle, FirstOrderOracle):
-                f, g = self.oracle(self.x)
-                self._fx = f
-                self._dfx = g
-            elif isinstance(self.oracle, SecondOrderOracle):
-                f, g, h = self.oracle(self.x)
-                self._fx = f
-                self._dfx = g
-                self._d2fx = h
-            else:
-                raise RuntimeError("Function value not available with this oracle.")
+            self._fx = self.eval(self.x)
+        return self._fx
+
+    def eval(self, x: floatVec) -> float:
+        return self.oracle.eval(x)
+
+
+@dataclass
+class FirstOrderStepInfo(StepInfo[FirstOrderOracle]):
+    _fx: Optional[float] = field(init=False, default=None)
+    """Internal function value at `x_k`."""
+
+    _dfx: Optional[floatVec] = field(init=False, default=None)
+    """Internal gradient at `x_k`."""
+
+    @property
+    def fx(self) -> float:
+        """The function value `f(x_k)` at the current point."""
+        if self._fx is None:
+            self._fx = self.eval(self.x)
         return self._fx
 
     @property
-    def grad(self) -> floatVec:
+    def dfx(self) -> floatVec:
         """The gradient `f'(x_k)` at the current point."""
         if self._dfx is None:
-            if isinstance(self.oracle, FirstOrderOracle):
-                f, g = self.oracle(self.x)
-                self._fx = f
-                self._dfx = g
-            elif isinstance(self.oracle, SecondOrderOracle):
-                f, g, h = self.oracle(self.x)
-                self._fx = f
-                self._dfx = g
-                self._d2fx = h
-            else:
-                raise RuntimeError("Gradient not available with this oracle.")
+            self._dfx = self.grad(self.x)
+        return self._dfx
+
+    def eval(self, x: floatVec) -> float:
+        return self.oracle.eval(x)
+
+    def grad(self, x: floatVec) -> floatVec:
+        return self.oracle.grad(x)
+
+
+@dataclass
+class SecondOrderStepInfo(StepInfo[SecondOrderOracle]):
+    _fx: Optional[float] = field(init=False, default=None)
+    """Internal function value at `x_k`."""
+
+    _dfx: Optional[floatVec] = field(init=False, default=None)
+    """Internal gradient at `x_k`."""
+
+    _d2fx: Optional[floatMat] = field(init=False, default=None)
+    """Internal Hessian at `x_k`."""
+
+    @property
+    def fx(self) -> float:
+        """The function value `f(x_k)` at the current point."""
+        if self._fx is None:
+            self._fx = self.eval(self.x)
+        return self._fx
+
+    @property
+    def dfx(self) -> floatVec:
+        """The gradient `f'(x_k)` at the current point."""
+        if self._dfx is None:
+            self._dfx = self.grad(self.x)
         return self._dfx
 
     @property
-    def hess(self) -> floatMat:
+    def d2fx(self) -> floatMat:
         """The Hessian `f''(x_k)` at the current point."""
         if self._d2fx is None:
-            if isinstance(self.oracle, SecondOrderOracle):
-                f, g, h = self.oracle(self.x)
-                self._fx = f
-                self._dfx = g
-                self._d2fx = h
-            else:
-                raise RuntimeError("Hessian not available with this oracle.")
+            self._d2fx = self.hess(self.x)
         return self._d2fx
+
+    def eval(self, x: floatVec) -> float:
+        return self.oracle.eval(x)
+
+    def grad(self, x: floatVec) -> floatVec:
+        return self.oracle.grad(x)
+
+    def hess(self, x: floatVec) -> floatMat:
+        return self.oracle.hess(x)
 
 
 @dataclass
 class LineSearchStepInfo(StepInfo):
     direction: Optional[floatVec] = None
     alpha: Optional[float] = None
+
+
+@dataclass
+class FirstOrderLineSearchStepInfo(FirstOrderStepInfo, LineSearchStepInfo):
+    pass
+
+
+@dataclass
+class SecondOrderLineSearchStepInfo(SecondOrderStepInfo, LineSearchStepInfo):
+    pass
 
 
 class RunInfo(TypedDict):
