@@ -238,19 +238,17 @@ class LineSearchOptimiser(IterativeOptimiser[TLineSearchStepInfo]):
         """Plot step lengths vs iterations for the best run."""
         plt.plot(self.step_lengths, marker="o", label=self.name)
 
-    def _phi_and_derphi(self, info: FirstOrderLineSearchStepInfo, alpha: float):
-        """Computes\\
-        `phi(alpha) = f(x + alpha * d)`\\
-        `phi'(alpha) = f'(x + alpha * d)^T d`
-        """
+    def _phi(self, info: FirstOrderLineSearchStepInfo, alpha: float) -> float:
+        """`phi(alpha) = f(x + alpha * d)`"""
         if info.direction is None:
             raise ValueError("Direction not set in StepInfo.")
-        x = info.x
-        d = info.direction
-        xa = x + alpha * d
-        fa = info.eval(xa)
-        ga = info.grad(xa)
-        return fa, float(ga.T @ d)
+        return info.eval(info.x + alpha * info.direction)
+
+    def _derphi(self, info: FirstOrderLineSearchStepInfo, alpha: float) -> float:
+        """`phi'(alpha) = f'(x + alpha * d)^T d`"""
+        if info.direction is None:
+            raise ValueError("Direction not set in StepInfo.")
+        return float(info.grad(info.x + alpha * info.direction).T @ info.direction)
 
 
 class SteepestDescentDirectionMixin(LineSearchOptimiser[FirstOrderLineSearchStepInfo]):

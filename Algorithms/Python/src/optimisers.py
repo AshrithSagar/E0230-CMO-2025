@@ -87,7 +87,7 @@ class GradientDescentArmijo(SteepestDescentDirectionMixin):
             self.alpha_step,
             dtype=np.float64,
         ):
-            f_new, _ = self._phi_and_derphi(info, alpha)
+            f_new = self._phi(info, alpha)
             if f_new <= f + self.c * alpha * derphi0:
                 alpha_prev = alpha
             else:
@@ -127,8 +127,8 @@ class GradientDescentBacktracking(SteepestDescentDirectionMixin):
 
         alpha = self.alpha_init
         for _ in range(self.maxiter):
-            new_f, _ = self._phi_and_derphi(info, alpha)
-            if new_f <= f + self.c * alpha * derphi0:
+            f_new = self._phi(info, alpha)
+            if f_new <= f + self.c * alpha * derphi0:
                 return alpha
             alpha *= self.beta
             if alpha < self.alpha_min:
@@ -167,7 +167,7 @@ class GradientDescentArmijoGoldstein(SteepestDescentDirectionMixin):
 
         # If initial alpha already satisfies both, return it
         alpha = self.alpha_init
-        f_new, _ = self._phi_and_derphi(info, alpha)
+        f_new = self._phi(info, alpha)
         if (f_new <= f + self.c * alpha * derphi0) and (
             f_new >= f + (1 - self.c) * alpha * derphi0
         ):
@@ -177,7 +177,7 @@ class GradientDescentArmijoGoldstein(SteepestDescentDirectionMixin):
         alpha_lo = 0.0
         alpha_hi = alpha
         for _ in range(self.maxiter):
-            phi_hi, _ = self._phi_and_derphi(info, alpha_hi)
+            phi_hi = self._phi(info, alpha_hi)
             if phi_hi <= f + self.c * alpha_hi * derphi0:
                 break
             alpha_hi *= self.beta
@@ -187,7 +187,7 @@ class GradientDescentArmijoGoldstein(SteepestDescentDirectionMixin):
         # Bisect between alpha_lo and alpha_hi until Goldstein condition hold
         for _ in range(self.maxiter):
             alpha_mid = 0.5 * (alpha_lo + alpha_hi)
-            phi_mid, _ = self._phi_and_derphi(info, alpha_mid)
+            phi_mid = self._phi(info, alpha_mid)
             if (phi_mid <= f + self.c * alpha_mid * derphi0) and (
                 phi_mid >= f + (1 - self.c) * alpha_mid * derphi0
             ):
@@ -240,7 +240,8 @@ class GradientDescentWolfe(SteepestDescentDirectionMixin):
         alpha_prev = 0.0
 
         for i in range(self.maxiter):
-            phi_a, derphi_a = self._phi_and_derphi(info, alpha)
+            phi_a = self._phi(info, alpha)
+            derphi_a = self._derphi(info, alpha)
 
             # Check Armijo
             if (phi_a > phi0 + self.c1 * alpha * derphi0) or (
@@ -275,10 +276,12 @@ class GradientDescentWolfe(SteepestDescentDirectionMixin):
         """
         if info.direction is None:
             raise ValueError("Direction must be provided for line search.")
-        phi_lo, _derphi_lo = self._phi_and_derphi(info, alpha_lo)
+        phi_lo = self._phi(info, alpha_lo)
+        _derphi_lo = self._derphi(info, alpha_lo)
         for _ in range(maxiter):
             alpha_j = 0.5 * (alpha_lo + alpha_hi)  # safe midpoint
-            phi_j, derphi_j = self._phi_and_derphi(info, alpha_j)
+            phi_j = self._phi(info, alpha_j)
+            derphi_j = self._derphi(info, alpha_j)
 
             # Armijo condition
             if (phi_j > phi0 + self.c1 * alpha_j * derphi0) or (phi_j >= phi_lo):
