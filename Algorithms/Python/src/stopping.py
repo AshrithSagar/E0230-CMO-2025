@@ -9,8 +9,8 @@ from typing import Iterable
 
 import numpy as np
 
-from .oracle import AbstractOracle, FirstOrderOracle, ZeroOrderOracle
-from .types import floatVec
+from .info import StepInfo
+from .oracle import FirstOrderOracle, ZeroOrderOracle
 
 
 class StoppingCriterion(ABC):
@@ -21,7 +21,7 @@ class StoppingCriterion(ABC):
         pass
 
     @abstractmethod
-    def check(self, x: floatVec, k: int, oracle_fn: AbstractOracle) -> bool:
+    def check(self, info: StepInfo) -> bool:
         """
         Return True if the stopping criterion is met.
         [Required]: This method should be implemented by subclasses to define the specific stopping condition.
@@ -46,8 +46,8 @@ class CompositeCriterion(StoppingCriterion):
         for criterion in self.criteria:
             criterion.reset()
 
-    def check(self, x: floatVec, k: int, oracle_fn: AbstractOracle) -> bool:
-        return any(criterion.check(x, k, oracle_fn) for criterion in self.criteria)
+    def check(self, info: StepInfo) -> bool:
+        return any(criterion.check(info) for criterion in self.criteria)
 
 
 class MaxIterationsCriterion(StoppingCriterion):
@@ -61,8 +61,8 @@ class MaxIterationsCriterion(StoppingCriterion):
         self.maxiter = int(maxiter)
         """Maximum number of iterations."""
 
-    def check(self, x: floatVec, k: int, oracle_fn: AbstractOracle) -> bool:
-        return bool(k >= self.maxiter)
+    def check(self, info: StepInfo) -> bool:
+        return bool(info.k >= self.maxiter)
 
 
 class GradientNormCriterion(StoppingCriterion):
@@ -76,12 +76,11 @@ class GradientNormCriterion(StoppingCriterion):
         self.tol = float(tol)
         """Tolerance for the gradient norm."""
 
-    def check(self, x: floatVec, k: int, oracle_fn: AbstractOracle) -> bool:
-        assert isinstance(oracle_fn, FirstOrderOracle), (
+    def check(self, info: StepInfo) -> bool:
+        assert isinstance(info.oracle, FirstOrderOracle), (
             f"{self.__class__.__name__} requires a FirstOrderOracle."
         )
-        _, grad = oracle_fn(x)
-        return bool(np.linalg.norm(grad) < self.tol)
+        return bool(np.linalg.norm(info.grad) < self.tol)
 
 
 class FunctionValueCriterion(StoppingCriterion):
@@ -95,9 +94,8 @@ class FunctionValueCriterion(StoppingCriterion):
         self.tol = float(tol)
         """Tolerance for the function value."""
 
-    def check(self, x: floatVec, k: int, oracle_fn: AbstractOracle) -> bool:
-        assert isinstance(oracle_fn, ZeroOrderOracle), (
+    def check(self, info: StepInfo) -> bool:
+        assert isinstance(info.oracle, ZeroOrderOracle), (
             f"{self.__class__.__name__} requires a ZeroOrderOracle."
         )
-        (f,) = oracle_fn(x)
-        return bool(f < self.tol)
+        return bool(info.fx < self.tol)
