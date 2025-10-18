@@ -15,9 +15,10 @@ from .base import (
     LineSearchOptimiser,
     NewtonDirectionMixin,
     SteepestDescentDirectionMixin,
+    UnitStepLengthMixin,
 )
 from .functions import ConvexQuadratic
-from .info import FirstOrderLineSearchStepInfo, SecondOrderLineSearchStepInfo
+from .info import FirstOrderLineSearchStepInfo
 from .types import floatVec
 
 
@@ -377,12 +378,11 @@ class ConjugateGradientMethod(LineSearchOptimiser[FirstOrderLineSearchStepInfo])
         return alpha
 
 
-class NewtonMethod(NewtonDirectionMixin):
+class NewtonMethod(NewtonDirectionMixin, UnitStepLengthMixin):
     """
     Standard Newton's method.
 
     `x_{k+1} = x_k - [f''(x_k)]^{-1} f'(x_k)`
     """
 
-    def step_length(self, info: SecondOrderLineSearchStepInfo) -> float:
-        return 1.0
+    pass  # All methods are provided by the mixins

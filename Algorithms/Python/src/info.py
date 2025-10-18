@@ -100,12 +100,18 @@ class LineSearchStepInfo(StepInfo):
 
 @dataclass
 class FirstOrderLineSearchStepInfo(FirstOrderStepInfo, LineSearchStepInfo):
-    pass
+    pass  # All attributes and methods are provided by the parent classes
 
 
 @dataclass
 class SecondOrderLineSearchStepInfo(SecondOrderStepInfo, LineSearchStepInfo):
-    pass
+    pass  # All attributes and methods are provided by the parent classes
+
+
+@dataclass
+class QuasiNewtonStepInfo(FirstOrderLineSearchStepInfo):
+    Hk: Optional[floatMat] = None
+    """Approximate inverse Hessian matrix at iteration `k`."""
 
 
 class RunInfo(TypedDict):

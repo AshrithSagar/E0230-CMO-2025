@@ -316,3 +316,14 @@ class NewtonDirectionMixin(LineSearchOptimiser[SecondOrderLineSearchStepInfo]):
 
         p_k = np.asarray(np.linalg.solve(hess, -grad), dtype=np.float64)
         return p_k
+
+
+class UnitStepLengthMixin(LineSearchOptimiser[TLineSearchStepInfo]):
+    """
+    A mixin class that provides a unit step length strategy.
+
+    `alpha_k = 1`
+    """
+
+    def step_length(self, info: TLineSearchStepInfo) -> float:
+        return 1.0
