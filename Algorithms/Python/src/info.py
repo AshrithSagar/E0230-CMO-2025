@@ -13,6 +13,16 @@ from .types import floatMat, floatVec
 TOracle = TypeVar("TOracle", bound=AbstractOracle)
 """Generic type variable for Oracle subclasses."""
 
+TZeroOrderOracle = TypeVar("TZeroOrderOracle", bound=ZeroOrderOracle)
+"""Generic type variable for ZeroOrderOracle subclasses."""
+
+TFirstOrderOracle = TypeVar("TFirstOrderOracle", bound=FirstOrderOracle)
+"""Generic type variable for FirstOrderOracle subclasses."""
+
+TSecondOrderOracle = TypeVar("TSecondOrderOracle", bound=SecondOrderOracle)
+"""Generic type variable for SecondOrderOracle subclasses."""
+
+
 TStepInfo = TypeVar("TStepInfo", bound="StepInfo")
 """Generic type variable for StepInfo subclasses."""
 
@@ -35,7 +45,7 @@ class StepInfo(Generic[TOracle]):
 
 
 @dataclass
-class ZeroOrderStepInfo(StepInfo[ZeroOrderOracle]):
+class ZeroOrderStepInfo(StepInfo[TZeroOrderOracle]):
     _fx: Optional[float] = field(init=False, default=None)
     """Internal function value at `x_k`."""
 
@@ -51,19 +61,9 @@ class ZeroOrderStepInfo(StepInfo[ZeroOrderOracle]):
 
 
 @dataclass
-class FirstOrderStepInfo(StepInfo[FirstOrderOracle]):
-    _fx: Optional[float] = field(init=False, default=None)
-    """Internal function value at `x_k`."""
-
+class FirstOrderStepInfo(ZeroOrderStepInfo[TFirstOrderOracle]):
     _dfx: Optional[floatVec] = field(init=False, default=None)
     """Internal gradient at `x_k`."""
-
-    @property
-    def fx(self) -> float:
-        """The function value `f(x_k)` at the current point."""
-        if self._fx is None:
-            self._fx = self.eval(self.x)
-        return self._fx
 
     @property
     def dfx(self) -> floatVec:
@@ -71,38 +71,15 @@ class FirstOrderStepInfo(StepInfo[FirstOrderOracle]):
         if self._dfx is None:
             self._dfx = self.grad(self.x)
         return self._dfx
-
-    def eval(self, x: floatVec) -> float:
-        return self.oracle.eval(x)
 
     def grad(self, x: floatVec) -> floatVec:
         return self.oracle.grad(x)
 
 
 @dataclass
-class SecondOrderStepInfo(StepInfo[SecondOrderOracle]):
-    _fx: Optional[float] = field(init=False, default=None)
-    """Internal function value at `x_k`."""
-
-    _dfx: Optional[floatVec] = field(init=False, default=None)
-    """Internal gradient at `x_k`."""
-
+class SecondOrderStepInfo(FirstOrderStepInfo[TSecondOrderOracle]):
     _d2fx: Optional[floatMat] = field(init=False, default=None)
     """Internal Hessian at `x_k`."""
-
-    @property
-    def fx(self) -> float:
-        """The function value `f(x_k)` at the current point."""
-        if self._fx is None:
-            self._fx = self.eval(self.x)
-        return self._fx
-
-    @property
-    def dfx(self) -> floatVec:
-        """The gradient `f'(x_k)` at the current point."""
-        if self._dfx is None:
-            self._dfx = self.grad(self.x)
-        return self._dfx
 
     @property
     def d2fx(self) -> floatMat:
@@ -110,12 +87,6 @@ class SecondOrderStepInfo(StepInfo[SecondOrderOracle]):
         if self._d2fx is None:
             self._d2fx = self.hess(self.x)
         return self._d2fx
-
-    def eval(self, x: floatVec) -> float:
-        return self.oracle.eval(x)
-
-    def grad(self, x: floatVec) -> floatVec:
-        return self.oracle.grad(x)
 
     def hess(self, x: floatVec) -> floatMat:
         return self.oracle.hess(x)

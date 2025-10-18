@@ -45,9 +45,8 @@ class ZeroOrderOracle(AbstractOracle):
         return self._oracle_f.eval(x)
 
     def reset(self):
-        super().reset()
         self.eval_call_count = 0
-        return self
+        return super().reset()
 
 
 class FirstOrderOracle(ZeroOrderOracle):
@@ -64,9 +63,8 @@ class FirstOrderOracle(ZeroOrderOracle):
         return self._oracle_f.grad(x)
 
     def reset(self):
-        super().reset()
         self.grad_call_count = 0
-        return self
+        return super().reset()
 
 
 class SecondOrderOracle(FirstOrderOracle):
@@ -83,6 +81,5 @@ class SecondOrderOracle(FirstOrderOracle):
         return self._oracle_f.hess(x)
 
     def reset(self):
-        super().reset()
         self.hess_call_count = 0
-        return self
+        return super().reset()

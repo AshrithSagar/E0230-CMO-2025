@@ -32,7 +32,7 @@ class StoppingCriterion(ABC, Generic[TStepInfo]):
         raise NotImplementedError
 
 
-class CompositeCriterion(StoppingCriterion):
+class CompositeCriterion(StoppingCriterion[StepInfo]):
     """
     Combines multiple stopping criteria. Stops when any one of the criteria is met.
     """
@@ -49,7 +49,7 @@ class CompositeCriterion(StoppingCriterion):
         return any(criterion.check(info) for criterion in self.criteria)
 
 
-class MaxIterationsCriterion(StoppingCriterion):
+class MaxIterationsCriterion(StoppingCriterion[StepInfo]):
     """
     Stops when the maximum number of iterations is reached.
 
@@ -64,7 +64,7 @@ class MaxIterationsCriterion(StoppingCriterion):
         return bool(info.k >= self.maxiter)
 
 
-class GradientNormCriterion(StoppingCriterion):
+class GradientNormCriterion(StoppingCriterion[FirstOrderStepInfo]):
     """
     Stops when the gradient norm is below a specified tolerance.
 
@@ -79,7 +79,7 @@ class GradientNormCriterion(StoppingCriterion):
         return bool(np.linalg.norm(info.dfx) < self.tol)
 
 
-class FunctionValueCriterion(StoppingCriterion):
+class FunctionValueCriterion(StoppingCriterion[ZeroOrderStepInfo]):
     """
     Stops when the function value is below a specified tolerance.
 
