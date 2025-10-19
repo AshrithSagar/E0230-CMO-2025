@@ -87,7 +87,7 @@ class IterativeOptimiser(ABC, Generic[TStepInfo]):
             Union[StoppingCriterion, CompositeCriterion, Iterable[StoppingCriterion]]
         ] = None,
         show_params: bool = True,
-    ) -> RunInfo:
+    ) -> RunInfo[TStepInfo]:
         """
         Runs the iterative algorithm.
 
@@ -155,6 +155,7 @@ class IterativeOptimiser(ABC, Generic[TStepInfo]):
                 info_next = self.step(info)
                 history.append(info_next)
                 info = info_next
+            x = info.x
         except OverflowError:  # Fallback, in case of non-convergence
             x = np.full(oracle_fn.dim, np.nan)
         finally:
