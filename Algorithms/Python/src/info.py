@@ -110,7 +110,7 @@ class SecondOrderLineSearchStepInfo(SecondOrderStepInfo, LineSearchStepInfo):
 
 @dataclass
 class QuasiNewtonStepInfo(FirstOrderLineSearchStepInfo):
-    Hk: Optional[floatMat] = None
+    H: Optional[floatMat] = None
     """Approximate inverse Hessian matrix at iteration `k`."""
 
 

@@ -22,6 +22,7 @@ from rich.text import TextType
 from .functions import ConvexQuadratic
 from .info import (
     FirstOrderLineSearchStepInfo,
+    QuasiNewtonStepInfo,
     RunInfo,
     SecondOrderLineSearchStepInfo,
     TLineSearchStepInfo,
@@ -34,7 +35,7 @@ from .stopping import (
     MaxIterationsCriterion,
     StoppingCriterion,
 )
-from .types import floatVec
+from .types import floatMat, floatVec
 from .utils import format_float, format_time, show_solution
 
 console = Console()
@@ -325,3 +326,32 @@ class UnitStepLengthMixin(LineSearchOptimiser[TLineSearchStepInfo]):
 
     def step_length(self, info: TLineSearchStepInfo) -> float:
         return 1.0
+
+
+class QuasiNewtonOptimiser(UnitStepLengthMixin[QuasiNewtonStepInfo], ABC):
+    """
+    A base template class for Quasi-Newton optimisation algorithms.
+    
+    `x_{k+1} = x_k + alpha_k * p_k`\\
+    where `p_k = -H_k f'(x_k)` and `H_k` is the approximate inverse Hessian matrix.
+    """
+
+    StepInfoClass = QuasiNewtonStepInfo
+
+    @abstractmethod
+    def hess_inv(self, info: QuasiNewtonStepInfo) -> floatMat:
+        """
+        Updates and returns the approximate inverse Hessian matrix `H_k`.\\
+        [Required]: This method should be implemented by subclasses to define the specific update rule.
+        Parameters:
+            info: An instance of `QuasiNewtonStepInfo` containing the current state of the algorithm.
+        Returns:
+            The updated approximate inverse Hessian matrix `H_k`.
+        """
+        raise NotImplementedError
+
+    def direction(self, info: QuasiNewtonStepInfo) -> floatVec:
+        grad = info.dfx
+        H = self.hess_inv(info)
+        pk = -H @ grad
+        return pk
