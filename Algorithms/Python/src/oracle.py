@@ -4,8 +4,22 @@ src/oracle.py
 Oracle utils
 """
 
+from typing import TypeVar
+
 from .functions import Function
 from .types import floatVec
+
+TOracle = TypeVar("TOracle", bound="AbstractOracle")
+"""Generic type variable for Oracle subclasses."""
+
+TZeroOrderOracle = TypeVar("TZeroOrderOracle", bound="ZeroOrderOracle")
+"""Generic type variable for ZeroOrderOracle subclasses."""
+
+TFirstOrderOracle = TypeVar("TFirstOrderOracle", bound="FirstOrderOracle")
+"""Generic type variable for FirstOrderOracle subclasses."""
+
+TSecondOrderOracle = TypeVar("TSecondOrderOracle", bound="SecondOrderOracle")
+"""Generic type variable for SecondOrderOracle subclasses."""
 
 
 class AbstractOracle:

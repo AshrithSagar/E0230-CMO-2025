@@ -400,19 +400,18 @@ class SR1Update(QuasiNewtonOptimiser):
     """
 
     def hess_inv(self, info: QuasiNewtonStepInfo) -> floatMat:
+        H = info.H
+        s = info.s
+        y = info.y
         if info.k == 0:
-            if info.H is None:
-                info.oracle
-                info.H = np.eye(info.x.shape[0], dtype=np.float64)
-            return info.H
+            if H is None:
+                H = np.eye(info.x.shape[0], dtype=np.float64)
+            return H
         else:
-            if info.H is None or info.s is None or info.y is None:
-                raise ValueError
-            H = info.H
-            s = info.s
-            y = info.y
+            if H is None or s is None or y is None:
+                raise ValueError("H, s, or y missing in QuasiNewtonStepInfo.")
             u = s - H @ y
-            return H + (u @ u.T) / float(u.T @ y)
+            return H + np.outer(u, u) / float(u.T @ y)
 
 
 class DFPUpdate(QuasiNewtonOptimiser):
@@ -423,16 +422,16 @@ class DFPUpdate(QuasiNewtonOptimiser):
     """
 
     def hess_inv(self, info: QuasiNewtonStepInfo) -> floatMat:
+        H = info.H
+        s = info.s
+        y = info.y
         if info.k == 0:
-            if info.H is None:
-                info.H = np.eye(info.x.shape[0], dtype=np.float64)
-            return info.H
+            if H is None:
+                H = np.eye(info.x.shape[0], dtype=np.float64)
+            return H
         else:
-            if info.H is None or info.s is None or info.y is None:
-                raise ValueError
-            H = info.H
-            s = info.s
-            y = info.y
+            if H is None or s is None or y is None:
+                raise ValueError("H, s, or y missing in QuasiNewtonStepInfo.")
             Hy = H @ y
             return (
                 H + np.outer(s, s) / float(y.T @ s) - np.outer(Hy, Hy) / float(y.T @ Hy)
@@ -447,16 +446,16 @@ class BFGSUpdate(QuasiNewtonOptimiser):
     """
 
     def hess_inv(self, info: QuasiNewtonStepInfo) -> floatMat:
+        H = info.H
+        s = info.s
+        y = info.y
         if info.k == 0:
-            if info.H is None:
-                info.H = np.eye(info.x.shape[0], dtype=np.float64)
-            return info.H
+            if H is None:
+                H = np.eye(info.x.shape[0], dtype=np.float64)
+            return H
         else:
-            if info.H is None or info.s is None or info.y is None:
-                raise ValueError
-            H = info.H
-            s = info.s
-            y = info.y
+            if H is None or s is None or y is None:
+                raise ValueError("H, s, or y missing in QuasiNewtonStepInfo.")
             rho = 1 / float(y.T @ s)
             eye = np.eye(H.shape[0], dtype=np.float64)
             term1 = eye - rho * np.outer(s, y)

@@ -5,7 +5,13 @@ tests/test_rosenbrock.py
 import numpy as np
 from src.base import IterativeOptimiser
 from src.functions import Rosenbrock
-from src.optimisers import GradientDescent, NewtonMethod
+from src.optimisers import (
+    BFGSUpdate,
+    DFPUpdate,
+    GradientDescent,
+    NewtonMethod,
+    SR1Update,
+)
 from src.oracle import AbstractOracle, FirstOrderOracle, SecondOrderOracle
 from src.stopping import GradientNormCriterion, MaxIterationsCriterion
 
@@ -19,9 +25,14 @@ def test_rosenbrock():
         GradientNormCriterion(tol=1e-6),
     ]
 
+    f_oracle = FirstOrderOracle(func)
+    s_oracle = SecondOrderOracle(func)
     runs: list[tuple[IterativeOptimiser, AbstractOracle]] = [
-        (GradientDescent(lr=1e-3), FirstOrderOracle(func)),
-        (NewtonMethod(), SecondOrderOracle(func)),
+        (GradientDescent(lr=1e-3), f_oracle),
+        (NewtonMethod(), s_oracle),
+        (SR1Update(), f_oracle),
+        (DFPUpdate(), f_oracle),
+        (BFGSUpdate(), f_oracle),
     ]
     for optimiser, oracle in runs:
         info = optimiser.run(oracle_fn=oracle, x0=x0, criteria=criteria)

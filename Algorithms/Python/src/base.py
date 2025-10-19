@@ -371,6 +371,7 @@ class QuasiNewtonOptimiser(UnitStepLengthMixin[QuasiNewtonStepInfo], ABC):
 
     def step(self, info: QuasiNewtonStepInfo) -> QuasiNewtonStepInfo:
         info_next = super().step(info)
+        info_next.H = info.H  # [FIXME]
         info_next.s = info_next.x - info.x
         info_next.y = info_next.dfx - info.dfx
         return info_next

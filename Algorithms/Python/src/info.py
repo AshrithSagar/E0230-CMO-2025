@@ -7,21 +7,8 @@ Info structures
 from dataclasses import dataclass, field
 from typing import Generic, Optional, TypedDict, TypeVar
 
-from .oracle import AbstractOracle, FirstOrderOracle, SecondOrderOracle, ZeroOrderOracle
+from .oracle import TFirstOrderOracle, TOracle, TSecondOrderOracle, TZeroOrderOracle
 from .types import floatMat, floatVec
-
-TOracle = TypeVar("TOracle", bound=AbstractOracle)
-"""Generic type variable for Oracle subclasses."""
-
-TZeroOrderOracle = TypeVar("TZeroOrderOracle", bound=ZeroOrderOracle)
-"""Generic type variable for ZeroOrderOracle subclasses."""
-
-TFirstOrderOracle = TypeVar("TFirstOrderOracle", bound=FirstOrderOracle)
-"""Generic type variable for FirstOrderOracle subclasses."""
-
-TSecondOrderOracle = TypeVar("TSecondOrderOracle", bound=SecondOrderOracle)
-"""Generic type variable for SecondOrderOracle subclasses."""
-
 
 TStepInfo = TypeVar("TStepInfo", bound="StepInfo")
 """Generic type variable for StepInfo subclasses."""
