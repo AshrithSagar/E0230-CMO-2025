@@ -68,14 +68,14 @@ class IterativeOptimiser(ABC, Generic[TStepInfo]):
         return self
 
     @abstractmethod
-    def step(self, info: TStepInfo) -> floatVec:
+    def step(self, info: TStepInfo) -> TStepInfo:
         """
         Performs a single step of the algorithm.\\
         [Required]: This method should be implemented by subclasses to define the specific update rule.
         Parameters:
-            info: An instance of `StepInfo` containing the current state of the algorithm.
+            info: An instance of `StepInfo` containing the current state of the algorithm at iteration `k`.
         Returns:
-            The updated value of `x` after the step, viz. `x_{k+1}`.
+            An instance of `StepInfo` containing the updated state after the step for iteration `k+1`.
         """
         raise NotImplementedError
 
@@ -128,12 +128,13 @@ class IterativeOptimiser(ABC, Generic[TStepInfo]):
         maxiter = int(maxiter)
         criteria = CompositeCriterion(_crit)
 
-        k: int = 0
-        x: floatVec = x0
-        history: list[floatVec] = [x0]
         self.reset()
         oracle_fn.reset()
         criteria.reset()
+        k: int = 0
+        x: floatVec = x0
+        info = self.StepInfoClass(x, k, oracle_fn)
+        history: list[TStepInfo] = [info]
 
         progress = Progress(
             TextColumn("[progress.description]{task.description}"),
@@ -149,11 +150,11 @@ class IterativeOptimiser(ABC, Generic[TStepInfo]):
             task = progress.add_task("Running...", total=maxiter, oracle_calls=0)
             for k in range(maxiter):
                 progress.update(task, advance=1, oracle_calls=oracle_fn.call_count)
-                info = self.StepInfoClass(x, k, oracle_fn)
                 if criteria.check(info):
                     break
-                x = self.step(info)
-                history.append(x)
+                info_next = self.step(info)
+                history.append(info_next)
+                info = info_next
         except OverflowError:  # Fallback, in case of non-convergence
             x = np.full(oracle_fn.dim, np.nan)
         finally:
@@ -224,7 +225,7 @@ class LineSearchOptimiser(IterativeOptimiser[TLineSearchStepInfo]):
         """
         raise NotImplementedError
 
-    def step(self, info: TLineSearchStepInfo) -> floatVec:
+    def step(self, info: TLineSearchStepInfo) -> TLineSearchStepInfo:
         p_k = self.direction(info)
         info.direction = p_k
         self.step_directions.append(p_k)
@@ -233,7 +234,12 @@ class LineSearchOptimiser(IterativeOptimiser[TLineSearchStepInfo]):
         info.alpha = alpha_k
         self.step_lengths.append(alpha_k)
 
-        return info.x + alpha_k * p_k
+        info_next = self.StepInfoClass(
+            x=info.x + alpha_k * p_k,
+            k=info.k + 1,
+            oracle=info.oracle,
+        )
+        return info_next
 
     def plot_step_lengths(self):
         """Plot step lengths vs iterations for the best run."""
@@ -331,9 +337,14 @@ class UnitStepLengthMixin(LineSearchOptimiser[TLineSearchStepInfo]):
 class QuasiNewtonOptimiser(UnitStepLengthMixin[QuasiNewtonStepInfo], ABC):
     """
     A base template class for Quasi-Newton optimisation algorithms.
-    
+
     `x_{k+1} = x_k + alpha_k * p_k`\\
     where `p_k = -H_k f'(x_k)` and `H_k` is the approximate inverse Hessian matrix.
+
+    `s_{k+1} = x_{k+1} - x_k`\\
+    `y_{k+1} = f'(x_{k+1}) - f'(x_k)`
+
+    `s0` and `y0` are not defined, so they are left as `None` for iteration `k=0`.
     """
 
     StepInfoClass = QuasiNewtonStepInfo
@@ -353,5 +364,12 @@ class QuasiNewtonOptimiser(UnitStepLengthMixin[QuasiNewtonStepInfo], ABC):
     def direction(self, info: QuasiNewtonStepInfo) -> floatVec:
         grad = info.dfx
         H = self.hess_inv(info)
+        info.H = H
         pk = -H @ grad
         return pk
+
+    def step(self, info: QuasiNewtonStepInfo) -> QuasiNewtonStepInfo:
+        info_next = super().step(info)
+        info_next.s = info_next.x - info.x
+        info_next.y = info_next.dfx - info.dfx
+        return info_next

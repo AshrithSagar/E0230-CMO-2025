@@ -14,12 +14,13 @@ from .base import (
     ExactLineSearchMixin,
     LineSearchOptimiser,
     NewtonDirectionMixin,
+    QuasiNewtonOptimiser,
     SteepestDescentDirectionMixin,
     UnitStepLengthMixin,
 )
 from .functions import ConvexQuadratic
-from .info import FirstOrderLineSearchStepInfo
-from .types import floatVec
+from .info import FirstOrderLineSearchStepInfo, QuasiNewtonStepInfo
+from .types import floatMat, floatVec
 
 
 class GradientDescent(SteepestDescentDirectionMixin):
@@ -389,3 +390,75 @@ class NewtonMethod(NewtonDirectionMixin, UnitStepLengthMixin):
     """
 
     pass  # All methods are provided by the mixins
+
+
+class SR1Update(QuasiNewtonOptimiser):
+    """
+    Symmetric Rank-One (SR1) update for Hessian inverse approximation.
+
+    `H_{k+1} = H_k + ((s_k - H_k y_k)(s_k - H_k y_k)^T) / ((s_k - H_k y_k)^T y_k)`
+    """
+
+    def hess_inv(self, info: QuasiNewtonStepInfo) -> floatMat:
+        if info.k == 0:
+            if info.H is None:
+                info.oracle
+                info.H = np.eye(info.x.shape[0], dtype=np.float64)
+            return info.H
+        else:
+            if info.H is None or info.s is None or info.y is None:
+                raise ValueError
+            H = info.H
+            s = info.s
+            y = info.y
+            u = s - H @ y
+            return H + (u @ u.T) / float(u.T @ y)
+
+
+class DFPUpdate(QuasiNewtonOptimiser):
+    """
+    Davidon-Fletcher-Powell (DFP) update for Hessian inverse approximation.
+
+    `H_{k+1} = H_k + (s_k s_k^T) / (y_k^T s_k) - (H_k y_k y_k^T H_k) / (y_k^T H_k y_k)`
+    """
+
+    def hess_inv(self, info: QuasiNewtonStepInfo) -> floatMat:
+        if info.k == 0:
+            if info.H is None:
+                info.H = np.eye(info.x.shape[0], dtype=np.float64)
+            return info.H
+        else:
+            if info.H is None or info.s is None or info.y is None:
+                raise ValueError
+            H = info.H
+            s = info.s
+            y = info.y
+            Hy = H @ y
+            return (
+                H + np.outer(s, s) / float(y.T @ s) - np.outer(Hy, Hy) / float(y.T @ Hy)
+            )
+
+
+class BFGSUpdate(QuasiNewtonOptimiser):
+    """
+    Broyden-Fletcher-Goldfarb-Shanno (BFGS) update for Hessian inverse approximation.
+
+    `H_{k+1} = (I - (s_k y_k^T) / (y_k^T s_k)) H_k (I - (y_k s_k^T) / (y_k^T s_k)) + (s_k s_k^T) / (y_k^T s_k)`
+    """
+
+    def hess_inv(self, info: QuasiNewtonStepInfo) -> floatMat:
+        if info.k == 0:
+            if info.H is None:
+                info.H = np.eye(info.x.shape[0], dtype=np.float64)
+            return info.H
+        else:
+            if info.H is None or info.s is None or info.y is None:
+                raise ValueError
+            H = info.H
+            s = info.s
+            y = info.y
+            rho = 1 / float(y.T @ s)
+            eye = np.eye(H.shape[0], dtype=np.float64)
+            term1 = eye - rho * np.outer(s, y)
+            term2 = eye - rho * np.outer(y, s)
+            return term1 @ H @ term2 + rho * np.outer(s, s)

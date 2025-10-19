@@ -93,28 +93,46 @@ class SecondOrderStepInfo(FirstOrderStepInfo[TSecondOrderOracle]):
 
 
 @dataclass
-class LineSearchStepInfo(StepInfo):
+class LineSearchStepInfo(StepInfo[TOracle]):
     direction: Optional[floatVec] = None
     alpha: Optional[float] = None
 
 
 @dataclass
-class FirstOrderLineSearchStepInfo(FirstOrderStepInfo, LineSearchStepInfo):
+class FirstOrderLineSearchStepInfo(
+    FirstOrderStepInfo[TFirstOrderOracle], LineSearchStepInfo[TFirstOrderOracle]
+):
     pass  # All attributes and methods are provided by the parent classes
 
 
 @dataclass
-class SecondOrderLineSearchStepInfo(SecondOrderStepInfo, LineSearchStepInfo):
+class SecondOrderLineSearchStepInfo(
+    SecondOrderStepInfo[TSecondOrderOracle], LineSearchStepInfo[TSecondOrderOracle]
+):
     pass  # All attributes and methods are provided by the parent classes
 
 
 @dataclass
-class QuasiNewtonStepInfo(FirstOrderLineSearchStepInfo):
+class QuasiNewtonStepInfo(FirstOrderLineSearchStepInfo[TFirstOrderOracle]):
     H: Optional[floatMat] = None
     """Approximate inverse Hessian matrix at iteration `k`."""
 
+    s: Optional[floatVec] = None
+    """
+    Step taken after the previous iteration, i.e., iteration `k-1`.
 
-class RunInfo(TypedDict):
+    `s_k = x_k - x_{k-1}`
+    """
+
+    y: Optional[floatVec] = None
+    """
+    Gradient difference after the previous iteration, i.e., iteration `k-1`.
+
+    `y_k = f'(x_k) - f'(x_{k-1})`
+    """
+
+
+class RunInfo(TypedDict, Generic[TStepInfo]):
     """
     Dictionary type for storing run information of an optimiser.
     - 'x0': Initial point.
@@ -130,6 +148,6 @@ class RunInfo(TypedDict):
     x_star: floatVec
     f_star: float
     n_iters: int
-    history: list[floatVec]
+    history: list[TStepInfo]
     oracle_call_count: int
     time_taken: float
