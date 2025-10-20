@@ -19,7 +19,12 @@ function OptimiserStep(
     error("OptimiserStep not implemented for $(typeof(opt))")
 end
 
-function optimise(opt::Optimiser, func::Function, x0::AbstractVector{<:Real})
+function optimise(
+        opt::Optimiser,
+        func::Function,
+        x0::AbstractVector{<:Real};
+        grad::Union{Nothing, Function} = nothing
+)
     state = OptimiserStart(opt, func, x0)
     while !state.converged
         state = OptimiserStep(opt, func, state)
