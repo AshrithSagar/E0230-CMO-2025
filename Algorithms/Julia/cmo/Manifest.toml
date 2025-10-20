@@ -469,7 +469,7 @@ uuid = "700de1a5-db45-46bc-99cf-38207098b444"
 version = "0.2.7"
 
 [[deps.cmo]]
-deps = ["ForwardDiff", "JuliaFormatter", "LinearAlgebra", "Test", "Zygote"]
+deps = ["ForwardDiff", "JuliaFormatter", "LinearAlgebra", "ReverseDiff", "Test", "Zygote"]
 path = "."
 uuid = "8fef1f49-b762-4057-bd17-4872457395b4"
 version = "0.1.0"
