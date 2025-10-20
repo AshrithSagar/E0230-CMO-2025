@@ -1,20 +1,24 @@
 # src/core.jl
 
 abstract type Optimiser end
+abstract type OptimiserState end
 
-mutable struct OptimiserState
-    x::AbstractVector{<:Real}
-    f::Real
-    k::Unsigned
-    converged::Bool
-end
-
-function OptimiserStart(opt::Optimiser, func::Function, x0::AbstractVector{<:Real})
-    return OptimiserState(x0, func(x0), 0, false)
+function OptimiserStart(
+        opt::Optimiser,
+        func::Function,
+        𝐱₀::AbstractVector{<:Real};
+        grad::Union{Nothing, Function} = nothing,
+        hess::Union{Nothing, Function} = nothing
+)
+    error("OptimiserStart not implemented for $(typeof(opt))")
 end
 
 function OptimiserStep(
-        opt::Optimiser, func::Function, state::OptimiserState
+        opt::Optimiser,
+        func::Function,
+        state::OptimiserState;
+        grad::Union{Nothing, Function} = nothing,
+        hess::Union{Nothing, Function} = nothing
 )::OptimiserState
     error("OptimiserStep not implemented for $(typeof(opt))")
 end
@@ -22,12 +26,13 @@ end
 function optimise(
         opt::Optimiser,
         func::Function,
-        x0::AbstractVector{<:Real};
-        grad::Union{Nothing, Function} = nothing
+        𝐱₀::AbstractVector{<:Real};
+        grad::Union{Nothing, Function} = nothing,
+        hess::Union{Nothing, Function} = nothing
 )
-    state = OptimiserStart(opt, func, x0)
+    state = OptimiserStart(opt, func, 𝐱₀; grad, hess)
     while !state.converged
-        state = OptimiserStep(opt, func, state)
+        state = OptimiserStep(opt, func, state; grad, hess)
     end
-    return state.x
+    return state.𝐱
 end
