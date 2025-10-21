@@ -1,34 +1,34 @@
 \section*{Question 5}
 
-Let \( \mathbf{x}^{*} \) be the global minimum of a convex function \( f \in \mathcal{C}_{L}^{1} \).
-Use \texttt{DESCENT} with \( \mathbf{u}^{(k)} = -\nabla f\left(\mathbf{x}^{(k)}\right) \).
+Let \( \xstar \) be the global minimum of a convex function \( f \in \classC^1_L \).
+Use \texttt{DESCENT} with \( \u^k = -\nabla f\left(\x^k\right) \).
 Let \( \alpha_{k} = \frac{\beta}{L} \) where \( 0<\beta<2 \).
 Answer the following with justification.
 \begin{enumerate}[label= (\alph*)]
-    \item Do all iterates lie in \( S = \left\{ \mathbf{x} \mid\left\Vert\mathbf{x}-\mathbf{x}^{*}\right\Vert \leq\left\Vert\mathbf{x}^{(0)}-\mathbf{x}^{*}\right\Vert \right\} \)?
+    \item Do all iterates lie in \( S = \left\{ \x \mid\left\Vert\x-\xstar\right\Vert \leq\left\Vert\x^0-\xstar\right\Vert \right\} \)?
 
     \item Do the iterates obey the sufficient decrease lemma?
 
     \item Find the minimum number of iterations required to ensure a point whose function value is at most \( .01 \) more than the value of global minimum value.
-        Assume that \( \left\Vert\mathbf{x}^{(0)}-\mathbf{x}^{*}\right\Vert = 1 \).
+        Assume that \( \left\Vert\x^0-\xstar\right\Vert = 1 \).
 \end{enumerate}
 
 \subsection*{Solution}
 
 \paragraph{Given:}
 \begin{equation*}
-    f \in \C^1_L,
+    f \in \classC^1_L,
     \quad
     \xstar = \argmin_{\x} \func{f}{\x},
     \quad
-    \mathbf{u}^{(k)} = -\grad{f}{\xk},
+    \u^k = -\grad{f}{\x^k},
     \quad
     \alpha_{k} = \frac{\beta}{L}, \; 0 < \beta < 2
 \end{equation*}
 
 \subsubsection*{(a)}
 
-Since \( f \in \C^1_L \), we have
+Since \( f \in \classC^1_L \), we have
 \begin{align*}
     \norm{\grad{f}{\x} - \grad{f}{\y}}
     & \leq
@@ -73,48 +73,48 @@ Now, by Cauchy-Schwarz inequality, we have
 \end{align*}
 Now, we can see that
 \begin{align*}
-    \xkp
+    \x^{k+1}
     & =
-    \xk + \alpha_k \mathbf{u}^{(k)}
+    \x^k + \alpha_k \u^k
     =
-    \xk - \frac{\beta}{L} \grad{f}{\xk}
+    \x^k - \frac{\beta}{L} \grad{f}{\x^k}
     \\
     \implies
-    \xkp - \xstar
+    \x^{k+1} - \xstar
     & =
-    \xk - \xstar - \frac{\beta}{L} \grad{f}{\xk}
+    \x^k - \xstar - \frac{\beta}{L} \grad{f}{\x^k}
     \\
-    \norm{\xkp - \xstar}^2
+    \norm{\x^{k+1} - \xstar}^2
     & =
-    \norm{\big( \xk - \xstar \big) - \frac{\beta}{L} \grad{f}{\xk}}^2
+    \norm{\big( \x^k - \xstar \big) - \frac{\beta}{L} \grad{f}{\x^k}}^2
     \\ & =
-    \norm{\xk - \xstar}^2
-    + \norm{\frac{\beta}{L} \grad{f}{\xk}}^2
-    - 2 \frac{\beta}{L} \dotp{\grad{f}{\xk}}{(\xk - \xstar)}
+    \norm{\x^k - \xstar}^2
+    + \norm{\frac{\beta}{L} \grad{f}{\x^k}}^2
+    - 2 \frac{\beta}{L} \dotp{\grad{f}{\x^k}}{(\x^k - \xstar)}
     \\ & \leq
-    \norm{\xk - \xstar}^2
-    + \frac{\beta^2}{\cancel{L^2}} \cancel{L^2} \norm{\xk - \xstar}^2
-    - 2 \frac{\beta}{\cancel{L}} \cancel{L} \norm{\xk - \xstar}^2
+    \norm{\x^k - \xstar}^2
+    + \frac{\beta^2}{\cancel{L^2}} \cancel{L^2} \norm{\x^k - \xstar}^2
+    - 2 \frac{\beta}{\cancel{L}} \cancel{L} \norm{\x^k - \xstar}^2
     \\ & =
-    (1 + \beta^2 - 2\beta) \, \norm{\xk - \xstar}^2
+    (1 + \beta^2 - 2\beta) \, \norm{\x^k - \xstar}^2
     =
-    {(1 - \beta)}^2 \, \norm{\xk - \xstar}^2
+    {(1 - \beta)}^2 \, \norm{\x^k - \xstar}^2
 \end{align*}
 
 Since \( 0 < \beta < 2 \implies -2 < -\beta < 0 \implies -1 < 1 - \beta < 1 \implies {(1 - \beta)}^2 < 1 \), we have
 \begin{equation*}
-    \norm{\xkp - \xstar}^2
-    < \norm{\xk - \xstar}^2,
+    \norm{\x^{k+1} - \xstar}^2
+    < \norm{\x^k - \xstar}^2,
     \quad \forall k \geq 0
 \end{equation*}
 
-By induction, we can see that all the iterates lie in the set \( S = \set{ \x \;\middle|\; \norm{\x - \xstar} \leq \norm{\x^{(0)} - \xstar} } \).
+By induction, we can see that all the iterates lie in the set \( S = \set{ \x \;\middle|\; \norm{\x - \xstar} \leq \norm{\x^0 - \xstar} } \).
 
 \subsubsection*{(b)}
 
 Sufficient decrease lemma states
 \begin{equation*}
-    \frac{\func{f}{\xk} - \func{f}{\xkp}}{\norm{\grad{f}{\xk}}^2}
+    \frac{\func{f}{\x^k} - \func{f}{\x^{k+1}}}{\norm{\grad{f}{\x^k}}^2}
     \geq
     R_k
     \geq
@@ -122,7 +122,7 @@ Sufficient decrease lemma states
     > 0
 \end{equation*}
 
-Since \( f \in \C^1_L \), we have
+Since \( f \in \classC^1_L \), we have
 \begin{align*}
     \func{f}{\y}
     & \leq
@@ -132,23 +132,23 @@ Since \( f \in \C^1_L \), we have
     \quad \forall \x, \y \in \R^d
     \\
     \implies
-    \func{f}{\xkp}
+    \func{f}{\x^{k+1}}
     & \leq
-    \func{f}{\xk}
-    + \dotp{\grad{f}{\xk}}{\big( \xkp - \xk \big)}
-    + \frac{L}{2} \, \norm{\xkp - \xk}^2
+    \func{f}{\x^k}
+    + \dotp{\grad{f}{\x^k}}{\big( \x^{k+1} - \x^k \big)}
+    + \frac{L}{2} \, \norm{\x^{k+1} - \x^k}^2
     \\
     \implies
-    \func{f}{\xk} - \func{f}{\xkp}
+    \func{f}{\x^k} - \func{f}{\x^{k+1}}
     & \geq
-    - \dotp{\grad{f}{\xk}}{\big( \xkp - \xk \big)}
-    - \frac{L}{2} \, \norm{\xkp - \xk}^2
+    - \dotp{\grad{f}{\x^k}}{\big( \x^{k+1} - \x^k \big)}
+    - \frac{L}{2} \, \norm{\x^{k+1} - \x^k}^2
     \\ & =
-    \frac{\beta}{L} \norm{\grad{f}{\xk}}^2
-    - \frac{\cancel{L}}{2} \frac{\beta^2}{L^{\cancel{2}}} \, \norm{\grad{f}{\xk}}^2
+    \frac{\beta}{L} \norm{\grad{f}{\x^k}}^2
+    - \frac{\cancel{L}}{2} \frac{\beta^2}{L^{\cancel{2}}} \, \norm{\grad{f}{\x^k}}^2
     \\
     \implies
-    \frac{\func{f}{\xk} - \func{f}{\xkp}}{\norm{\grad{f}{\xk}}^2}
+    \frac{\func{f}{\x^k} - \func{f}{\x^{k+1}}}{\norm{\grad{f}{\x^k}}^2}
     & \geq
     \frac{\beta}{L}
     - \frac{\beta^2}{2 L}
@@ -174,14 +174,14 @@ Thus, the iterates obey the sufficient decrease lemma.
 
 We want to find a minimum \( k \) such that
 \begin{equation*}
-    \func{f}{\xk}
+    \func{f}{\x^k}
     \leq
     \func{f}{\xstar}
     + 0.01
 \end{equation*}
-given that \( \norm{\x^{(0)} - \xstar} = 1 \).
+given that \( \norm{\x^0 - \xstar} = 1 \).
 
-Now, since \( f \in \C^1_L \), we have
+Now, since \( f \in \classC^1_L \), we have
 \begin{align*}
     \func{f}{\y}
     & \leq
@@ -191,17 +191,17 @@ Now, since \( f \in \C^1_L \), we have
     \quad \forall \x, \y \in \R^d
     \\
     \implies
-    \func{f}{\xk}
+    \func{f}{\x^k}
     & \leq
     \func{f}{\xstar}
-    + \frac{L}{2} \, \norm{\xk - \xstar}^2
+    + \frac{L}{2} \, \norm{\x^k - \xstar}^2
     \\
     \implies
-    \func{f}{\xk} - \func{f}{\xstar}
+    \func{f}{\x^k} - \func{f}{\xstar}
     & \leq
-    \frac{L}{2} \, \norm{\xk - \xstar}^2
+    \frac{L}{2} \, \norm{\x^k - \xstar}^2
     \leq
-    \frac{L}{2} {(1 - \beta)}^{2k} \, \norm{\x^{(0)} - \xstar}^2
+    \frac{L}{2} {(1 - \beta)}^{2k} \, \norm{\x^0 - \xstar}^2
     =
     \frac{L}{2} {(1 - \beta)}^{2k}
     \\
@@ -210,7 +210,7 @@ Now, since \( f \in \C^1_L \), we have
     & \leq
     0.01,
     \quad \text{then }
-    \func{f}{\xk}
+    \func{f}{\x^k}
     \leq
     \func{f}{\xstar}
     + 0.01
@@ -246,57 +246,57 @@ Since \( f \) is convex, we have
     \implies
     \func{f}{\xstar}
     & \geq
-    \func{f}{\xk}
-    + \dotp{\grad{f}{\xk}}{(\xstar - \xk)}
+    \func{f}{\x^k}
+    + \dotp{\grad{f}{\x^k}}{(\xstar - \x^k)}
     \\
     \implies
-    \func{f}{\xk} - \func{f}{\xstar}
+    \func{f}{\x^k} - \func{f}{\xstar}
     & \leq
-    -\dotp{\grad{f}{\xk}}{(\xstar - \xk)}
+    -\dotp{\grad{f}{\x^k}}{(\xstar - \x^k)}
     =
-    \dotp{\grad{f}{\xk}}{(\xk - \xstar)}
+    \dotp{\grad{f}{\x^k}}{(\x^k - \xstar)}
     \\ & \leq
-    \abs{\dotp{\grad{f}{\xk}}{(\xk - \xstar)}}
+    \abs{\dotp{\grad{f}{\x^k}}{(\x^k - \xstar)}}
     \leq
-    \norm{\grad{f}{\xk}} \, \norm{\xk - \xstar}
+    \norm{\grad{f}{\x^k}} \, \norm{\x^k - \xstar}
     \\
     \because
-    \norm{\xk - \xstar}
+    \norm{\x^k - \xstar}
     & \leq
-    \norm{\x^{(0)} - \xstar}
+    \norm{\x^0 - \xstar}
     = 1,
     \quad \forall k \geq 0
     \\
     \implies
     &
     \boxed{
-        \func{f}{\xk} - \func{f}{\xstar}
+        \func{f}{\x^k} - \func{f}{\xstar}
         \leq
-        \norm{\grad{f}{\xk}},
+        \norm{\grad{f}{\x^k}},
         \quad \forall k \geq 0
     }
     \\
     \because
-    \frac{\func{f}{\xk} - \func{f}{\xkp}}{\norm{\grad{f}{\xk}}^2}
+    \frac{\func{f}{\x^k} - \func{f}{\x^{k+1}}}{\norm{\grad{f}{\x^k}}^2}
     & \geq
     R
     > 0,
     \quad \forall k \geq 0
     \\
     \implies
-    \norm{\grad{f}{\xk}}^2
+    \norm{\grad{f}{\x^k}}^2
     & \leq
-    \frac{\func{f}{\xk} - \func{f}{\xkp}}{R},
+    \frac{\func{f}{\x^k} - \func{f}{\x^{k+1}}}{R},
     \quad \forall k \geq 0
     \\
     \implies
-    \func{f}{\xk} - \func{f}{\xkp}
+    \func{f}{\x^k} - \func{f}{\x^{k+1}}
     & \geq
-    R {\left( \func{f}{\xk} - \func{f}{\xstar} \right)}^2,
+    R {\left( \func{f}{\x^k} - \func{f}{\xstar} \right)}^2,
     \quad \forall k \geq 0
 \end{align*}
 
-Define \( \delta_k \triangleq \func{f}{\xk} - \func{f}{\xstar} \geq 0 \).
+Define \( \delta_k \triangleq \func{f}{\x^k} - \func{f}{\xstar} \geq 0 \).
 Then, we have
 \begin{align*}
     \implies
@@ -361,9 +361,9 @@ Then, we have
     \because
     \delta_0
     =
-    \func{f}{\x^{(0)}} - \func{f}{\xstar}
+    \func{f}{\x^0} - \func{f}{\xstar}
     & \leq
-    \frac{L}{2} \, \norm{\x^{(0)} - \xstar}^2
+    \frac{L}{2} \, \norm{\x^0 - \xstar}^2
     =
     \frac{L}{2}
     = \frac{1}{R} \cdot \frac{\beta (2 - \beta)}{4}
@@ -393,7 +393,7 @@ Then, we have
     & \leq
     0.01,
     \quad \text{then }
-    \func{f}{\xk}
+    \func{f}{\x^k}
     \leq
     \func{f}{\xstar}
     + 0.01

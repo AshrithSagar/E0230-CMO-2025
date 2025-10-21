@@ -24,8 +24,8 @@ Answer True (T) or False (F)
             \end{align*}
         \end{solutionbox}
 
-    \item Let \( \func{f}{\x} = \mathbf{a}^\top \x \).
-        The derivative of \( f \) is \( \mathbf{a} \).
+    \item Let \( \func{f}{\x} = \a^\top \x \).
+        The derivative of \( f \) is \( \a \).
 
         \begin{solutionbox}
             True.
@@ -34,49 +34,49 @@ Answer True (T) or False (F)
                 & =
                 \sum_{i = 1}^{d} a_i x_i,
                 \quad \x = {\left[x_{1}, x_{2}, \ldots, x_{d}\right]}^\top,
-                \; \mathbf{a} = {\left[a_{1}, a_{2}, \ldots, a_{d}\right]}^\top
+                \; \a = {\left[a_{1}, a_{2}, \ldots, a_{d}\right]}^\top
                 \\
                 \implies
                 \grad{f}{\x}
                 & =
-                {\left[\frac{\partial f}{\partial x_{1}}, \frac{\partial f}{\partial x_{2}}, \ldots, \frac{\partial f}{\partial x_{d}}\right]}^\top = {\left[a_{1}, a_{2}, \ldots, a_{d}\right]}^\top = \mathbf{a}
+                {\left[\frac{\partial f}{\partial x_{1}}, \frac{\partial f}{\partial x_{2}}, \ldots, \frac{\partial f}{\partial x_{d}}\right]}^\top = {\left[a_{1}, a_{2}, \ldots, a_{d}\right]}^\top = \a
             \end{align*}
         \end{solutionbox}
 
         \newpage
-    \item The hessian of \( \func{f}{\x} = \half \qf{\x}{A}, A = \outpbf{u}{v}, \mathbf{u} \neq \mathbf{v} \), is given by \( H = A \).
+    \item The hessian of \( \func{f}{\x} = \half \qf{\x}{A}, A = \outp{\u}{\v}, \u \neq \v \), is given by \( H = A \).
 
         \begin{solutionbox}
             False.
             \begin{align*}
                 A
                 & =
-                \outpbf{u}{v}
+                \outp{\u}{\v}
                 \implies
                 A^\top
                 =
-                {\left(\outpbf{u}{v}\right)}^\top
+                {\left(\outp{\u}{\v}\right)}^\top
                 =
-                \outpbf{v}{u}
+                \outp{\v}{\u}
                 \\
                 \func{f}{\x}
                 & =
                 \half \qf{\x}{A}
                 =
-                \half \qf{\x}{(\outpbf{u}{v})}
+                \half \qf{\x}{(\outp{\u}{\v})}
                 =
-                \half {(\dotpbf{u}{\x})} (\dotpbf{v}{\x})
+                \half {(\dotp{\u}{\x})} (\dotp{\v}{\x})
                 \\
                 \implies
                 \grad{f}{\x}
                 & =
-                \half (\dotpbf{u}{\x}) \nabla (\dotpbf{v}{\x})
-                + \half (\dotpbf{v}{\x}) \nabla (\dotpbf{u}{\x})
+                \half (\dotp{\u}{\x}) \nabla (\dotp{\v}{\x})
+                + \half (\dotp{\v}{\x}) \nabla (\dotp{\u}{\x})
                 \\ & =
-                \half (\dotpbf{u}{\x}) \mathbf{v}
-                + \half (\dotpbf{v}{\x}) \mathbf{u}
+                \half (\dotp{\u}{\x}) \v
+                + \half (\dotp{\v}{\x}) \u
                 =
-                \half (\outpbf{u}{v} + \outpbf{v}{u}) \x
+                \half (\outp{\u}{\v} + \outp{\v}{\u}) \x
                 =
                 \half (A + A^\top) \x
                 \\
@@ -95,29 +95,29 @@ Answer True (T) or False (F)
                 \\
                 \text{Also, } \quad
                 &
-                \outpbf{u}{v} = \outpbf{v}{u}
+                \outp{\u}{\v} = \outp{\v}{\u}
                 \iff
-                \mathbf{u} = \lambda \mathbf{v}, \; \lambda \in \R
+                \u = \lambda \v, \; \lambda \in \R
                 \\
                 \because
-                \mathbf{u} \neq \lambda \mathbf{v}
+                \u \neq \lambda \v
                 & \implies
-                \outpbf{u}{v} \neq \outpbf{v}{u}
+                \outp{\u}{\v} \neq \outp{\v}{\u}
                 \implies
                 A \neq A^\top
                 \implies
                 H \neq A
             \end{align*}
-            Should have been given \( \mathbf{u} \neq \lambda \mathbf{v} \) instead of \( \mathbf{u} \neq \mathbf{v} \).
+            Should have been given \( \u \neq \lambda \v \) instead of \( \u \neq \v \).
         \end{solutionbox}
 
-    \item For \( f \), a \( \C^2 \) function, consider a point \( \xhat \) such that \( \grad{f}{\xhat} = 0 \) and the Hessian is positive definite, \( \hess{f}{\xhat} \succ 0 \).
+    \item For \( f \), a \( \classC^2 \) function, consider a point \( \xhat \) such that \( \grad{f}{\xhat} = 0 \) and the Hessian is positive definite, \( \hess{f}{\xhat} \succ 0 \).
         Then \( \xhat \) is global minimum of \( f \).
 
         \begin{solutionbox}
             False.
 
-            From the given conditions, \( f \in \C^2, \grad{f}{\xhat} = 0, \hess{f}{\xhat} \succ 0 \), we can say that \( \xhat \) is a strict local minimum of \( f \) by the second order necessary condition for optimalilty.
+            From the given conditions, \( f \in \classC^2, \grad{f}{\xhat} = 0, \hess{f}{\xhat} \succ 0 \), we can say that \( \xhat \) is a strict local minimum of \( f \) by the second order necessary condition for optimalilty.
 
             To be able to say that \( \xhat \) is a global minimum of \( f \), we need \( f \) to be convex, i.e., \( \hess{f}{\x} \succeq 0, \; \forall \x \in \operatorname{dom}(f) \), as per the second order sufficient condition for optimality and the second order condition for convexity.
         \end{solutionbox}
@@ -137,7 +137,7 @@ Answer True (T) or False (F)
                 \implies
                 \grad{f}{\xhat}
                 & =
-                \mathbf{0}
+                \zero
                 \implies
                 x_2 = x_1^2, \quad 1 + x_1 = 0
                 \implies
@@ -156,7 +156,7 @@ Answer True (T) or False (F)
             It has a unique global minimum at \( (x, y) = (a, a^2), \; \forall b > 0 \).
         \end{solutionbox}
 
-    \item Suppose global minimum, \( \xhat \), exists for a function \( f \in \C^{1} \).
+    \item Suppose global minimum, \( \xhat \), exists for a function \( f \in \classC^1 \).
         \( \xhat \in \{ \x \mid \grad{f}{\x} = 0 \} \).
 
         \begin{solutionbox}

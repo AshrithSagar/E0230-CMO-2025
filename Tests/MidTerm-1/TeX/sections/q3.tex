@@ -24,10 +24,10 @@ Answer the following with justification.
     \quad
     \func{f}{\x}
     =
-    \half {(\dotp{\x}{\mathbf{v}_1})}^2 + t \dotp{\mathbf{v}_2}{\x},
+    \half {(\dotp{\x}{\v_1})}^2 + t \dotp{\v_2}{\x},
     \quad t \in \R,
-    \; \mathbf{v}_1, \mathbf{v}_2 \in \R^d,
-    \; \dotp{\mathbf{v}_1}{\mathbf{v}_2} = 0
+    \; \v_1, \v_2 \in \R^d,
+    \; \dotp{\v_1}{\v_2} = 0
 \end{equation*}
 
 \subsubsection*{(a)}
@@ -36,20 +36,20 @@ Answer the following with justification.
     \implies
     \func{f}{\x}
     & =
-    \half \qf{\x}{(\outp{\mathbf{v}_1}{\mathbf{v}_1})} + \dotp{(t \mathbf{v}_2)}{\x}
+    \half \qf{\x}{(\outp{\v_1}{\v_1})} + \dotp{(t \v_2)}{\x}
     \\
     \implies
     \grad{f}{\x}
     & =
-    (\outp{\mathbf{v}_1}{\mathbf{v}_1}) \x + t \mathbf{v}_2
+    (\outp{\v_1}{\v_1}) \x + t \v_2
     \\
     \implies
     \hess{f}{\x}
     & =
-    \outp{\mathbf{v}_1}{\mathbf{v}_1}
+    \outp{\v_1}{\v_1}
 \end{align*}
 
-The eigenvalues of the Hessian are \( \norm{\mathbf{v}_1}^2 \) and \( 0 \) with eigenvectors \( \mathbf{v}_1 \) and any vector orthogonal to \( \mathbf{v}_1 \) respectively.
+The eigenvalues of the Hessian are \( \norm{\v_1}^2 \) and \( 0 \) with eigenvectors \( \v_1 \) and any vector orthogonal to \( \v_1 \) respectively.
 
 Since the eigenvalues of the Hessian are non-negative, the function \( f \) is convex by the second-order condition for convexity, i.e., \( \hess{f}{\x} \succeq 0, \; \forall \x \in \R^d \).
 
@@ -61,20 +61,20 @@ From the first-order necessary condition for optimality, we have
     & =
     \zero
     \implies
-    (\outp{\mathbf{v}_1}{\mathbf{v}_1}) \xstar + t \mathbf{v}_2
+    (\outp{\v_1}{\v_1}) \xstar + t \v_2
     = \zero
     \\
     \implies
-    (\dotp{\mathbf{v}_1}{\xstar}) \mathbf{v}_1
+    (\dotp{\v_1}{\xstar}) \v_1
     & =
-    -t \mathbf{v}_2,
+    -t \v_2,
     \quad
     \forall t \in \R,
-    \; \mathbf{v}_1, \mathbf{v}_2 \in \R^d,
-    \; \dotp{\mathbf{v}_1}{\mathbf{v}_2} = 0
+    \; \v_1, \v_2 \in \R^d,
+    \; \dotp{\v_1}{\v_2} = 0
 \end{align*}
 
-For \( t = 0 \), we have \( \xstar \in \set{ \x \in \R^d \;\middle|\; \dotp{\mathbf{v}_1}{\x} = 0 } \), and \( \func{f}{\xstar} = 0 \).
+For \( t = 0 \), we have \( \xstar \in \set{ \x \in \R^d \;\middle|\; \dotp{\v_1}{\x} = 0 } \), and \( \func{f}{\xstar} = 0 \).
 
 For \( t \neq 0 \), \( f \) is unbounded below.
 
@@ -86,20 +86,20 @@ For \( t \neq 0 \), \( f \) is unbounded below.
     & =
     \func{f}{\x} + \half {\norm{\x}}^2
     =
-    \half \qf{\x}{(\outp{\mathbf{v}_1}{\mathbf{v}_1} + \I)} + \dotp{(t \mathbf{v}_2)}{\x}
+    \half \qf{\x}{(\outp{\v_1}{\v_1} + \I)} + \dotp{(t \v_2)}{\x}
     \\
     \implies
     \grad{g}{\x}
     & =
-    (\outp{\mathbf{v}_1}{\mathbf{v}_1} + \I) \x + t \mathbf{v}_2
+    (\outp{\v_1}{\v_1} + \I) \x + t \v_2
     \\
     \implies
     \hess{g}{\x}
     & =
-    \outp{\mathbf{v}_1}{\mathbf{v}_1} + \I
+    \outp{\v_1}{\v_1} + \I
 \end{align*}
 
-From Cayley-Hamilton theorem, it follows that the eigenvalues of the Hessian are \( \norm{\mathbf{v}_1}^2 + 1 \) and \( 1 \) with eigenvectors \( \mathbf{v}_1 \) and any vector orthogonal to \( \mathbf{v}_1 \) respectively.
+From Cayley-Hamilton theorem, it follows that the eigenvalues of the Hessian are \( \norm{\v_1}^2 + 1 \) and \( 1 \) with eigenvectors \( \v_1 \) and any vector orthogonal to \( \v_1 \) respectively.
 
 The function \( g \) is strongly convex since the eigenvalues of the Hessian are strictly positive, i.e., \( \hess{g}{\x} \succeq \I \implies \hess{g}{\x} \succ 0, \; \forall \x \in \R^d \).
 
@@ -109,55 +109,55 @@ Now, we have
     & =
     \zero
     \implies
-    (\outp{\mathbf{v}_1}{\mathbf{v}_1} + \I) \xstar + t \mathbf{v}_2
+    (\outp{\v_1}{\v_1} + \I) \xstar + t \v_2
     = \zero
     \implies
     \hess{f}{\xstar} \, \xstar
     =
-    - t \mathbf{v}_2
+    - t \v_2
     \\
     \implies
     \xstar
     & =
-    -t \inv{(\outp{\mathbf{v}_1}{\mathbf{v}_1} + \I)} \mathbf{v}_2,
+    -t \inv{(\outp{\v_1}{\v_1} + \I)} \v_2,
     \quad
     \forall t \in \R
 \end{align*}
 
 Now, since
 \begin{equation*}
-    \hess{f}{\x} \, \mathbf{v}_2
+    \hess{f}{\x} \, \v_2
     =
-    (\outp{\mathbf{v}_1}{\mathbf{v}_1} + \I) \mathbf{v}_2
+    (\outp{\v_1}{\v_1} + \I) \v_2
     =
-    \mathbf{v}_2
+    \v_2
 \end{equation*}
-it follows that \( \mathbf{v}_2 \) is an eigenvector of \( \hess{f}{\x} \) with eigenvalue \( 1 \).
+it follows that \( \v_2 \) is an eigenvector of \( \hess{f}{\x} \) with eigenvalue \( 1 \).
 
 By Sherman-Morrison formula, we have
 \begin{align*}
-    \inv{(\mathbf{A} + \outp{\mathbf{u}}{\mathbf{v}})}
+    \inv{(\mathbf{A} + \outp{\u}{\v})}
     & =
-    \inv{\mathbf{A}} - \frac{\inv{\mathbf{A}} \outp{\mathbf{u}}{\mathbf{v}} \inv{\mathbf{A}}}{1 + \qf{\mathbf{v}}{\inv{\mathbf{A}}}[\mathbf{u}]},
+    \inv{\mathbf{A}} - \frac{\inv{\mathbf{A}} \outp{\u}{\v} \inv{\mathbf{A}}}{1 + \qf{\v}{\inv{\mathbf{A}}}[\u]},
     \\
     \implies
-    \inv{(\outp{\mathbf{v}_1}{\mathbf{v}_1} + \I)}
+    \inv{(\outp{\v_1}{\v_1} + \I)}
     & =
-    \I - \frac{\outp{\mathbf{v}_1}{\mathbf{v}_1}}{\norm{\mathbf{v}_1}^2 + 1}
+    \I - \frac{\outp{\v_1}{\v_1}}{\norm{\v_1}^2 + 1}
     \\
     \implies
     \xstar
     & =
-    -t \left( \I - \frac{\outp{\mathbf{v}_1}{\mathbf{v}_1}}{\norm{\mathbf{v}_1}^2 + 1} \right) \mathbf{v}_2
+    -t \left( \I - \frac{\outp{\v_1}{\v_1}}{\norm{\v_1}^2 + 1} \right) \v_2
     =
-    -t \mathbf{v}_2 + \zero
+    -t \v_2 + \zero
     \\
     \implies
     &
     \boxed{
         \xstar
         =
-        -t \mathbf{v}_2,
+        -t \v_2,
         \quad
         \forall t \in \R
     }
@@ -165,18 +165,18 @@ By Sherman-Morrison formula, we have
     \implies
     \func{g}{\xstar}
     & =
-    \half \qf{\xstar}{(\outp{\mathbf{v}_1}{\mathbf{v}_1} + \I)} + t \dotp{\mathbf{v}_2}{\xstar}
+    \half \qf{\xstar}{(\outp{\v_1}{\v_1} + \I)} + t \dotp{\v_2}{\xstar}
     =
-    \half \dotp{\xstar}{(-t \mathbf{v}_2)} + t \dotp{\mathbf{v}_2}{\xstar}
+    \half \dotp{\xstar}{(-t \v_2)} + t \dotp{\v_2}{\xstar}
     =
-    \half t \dotp{\mathbf{v}_2}{\xstar}
+    \half t \dotp{\v_2}{\xstar}
     \\
     \implies
     &
     \boxed{
         \func{g}{\xstar}
         =
-        -\half t^2 \norm{\mathbf{v}_2}^2,
+        -\half t^2 \norm{\v_2}^2,
         \quad
         \forall t \in \R
     }

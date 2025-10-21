@@ -1,11 +1,11 @@
 \section*{Question 2}
 
-Let \( f: \R^{d} \rightarrow \R \) be \( \mathcal{C}_{L}^{1} \).
+Let \( f: \R^{d} \rightarrow \R \) be \( \classC^1_L \).
 Consider implementing the Wolfe method of inexact line search for the Algorithm \texttt{DESCENT}.
 \begin{enumerate}[label= (\alph*)]
     \item State the Wolfe conditions.
 
-    \item Compute the minimum guaranteed stepsize at \( \mathbf{x}^{(k)} \).
+    \item Compute the minimum guaranteed stepsize at \( \x^k \).
 
     \item Does the Wolfe method satisfy the Sufficient Decrease Lemma.
         Justify.
@@ -16,14 +16,14 @@ Consider implementing the Wolfe method of inexact line search for the Algorithm 
 \subsection*{(a) Wolfe conditions}
 
 \begin{align*}
-    \func{f}{\xk + \alpha_k \pk}
+    \func{f}{\x^k + \alpha_k \p^k}
     & \leq
-    \func{f}{\xk} + c_1 \alpha_k \dotp{\grad{f}{\xk}}{\pk}
+    \func{f}{\x^k} + c_1 \alpha_k \dotp{\grad{f}{\x^k}}{\p^k}
     \tag{sufficient decrease}
     \\
-    \dotp{\grad{f}{\xk + \alpha_k \pk}}{\pk}
+    \dotp{\grad{f}{\x^k + \alpha_k \p^k}}{\p^k}
     & \geq
-    c_2 \dotp{\grad{f}{\xk}}{\pk}
+    c_2 \dotp{\grad{f}{\x^k}}{\p^k}
     \tag{curvature}
     \\
     \text{where } \;&
@@ -45,16 +45,16 @@ Consider implementing the Wolfe method of inexact line search for the Algorithm 
     \\ &
     \func{g}{\alpha}
     \triangleq
-    \func{f}{\xk + \alpha \pk}
+    \func{f}{\x^k + \alpha \p^k}
     \implies
     \func{g^\prime}{\alpha}
     =
-    \dotp{\grad{f}{\xk + \alpha \pk}}{\pk}
+    \dotp{\grad{f}{\x^k + \alpha \p^k}}{\p^k}
 \end{align*}
 
-\subsection*{(b) Minimum guaranteed stepsize at \( \xk \)}
+\subsection*{(b) Minimum guaranteed stepsize at \( \x^k \)}
 
-Since \( f \in \C^1_L \), we have
+Since \( f \in \classC^1_L \), we have
 \begin{align*}
     \norm{\grad{f}{\y} - \grad{f}{\x}}
     & \leq
@@ -63,11 +63,11 @@ Since \( f \in \C^1_L \), we have
     \forall \x, \y \in \R^d
     \\
     \implies
-    \norm{\grad{f}{\xk + \alpha \pk} - \grad{f}{\xk}}
+    \norm{\grad{f}{\x^k + \alpha \p^k} - \grad{f}{\x^k}}
     & \leq
-    L \norm{\alpha \pk}
+    L \norm{\alpha \p^k}
     =
-    L \alpha \norm{\pk},
+    L \alpha \norm{\p^k},
     \quad
     \forall \alpha > 0
 \end{align*}
@@ -75,32 +75,32 @@ Since \( f \in \C^1_L \), we have
 Now, from the curvature condition, we have
 \begin{align*}
     \implies
-    c_2 \dotp{\grad{f}{\xk}}{\pk}
+    c_2 \dotp{\grad{f}{\x^k}}{\p^k}
     & \leq
-    \dotp{\grad{f}{\xk + \alpha_k \pk}}{\pk}
+    \dotp{\grad{f}{\x^k + \alpha_k \p^k}}{\p^k}
     \\
     \implies
-    (c_2 - 1) \dotp{\grad{f}{\xk}}{\pk}
+    (c_2 - 1) \dotp{\grad{f}{\x^k}}{\p^k}
     & \leq
-    \dotp{\Big( \grad{f}{\xk + \alpha_k \pk} - \grad{f}{\xk} \Big)}{\pk}
+    \dotp{\Big( \grad{f}{\x^k + \alpha_k \p^k} - \grad{f}{\x^k} \Big)}{\p^k}
     \\
 \end{align*}
 Now, by Cauchy-Schwarz inequality, we get
 \begin{align*}
     \implies
-    \abs{\dotp{\Big( \grad{f}{\xk + \alpha_k \pk} - \grad{f}{\xk} \Big)}{\pk}}
+    \abs{\dotp{\Big( \grad{f}{\x^k + \alpha_k \p^k} - \grad{f}{\x^k} \Big)}{\p^k}}
     & \leq
-    \norm{\grad{f}{\xk + \alpha_k \pk} - \grad{f}{\xk}}
-    \; \norm{\pk}
+    \norm{\grad{f}{\x^k + \alpha_k \p^k} - \grad{f}{\x^k}}
+    \; \norm{\p^k}
     \\ & \leq
-    L \alpha_k \norm{\pk}^2
+    L \alpha_k \norm{\p^k}^2
 \end{align*}
 And since \( x \leq \abs{x}, \; \forall x \in \R \), we finally get
 \begin{align*}
     \implies
-    (c_2 - 1) \dotp{\grad{f}{\xk}}{\pk}
+    (c_2 - 1) \dotp{\grad{f}{\x^k}}{\p^k}
     & \leq
-    L \alpha_k \norm{\pk}^2
+    L \alpha_k \norm{\p^k}^2
 \end{align*}
 \begin{equation*}
     \implies
@@ -108,7 +108,7 @@ And since \( x \leq \abs{x}, \; \forall x \in \R \), we finally get
         \alpha_k
         \geq
         \frac{(c_2 - 1)}{L}
-        \frac{\dotp{\grad{f}{\xk}}{\pk}}{\norm{\pk}^2}
+        \frac{\dotp{\grad{f}{\x^k}}{\p^k}}{\norm{\p^k}^2}
     }
     > 0
 \end{equation*}
@@ -119,7 +119,7 @@ Yes, the Wolfe method satisfies the sufficient decrease lemma.
 
 Sufficient decrease lemma states
 \begin{equation*}
-    \frac{\func{f}{\xk} - \func{f}{\xk + \alpha_k \pk}}{\norm{\grad{f}{\xk}}^2}
+    \frac{\func{f}{\x^k} - \func{f}{\x^k + \alpha_k \p^k}}{\norm{\grad{f}{\x^k}}^2}
     \geq
     R_k
     \geq
@@ -128,78 +128,78 @@ Sufficient decrease lemma states
 \end{equation*}
 \begin{align*}
     \implies
-    \func{f}{\xk + \alpha_k \pk}
+    \func{f}{\x^k + \alpha_k \p^k}
     & \leq
-    \func{f}{\xk} + c_1 \alpha_k \dotp{\grad{f}{\xk}}{\pk}
+    \func{f}{\x^k} + c_1 \alpha_k \dotp{\grad{f}{\x^k}}{\p^k}
     \\
     \implies
-    \func{f}{\xk} - \func{f}{\xk + \alpha_k \pk}
+    \func{f}{\x^k} - \func{f}{\x^k + \alpha_k \p^k}
     & \geq
-    - c_1 \alpha_k \dotp{\grad{f}{\xk}}{\pk}
+    - c_1 \alpha_k \dotp{\grad{f}{\x^k}}{\p^k}
 \end{align*}
 Since \( -x \geq -\abs{x}, \; \forall x \in \R \),
 and by Cauchy-Schwarz inequality, we get
 \begin{align*}
     \implies
-    - c_1 \alpha_k \dotp{\grad{f}{\xk}}{\pk}
+    - c_1 \alpha_k \dotp{\grad{f}{\x^k}}{\p^k}
     & \geq
-    - c_1 \alpha_k \abs{\dotp{\grad{f}{\xk}}{\pk}}
+    - c_1 \alpha_k \abs{\dotp{\grad{f}{\x^k}}{\p^k}}
     \\
-    \abs{\dotp{\grad{f}{\xk}}{\pk}}
+    \abs{\dotp{\grad{f}{\x^k}}{\p^k}}
     & \leq
-    \norm{\grad{f}{\xk}}
-    \; \norm{\pk}
+    \norm{\grad{f}{\x^k}}
+    \; \norm{\p^k}
     \\
     \implies
-    - c_1 \alpha_k \abs{\dotp{\grad{f}{\xk}}{\pk}}
+    - c_1 \alpha_k \abs{\dotp{\grad{f}{\x^k}}{\p^k}}
     & \geq
-    - c_1 \alpha_k \norm{\grad{f}{\xk}}
-    \; \norm{\pk}
+    - c_1 \alpha_k \norm{\grad{f}{\x^k}}
+    \; \norm{\p^k}
     \\
     \implies
-    \func{f}{\xk} - \func{f}{\xk + \alpha_k \pk}
+    \func{f}{\x^k} - \func{f}{\x^k + \alpha_k \p^k}
     & \geq
-    - c_1 \alpha_k \norm{\grad{f}{\xk}}
-    \; \norm{\pk}
+    - c_1 \alpha_k \norm{\grad{f}{\x^k}}
+    \; \norm{\p^k}
     \\
     \because
     \alpha_k
     & \geq
     \frac{(c_2 - 1)}{L}
-    \frac{\dotp{\grad{f}{\xk}}{\pk}}{\norm{\pk}^2}
+    \frac{\dotp{\grad{f}{\x^k}}{\p^k}}{\norm{\p^k}^2}
     \\
     \implies
-    \func{f}{\xk} - \func{f}{\xk + \alpha_k \pk}
+    \func{f}{\x^k} - \func{f}{\x^k + \alpha_k \p^k}
     & \geq
     - c_1
     \frac{(c_2 - 1)}{L}
-    \frac{\dotp{\grad{f}{\xk}}{\pk}}{\norm{\pk}^2}
-    \norm{\grad{f}{\xk}}
-    \; \norm{\pk}
+    \frac{\dotp{\grad{f}{\x^k}}{\p^k}}{\norm{\p^k}^2}
+    \norm{\grad{f}{\x^k}}
+    \; \norm{\p^k}
     \\
     \implies
-    \frac{\func{f}{\xk} - \func{f}{\xk + \alpha_k \pk}}{\norm{\grad{f}{\xk}}^2}
+    \frac{\func{f}{\x^k} - \func{f}{\x^k + \alpha_k \p^k}}{\norm{\grad{f}{\x^k}}^2}
     & \geq
     - c_1
     \frac{(c_2 - 1)}{L}
-    \frac{\dotp{\grad{f}{\xk}}{\pk}}{\norm{\grad{f}{\xk}} \norm{\pk}}
+    \frac{\dotp{\grad{f}{\x^k}}{\p^k}}{\norm{\grad{f}{\x^k}} \norm{\p^k}}
     \\
     \implies
     R_k
     & \triangleq
     - c_1
     \frac{(c_2 - 1)}{L}
-    \frac{\dotp{\grad{f}{\xk}}{\pk}}{\norm{\grad{f}{\xk}} \norm{\pk}}
+    \frac{\dotp{\grad{f}{\x^k}}{\p^k}}{\norm{\grad{f}{\x^k}} \norm{\p^k}}
     \\
     \because
     -1
     & \leq
-    \frac{\dotp{\grad{f}{\xk}}{\pk}}{\norm{\grad{f}{\xk}} \norm{\pk}}
+    \frac{\dotp{\grad{f}{\x^k}}{\p^k}}{\norm{\grad{f}{\x^k}} \norm{\p^k}}
     \leq
     1
     \\
     \implies
-    - \frac{\dotp{\grad{f}{\xk}}{\pk}}{\norm{\grad{f}{\xk}} \norm{\pk}}
+    - \frac{\dotp{\grad{f}{\x^k}}{\p^k}}{\norm{\grad{f}{\x^k}} \norm{\p^k}}
     & \geq
     - 1
     \\
