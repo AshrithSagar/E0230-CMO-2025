@@ -29,3 +29,217 @@ This is another view of the Broyden family.
 \end{enumerate}
 
 \subsection*{Solution}
+
+\subsubsection*{(a)}
+
+\begin{align*}
+    \because
+    \A_{k+1}
+    & =
+    \A_k + \B_k \D \B_k^\top
+    \implies
+    \boldsymbol{\delta}_k
+    =
+    \A_{k+1} \boldsymbol{\gamma_k}
+    =
+    \A_k \boldsymbol{\gamma_k}
+    + \B_k \D \B_k^\top \boldsymbol{\gamma_k}
+    \\
+    \implies
+    \boldsymbol{\delta}_k - \A_k \boldsymbol{\gamma_k}
+    & =
+    \B_k \D \B_k^\top \boldsymbol{\gamma_k}
+    =
+    \B_k \u
+    \\
+    \text{Also, }
+    \boldsymbol{\delta}_k - \A_k \boldsymbol{\gamma_k}
+    & =
+    \begin{bmatrix}
+        \boldsymbol{\delta}_k
+        &
+        \A_k \boldsymbol{\gamma_k}
+    \end{bmatrix}
+    \begin{bmatrix}
+        1 \\ -1
+    \end{bmatrix}
+    =
+    \B_k
+    \begin{bmatrix}
+        1 \\ -1
+    \end{bmatrix}
+    \implies
+    \boxed{
+        \u
+        =
+        \begin{bmatrix}
+            1 \\ -1
+        \end{bmatrix}
+    }
+\end{align*}
+
+\begin{align*}
+    \text{Now, }
+    \u
+    & =
+    \D \B_k^\top \boldsymbol{\gamma_k}
+    =
+    \begin{bmatrix}
+        a & b \\ c & d
+    \end{bmatrix}
+    \begin{bmatrix}
+        \boldsymbol{\delta}_k^\top \boldsymbol{\gamma_k} \\
+        \boldsymbol{\gamma_k}^\top \A_k \boldsymbol{\gamma_k}
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+        a \boldsymbol{\delta}_k^\top \boldsymbol{\gamma_k} + b \boldsymbol{\gamma_k}^\top \A_k \boldsymbol{\gamma_k} \\
+        c \boldsymbol{\delta}_k^\top \boldsymbol{\gamma_k} + d \boldsymbol{\gamma_k}^\top \A_k \boldsymbol{\gamma_k}
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+        1 \\ -1
+    \end{bmatrix}
+    \\
+    \implies
+    &
+    \boxed{
+        \begin{cases}
+            a \boldsymbol{\delta}_k^\top \boldsymbol{\gamma_k} + b \boldsymbol{\gamma_k}^\top \A_k \boldsymbol{\gamma_k} = 1 \\
+            c \boldsymbol{\delta}_k^\top \boldsymbol{\gamma_k} + d \boldsymbol{\gamma_k}^\top \A_k \boldsymbol{\gamma_k} = -1
+        \end{cases}
+    }
+\end{align*}
+
+\subsubsection*{(b)}
+
+\begin{align*}
+    b = c = 0
+    \implies
+    &
+    \begin{cases}
+        a \boldsymbol{\delta}_k^\top \boldsymbol{\gamma_k} = 1 \\
+        d \boldsymbol{\gamma_k}^\top \A_k \boldsymbol{\gamma_k} = -1
+    \end{cases}
+    \implies
+    a
+    =
+    \frac{1}{\boldsymbol{\delta}_k^\top \boldsymbol{\gamma_k}},
+    \quad
+    d
+    =
+    -\frac{1}{\boldsymbol{\gamma_k}^\top \A_k \boldsymbol{\gamma_k}}
+    \\
+    \implies
+    \A_{k+1}
+    & =
+    \A_k
+    +
+    \begin{bmatrix}
+        \boldsymbol{\delta}_k
+        &
+        \A_k \boldsymbol{\gamma_k}
+    \end{bmatrix}
+    \begin{bmatrix}
+        a & 0 \\ 0 & d
+    \end{bmatrix}
+    \begin{bmatrix}
+        \boldsymbol{\delta}_k^\top \\
+        \boldsymbol{\gamma_k}^\top \A_k
+    \end{bmatrix}
+    =
+    \A_k
+    +
+    a \boldsymbol{\delta}_k \boldsymbol{\delta}_k^\top
+    +
+    d \A_k \boldsymbol{\gamma_k} \boldsymbol{\gamma_k}^\top \A_k
+    \\
+    \implies
+    \A_{k+1}
+    & =
+    \A_k
+    +
+    \frac{\boldsymbol{\delta}_k \boldsymbol{\delta}_k^\top}{\boldsymbol{\delta}_k^\top \boldsymbol{\gamma_k}}
+    -
+    \frac{\A_k \boldsymbol{\gamma_k} \boldsymbol{\gamma_k}^\top \A_k}{\boldsymbol{\gamma_k}^\top \A_k \boldsymbol{\gamma_k}}
+\end{align*}
+
+This is the DFP update.
+
+\subsubsection*{(c)}
+
+\begin{align*}
+    &
+    a = d = t, b = c = -t, t > 0
+    \implies
+    \begin{cases}
+        t \boldsymbol{\delta}_k^\top \boldsymbol{\gamma_k} - t \boldsymbol{\gamma_k}^\top \A_k \boldsymbol{\gamma_k} = 1 \\
+        -t \boldsymbol{\delta}_k^\top \boldsymbol{\gamma_k} + t \boldsymbol{\gamma_k}^\top \A_k \boldsymbol{\gamma_k} = -1
+    \end{cases}
+    \\
+    \implies
+    t
+    & =
+    \frac{1}{\boldsymbol{\delta}_k^\top \boldsymbol{\gamma_k} - \boldsymbol{\gamma_k}^\top \A_k \boldsymbol{\gamma_k}}
+    \\
+    \implies
+    \A_{k+1}
+    & =
+    \A_k
+    +
+    \begin{bmatrix}
+        \boldsymbol{\delta}_k
+        &
+        \A_k \boldsymbol{\gamma_k}
+    \end{bmatrix}
+    \begin{bmatrix}
+        t & -t \\ -t & t
+    \end{bmatrix}
+    \begin{bmatrix}
+        \boldsymbol{\delta}_k^\top \\
+        \boldsymbol{\gamma_k}^\top \A_k
+    \end{bmatrix}
+    \\ & =
+    \A_k
+    +
+    t
+    \left(
+        \boldsymbol{\delta}_k - \A_k \boldsymbol{\gamma_k}
+    \right)
+    {\left(
+            \boldsymbol{\delta}_k - \A_k \boldsymbol{\gamma_k}
+    \right)}^\top
+    \\
+    \implies
+    \A_{k+1}
+    & =
+    \A_k
+    +
+    \frac{
+        \left(
+            \boldsymbol{\delta}_k - \A_k \boldsymbol{\gamma_k}
+        \right)
+        {\left(
+                \boldsymbol{\delta}_k - \A_k \boldsymbol{\gamma_k}
+        \right)}^\top
+    }{
+        \boldsymbol{\delta}_k^\top \boldsymbol{\gamma_k} - \boldsymbol{\gamma_k}^\top \A_k \boldsymbol{\gamma_k}
+    }
+\end{align*}
+
+This is the SR1 update, with \( t > 0 \), i.e., the denominator is positive.
+
+\subsubsection*{(d)}
+
+This is equivalent to putting \( t = -t \), i.e., \( t = 0 \), in the previous part, i.e., in the SR1 update, causing the denominator to blow up.
+In this case, the update is not defined.
+
+Another way to see this, with \( t = a = b = c = d \), the system of equations becomes
+\begin{equation*}
+    \begin{cases}
+        t \boldsymbol{\delta}_k^\top \boldsymbol{\gamma_k} + t \boldsymbol{\gamma_k}^\top \A_k \boldsymbol{\gamma_k} = 1 \\
+        t \boldsymbol{\delta}_k^\top \boldsymbol{\gamma_k} + t \boldsymbol{\gamma_k}^\top \A_k \boldsymbol{\gamma_k} = -1
+    \end{cases}
+\end{equation*}
+which is an inconsistent system.
+The update is not defined in this case.
