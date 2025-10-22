@@ -10,7 +10,7 @@ References
 
 import time
 from abc import ABC, abstractmethod
-from typing import Generic, Iterable, Optional, Union
+from typing import Iterable, Optional, Self, Union
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -22,11 +22,11 @@ from rich.text import TextType
 from .functions import ConvexQuadratic
 from .info import (
     FirstOrderLineSearchStepInfo,
+    LineSearchStepInfo,
     QuasiNewtonStepInfo,
     RunInfo,
     SecondOrderLineSearchStepInfo,
-    TLineSearchStepInfo,
-    TStepInfo,
+    StepInfo,
 )
 from .oracle import AbstractOracle, FirstOrderOracle
 from .stopping import (
@@ -41,7 +41,7 @@ from .utils import format_float, format_time, show_solution
 console = Console()
 
 
-class IterativeOptimiser(ABC, Generic[TStepInfo]):
+class IterativeOptimiser[T: StepInfo](ABC):
     """
     A base template class for iterative optimisation algorithms,
     particularly for the minimisation objective.
@@ -51,7 +51,7 @@ class IterativeOptimiser(ABC, Generic[TStepInfo]):
     `x_k` is the value at iteration `k`.
     """
 
-    StepInfoClass: type[TStepInfo]
+    StepInfoClass: type[T]
 
     def __init__(self, **kwargs):
         # Initialises the iterative optimiser with configuration parameters.
@@ -60,7 +60,7 @@ class IterativeOptimiser(ABC, Generic[TStepInfo]):
         self.name = self.__class__.__name__
         """Name of the algorithm, derived from the class name of the optimiser."""
 
-    def reset(self):
+    def reset(self) -> Self:
         """
         Resets the internal state of the algorithm before a new run.\\
         [Optional]: This method can be overridden by subclasses to set up any necessary state if needed.
@@ -68,7 +68,7 @@ class IterativeOptimiser(ABC, Generic[TStepInfo]):
         return self
 
     @abstractmethod
-    def step(self, info: TStepInfo) -> TStepInfo:
+    def step(self, info: T) -> T:
         """
         Performs a single step of the algorithm.\\
         [Required]: This method should be implemented by subclasses to define the specific update rule.
@@ -87,7 +87,7 @@ class IterativeOptimiser(ABC, Generic[TStepInfo]):
             Union[StoppingCriterion, CompositeCriterion, Iterable[StoppingCriterion]]
         ] = None,
         show_params: bool = True,
-    ) -> RunInfo[TStepInfo]:
+    ) -> RunInfo[T]:
         """
         Runs the iterative algorithm.
 
@@ -134,7 +134,7 @@ class IterativeOptimiser(ABC, Generic[TStepInfo]):
         k: int = 0
         x: floatVec = x0
         info = self.StepInfoClass(x, k, oracle_fn)
-        history: list[TStepInfo] = [info]
+        history: list[T] = [info]
 
         progress = Progress(
             TextColumn("[progress.description]{task.description}"),
@@ -199,7 +199,7 @@ class IterativeOptimiser(ABC, Generic[TStepInfo]):
         show_solution(x, fx, table=table)
 
 
-class LineSearchOptimiser(IterativeOptimiser[TLineSearchStepInfo]):
+class LineSearchOptimiser[T: LineSearchStepInfo](IterativeOptimiser[T]):
     """
     A base template class for line search-based iterative optimisation algorithms.
 
@@ -207,26 +207,26 @@ class LineSearchOptimiser(IterativeOptimiser[TLineSearchStepInfo]):
     where `alpha_k` is the step length along the descent direction `p_k`.
     """
 
-    def reset(self):
+    def reset(self) -> Self:
         self.step_lengths: list[float] = []
         self.step_directions: list[floatVec] = []
         return super().reset()
 
-    def direction(self, info: TLineSearchStepInfo) -> floatVec:
+    def direction(self, info: T) -> floatVec:
         """
         Returns the descent direction `p_k` to move towards from `x_k`.\\
         [Required]: This method should be implemented by subclasses to define the specific direction strategy.
         """
         raise NotImplementedError
 
-    def step_length(self, info: TLineSearchStepInfo) -> float:
+    def step_length(self, info: T) -> float:
         """
         Returns step length `alpha_k` to take along the descent direction `p_k`.\\
         [Required]: This method should be implemented by subclasses to define the specific step length strategy.
         """
         raise NotImplementedError
 
-    def step(self, info: TLineSearchStepInfo) -> TLineSearchStepInfo:
+    def step(self, info: T) -> T:
         p_k = self.direction(info)
         info.direction = p_k
         self.step_directions.append(p_k)
@@ -324,14 +324,14 @@ class NewtonDirectionMixin(LineSearchOptimiser[SecondOrderLineSearchStepInfo]):
         return p_k
 
 
-class UnitStepLengthMixin(LineSearchOptimiser[TLineSearchStepInfo]):
+class UnitStepLengthMixin[T: LineSearchStepInfo](LineSearchOptimiser[T]):
     """
     A mixin class that provides a unit step length strategy.
 
     `alpha_k = 1`
     """
 
-    def step_length(self, info: TLineSearchStepInfo) -> float:
+    def step_length(self, info: T) -> float:
         return 1.0
 
 

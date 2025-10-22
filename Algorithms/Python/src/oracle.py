@@ -4,22 +4,10 @@ src/oracle.py
 Oracle utils
 """
 
-from typing import TypeVar
+from typing import Self
 
 from .functions import Function
 from .types import floatVec
-
-TOracle = TypeVar("TOracle", bound="AbstractOracle")
-"""Generic type variable for Oracle subclasses."""
-
-TZeroOrderOracle = TypeVar("TZeroOrderOracle", bound="ZeroOrderOracle")
-"""Generic type variable for ZeroOrderOracle subclasses."""
-
-TFirstOrderOracle = TypeVar("TFirstOrderOracle", bound="FirstOrderOracle")
-"""Generic type variable for FirstOrderOracle subclasses."""
-
-TSecondOrderOracle = TypeVar("TSecondOrderOracle", bound="SecondOrderOracle")
-"""Generic type variable for SecondOrderOracle subclasses."""
 
 
 class AbstractOracle:
@@ -38,7 +26,7 @@ class AbstractOracle:
         This is useful for the 'analytical complexity' of the algorithms.
         """
 
-    def reset(self):
+    def reset(self) -> Self:
         """Resets the internal call counts."""
         self.call_count = 0
         return self
@@ -58,7 +46,7 @@ class ZeroOrderOracle(AbstractOracle):
         self.eval_call_count += 1
         return self._oracle_f.eval(x)
 
-    def reset(self):
+    def reset(self) -> Self:
         self.eval_call_count = 0
         return super().reset()
 
@@ -76,7 +64,7 @@ class FirstOrderOracle(ZeroOrderOracle):
         self.grad_call_count += 1
         return self._oracle_f.grad(x)
 
-    def reset(self):
+    def reset(self) -> Self:
         self.grad_call_count = 0
         return super().reset()
 
@@ -94,6 +82,6 @@ class SecondOrderOracle(FirstOrderOracle):
         self.hess_call_count += 1
         return self._oracle_f.hess(x)
 
-    def reset(self):
+    def reset(self) -> Self:
         self.hess_call_count = 0
         return super().reset()

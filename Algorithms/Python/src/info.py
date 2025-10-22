@@ -5,20 +5,14 @@ Info structures
 """
 
 from dataclasses import dataclass, field
-from typing import Generic, Optional, TypedDict, TypeVar
+from typing import Optional, TypedDict
 
-from .oracle import TFirstOrderOracle, TOracle, TSecondOrderOracle, TZeroOrderOracle
+from .oracle import AbstractOracle, FirstOrderOracle, SecondOrderOracle, ZeroOrderOracle
 from .types import floatMat, floatVec
-
-TStepInfo = TypeVar("TStepInfo", bound="StepInfo")
-"""Generic type variable for StepInfo subclasses."""
-
-TLineSearchStepInfo = TypeVar("TLineSearchStepInfo", bound="LineSearchStepInfo")
-"""Generic type variable for LineSearchStepInfo subclasses."""
 
 
 @dataclass
-class StepInfo(Generic[TOracle]):
+class StepInfo[T: AbstractOracle]:
     """A dataclass for the state of the algorithm at iteration `k`."""
 
     x: floatVec
@@ -27,12 +21,12 @@ class StepInfo(Generic[TOracle]):
     k: int
     """The current iteration number `k`."""
 
-    oracle: TOracle
+    oracle: T
     """The oracle function used to evaluate `f`."""
 
 
 @dataclass
-class ZeroOrderStepInfo(StepInfo[TZeroOrderOracle]):
+class ZeroOrderStepInfo[T: ZeroOrderOracle](StepInfo[T]):
     _fx: Optional[float] = field(init=False, default=None)
     """Internal function value at `x_k`."""
 
@@ -48,7 +42,7 @@ class ZeroOrderStepInfo(StepInfo[TZeroOrderOracle]):
 
 
 @dataclass
-class FirstOrderStepInfo(ZeroOrderStepInfo[TFirstOrderOracle]):
+class FirstOrderStepInfo[T: FirstOrderOracle](ZeroOrderStepInfo[T]):
     _dfx: Optional[floatVec] = field(init=False, default=None)
     """Internal gradient at `x_k`."""
 
@@ -64,7 +58,7 @@ class FirstOrderStepInfo(ZeroOrderStepInfo[TFirstOrderOracle]):
 
 
 @dataclass
-class SecondOrderStepInfo(FirstOrderStepInfo[TSecondOrderOracle]):
+class SecondOrderStepInfo[T: SecondOrderOracle](FirstOrderStepInfo[T]):
     _d2fx: Optional[floatMat] = field(init=False, default=None)
     """Internal Hessian at `x_k`."""
 
@@ -80,27 +74,27 @@ class SecondOrderStepInfo(FirstOrderStepInfo[TSecondOrderOracle]):
 
 
 @dataclass
-class LineSearchStepInfo(StepInfo[TOracle]):
+class LineSearchStepInfo[T: AbstractOracle](StepInfo[T]):
     direction: Optional[floatVec] = None
     alpha: Optional[float] = None
 
 
 @dataclass
-class FirstOrderLineSearchStepInfo(
-    FirstOrderStepInfo[TFirstOrderOracle], LineSearchStepInfo[TFirstOrderOracle]
+class FirstOrderLineSearchStepInfo[T: FirstOrderOracle](
+    FirstOrderStepInfo[T], LineSearchStepInfo[T]
 ):
     pass  # All attributes and methods are provided by the parent classes
 
 
 @dataclass
-class SecondOrderLineSearchStepInfo(
-    SecondOrderStepInfo[TSecondOrderOracle], LineSearchStepInfo[TSecondOrderOracle]
+class SecondOrderLineSearchStepInfo[T: SecondOrderOracle](
+    SecondOrderStepInfo[T], LineSearchStepInfo[T]
 ):
     pass  # All attributes and methods are provided by the parent classes
 
 
 @dataclass
-class QuasiNewtonStepInfo(FirstOrderLineSearchStepInfo[TFirstOrderOracle]):
+class QuasiNewtonStepInfo[T: FirstOrderOracle](FirstOrderLineSearchStepInfo[T]):
     H: Optional[floatMat] = None
     """Approximate inverse Hessian matrix at iteration `k`."""
 
@@ -119,7 +113,7 @@ class QuasiNewtonStepInfo(FirstOrderLineSearchStepInfo[TFirstOrderOracle]):
     """
 
 
-class RunInfo(TypedDict, Generic[TStepInfo]):
+class RunInfo[T: StepInfo](TypedDict):
     """
     Dictionary type for storing run information of an optimiser.
     - 'x0': Initial point.
@@ -135,6 +129,6 @@ class RunInfo(TypedDict, Generic[TStepInfo]):
     x_star: floatVec
     f_star: float
     n_iters: int
-    history: list[TStepInfo]
+    history: list[T]
     oracle_call_count: int
     time_taken: float

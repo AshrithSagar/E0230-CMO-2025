@@ -5,14 +5,14 @@ Stopping criteria
 """
 
 from abc import ABC, abstractmethod
-from typing import Generic, Iterable
+from typing import Iterable
 
 import numpy as np
 
-from .info import FirstOrderStepInfo, StepInfo, TStepInfo, ZeroOrderStepInfo
+from .info import FirstOrderStepInfo, StepInfo, ZeroOrderStepInfo
 
 
-class StoppingCriterion(ABC, Generic[TStepInfo]):
+class StoppingCriterion[T: StepInfo](ABC):
     """An abstract base class to encapsulate various stopping criteria for iterative algorithms."""
 
     def reset(self):
@@ -20,7 +20,7 @@ class StoppingCriterion(ABC, Generic[TStepInfo]):
         pass
 
     @abstractmethod
-    def check(self, info: TStepInfo) -> bool:
+    def check(self, info: T) -> bool:
         """
         Return True if the stopping criterion is met.
         [Required]: This method should be implemented by subclasses to define the specific stopping condition.
