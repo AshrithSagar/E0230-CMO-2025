@@ -1,0 +1,31 @@
+\section*{Question 5}
+
+Consider Quasi Newton Algorithms for minimizing \( f: \R^d \).
+Let
+\begin{equation*}
+    \delta_k = A_{k+1} \gamma_k, \quad \gamma_k = \nabla f\left(\x^{k+1}\right)-\nabla f(\x^k),
+    \quad \delta_k = \x^{k+1}-\x^k
+\end{equation*}
+
+\( A_{k+1} \in \PSD \)be the Quasi Newton update.
+Let \( A_{k+1} = A_k+B_k D B_k^\top \) where \( B_k = \left[\delta_k, A_k \gamma_k\right] \in \R^{d \times 2} \), \( D =
+    \begin{bmatrix}
+        a & b \\ c & d
+    \end{bmatrix}
+\in \R^{2 \times 2} D \) is chosen to satisfy the Quasi Newton update.
+This is another view of the Broyden family.
+
+\begin{enumerate}[label= (\alph*)]
+    \item Determine \( u \in \R^2 \) if \( u = D B_k^\top \gamma_k \).
+        State any relation thus obtained on the entries of \( D \) and the quasi newton updates.
+
+    \item What update does the condition \( b = c = 0 \) yield?
+        Use the relation derived in the previous question?
+
+    \item Determine \( A_{k+1} \) and \( t \) if \( a = d = t, b = c = -t \) and \( t > 0 \).
+        Does this yield any familiar result?
+
+    \item Examine the problem of Computing \( A_{k+1} \) if all entries of \( D \) are same?
+\end{enumerate}
+
+\subsection*{Solution}

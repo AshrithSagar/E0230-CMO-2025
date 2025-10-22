@@ -1,0 +1,26 @@
+\section*{Question 4}
+
+Consider Newton method for minimizing \( \mathcal{C}^2 \) function over \( \R^d \).
+
+\begin{enumerate}[label= (\alph*)]
+    \item Compute the decrease in function value after one iteration of Newton Method from a point \( \hat{\x} \).
+
+    \item If \( \xstar \) be a local minimum.
+        The minimum eigenvalue of Hessian at \( \xstar \) is 1.
+        It is known that all \( \x \in\left\{\x \mid\left\|\x-\xstar\right\| \leq 5\right\} \) the Hessian at \( \x \) is positive definite.
+        Can you estimate from what starting point around \( \xstar \) we can see the speed up due to Newton Method.
+
+    \item Consider the following problem
+        \begin{equation*}
+            \min _{\x \in \R^2} f(\x)\left( = x_1^2 + {(2 - x_2)}^3\right)
+        \end{equation*}
+        Let us solve it through Newton method
+
+        You are given an implementation of Newton's iteration.
+        You are however not sure about the correctness of the implementation and you suspect there maybe bugs in the code.
+        After applying 4 iterations, starting from \( {[1,1]}^\top \) it was found \( \x^4 = {[1,2]}^\top \).
+        Is the implementation buggy?
+        Give reasons.
+\end{enumerate}
+
+\subsection*{Solution}
