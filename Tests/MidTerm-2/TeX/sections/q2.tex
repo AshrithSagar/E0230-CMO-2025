@@ -15,3 +15,103 @@ Consider minimizing \( f \) defined in (\texttt{CQ})
 \end{enumerate}
 
 \subsection*{Solution}
+
+\subsubsection*{(a)}
+
+\begin{align*}
+    \x^{k+1}
+    & =
+    \x^k
+    -
+    \frac{\dotp{\grad{f}{\x^k}}{\u_k}}{\qf{\u_k}{\Q}} \u_k,
+    \quad k = 0, \ldots, d-1
+    \\
+    \implies
+    \x^{k+1}
+    & =
+    \x^0
+    -
+    \sum_{i = 0}^{k}
+    \frac{\dotp{\grad{f}{\x^i}}{\e_{i+1}}}{\qf{\e_{i+1}}{\Q}} \e_{i+1},
+    \quad k = 0, \ldots, d-1
+    \\
+    \implies
+    \x^k
+    & =
+    -
+    \sum_{i = 0}^{k-1}
+    \frac{\dotp{\grad{f}{\x^i}}{\e_{i+1}}}{\qf{\e_{i+1}}{\Q}} \e_{i+1},
+    \quad k = 1, \ldots, d
+    \\
+    \because
+    \grad{f}{\x}
+    & =
+    \Q \x + \h,
+    \quad \forall \x \in \R^d
+    \\
+    \implies
+    \x^k
+    & =
+    -
+    \sum_{i = 0}^{k-1}
+    \frac{\dotp{\pbrac{\Q \x^i + \h}}{\e_{i+1}}}{\qf{\e_{i+1}}{\Q}} \e_{i+1}
+    \\ & =
+    -
+    \sum_{i = 0}^{k-1}
+    \frac{\qf{\x^i}{\Q}[\e_{i+1}]}{\qf{\e_{i+1}}{\Q}} \e_{i+1}
+    -
+    \sum_{i = 0}^{k-1}
+    \frac{\dotp{\h}{\e_{i+1}}}{\qf{\e_{i+1}}{\Q}} \e_{i+1},
+    \quad k = 1, \ldots, d
+    \\
+    \implies
+    \qf{\x^k}{\Q}[\e_{k+1}]
+    & =
+    -
+    \sum_{i = 0}^{k-1}
+    \frac{\qf{\x^i}{\Q}[\e_{i+1}]}{\qf{\e_{i+1}}{\Q}} \cancel{ \qf{\e_{i+1}}{\Q}[\e_{k+1}] }
+    -
+    \sum_{i = 0}^{k-1}
+    \frac{\dotp{\h}{\e_{i+1}}}{\qf{\e_{i+1}}{\Q}} \cancel{ \qf{\e_{i+1}}{\Q}[\e_{k+1}] }
+    \\ & =
+    0,
+    \quad k = 1, \ldots, d-1
+    \\
+    \implies
+    \x^k
+    & =
+    -
+    \sum_{i = 0}^{k-1}
+    \frac{\dotp{\h}{\e_{i+1}}}{\qf{\e_{i+1}}{\Q}} \e_{i+1},
+    \quad k = 1, \ldots, d
+    \\
+    \implies
+    &
+    \boxed{
+        \x^k
+        =
+        -
+        \sum_{i = 1}^{k}
+        \frac{\dotp{\h}{\e_i}}{\qf{\e_i}{\Q}} \e_i,
+        \quad k = 1, \ldots, d
+    }
+\end{align*}
+
+Further,
+\begin{align*}
+    \x^k
+    & =
+    -
+    \sum_{i = 1}^{k}
+    h_i \e_i,
+    \quad k = 1, \ldots, d
+    \\
+    \implies
+    \x^d
+    & =
+    -
+    \sum_{i = 1}^{d}
+    h_i \e_i
+    =
+    -\h
+\end{align*}
