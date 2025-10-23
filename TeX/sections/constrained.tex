@@ -294,7 +294,7 @@ For a convex primal problem satisfying the Slater's conditions, if \( \xstar \) 
     \func{q}{\boldsymbol{\lambda}^{\star}, \boldsymbol{\mu}^{\star}}
 \end{equation*}
 
-\section{Karush-Kuhn-Tucker (KKT) conditions}
+\section{Karush-Kuhn-Tucker (KKT) conditions}\label{sec:kkt-conditions}
 
 Consider the constrained optimisation problem as in~\psecref{sec:constrained-optimisation-problem-form} where \( f, g_i, h_j \) are differentiable functions.
 Let \( \xstar \) be a local minimum and suppose that the gradients of the active constraints at \( \xstar \) are linearly independent.
@@ -331,3 +331,101 @@ Then, there exist \( \lambda_i \geq 0, \; i \in \set{1, 2, \ldots, m}, \ \mu_j \
     \quad \forall i \in \set{1, 2, \ldots, m}
     \tag{complementary slackness}
 \end{align*}
+
+\section{Convex programming}
+
+\begin{equation*}
+    \minimize_{\x} \func{f}{\x}
+    \quad \subjectto \quad
+    \func{f_i}{\x} \leq 0, \quad i \in \set{1, 2, \ldots, m}
+\end{equation*}
+where \( f, \,\, f_i, \, i \in \set{1, 2, \dots, m} \) are convex functions is called a \textbf{convex programming} problem.
+
+For a convex programming problem satisfying the Slater's conditions, if \( \xstar \) and \( \boldsymbol{\lambda}^{\star} \) are optimal solutions of the primal and dual problems respectively, then the KKT conditions~\psecref{sec:kkt-conditions} are necessary and sufficient for optimality.
+
+\subsection{Convex Equality Quadratic Programming (CEQP)}
+
+\begin{align*}
+    \minimize_{\x}
+    \quad &
+    \half \qf{\x}{\Q} + \dotp{\h}{\x} + c
+    \\ \subjectto \quad &
+    \A \x = \b
+\end{align*}
+where \( \Q \in \PSD, \; \h \in \R^d, \; \A \in \R^{m \times d}, \; \b \in \R^m \).
+
+The Lagrangian function is given by
+\begin{align*}
+    \func{\calL}{\x, \boldsymbol{\mu}}
+    & =
+    \half \qf{\x}{\Q} + \dotp{\h}{\x} + c
+    -
+    \dotp{\boldsymbol{\mu}}{\pbrac{\A \x - \b}}
+    \\
+    \implies
+    \func{\nabla_{\x} \calL}{\x, \boldsymbol{\mu}}
+    & =
+    \Q \x + \h - \dotp{\A}{\boldsymbol{\mu}}
+\end{align*}
+
+KKT conditions:
+\begin{align*}
+    \func{\nabla_{\x} \calL}{\xstar, \boldsymbol{\mu}^\ast}
+    & =
+    \Q \xstar + \h - \dotp{\A}{\boldsymbol{\mu}^\ast}
+    =
+    \zero
+    \\
+    \A \xstar
+    & =
+    \b
+\end{align*}
+
+\subsection{Convex Inequality Quadratic Programming (CIQP)}
+
+\begin{align*}
+    \minimize_{\x}
+    \quad &
+    \half \qf{\x}{\Q} + \dotp{\h}{\x} + c
+    \\ \subjectto \quad &
+    \A \x \geq \b
+\end{align*}
+where \( \Q \in \PSD, \; \h \in \R^d, \; \A \in \R^{m \times d}, \; \b \in \R^m \).
+
+The Lagrangian function is given by
+\begin{align*}
+    \func{\calL}{\x, \boldsymbol{\lambda}}
+    & =
+    \half \qf{\x}{\Q} + \dotp{\h}{\x} + c
+    -
+    \dotp{\boldsymbol{\lambda}}{\pbrac{\A \x - \b}}
+    \\
+    \implies
+    \func{\nabla_{\x} \calL}{\x, \boldsymbol{\lambda}}
+    & =
+    \Q \x + \h - \dotp{\A}{\boldsymbol{\lambda}}
+\end{align*}
+
+KKT conditions:
+\begin{align*}
+    \func{\nabla_{\x} \calL}{\xstar, \boldsymbol{\lambda}^\ast}
+    & =
+    \Q \xstar + \h - \dotp{\A}{\boldsymbol{\lambda}^\ast}
+    =
+    \zero
+    \\
+    \A \xstar
+    & =
+    \b
+\end{align*}
+
+\section{Active set methods}
+
+Active set methods are iterative methods for solving convex constrained optimisation problems.
+At each iteration, an estimate of the active set of constraints is maintained and used to solve a simpler optimisation problem.
+The active set is updated based on the solution obtained at each iteration until convergence is achieved.
+\begin{equation*}
+    A(\x)
+    \triangleq
+    \set{i \in \set{1, 2, \ldots, m} \given \func{g_i}{\x} = 0}
+\end{equation*}
