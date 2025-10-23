@@ -16,7 +16,7 @@ Consider minimizing \( f \) defined in (\texttt{CQ})
 
 \subsection*{Solution}
 
-\subsubsection*{(a)}
+\subsubsection*{(a) Conjugate Direction}
 
 \begin{align*}
     \x^{k+1}
@@ -114,4 +114,181 @@ Further,
     h_i \e_i
     =
     -\h
+\end{align*}
+
+\subsubsection*{(b) Conjugate Gradient}
+
+\begin{align*}
+    \x^0
+    & =
+    \zero,
+    \quad
+    \r_0
+    =
+    \grad{f}{\x^0}
+    =
+    \h,
+    \quad
+    \u_0
+    =
+    -\r_0
+    =
+    -\h
+    \\
+    \alpha_k
+    & =
+    \frac{\dotp{\r_k}{\r_k}}{\qf{\u_k}{\Q}},
+    \quad k = 0, \ldots, d-1
+    \\
+    \x^{k+1}
+    & =
+    \x^k
+    +
+    \alpha_k \u_k,
+    \quad k = 0, \ldots, d-1
+    \\
+    \r_{k+1}
+    & =
+    \r_k
+    +
+    \alpha_k \Q \u_k
+    =
+    \grad{f}{\x^{k+1}},
+    \quad k = 0, \ldots, d-1
+    \\
+    \beta_{k+1}
+    & =
+    \frac{\dotp{\r_{k+1}}{\r_{k+1}}}{\dotp{\r_k}{\r_k}},
+    \quad k = 0, \ldots, d-1
+    \\
+    \u_{k+1}
+    & =
+    -\r_{k+1}
+    +
+    \beta_{k+1} \u_k,
+    \quad k = 0, \ldots, d-1
+\end{align*}
+\begin{align*}
+    \implies
+    \beta_{k+2} \u_{k+1}
+    & =
+    -\beta_{k+2} \r_{k+1}
+    +
+    \beta_{k+2} \beta_{k+1} \u_k,
+    \quad k = 0, \ldots, d-2
+    \\
+    \implies
+    \beta_{k+1} \u_k
+    & =
+    -\beta_{k+1} \r_k
+    +
+    \beta_{k+1} \beta_k \u_{k-1},
+    \quad k = 1, \ldots, d-1
+    \\
+    \implies
+    \u_{k+1}
+    & =
+    -\r_{k+1}
+    -
+    \beta_{k+1} \r_{k}
+    +
+    \beta_{k+1} \beta_k \u_{k-1},
+    \quad k = 1, \ldots, d-1
+    \\
+    \implies
+    \u_k
+    & =
+    -\r_k
+    -
+    \sum_{i = 1}^{k-1}
+    \pbrac{ \prod_{j = i+1}^{k} \beta_j } \r_i
+    +
+    \pbrac{ \prod_{j = 1}^{k} \beta_j } \u_0,
+    \quad k = 1, \ldots, d
+    \\
+    \text{Now, }
+    \prod_{j = i + 1}^{k} \beta_j
+    & =
+    \frac{\dotp{\r_k}{\r_k}}{\dotp{\r_i}{\r_i}},
+    \quad k = 1, \ldots, d, \quad i = 0, \ldots, k-1
+    \\
+    \implies
+    \prod_{j = 1}^{k} \beta_j
+    & =
+    \frac{\dotp{\r_k}{\r_k}}{\dotp{\r_0}{\r_0}},
+    \quad k = 1, \ldots, d
+    \\
+    \implies
+    \u_k
+    & =
+    -\r_k
+    -
+    \sum_{i = 1}^{k-1}
+    \frac{\dotp{\r_k}{\r_k}}{\dotp{\r_i}{\r_i}} \r_i
+    +
+    \frac{\dotp{\r_k}{\r_k}}{\dotp{\r_0}{\r_0}} \u_0,
+    \quad k = 1, \ldots, d
+    \\
+    \implies
+    \u_k
+    & =
+    -\r_k
+    -
+    \sum_{i = 0}^{k-1}
+    \frac{\dotp{\r_k}{\r_k}}{\dotp{\r_i}{\r_i}} \r_i,
+    \quad k = 1, \ldots, d
+    \\ & =
+    -
+    \sum_{i = 0}^{k}
+    \frac{\dotp{\r_k}{\r_k}}{\dotp{\r_i}{\r_i}} \r_i,
+    \quad k = 1, \ldots, d
+    \\
+    \text{Also, }
+    \because
+    \u_0
+    & =
+    -\r_0
+\end{align*}
+\begin{equation*}
+    \implies
+    \boxed{
+        \u_k
+        =
+        -
+        \sum_{i = 0}^{k}
+        \frac{\dotp{\r_k}{\r_k}}{\dotp{\r_i}{\r_i}} \r_i,
+        \quad k = 0, \ldots, d
+    }
+\end{equation*}
+\begin{align*}
+    \implies
+    \qf{\u_k}{\Q}
+    & =
+    \qf{
+        \pbrac{
+            \sum_{i = 0}^{k}
+            \frac{\dotp{\r_k}{\r_k}}{\dotp{\r_i}{\r_i}} \r_i
+        }
+    }{\Q}[
+        \pbrac{
+            \sum_{j = 0}^{k}
+            \frac{\dotp{\r_k}{\r_k}}{\dotp{\r_j}{\r_j}} \r_j
+        }
+    ]
+    \\ & =
+    \sum_{i = 0}^{k}
+    \sum_{j = 0}^{k}
+    \frac{\pbrac{\dotp{\r_k}{\r_k}}^2}{\dotp{\r_i}{\r_i} \dotp{\r_j}{\r_j}}
+    \qf{\r_i}{\Q}[\r_j]
+\end{align*}
+\begin{align*}
+    \implies
+    \r_{k+1}
+    & =
+    \r_k
+    -
+    \alpha_k
+    \sum_{i = 0}^{k}
+    \frac{\dotp{\r_k}{\r_k}}{\dotp{\r_i}{\r_i}} \Q \r_i,
+    \quad k = 0, \ldots, d-1
 \end{align*}
