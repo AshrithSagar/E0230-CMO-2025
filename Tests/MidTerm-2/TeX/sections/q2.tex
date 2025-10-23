@@ -127,6 +127,8 @@ Further,
     =
     \grad{f}{\x^0}
     =
+    \Q \x^0 + \h
+    =
     \h,
     \quad
     \u_0
@@ -279,7 +281,8 @@ Further,
     \sum_{i = 0}^{k}
     \sum_{j = 0}^{k}
     \frac{\pbrac{\dotp{\r_k}{\r_k}}^2}{\dotp{\r_i}{\r_i} \dotp{\r_j}{\r_j}}
-    \qf{\r_i}{\Q}[\r_j]
+    \qf{\r_i}{\Q}[\r_j],
+    \quad k = 0, \ldots, d
 \end{align*}
 \begin{align*}
     \implies
@@ -291,4 +294,47 @@ Further,
     \sum_{i = 0}^{k}
     \frac{\dotp{\r_k}{\r_k}}{\dotp{\r_i}{\r_i}} \Q \r_i,
     \quad k = 0, \ldots, d-1
+    \\
+    \implies
+    \r_{k+1}
+    & =
+    \r_0
+    -
+    \sum_{j = 0}^{k}
+    \alpha_j
+    \sum_{i = 0}^{j}
+    \frac{\dotp{\r_j}{\r_j}}{\dotp{\r_i}{\r_i}} \Q \r_i,
+    \quad k = 0, \ldots, d-1
+    \\
+    \text{i.e., }
+    \r_k
+    & =
+    \r_0
+    -
+    \sum_{j = 0}^{k-1}
+    \alpha_j
+    \sum_{i = 0}^{j}
+    \frac{\dotp{\r_j}{\r_j}}{\dotp{\r_i}{\r_i}} \Q \r_i,
+    \quad k = 1, \ldots, d
+    \\
+    \implies
+    \qf{\r_k}{\Q}[\r_l]
+    & =
+    \qf{\r_0}{\Q}[\r_l]
+    -
+    \sum_{j = 0}^{k-1}
+    \alpha_j
+    \sum_{i = 0}^{j}
+    \frac{\dotp{\r_j}{\r_j}}{\dotp{\r_i}{\r_i}} \Q \qf{\r_i}{\Q}[\r_l],
+    \quad k = 1, \ldots, d,
+    \quad l = 0, \ldots, d
+\end{align*}
+\begin{align*}
+    \implies
+    \x^k
+    & =
+    \sum_{j = 0}^{k-1}
+    \alpha_j
+    \u_j,
+    \quad k = 1, \ldots, d
 \end{align*}
