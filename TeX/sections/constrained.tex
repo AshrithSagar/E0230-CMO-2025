@@ -27,6 +27,8 @@ A \textbf{constrained minimisation problem} aims to find a point \( \xstar \in \
 
 The set \( \calC \subseteq \calD \) is called the \textbf{feasible region} / \textbf{feasible set} / \textbf{solution space}.
 
+If \( f \) is unbounded below on \( \calC \), then the problem is said to be \textbf{unbounded}.
+
 If \( \calC = \emptyset \), then the problem is said to be \textbf{infeasible}.
 
 \section{Types of minimum}
@@ -225,78 +227,123 @@ From the definition, we can see that the following holds true:
     Thus, the second statement is true.
 \end{proof}
 
-\section{Constrained optimisation problem form}\label{sec:constrained-optimisation-problem-form}
+\section{Optimisation standard form}\label{sec:constrained-optimisation-standard-form}
 
-A constrained optimisation problem can be put into the following form
+An optimisation problem can be put into the following standard form
 \begin{align*}
-    \minimize_{\x} \quad & \func{f}{\x} \\
-    \subjectto \quad
-    & \func{g_i}{\x} \leq 0, \quad i \in \set{1, 2, \ldots, m} \\
-    & \func{h_j}{\x} = 0, \quad j \in \set{1, 2, \ldots, p}
+    \minimize_{\x}
+    \quad &
+    \func{f}{\x}
+    \\ \subjectto \quad &
+    \func{g_i}{\x} \leq 0,
+    \quad i \in \set{1, 2, \ldots, m},
+    \quad m \geq 0
+    \\ &
+    \func{h_j}{\x} = 0,
+    \quad j \in \set{1, 2, \ldots, p},
+    \quad p \geq 0
 \end{align*}
 
-The functions \( g_i \) are called \textbf{inequality constraints} and the functions \( h_j \) are called \textbf{equality constraints}.
+\begin{itemize}
+    \item The function \( f: \R^d \to \R \) is called the \textbf{objective function}.
 
-\section{Lagrangian}
+    \item The functions \( g_i: \R^d \to \R, \; i \in \set{1, 2, \ldots, m}, \) and \( h_j: \R^d \to \R, \; j \in \set{1, 2, \ldots, p}, \) are called the \textbf{constraint functions}.
 
-\subsection{Lagrangian function}
+    \item The constraints \( \func{g_i}{\x} \leq 0 \) are called \textbf{inequality constraints}.
 
-The \textbf{Lagrangian function} \( \calL: \R^d \times \R^m \times \R^p \to \R \) associated with the constrained optimisation problem in~\psecref{sec:constrained-optimisation-problem-form} is defined as
-\begin{equation*}
-    \func{\calL}{\x, \boldsymbol{\lambda}, \boldsymbol{\mu}}
-    \triangleq
-    \func{f}{\x}
-    +
-    \sum_{i = 1}^{m} \lambda_i \, \func{g_i}{\x}
-    +
-    \sum_{j = 1}^{p} \mu_j \, \func{h_j}{\x}
-\end{equation*}
+    \item The constraints \( \func{h_j}{\x} = 0 \) are called \textbf{equality constraints}.
+
+    \item If a point \( \x \in \R^d \) satisfies all the constraints, then it is called a \textbf{feasible point}.
+
+    \item If a point \( \x \in \R^d \) violates any of the constraints, then it is called an \textbf{infeasible point}.
+
+    \item The set of all feasible points is called the \textbf{feasible set}.
+
+    \item An \textbf{optimal point} \( \xstar \) is a feasible point that minimises the objective function, i.e.,\\
+        \( \func{f}{\xstar} \leq \func{f}{\x}, \; \forall \x \) feasible.
+
+    \item A \textbf{binding constraint} is any inequality constraint that is satisfied with equality at an optimal point.
+        A \textbf{non-binding constraint} is any inequality constraint that is satisfied with strict inequality at an optimal point.
+
+    \item The case \( m = 0 \) corresponds to having no inequality constraints, the case \( p = 0 \) corresponds to having no equality constraints, and the case \( m = p = 0 \) corresponds to an unconstrained optimisation problem.
+\end{itemize}
+
+\chapter{Duality}
+
+\section{Primal problem}
+
+Consider the constrained optimisation problem as in~\psecref{sec:constrained-optimisation-standard-form}, referred to as the \textbf{primal problem}.
+The \textbf{primal variables} are the variables \( \x \in \R^d \) being optimised.
+
+\section{Lagrangian function}
+
+\begin{definition}{Lagrangian function}{}
+    The \textbf{Lagrangian} / \textbf{Lagrange function} \( \calL: \R^d \times \R^m \times \R^p \to \R \) associated with the constrained optimisation problem in~\psecref{sec:constrained-optimisation-standard-form} is defined as
+    \vspace{-0.5em}
+    \begin{equation*}
+        \func{\calL}{\x, \boldsymbol{\lambda}, \boldsymbol{\mu}}
+        \triangleq
+        \func{f}{\x}
+        +
+        \sum_{i = 1}^{m} \lambda_i \, \func{g_i}{\x}
+        +
+        \sum_{j = 1}^{p} \mu_j \, \func{h_j}{\x}
+    \end{equation*}
+\end{definition}
 
 \subsection{Lagrange multipliers}
 
-The variables \( \lambda_i, \; i \in \set{1, 2, \ldots, m}, \) and \( \mu_j, \; j \in \set{1, 2, \ldots, p}, \) are called the \textbf{Lagrange multipliers} associated with the inequality and equality constraints respectively.
+The variables \( \lambda_i, \; i \in \set{1, 2, \ldots, m}, \) and \( \mu_j, \; j \in \set{1, 2, \ldots, p}, \) are called the \textbf{Lagrange multipliers} / \textbf{dual variables} associated with the inequality and equality constraints respectively.
 
-\subsection{Lagrange dual function}
+\section{Lagrange dual function}
 
-The \textbf{Lagrange dual function} \( q: \R^m \times \R^p \to \R \) associated with the constrained optimisation problem in~\psecref{sec:constrained-optimisation-problem-form} is defined as
-\begin{equation*}
-    \func{q}{\boldsymbol{\lambda}, \boldsymbol{\mu}}
-    \triangleq
-    \inf_{\x} \func{\calL}{\x, \boldsymbol{\lambda}, \boldsymbol{\mu}}
-\end{equation*}
+\begin{definition}{Lagrange dual function}{}
+    The \textbf{Lagrange dual function} \( q: \R^m \times \R^p \to \R \) associated with the constrained optimisation problem in~\psecref{sec:constrained-optimisation-standard-form} is defined as
+    \begin{equation*}
+        \func{q}{\boldsymbol{\lambda}, \boldsymbol{\mu}}
+        \triangleq
+        \min_{\x} \func{\calL}{\x, \boldsymbol{\lambda}, \boldsymbol{\mu}}
+    \end{equation*}
+\end{definition}
 
-\section{Duality}
+\section{Lagrange dual problem}
 
-Consider the constrained optimisation problem as in~\psecref{sec:constrained-optimisation-problem-form}, referred to as the \textbf{primal problem}.
-The corresponding \textbf{Lagrange dual problem} is given by
+The corresponding \textbf{Lagrange dual problem} of the primal problem in~\psecref{sec:constrained-optimisation-standard-form} is given by
 \begin{align*}
-    \maximize_{\boldsymbol{\lambda}, \boldsymbol{\mu}} \quad & \func{q}{\boldsymbol{\lambda}, \boldsymbol{\mu}} \\
-    \subjectto \quad
-    & \lambda_i \geq 0, \quad i \in \set{1, 2, \ldots, m}
+    \maximize_{\boldsymbol{\lambda}, \boldsymbol{\mu}} \quad &
+    \func{q}{\boldsymbol{\lambda}, \boldsymbol{\mu}}
+    \\ \subjectto \quad &
+    \lambda_i \geq 0,
+    \quad i \in \set{1, 2, \ldots, m}
 \end{align*}
 
-\subsection{Weak duality}
+\section{Weak duality}
 
-Let \( \xhat \) be any feasible point of the primal problem and \( (\hat{\boldsymbol{\lambda}}, \hat{\boldsymbol{\mu}}) \) be any feasible point of the dual problem.
-Then, we have
-\begin{equation*}
-    \func{q}{\hat{\boldsymbol{\lambda}}, \hat{\boldsymbol{\mu}}}
-    \leq
-    \func{f}{\xhat}
-\end{equation*}
+\begin{theorem}{Weak duality}{}
+    If \( \xhat \) and \( (\hat{\boldsymbol{\lambda}}, \hat{\boldsymbol{\mu}}) \) are any feasible solutions of the primal and dual problems respectively, then
+    \vspace{-0.5em}
+    \begin{equation*}
+        \func{q}{\hat{\boldsymbol{\lambda}}, \hat{\boldsymbol{\mu}}}
+        \leq
+        \func{f}{\xhat}
+    \end{equation*}
+\end{theorem}
 
-\subsection{Strong duality}
+\section{Strong duality}
 
-For a convex primal problem satisfying the Slater's conditions, if \( \xstar \) and \( (\boldsymbol{\lambda}^{\star}, \boldsymbol{\mu}^{\star}) \) are optimal solutions of the primal and dual problems respectively, then
-\begin{equation*}
-    \func{f}{\xstar}
-    =
-    \func{q}{\boldsymbol{\lambda}^{\star}, \boldsymbol{\mu}^{\star}}
-\end{equation*}
+\begin{theorem}{Strong duality}{}
+    For a convex primal problem satisfying the Slater's conditions, if \( \xstar \) and \( (\boldsymbol{\lambda}^{\star}, \boldsymbol{\mu}^{\star}) \) are optimal solutions of the primal and dual problems respectively, then
+    \vspace{-0.5em}
+    \begin{equation*}
+        \func{f}{\xstar}
+        =
+        \func{q}{\boldsymbol{\lambda}^{\star}, \boldsymbol{\mu}^{\star}}
+    \end{equation*}
+\end{theorem}
 
 \section{Karush-Kuhn-Tucker (KKT) conditions}\label{sec:kkt-conditions}
 
-Consider the constrained optimisation problem as in~\psecref{sec:constrained-optimisation-problem-form} where \( f, g_i, h_j \) are differentiable functions.
+Consider the constrained optimisation problem as in~\psecref{sec:constrained-optimisation-standard-form} where \( f, g_i, h_j \) are differentiable functions.
 Let \( \xstar \) be a local minimum and suppose that the gradients of the active constraints at \( \xstar \) are linearly independent.
 Then, there exist \( \lambda_i \geq 0, \; i \in \set{1, 2, \ldots, m}, \ \mu_j \in \R, \; j \in \set{1, 2, \ldots, p} \) such that
 \begin{align*}
@@ -332,7 +379,9 @@ Then, there exist \( \lambda_i \geq 0, \; i \in \set{1, 2, \ldots, m}, \ \mu_j \
     \tag{complementary slackness}
 \end{align*}
 
-\section{Convex programming}
+\chapter{Constrained optimisation problem classes}
+
+\section{Convex programming (CP)}
 
 \begin{equation*}
     \minimize_{\x} \func{f}{\x}
@@ -342,6 +391,53 @@ Then, there exist \( \lambda_i \geq 0, \; i \in \set{1, 2, \ldots, m}, \ \mu_j \
 where \( f, \,\, f_i, \, i \in \set{1, 2, \dots, m} \) are convex functions is called a \textbf{convex programming} problem.
 
 For a convex programming problem satisfying the Slater's conditions, if \( \xstar \) and \( \boldsymbol{\lambda}^{\star} \) are optimal solutions of the primal and dual problems respectively, then the KKT conditions~\psecref{sec:kkt-conditions} are necessary and sufficient for optimality.
+
+\section{Linear programming (LP)}
+
+\begin{align*}
+    \minimize_{\x}
+    \quad &
+    \dotp{\c}{\x}
+    \\ \subjectto \quad &
+    \A \x \leq \b
+\end{align*}
+where \( \c \in \R^d, \; \A \in \R^{m \times d}, \; \b \in \R^m \).
+
+The Lagrangian function is given by
+\begin{align*}
+    \func{\calL}{\x, \boldsymbol{\lambda}}
+    & =
+    \dotp{\c}{\x}
+    -
+    \dotp{\boldsymbol{\lambda}}{\pbrac{\A \x - \b}}
+    \\
+    \implies
+    \func{\nabla_{\x} \calL}{\x, \boldsymbol{\lambda}}
+    & =
+    \c - \dotp{\A}{\boldsymbol{\lambda}}
+\end{align*}
+
+KKT conditions:
+\begin{align*}
+    \func{\nabla_{\x} \calL}{\xstar, \boldsymbol{\lambda}^\ast}
+    & =
+    \c - \dotp{\A}{\boldsymbol{\lambda}^\ast}
+    = \zero
+    \\
+    \A \xstar
+    &
+    \leq \b
+    \\
+    \boldsymbol{\lambda}^\ast
+    & \geq
+    \zero
+    \\
+    \dotp{\boldsymbol{\lambda}^\ast}{\pbrac{\A \xstar - \b}}
+    & =
+    0
+\end{align*}
+
+\section{Quadratic programming (QP)}
 
 \subsection{Convex Equality Quadratic Programming (CEQP)}
 
@@ -417,9 +513,17 @@ KKT conditions:
     \A \xstar
     & =
     \b
+    \\
+    \boldsymbol{\lambda}^\ast
+    & \geq
+    \zero
+    \\
+    \dotp{\boldsymbol{\lambda}^\ast}{\pbrac{\A \xstar - \b}}
+    & =
+    0
 \end{align*}
 
-\section{Active set methods}
+\chapter{Active set methods}
 
 Active set methods are iterative methods for solving convex constrained optimisation problems.
 At each iteration, an estimate of the active set of constraints is maintained and used to solve a simpler optimisation problem.
