@@ -262,8 +262,14 @@ An optimisation problem can be put into the following standard form
     \item An \textbf{optimal point} \( \xstar \) is a feasible point that minimises the objective function, i.e.,\\
         \( \func{f}{\xstar} \leq \func{f}{\x}, \; \forall \x \) feasible.
 
-    \item A \textbf{binding constraint} is any inequality constraint that is satisfied with equality at an optimal point.
-        A \textbf{non-binding constraint} is any inequality constraint that is satisfied with strict inequality at an optimal point.
+    \item An \textbf{active constraint} is a constraint that is satisfied with equality at a given feasible point.
+        An \textbf{inactive constraint} is a constraint that is satisfied with strict inequality at a given feasible point.
+        All equality constraints are always active.
+
+    \item A \textbf{binding constraint} is a constraint that is satisfied with equality at a given optimal point.
+        A \textbf{non-binding constraint} is a constraint that is satisfied with strict inequality at a given optimal point.
+        \( \text{Binding constraints} \subseteq \text{Active constraints} \), i.e., at an optimal point, all active constraints need not be binding.
+        An equality constraint is always binding at an optimal point.
 
     \item The case \( m = 0 \) corresponds to having no inequality constraints, the case \( p = 0 \) corresponds to having no equality constraints, and the case \( m = p = 0 \) corresponds to an unconstrained optimisation problem.
 \end{itemize}
@@ -531,5 +537,5 @@ The active set is updated based on the solution obtained at each iteration until
 \begin{equation*}
     A(\x)
     \triangleq
-    \set{i \in \set{1, 2, \ldots, m} \given \func{g_i}{\x} = 0}
+    \set{i \given \func{g_i}{\x} = 0, \; i \in \set{1, 2, \ldots, m}}
 \end{equation*}
