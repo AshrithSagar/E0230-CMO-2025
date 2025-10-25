@@ -445,7 +445,7 @@ KKT conditions:
 
 \section{Quadratic programming (QP)}
 
-\subsection{Convex Equality Quadratic Programming (CEQP)}
+\subsection{Convex Equality Quadratic Programming (CEQP)}\label{sec:ceqp}
 
 \begin{align*}
     \minimize_{\x}
@@ -483,7 +483,7 @@ KKT conditions:
     \b
 \end{align*}
 
-\subsection{Convex Inequality Quadratic Programming (CIQP)}
+\subsection{Convex Inequality Quadratic Programming (CIQP)}\label{sec:ciqp}
 
 \begin{align*}
     \minimize_{\x}
@@ -517,7 +517,7 @@ KKT conditions:
     \zero
     \\
     \A \xstar
-    & =
+    & \geq
     \b
     \\
     \bflambda^\ast
@@ -535,7 +535,129 @@ Active set methods are iterative methods for solving convex constrained optimisa
 At each iteration, an estimate of the active set of constraints is maintained and used to solve a simpler optimisation problem.
 The active set is updated based on the solution obtained at each iteration until convergence is achieved.
 \begin{equation*}
-    A(\x)
+    \func{\calA}{\x}
     \triangleq
     \set{i \given \func{g_i}{\x} = 0, \; i \in \set{1, 2, \ldots, m}}
 \end{equation*}
+
+\begin{algorithm}[H]
+    \caption{
+        Active set method for (strongly convex) CIQP~\psecref{sec:ciqp} using CEQP~\psecref{sec:ceqp}
+        \begin{align*}
+            \minimize_{\x}
+            \quad &
+            \half \qf{\x}{\Q} + \dotp{\h}{\x} + c
+            \\ \subjectto \quad &
+            \dotp{\a_i}{\x} \geq b_i,
+            \quad i \in \set{1, 2, \ldots, m}
+        \end{align*}
+        where \(
+            \Q \in \PD
+            , \;
+            \h \in \R^d
+            , \;
+            \A
+            =
+            \begin{bmatrix}
+                {\a_1}^\top & {\a_2}^\top & \dots & {\a_m}^\top
+            \end{bmatrix}^\top
+            \in \R^{m \times d}
+            , \;
+            \b
+            =
+            \begin{bmatrix}
+                b_1 & b_2 & \dots & b_m
+            \end{bmatrix}^\top
+            \in \R^m
+        \).
+    }
+    \SetAlgoLined{}
+    \KwIn{
+        Initial point \( \x^0 \) feasible for the CIQP problem;\\
+        Initial active set \( \calW_0 \subseteq \func{\calA}{\x^0} \subseteq \set{1, 2, \ldots, m} \);
+    }
+    \KwOut{
+        Minimiser \( \xstar \) and the corresponding Lagrange multipliers \( \bflambda^\ast \) for the CIQP problem\;
+    }
+
+    \( k \gets 0 \)\;
+
+    \While{not converged}{
+        Solve the search direction subproblem (a CEQP problem);
+        \( (\v_k, \bfmu_k) = \operatorname{EQS}(\text{P\( ^k \)}) \)
+        \vspace{-0.5em}
+        \begin{align*}
+            \minimize_{\v}
+            \quad &
+            \half \qf{\v}{\Q} + \dotp{\pbrac{\Q \x^k + \h}}{\v}
+            \tag{P\( ^k \)}
+            \\ \subjectto \quad &
+            \dotp{\a_i}{\v} = 0,
+            \quad i \in \calW_k
+        \end{align*}
+
+        \vspace{-0.5em}
+        \eIf{\( \v_k = \zero \)}{
+            \eIf{\( \bfmu_k \geq \zero \)}{
+                Optimality conditions met\;
+
+                \Return{\( \x^k, \, \bfmu_k \)\;}
+            }{
+                Relax the most restrictive active constraint\;
+
+                \( \x^{k+1} = \x^k \)\;
+
+                \(
+                    \displaystyle
+                    \calW_{k+1}
+                    =
+                    \calW_k
+                    \setminus
+                    j,
+                    \qquad
+                    j
+                    \in
+                    \argmin_{i \in \set{1, 2, \dots, \operatorname{length}(\bfmu_k)}}
+                    \bbrac{\bfmu_k}_i
+                \)\;
+            }
+        }{
+            \eIf{\( \dotp{\a_i}{\v_k} \geq 0, \; \forall i \in \set{1, 2, \ldots, m} \setminus \calW_k \)}{
+                All inactive constraints still remain feasible when taking a full step along \( \v_k \)\;
+
+                \( \x^{k+1} = \x^k + \v_k \)\;
+
+                \( \calW_{k+1} = \calW_k \)\;
+            }{
+                Find the step length \( \alpha_k > 0 \) and the blocking constraint indices \( J_k \) as
+                \vspace{-0.75em}
+                \begin{equation*}
+                    \alpha_k, \; J_k
+                    =
+                    \mathop{\min, \argmin}_{
+                        \substack{
+                            i \in \set{1, 2, \ldots, m} \setminus \calW_k
+                            \\
+                            \dotp{\a_i}{\v_k} < 0
+                        }
+                    }{
+                        \frac
+                        {b_i - \dotp{\a_i}{\x^k}}
+                        {\dotp{\a_i}{\v_k}}
+                    }
+                \end{equation*}
+
+                \vspace{-1em}
+                \( \x^{k+1} = \x^k + \alpha_k \v_k \)\;
+
+                \(
+                    \calW_{k+1}
+                    = \calW_k \cup \set{j},
+                    \quad j \in J_k
+                \)\;
+            }
+        }
+
+        \( k \gets k + 1 \)\;
+    }
+\end{algorithm}
