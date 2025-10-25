@@ -540,6 +540,106 @@ The active set is updated based on the solution obtained at each iteration until
     \set{i \given \func{g_i}{\x} = 0, \; i \in \set{1, 2, \ldots, m}}
 \end{equation*}
 
+\begin{theorem}{Equivalence of CIQP and CEQP at optimality}{}
+    The CEQP~\psecref{sec:ceqp} built from the active set of a (strongly convex) CIQP~\psecref{sec:ciqp} at its optimal solution has the same optimal solution as the CIQP, i.e., given a (strongly convex) CIQP with an optimal solution \( (\xstar, \bflambda^\ast) \), the solution to the following CEQP with the active set \( \func{\calA}{\xstar} \) is \( (\xstar, \bfmu^\ast) \), where \( \bfmu^\ast = \bbrac{\bflambda^\ast}_j, \; \forall j \in \func{\calA}{\xstar} \).
+    \vspace{-0.5em}
+    \begin{equation*}
+        \begin{aligned}
+            \minimize_{\x}
+            \quad &
+            \half \qf{\x}{\Q} + \dotp{\h}{\x} + c
+            \\ \subjectto \quad &
+            \dotp{\a_i}{\x} \geq b_i,
+            \quad i \in \set{1, 2, \ldots, m}
+        \end{aligned}
+        \quad \longleftrightarrow \quad
+        \begin{aligned}
+            \minimize_{\x}
+            \quad &
+            \half \qf{\x}{\Q} + \dotp{\h}{\x} + c
+            \\ \subjectto \quad &
+            \dotp{\a_j}{\x} = b_j,
+            \quad j \in \func{\calA}{\xstar}
+        \end{aligned}
+    \end{equation*}
+\end{theorem}
+
+\begin{proof}
+    The proof follows from the KKT conditions of the CIQP and CEQP.
+
+    Since \( (\xstar, \bflambda^\ast) \) is an optimal solution of the CIQP, we have from the KKT conditions that
+    \begin{align*}
+        \Q \xstar + \h - \sum_{i = 1}^{m} \bbrac{\bflambda^\ast}_i \, \a_i
+        & =
+        \zero
+        \\
+        \dotp{\a_i}{\xstar}
+        & \geq
+        b_i,
+        \quad \forall i \in \set{1, 2, \ldots, m}
+        \\
+        \bbrac{\bflambda^\ast}_i
+        & \geq
+        0,
+        \quad \forall i \in \set{1, 2, \ldots, m}
+        \\
+        \bbrac{\bflambda^\ast}_i \, \pbrac{\dotp{\a_i}{\xstar} - b_i}
+        & =
+        0,
+        \quad \forall i \in \set{1, 2, \ldots, m}
+    \end{align*}
+
+    The active set of the CIQP at \( \xstar \) is given by
+    \begin{equation*}
+        \func{\calA}{\xstar}
+        =
+        \set{i \given \dotp{\a_i}{\xstar} = b_i, \; i \in \set{1, 2, \ldots, m}}
+    \end{equation*}
+    and we can see that \( \forall k \in \set{1, 2, \ldots, m} \setminus \func{\calA}{\xstar}, \; \bbrac{\bflambda^\ast}_k = 0 \) from the complementary slackness condition.
+    \begin{align*}
+        \implies
+        \Q \xstar + \h - \sum_{j \in \func{\calA\,}{\xstar}} \bbrac{\bflambda^\ast}_j \, \a_j
+        & =
+        \zero
+        \\
+        \dotp{\a_j}{\xstar}
+        =
+        b_j,
+        \quad &
+        \forall j \in \func{\calA}{\xstar}
+        \\
+        \bbrac{\bflambda^\ast}_j
+        \geq 0,
+        \quad \forall j \in \func{\calA}{\xstar},
+        \quad \text{and} \quad &
+        \bbrac{\bflambda^\ast}_k
+        = 0,
+        \quad \forall k \in \set{1, 2, \ldots, m} \setminus \func{\calA}{\xstar}
+    \end{align*}
+
+    For the CEQP constructed from the active set \( \func{\calA}{\xstar} \), let \( (\xhat, \hat{\bfmu}) \) be its optimal solution, and let \( p = \func{\#}{\func{\calA}{\xstar}} \).
+    From the KKT conditions of the CEQP, we have
+    \begin{align*}
+        \Q \xhat + \h - \sum_{
+            \substack{
+                i \in \set{1, 2, \ldots, p}
+                \\
+                j \in \func{\calA\,}{\xstar}
+            }
+        } \bbrac{\hat{\bfmu}}_i \, \a_j
+        & =
+        \zero
+        \\
+        \dotp{\a_j}{\xhat}
+        =
+        b_j,
+        \quad &
+        \forall j \in \func{\calA}{\xstar}
+    \end{align*}
+    Thereby, the mapping \( \R^p \leftarrow \R_{\geq 0}^m \) defined by \( \bbrac{\hat{\bfmu}}_i \leftarrow \bbrac{\bflambda^\ast}_j, \; \forall j \in \func{\calA}{\xstar} \) and \( \xhat = \xstar \) satisfies the KKT conditions of the CEQP;
+    \( \therefore (\xstar, \bfmu^\ast) \) is an optimal solution of the CEQP where \( \bfmu^\ast = \bbrac{\bflambda^\ast}_j, \; \forall j \in \func{\calA}{\xstar} \).
+\end{proof}
+
 \begin{algorithm}[H]
     \caption{
         Active set method for (strongly convex) CIQP~\psecref{sec:ciqp} using CEQP~\psecref{sec:ceqp}
