@@ -55,6 +55,7 @@
 \newcommand{\smalloh}[1]{\func{{\scriptstyle\calO}}{#1}}
 
 \LoopCommands{xyzcheapbruv}[#1]{\declaremathcommandPIE#2{{\mathbf{#1}}##1##2\IfEmptyTF{##3}{}{^{(\GetExponent{##3})}}}}
+\LoopCommands\lettersGreekAll[bf#1]{\newmathcommand#2{{\boldsymbol{#3}}}}
 
 \LoopCommands{IUVMCABQED}[#1]{\newmathcommand#2{{\mathbf{#1}}}}
 \newcommand{\Qinv}{\inv{\Q}}

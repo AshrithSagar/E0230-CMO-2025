@@ -287,7 +287,7 @@ The \textbf{primal variables} are the variables \( \x \in \R^d \) being optimise
     The \textbf{Lagrangian} / \textbf{Lagrange function} \( \calL: \R^d \times \R^m \times \R^p \to \R \) associated with the constrained optimisation problem in~\psecref{sec:constrained-optimisation-standard-form} is defined as
     \vspace{-0.5em}
     \begin{equation*}
-        \func{\calL}{\x, \boldsymbol{\lambda}, \boldsymbol{\mu}}
+        \func{\calL}{\x, \bflambda, \bfmu}
         \triangleq
         \func{f}{\x}
         +
@@ -306,9 +306,9 @@ The variables \( \lambda_i, \; i \in \set{1, 2, \ldots, m}, \) and \( \mu_j, \; 
 \begin{definition}{Lagrange dual function}{}
     The \textbf{Lagrange dual function} \( q: \R^m \times \R^p \to \R \) associated with the constrained optimisation problem in~\psecref{sec:constrained-optimisation-standard-form} is defined as
     \begin{equation*}
-        \func{q}{\boldsymbol{\lambda}, \boldsymbol{\mu}}
+        \func{q}{\bflambda, \bfmu}
         \triangleq
-        \min_{\x} \func{\calL}{\x, \boldsymbol{\lambda}, \boldsymbol{\mu}}
+        \min_{\x} \func{\calL}{\x, \bflambda, \bfmu}
     \end{equation*}
 \end{definition}
 
@@ -316,8 +316,8 @@ The variables \( \lambda_i, \; i \in \set{1, 2, \ldots, m}, \) and \( \mu_j, \; 
 
 The corresponding \textbf{Lagrange dual problem} of the primal problem in~\psecref{sec:constrained-optimisation-standard-form} is given by
 \begin{align*}
-    \maximize_{\boldsymbol{\lambda}, \boldsymbol{\mu}} \quad &
-    \func{q}{\boldsymbol{\lambda}, \boldsymbol{\mu}}
+    \maximize_{\bflambda, \bfmu} \quad &
+    \func{q}{\bflambda, \bfmu}
     \\ \subjectto \quad &
     \lambda_i \geq 0,
     \quad i \in \set{1, 2, \ldots, m}
@@ -326,10 +326,10 @@ The corresponding \textbf{Lagrange dual problem} of the primal problem in~\psecr
 \section{Weak duality}
 
 \begin{theorem}{Weak duality}{}
-    If \( \xhat \) and \( (\hat{\boldsymbol{\lambda}}, \hat{\boldsymbol{\mu}}) \) are any feasible solutions of the primal and dual problems respectively, then
+    If \( \xhat \) and \( (\hat{\bflambda}, \hat{\bfmu}) \) are any feasible solutions of the primal and dual problems respectively, then
     \vspace{-0.5em}
     \begin{equation*}
-        \func{q}{\hat{\boldsymbol{\lambda}}, \hat{\boldsymbol{\mu}}}
+        \func{q}{\hat{\bflambda}, \hat{\bfmu}}
         \leq
         \func{f}{\xhat}
     \end{equation*}
@@ -338,12 +338,12 @@ The corresponding \textbf{Lagrange dual problem} of the primal problem in~\psecr
 \section{Strong duality}
 
 \begin{theorem}{Strong duality}{}
-    For a convex primal problem satisfying the Slater's conditions, if \( \xstar \) and \( (\boldsymbol{\lambda}^{\star}, \boldsymbol{\mu}^{\star}) \) are optimal solutions of the primal and dual problems respectively, then
+    For a convex primal problem satisfying the Slater's conditions, if \( \xstar \) and \( (\bflambda^{\star}, \bfmu^{\star}) \) are optimal solutions of the primal and dual problems respectively, then
     \vspace{-0.5em}
     \begin{equation*}
         \func{f}{\xstar}
         =
-        \func{q}{\boldsymbol{\lambda}^{\star}, \boldsymbol{\mu}^{\star}}
+        \func{q}{\bflambda^{\star}, \bfmu^{\star}}
     \end{equation*}
 \end{theorem}
 
@@ -353,7 +353,7 @@ Consider the constrained optimisation problem as in~\psecref{sec:constrained-opt
 Let \( \xstar \) be a local minimum and suppose that the gradients of the active constraints at \( \xstar \) are linearly independent.
 Then, there exist \( \lambda_i \geq 0, \; i \in \set{1, 2, \ldots, m}, \ \mu_j \in \R, \; j \in \set{1, 2, \ldots, p} \) such that
 \begin{align*}
-    \func{\nabla_{\x} \calL}{\xstar, \boldsymbol{\lambda}, \boldsymbol{\mu}}
+    \func{\nabla_{\x} \calL}{\xstar, \bflambda, \bfmu}
     & =
     \func{\nabla_{\x} f}{\xstar}
     +
@@ -396,7 +396,7 @@ Then, there exist \( \lambda_i \geq 0, \; i \in \set{1, 2, \ldots, m}, \ \mu_j \
 \end{equation*}
 where \( f, \,\, f_i, \, i \in \set{1, 2, \dots, m} \) are convex functions is called a \textbf{convex programming} problem.
 
-For a convex programming problem satisfying the Slater's conditions, if \( \xstar \) and \( \boldsymbol{\lambda}^{\star} \) are optimal solutions of the primal and dual problems respectively, then the KKT conditions~\psecref{sec:kkt-conditions} are necessary and sufficient for optimality.
+For a convex programming problem satisfying the Slater's conditions, if \( \xstar \) and \( \bflambda^{\star} \) are optimal solutions of the primal and dual problems respectively, then the KKT conditions~\psecref{sec:kkt-conditions} are necessary and sufficient for optimality.
 
 \section{Linear programming (LP)}
 
@@ -411,34 +411,34 @@ where \( \c \in \R^d, \; \A \in \R^{m \times d}, \; \b \in \R^m \).
 
 The Lagrangian function is given by
 \begin{align*}
-    \func{\calL}{\x, \boldsymbol{\lambda}}
+    \func{\calL}{\x, \bflambda}
     & =
     \dotp{\c}{\x}
     -
-    \dotp{\boldsymbol{\lambda}}{\pbrac{\A \x - \b}}
+    \dotp{\bflambda}{\pbrac{\A \x - \b}}
     \\
     \implies
-    \func{\nabla_{\x} \calL}{\x, \boldsymbol{\lambda}}
+    \func{\nabla_{\x} \calL}{\x, \bflambda}
     & =
-    \c - \dotp{\A}{\boldsymbol{\lambda}}
+    \c - \dotp{\A}{\bflambda}
 \end{align*}
 
 KKT conditions:
 \begin{align*}
-    \func{\nabla_{\x} \calL}{\xstar, \boldsymbol{\lambda}^\ast}
+    \func{\nabla_{\x} \calL}{\xstar, \bflambda^\ast}
     & =
-    \c - \dotp{\A}{\boldsymbol{\lambda}^\ast}
+    \c - \dotp{\A}{\bflambda^\ast}
     = \zero
     \\
     \A \xstar
     &
     \leq \b
     \\
-    \boldsymbol{\lambda}^\ast
+    \bflambda^\ast
     & \geq
     \zero
     \\
-    \dotp{\boldsymbol{\lambda}^\ast}{\pbrac{\A \xstar - \b}}
+    \dotp{\bflambda^\ast}{\pbrac{\A \xstar - \b}}
     & =
     0
 \end{align*}
@@ -458,23 +458,23 @@ where \( \Q \in \PSD, \; \h \in \R^d, \; \A \in \R^{m \times d}, \; \b \in \R^m 
 
 The Lagrangian function is given by
 \begin{align*}
-    \func{\calL}{\x, \boldsymbol{\mu}}
+    \func{\calL}{\x, \bfmu}
     & =
     \half \qf{\x}{\Q} + \dotp{\h}{\x} + c
     -
-    \dotp{\boldsymbol{\mu}}{\pbrac{\A \x - \b}}
+    \dotp{\bfmu}{\pbrac{\A \x - \b}}
     \\
     \implies
-    \func{\nabla_{\x} \calL}{\x, \boldsymbol{\mu}}
+    \func{\nabla_{\x} \calL}{\x, \bfmu}
     & =
-    \Q \x + \h - \dotp{\A}{\boldsymbol{\mu}}
+    \Q \x + \h - \dotp{\A}{\bfmu}
 \end{align*}
 
 KKT conditions:
 \begin{align*}
-    \func{\nabla_{\x} \calL}{\xstar, \boldsymbol{\mu}^\ast}
+    \func{\nabla_{\x} \calL}{\xstar, \bfmu^\ast}
     & =
-    \Q \xstar + \h - \dotp{\A}{\boldsymbol{\mu}^\ast}
+    \Q \xstar + \h - \dotp{\A}{\bfmu^\ast}
     =
     \zero
     \\
@@ -496,23 +496,23 @@ where \( \Q \in \PSD, \; \h \in \R^d, \; \A \in \R^{m \times d}, \; \b \in \R^m 
 
 The Lagrangian function is given by
 \begin{align*}
-    \func{\calL}{\x, \boldsymbol{\lambda}}
+    \func{\calL}{\x, \bflambda}
     & =
     \half \qf{\x}{\Q} + \dotp{\h}{\x} + c
     -
-    \dotp{\boldsymbol{\lambda}}{\pbrac{\A \x - \b}}
+    \dotp{\bflambda}{\pbrac{\A \x - \b}}
     \\
     \implies
-    \func{\nabla_{\x} \calL}{\x, \boldsymbol{\lambda}}
+    \func{\nabla_{\x} \calL}{\x, \bflambda}
     & =
-    \Q \x + \h - \dotp{\A}{\boldsymbol{\lambda}}
+    \Q \x + \h - \dotp{\A}{\bflambda}
 \end{align*}
 
 KKT conditions:
 \begin{align*}
-    \func{\nabla_{\x} \calL}{\xstar, \boldsymbol{\lambda}^\ast}
+    \func{\nabla_{\x} \calL}{\xstar, \bflambda^\ast}
     & =
-    \Q \xstar + \h - \dotp{\A}{\boldsymbol{\lambda}^\ast}
+    \Q \xstar + \h - \dotp{\A}{\bflambda^\ast}
     =
     \zero
     \\
@@ -520,11 +520,11 @@ KKT conditions:
     & =
     \b
     \\
-    \boldsymbol{\lambda}^\ast
+    \bflambda^\ast
     & \geq
     \zero
     \\
-    \dotp{\boldsymbol{\lambda}^\ast}{\pbrac{\A \xstar - \b}}
+    \dotp{\bflambda^\ast}{\pbrac{\A \xstar - \b}}
     & =
     0
 \end{align*}

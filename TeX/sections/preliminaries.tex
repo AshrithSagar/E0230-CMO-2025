@@ -1037,8 +1037,8 @@ The set of all eigenvalues of \( \A \) is called the \textbf{spectrum} of \( \A 
     \vspace{-0.5em}
     \begin{equation*}
         \A = \sum_{i = 1}^{d} \lambda_i \outp{\v_i}{\v_i}
-        = \V \boldsymbol{\Lambda} \V^\top
-        = \V \boldsymbol{\Lambda} \inv{\V}
+        = \V \bfLambda \V^\top
+        = \V \bfLambda \inv{\V}
     \end{equation*}
 
     \vspace{-0.5em}
@@ -1046,7 +1046,7 @@ The set of all eigenvalues of \( \A \) is called the \textbf{spectrum} of \( \A 
         \begin{bmatrix}
             \v_1 & \v_2 & \cdots & \v_d
         \end{bmatrix}
-    \in \R^{d \times d} \) is an orthogonal matrix (i.e., \( \dotp{\V}{\V} = \outp{\V}{\V} = \I \)) and \( \boldsymbol{\Lambda} = \diag{\lambda_1, \lambda_2, \ldots, \lambda_d} \in \R^{d \times d} \) is a diagonal matrix containing the eigenvalues of \( \A \).
+    \in \R^{d \times d} \) is an orthogonal matrix (i.e., \( \dotp{\V}{\V} = \outp{\V}{\V} = \I \)) and \( \bfLambda = \diag{\lambda_1, \lambda_2, \ldots, \lambda_d} \in \R^{d \times d} \) is a diagonal matrix containing the eigenvalues of \( \A \).
 \end{theorem}
 
 \begin{proof}
@@ -1101,7 +1101,7 @@ The set of all eigenvalues of \( \A \) is called the \textbf{spectrum} of \( \A 
     Thereby, we can always find \( d \) orthonormal eigenvectors of \( \A \), thus forming an orthonormal basis for \( \R^d \).
     This gives that \( \V \) is an orthogonal matrix \( \implies \dotp{\V}{\V} = \I \implies \inv{\V} = \V^\top \).
 
-    Now, with \( \boldsymbol{\Lambda} = \diag{\lambda_1, \lambda_2, \ldots, \lambda_d} \) and \( \V = [\v_1, \v_2, \ldots, \v_d] \), we have
+    Now, with \( \bfLambda = \diag{\lambda_1, \lambda_2, \ldots, \lambda_d} \) and \( \V = [\v_1, \v_2, \ldots, \v_d] \), we have
     \begin{equation*}
         \A \V
         =
@@ -1109,13 +1109,13 @@ The set of all eigenvalues of \( \A \) is called the \textbf{spectrum} of \( \A 
         =
         [\lambda_1 \v_1, \lambda_2 \v_2, \ldots, \lambda_d \v_d]
         =
-        \V \boldsymbol{\Lambda}
+        \V \bfLambda
         \implies
         \A
         =
-        \V \boldsymbol{\Lambda} \inv{\V}
+        \V \bfLambda \inv{\V}
         =
-        \V \boldsymbol{\Lambda} \V^\top
+        \V \bfLambda \V^\top
     \end{equation*}
 \end{proof}
 

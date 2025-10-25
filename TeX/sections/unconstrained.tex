@@ -488,26 +488,26 @@ Assume \( f \in \classC^2 \), and use \( \func{f}{\x + \p} = \func{f}{\x} + \dot
     \begin{equation*}
         \func{f}{\y} - \func{f}{\x} - \dotp{\grad{f}{\x}}{\pbrac{\y - \x}}
         =
-        \half {(\y - \x)}^\top \hess{f}{\boldsymbol{\xi}} (\y - \x),
-        \quad \boldsymbol{\xi} = (1 - t) \x + t \y, \; t \in (0, 1)
+        \half {(\y - \x)}^\top \hess{f}{\bfxi} (\y - \x),
+        \quad \bfxi = (1 - t) \x + t \y, \; t \in (0, 1)
     \end{equation*}
     for some \( t \in (0, 1) \).
     Therefore, we have
     \begin{equation*}
-        {(\y - \x)}^\top \hess{f}{\boldsymbol{\xi}} (\y - \x)
+        {(\y - \x)}^\top \hess{f}{\bfxi} (\y - \x)
         \geq 0,
         \quad \forall \x, \y \in \calD
     \end{equation*}
     which implies \( \hess{f}{\x} \succeq \zero, \; \forall \x \in \calD \).
-    (Note: \( \boldsymbol{\xi} \in \calD \) since \( \calD \) is convex.)
+    (Note: \( \bfxi \in \calD \) since \( \calD \) is convex.)
 
     \( (\Leftarrow) \)
     From Taylor's theorem, we have
     \begin{equation*}
         \func{f}{\y} - \func{f}{\x} - \dotp{\grad{f}{\x}}{\pbrac{\y - \x}}
         =
-        \half {(\y - \x)}^\top \hess{f}{\boldsymbol{\xi}} (\y - \x),
-        \quad \boldsymbol{\xi} = (1 - t) \x + t \y, \; t \in (0, 1)
+        \half {(\y - \x)}^\top \hess{f}{\bfxi} (\y - \x),
+        \quad \bfxi = (1 - t) \x + t \y, \; t \in (0, 1)
     \end{equation*}
     for some \( t \in (0, 1) \).
     Since \( \hess{f}{\x} \succeq \zero, \; \forall \x \in \calD \), we have
@@ -2968,16 +2968,16 @@ Consider the update
 \paragraph{Quasi-Newton condition:}
 \begin{equation}\label{eq:quasi-newton-condition}
     \boxed{
-        \A_{k+1} \, \boldsymbol{\gamma}_k
+        \A_{k+1} \, \bfgamma_k
         =
-        \boldsymbol{\delta}_k
+        \bfdelta_k
     },
     \quad
-    \boldsymbol{\gamma}_k
+    \bfgamma_k
     \triangleq
     \grad{f}{\x^{k+1}} - \grad{f}{\x^k},
     \quad
-    \boldsymbol{\delta}_k
+    \bfdelta_k
     \triangleq
     \x^{k+1} - \x^k
 \end{equation}
@@ -3034,9 +3034,9 @@ Note that, for strongly convex quadratic functions~\psecref{sec:strongly-convex-
 \begin{equation}\label{eq:secant-equation-quadratic}
     \implies
     \boxed{
-        \boldsymbol{\gamma}_k
+        \bfgamma_k
         =
-        \Q \, \boldsymbol{\delta}_k,
+        \Q \, \bfdelta_k,
         \quad \forall k \geq 0
     }
 \end{equation}
@@ -3048,11 +3048,11 @@ which is known as the \textbf{secant equation}.
         Quasi-Newton methods.
         \quad
         \(
-            \boldsymbol{\gamma}_k
+            \bfgamma_k
             \triangleq
             \grad{f}{\x^{k+1}} - \grad{f}{\x^k},
             \quad
-            \boldsymbol{\delta}_k
+            \bfdelta_k
             \triangleq
             \x^{k+1} - \x^k
         \)
@@ -3074,13 +3074,13 @@ which is known as the \textbf{secant equation}.
             +
             \frac{
                 \outp
-                {\pbrac{\boldsymbol{\delta}_k - \A_k \, \boldsymbol{\gamma}_k}}
-                {\pbrac{\boldsymbol{\delta}_k - \A_k \, \boldsymbol{\gamma}_k}}
+                {\pbrac{\bfdelta_k - \A_k \, \bfgamma_k}}
+                {\pbrac{\bfdelta_k - \A_k \, \bfgamma_k}}
             }
             {
                 \dotp
-                {\pbrac{\boldsymbol{\delta}_k - \A_k \, \boldsymbol{\gamma}_k}}
-                {\boldsymbol{\gamma}_k}
+                {\pbrac{\bfdelta_k - \A_k \, \bfgamma_k}}
+                {\bfgamma_k}
             }
         \)
         &
@@ -3090,13 +3090,13 @@ which is known as the \textbf{secant equation}.
             +
             \frac{
                 \outp
-                {\pbrac{\boldsymbol{\gamma}_k - \B_k \, \boldsymbol{\delta}_k}}
-                {\pbrac{\boldsymbol{\gamma}_k - \B_k \, \boldsymbol{\delta}_k}}
+                {\pbrac{\bfgamma_k - \B_k \, \bfdelta_k}}
+                {\pbrac{\bfgamma_k - \B_k \, \bfdelta_k}}
             }
             {
                 \dotp
-                {\pbrac{\boldsymbol{\gamma}_k - \B_k \, \boldsymbol{\delta}_k}}
-                {\boldsymbol{\delta}_k}
+                {\pbrac{\bfgamma_k - \B_k \, \bfdelta_k}}
+                {\bfdelta_k}
             }
         \)
         \\
@@ -3108,12 +3108,12 @@ which is known as the \textbf{secant equation}.
             \A_k
             +
             \frac
-            {\outp{\boldsymbol{\delta}_k}{\boldsymbol{\delta}_k}}
-            {\dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}}
+            {\outp{\bfdelta_k}{\bfdelta_k}}
+            {\dotp{\bfdelta_k}{\bfgamma_k}}
             -
             \frac
-            {\A_k \outp{\boldsymbol{\gamma}_k}{\boldsymbol{\gamma}_k} \A_k}
-            {\qf{\boldsymbol{\gamma}_k}{\A_k}}
+            {\A_k \outp{\bfgamma_k}{\bfgamma_k} \A_k}
+            {\qf{\bfgamma_k}{\A_k}}
         \)
         &
         \(
@@ -3122,21 +3122,21 @@ which is known as the \textbf{secant equation}.
                 \I
                 -
                 \frac
-                {\outp{\boldsymbol{\gamma}_k}{\boldsymbol{\delta}_k}}
-                {\dotp{\boldsymbol{\gamma}_k}{\boldsymbol{\delta}_k}}
+                {\outp{\bfgamma_k}{\bfdelta_k}}
+                {\dotp{\bfgamma_k}{\bfdelta_k}}
             }
             \B_k
             \pbrac{
                 \I
                 -
                 \frac
-                {\outp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}}
-                {\dotp{\boldsymbol{\gamma}_k}{\boldsymbol{\delta}_k}}
+                {\outp{\bfdelta_k}{\bfgamma_k}}
+                {\dotp{\bfgamma_k}{\bfdelta_k}}
             }
             +
             \frac
-            {\outp{\boldsymbol{\gamma}_k}{\boldsymbol{\gamma}_k}}
-            {\dotp{\boldsymbol{\gamma}_k}{\boldsymbol{\delta}_k}}
+            {\outp{\bfgamma_k}{\bfgamma_k}}
+            {\dotp{\bfgamma_k}{\bfdelta_k}}
         \)
         \\
         \midrule
@@ -3148,21 +3148,21 @@ which is known as the \textbf{secant equation}.
                 \I
                 -
                 \frac
-                {\outp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}}
-                {\dotp{\boldsymbol{\gamma}_k}{\boldsymbol{\delta}_k}}
+                {\outp{\bfdelta_k}{\bfgamma_k}}
+                {\dotp{\bfgamma_k}{\bfdelta_k}}
             }
             \A_k
             \pbrac{
                 \I
                 -
                 \frac
-                {\outp{\boldsymbol{\gamma}_k}{\boldsymbol{\delta}_k}}
-                {\dotp{\boldsymbol{\gamma}_k}{\boldsymbol{\delta}_k}}
+                {\outp{\bfgamma_k}{\bfdelta_k}}
+                {\dotp{\bfgamma_k}{\bfdelta_k}}
             }
             +
             \frac
-            {\outp{\boldsymbol{\delta}_k}{\boldsymbol{\delta}_k}}
-            {\dotp{\boldsymbol{\gamma}_k}{\boldsymbol{\delta}_k}}
+            {\outp{\bfdelta_k}{\bfdelta_k}}
+            {\dotp{\bfgamma_k}{\bfdelta_k}}
         \)
         &
         \(
@@ -3170,12 +3170,12 @@ which is known as the \textbf{secant equation}.
             \B_k
             +
             \frac
-            {\outp{\boldsymbol{\gamma}_k}{\boldsymbol{\gamma}_k}}
-            {\dotp{\boldsymbol{\gamma}_k}{\boldsymbol{\delta}_k}}
+            {\outp{\bfgamma_k}{\bfgamma_k}}
+            {\dotp{\bfgamma_k}{\bfdelta_k}}
             -
             \frac
-            {\outp{\pbrac{\B_k \boldsymbol{\delta}_k}}{\pbrac{\B_k \boldsymbol{\delta}_k}}}
-            {\qf{\boldsymbol{\delta}_k}{\B_k}}
+            {\outp{\pbrac{\B_k \bfdelta_k}}{\pbrac{\B_k \bfdelta_k}}}
+            {\qf{\bfdelta_k}{\B_k}}
         \)
         \\
         \midrule
@@ -3214,18 +3214,18 @@ Choose the update so that \( \A_k \) is symmetric, and
 \end{equation*}
 \begin{align*}
     \because
-    \boldsymbol{\delta}_k
+    \bfdelta_k
     =
-    \A_{k+1} \, \boldsymbol{\gamma}_k
+    \A_{k+1} \, \bfgamma_k
     & =
-    \A_k \, \boldsymbol{\gamma}_k
-    + \beta \, \outp{\v}{\v} \, \boldsymbol{\gamma}_k
+    \A_k \, \bfgamma_k
+    + \beta \, \outp{\v}{\v} \, \bfgamma_k
     \\
     \implies
-    \boldsymbol{\delta}_k
-    - \A_k \, \boldsymbol{\gamma}_k
+    \bfdelta_k
+    - \A_k \, \bfgamma_k
     & =
-    \beta \pbrac{\dotp{\v}{\boldsymbol{\gamma}_k}} \, \v
+    \beta \pbrac{\dotp{\v}{\bfgamma_k}} \, \v
 \end{align*}
 
 One such solution to the above equation is
@@ -3233,10 +3233,10 @@ One such solution to the above equation is
     &
     \v
     =
-    \boldsymbol{\delta}_k
-    - \A_k \, \boldsymbol{\gamma}_k,
+    \bfdelta_k
+    - \A_k \, \bfgamma_k,
     \qquad
-    \beta \pbrac{\dotp{\v}{\boldsymbol{\gamma}_k}}
+    \beta \pbrac{\dotp{\v}{\bfgamma_k}}
     =
     1
     \\
@@ -3245,15 +3245,15 @@ One such solution to the above equation is
     \boxed{
         \v
         =
-        \boldsymbol{\delta}_k
-        - \A_k \, \boldsymbol{\gamma}_k,
+        \bfdelta_k
+        - \A_k \, \bfgamma_k,
         \qquad
         \beta
         =
         \frac{1}{
-            \dotp{\pbrac{\boldsymbol{\delta}_k
-            - \A_k \, \boldsymbol{\gamma}_k}}
-            {\boldsymbol{\gamma}_k}
+            \dotp{\pbrac{\bfdelta_k
+            - \A_k \, \bfgamma_k}}
+            {\bfgamma_k}
         }
     }
 \end{align*}
@@ -3267,12 +3267,12 @@ Hence, we have the SR1 update as
         +
         \frac{
             \outp
-            {\pbrac{\boldsymbol{\delta}_k - \A_k \, \boldsymbol{\gamma}_k}}
-            {\pbrac{\boldsymbol{\delta}_k - \A_k \, \boldsymbol{\gamma}_k}}
+            {\pbrac{\bfdelta_k - \A_k \, \bfgamma_k}}
+            {\pbrac{\bfdelta_k - \A_k \, \bfgamma_k}}
         }{
             \dotp
-            {\pbrac{\boldsymbol{\delta}_k - \A_k \, \boldsymbol{\gamma}_k}}
-            {\boldsymbol{\gamma}_k}
+            {\pbrac{\bfdelta_k - \A_k \, \bfgamma_k}}
+            {\bfgamma_k}
         }
     }
     \triangleq
@@ -3286,13 +3286,13 @@ Since the denominator in~\peqref{eq:sr1} can be very small or zero, we only use 
 \begin{equation*}
     \abs{
         \dotp
-        {\pbrac{\boldsymbol{\delta}_k - \A_k \, \boldsymbol{\gamma}_k}}
-        {\boldsymbol{\gamma}_k}
+        {\pbrac{\bfdelta_k - \A_k \, \bfgamma_k}}
+        {\bfgamma_k}
     }
     \geq
     \rho
-    \, \norm{\boldsymbol{\delta}_k - \A_k \, \boldsymbol{\gamma}_k}
-    \, \norm{\boldsymbol{\gamma}_k},
+    \, \norm{\bfdelta_k - \A_k \, \bfgamma_k}
+    \, \norm{\bfgamma_k},
     \quad
     \text{for some small }
     \rho \in (0, 1)
@@ -3303,9 +3303,9 @@ Since the denominator in~\peqref{eq:sr1} can be very small or zero, we only use 
     the iterates generated in the SR1 update \( \set{\x^i}_{i = 0}^{k+1} \) satisfy
     \vspace{-0.5em}
     \begin{equation*}
-        \A_{k+1} \, \boldsymbol{\gamma}_i
+        \A_{k+1} \, \bfgamma_i
         =
-        \boldsymbol{\delta}_i,
+        \bfdelta_i,
         \quad \forall i \in \set{0, 1, \ldots, k}
     \end{equation*}
 \end{theorem}
@@ -3316,25 +3316,25 @@ Since the denominator in~\peqref{eq:sr1} can be very small or zero, we only use 
     \paragraph{Base case:}
     For \( k = 0 \), the statement
     \(
-        \A_1 \, \boldsymbol{\gamma}_0
+        \A_1 \, \bfgamma_0
         =
-        \boldsymbol{\delta}_0
+        \bfdelta_0
     \)
     holds true by the Quasi-Newton condition~\peqref{eq:quasi-newton-condition}.
 
     \paragraph{Induction step:}
     Assume that the statement holds true for \( k = m - 1 \), i.e.,
     \begin{equation*}
-        \A_m \, \boldsymbol{\gamma}_i
+        \A_m \, \bfgamma_i
         =
-        \boldsymbol{\delta}_i,
+        \bfdelta_i,
         \quad \forall i \in \set{0, 1, \ldots, m - 1}
     \end{equation*}
     We need to show that the statement holds true for \( k = m \), i.e.,
     \begin{equation*}
-        \A_{m + 1} \, \boldsymbol{\gamma}_i
+        \A_{m + 1} \, \bfgamma_i
         =
-        \boldsymbol{\delta}_i,
+        \bfdelta_i,
         \quad \forall i \in \set{0, 1, \ldots, m}
     \end{equation*}
 
@@ -3342,54 +3342,54 @@ Since the denominator in~\peqref{eq:sr1} can be very small or zero, we only use 
     \begin{align*}
         \implies
         \dotp
-        {\pbrac{\boldsymbol{\delta}_m - \A_m \, \boldsymbol{\gamma}_m}}
-        {\boldsymbol{\gamma}_i}
+        {\pbrac{\bfdelta_m - \A_m \, \bfgamma_m}}
+        {\bfgamma_i}
         & =
         \dotp
-        {\boldsymbol{\delta}_m}
-        {\boldsymbol{\gamma}_i}
+        {\bfdelta_m}
+        {\bfgamma_i}
         -
         \dotp
-        {\pbrac{\A_m \, \boldsymbol{\gamma}_m}}
-        {\boldsymbol{\gamma}_i}
+        {\pbrac{\A_m \, \bfgamma_m}}
+        {\bfgamma_i}
         =
         \dotp
-        {\boldsymbol{\delta}_m}
-        {\boldsymbol{\gamma}_i}
+        {\bfdelta_m}
+        {\bfgamma_i}
         -
         \qf
-        {\boldsymbol{\gamma}_m}
+        {\bfgamma_m}
         {\A_m}
-        [\boldsymbol{\gamma}_i]
+        [\bfgamma_i]
         =
         \dotp
-        {\boldsymbol{\delta}_m}
-        {\boldsymbol{\gamma}_i}
+        {\bfdelta_m}
+        {\bfgamma_i}
         -
         \dotp
-        {\boldsymbol{\gamma}_m}
-        {\boldsymbol{\delta}_i}
+        {\bfgamma_m}
+        {\bfdelta_i}
         \\ & =
         \dotp
-        {\boldsymbol{\delta}_m}
-        {\pbrac{\Q \boldsymbol{\delta}_i}}
+        {\bfdelta_m}
+        {\pbrac{\Q \bfdelta_i}}
         -
         \dotp
-        {\pbrac{\Q \boldsymbol{\delta}_m}}
-        {\boldsymbol{\delta}_i}
+        {\pbrac{\Q \bfdelta_m}}
+        {\bfdelta_i}
         =
         \cancel{
             \qf
-            {\boldsymbol{\delta}_m}
+            {\bfdelta_m}
             {\Q}
-            [\boldsymbol{\delta}_i]
+            [\bfdelta_i]
         }
         -
         \cancel{
             \qf
-            {\boldsymbol{\delta}_m}
+            {\bfdelta_m}
             {\Q}
-            [\boldsymbol{\delta}_i]
+            [\bfdelta_i]
         }
         = 0
     \end{align*}
@@ -3399,49 +3399,49 @@ Since the denominator in~\peqref{eq:sr1} can be very small or zero, we only use 
         \implies
         \boxed{
             \dotp
-            {\pbrac{\boldsymbol{\delta}_m - \A_m \, \boldsymbol{\gamma}_m}}
-            {\boldsymbol{\gamma}_i}
+            {\pbrac{\bfdelta_m - \A_m \, \bfgamma_m}}
+            {\bfgamma_i}
             = 0,
             \quad \forall i \in \set{0, 1, \ldots, m - 1}
         }
     \end{equation*}
     \begin{equation*}
         \implies
-        \A_{m + 1} \, \boldsymbol{\gamma}_i
+        \A_{m + 1} \, \bfgamma_i
         =
         \pbrac{
             \A_m
             +
             \frac{
                 \outp
-                {\pbrac{\boldsymbol{\delta}_m - \A_m \, \boldsymbol{\gamma}_m}}
-                {\pbrac{\boldsymbol{\delta}_m - \A_m \, \boldsymbol{\gamma}_m}}
+                {\pbrac{\bfdelta_m - \A_m \, \bfgamma_m}}
+                {\pbrac{\bfdelta_m - \A_m \, \bfgamma_m}}
             }{
                 \dotp
-                {\pbrac{\boldsymbol{\delta}_m - \A_m \, \boldsymbol{\gamma}_m}}
-                {\boldsymbol{\gamma}_m}
+                {\pbrac{\bfdelta_m - \A_m \, \bfgamma_m}}
+                {\bfgamma_m}
             }
-        } \, \boldsymbol{\gamma}_i
+        } \, \bfgamma_i
         =
-        \A_m \, \boldsymbol{\gamma}_i
+        \A_m \, \bfgamma_i
         =
-        \boldsymbol{\delta}_i,
+        \bfdelta_i,
         \quad \forall i \in \set{0, 1, \ldots, m - 1}
     \end{equation*}
 
     From the Quasi-Newton condition~\peqref{eq:quasi-newton-condition} for \( k = m \), we have
     \(
-        \A_{m + 1} \, \boldsymbol{\gamma}_m
+        \A_{m + 1} \, \bfgamma_m
         =
-        \boldsymbol{\delta}_m
+        \bfdelta_m
     \).
 
     Combining with the above result, we finally have
     \(
         \quad \therefore
-        \A_{m + 1} \, \boldsymbol{\gamma}_i
+        \A_{m + 1} \, \bfgamma_i
         =
-        \boldsymbol{\delta}_i,
+        \bfdelta_i,
         \quad \forall i \in \set{0, 1, \ldots, m}
     \).
 
@@ -3464,21 +3464,21 @@ Choose the update so that \( \A_k \) is symmetric, and
 \end{equation*}
 \begin{align*}
     \because
-    \boldsymbol{\delta}_k
+    \bfdelta_k
     =
-    \A_{k+1} \, \boldsymbol{\gamma}_k
+    \A_{k+1} \, \bfgamma_k
     & =
-    \A_k \, \boldsymbol{\gamma}_k
-    + \beta_1 \, \outp{\u}{\u} \, \boldsymbol{\gamma}_k
-    + \beta_2 \, \outp{\v}{\v} \, \boldsymbol{\gamma}_k
+    \A_k \, \bfgamma_k
+    + \beta_1 \, \outp{\u}{\u} \, \bfgamma_k
+    + \beta_2 \, \outp{\v}{\v} \, \bfgamma_k
     \\
     \implies
-    \boldsymbol{\delta}_k
-    - \A_k \, \boldsymbol{\gamma}_k
+    \bfdelta_k
+    - \A_k \, \bfgamma_k
     & =
-    \beta_1 \pbrac{\dotp{\u}{\boldsymbol{\gamma}_k}} \, \u
+    \beta_1 \pbrac{\dotp{\u}{\bfgamma_k}} \, \u
     +
-    \beta_2 \pbrac{\dotp{\v}{\boldsymbol{\gamma}_k}} \, \v
+    \beta_2 \pbrac{\dotp{\v}{\bfgamma_k}} \, \v
 \end{align*}
 
 One such solution to the above equation is
@@ -3486,17 +3486,17 @@ One such solution to the above equation is
     &
     \u
     =
-    \boldsymbol{\delta}_k,
+    \bfdelta_k,
     \quad
     \v
     =
-    \A_k \, \boldsymbol{\gamma}_k,
+    \A_k \, \bfgamma_k,
     \qquad
-    \beta_1 \pbrac{\dotp{\u}{\boldsymbol{\gamma}_k}}
+    \beta_1 \pbrac{\dotp{\u}{\bfgamma_k}}
     =
     1,
     \quad
-    \beta_2 \pbrac{\dotp{\v}{\boldsymbol{\gamma}_k}}
+    \beta_2 \pbrac{\dotp{\v}{\bfgamma_k}}
     =
     -1
     \\
@@ -3505,19 +3505,19 @@ One such solution to the above equation is
     \boxed{
         \u
         =
-        \boldsymbol{\delta}_k,
+        \bfdelta_k,
         \quad
         \v
         =
-        \A_k \, \boldsymbol{\gamma}_k,
+        \A_k \, \bfgamma_k,
         \qquad
         \beta_1
         =
-        \frac{1}{\dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}},
+        \frac{1}{\dotp{\bfdelta_k}{\bfgamma_k}},
         \quad
         \beta_2
         =
-        -\frac{1}{\qf{\boldsymbol{\gamma}_k}{\A_k}}
+        -\frac{1}{\qf{\bfgamma_k}{\A_k}}
     }
 \end{align*}
 
@@ -3529,28 +3529,28 @@ Hence, we have the DFP update as
         \A_k
         +
         \frac
-        {\outp{\boldsymbol{\delta}_k}{\boldsymbol{\delta}_k}}
-        {\dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}}
+        {\outp{\bfdelta_k}{\bfdelta_k}}
+        {\dotp{\bfdelta_k}{\bfgamma_k}}
         -
         \frac
-        {\A_k \outp{\boldsymbol{\gamma}_k}{\boldsymbol{\gamma}_k} \A_k}
-        {\qf{\boldsymbol{\gamma}_k}{\A_k}}
+        {\A_k \outp{\bfgamma_k}{\bfgamma_k} \A_k}
+        {\qf{\bfgamma_k}{\A_k}}
     }
     \triangleq
     \A_{k+1}^{\text{DFP}}
 \end{equation*}
 
-The DFP update guarantees positive definiteness of \( \A_{k+1} \) if \( \A_k \succ \zero \) and \( \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k} > 0 \).
+The DFP update guarantees positive definiteness of \( \A_{k+1} \) if \( \A_k \succ \zero \) and \( \dotp{\bfdelta_k}{\bfgamma_k} > 0 \).
 
-The condition \( \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k} > 0 \) is known as the \textit{curvature condition}, and is satisfied if \( f \) is strongly convex and \( \alpha_k \) is chosen using exact line search or an inexact line search that satisfies the Wolfe conditions.
+The condition \( \dotp{\bfdelta_k}{\bfgamma_k} > 0 \) is known as the \textit{curvature condition}, and is satisfied if \( f \) is strongly convex and \( \alpha_k \) is chosen using exact line search or an inexact line search that satisfies the Wolfe conditions.
 
 \begin{theorem}{DFP positive definiteness}{}
-    If \( \A_0 \) is symmetric positive-definite and \( \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k} > 0, \; \forall k \), then the DFP update preserves positive definiteness, i.e., if \( \A_k \succ \zero \) and \( \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k} > 0 \), then \( \A_{k+1} \succ \zero \).
+    If \( \A_0 \) is symmetric positive-definite and \( \dotp{\bfdelta_k}{\bfgamma_k} > 0, \; \forall k \), then the DFP update preserves positive definiteness, i.e., if \( \A_k \succ \zero \) and \( \dotp{\bfdelta_k}{\bfgamma_k} > 0 \), then \( \A_{k+1} \succ \zero \).
 \end{theorem}
 
 \begin{proof}
     Since \( \A_k \succ \zero \), we have the Cholesky decomposition \( \A_k = \outp{\mathbf{L}_k}{\mathbf{L}_k} \), where \( \mathbf{L}_k \) is a lower triangular matrix with positive diagonal entries.
-    Setting \( \a = \dotp{\mathbf{L}_k}{\z}, \; \b = \dotp{\mathbf{L}_k}{\boldsymbol{\gamma}_k} \), where \( \z \in \R^d \setminus \set{\zero} \), we have
+    Setting \( \a = \dotp{\mathbf{L}_k}{\z}, \; \b = \dotp{\mathbf{L}_k}{\bfgamma_k} \), where \( \z \in \R^d \setminus \set{\zero} \), we have
     \begin{align*}
         \implies
         \qf{\z}{\A_{k+1}}
@@ -3559,31 +3559,31 @@ The condition \( \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k} > 0 \) is k
         +
         \qf{\z}{
             \frac
-            {\outp{\boldsymbol{\delta}_k}{\boldsymbol{\delta}_k}}
-            {\dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}}
+            {\outp{\bfdelta_k}{\bfdelta_k}}
+            {\dotp{\bfdelta_k}{\bfgamma_k}}
         }
         -
         \qf{\z}{
             \frac
-            {\A_k \outp{\boldsymbol{\gamma}_k}{\boldsymbol{\gamma}_k} \A_k}
-            {\qf{\boldsymbol{\gamma}_k}{\A_k}}
+            {\A_k \outp{\bfgamma_k}{\bfgamma_k} \A_k}
+            {\qf{\bfgamma_k}{\A_k}}
         }
         \\ & =
         \qf{\z}{\outp{\mathbf{L}_k}{\mathbf{L}_k}}
         +
         \frac
-        {\pbrac{\dotp{\boldsymbol{\delta}_k}{\z}}^2}
-        {\dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}}
+        {\pbrac{\dotp{\bfdelta_k}{\z}}^2}
+        {\dotp{\bfdelta_k}{\bfgamma_k}}
         -
         \qf{\z}{
             \frac
-            {\outp{\mathbf{L}_k}{\mathbf{L}_k} \outp{\boldsymbol{\gamma}_k}{\boldsymbol{\gamma}_k} \outp{\mathbf{L}_k}{\mathbf{L}_k}}
-            {\qf{\boldsymbol{\gamma}_k}{\outp{\mathbf{L}_k}{\mathbf{L}_k}}}
+            {\outp{\mathbf{L}_k}{\mathbf{L}_k} \outp{\bfgamma_k}{\bfgamma_k} \outp{\mathbf{L}_k}{\mathbf{L}_k}}
+            {\qf{\bfgamma_k}{\outp{\mathbf{L}_k}{\mathbf{L}_k}}}
         }
         =
         \frac
-        {\pbrac{\dotp{\boldsymbol{\delta}_k}{\z}}^2}
-        {\dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}}
+        {\pbrac{\dotp{\bfdelta_k}{\z}}^2}
+        {\dotp{\bfdelta_k}{\bfgamma_k}}
         +
         \bbrac{
             \dotp{\a}{\a}
@@ -3605,9 +3605,9 @@ The condition \( \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k} > 0 \) is k
         \; \lambda \in \R
     \end{equation*}
 
-    Since \( \mathbf{L}_k^\top \) is invertible, and thereby it's nullspace is \( \set{\zero} \), which implies \( \b = \zero \iff \boldsymbol{\gamma}_k = \zero \).\\
-    But \( \boldsymbol{\gamma}_k = \zero \implies \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k} = 0 \), a contradiction.
-    Thus, \( \boldsymbol{\gamma}_k \neq \zero \), and thereby \( \b \neq \zero \).
+    Since \( \mathbf{L}_k^\top \) is invertible, and thereby it's nullspace is \( \set{\zero} \), which implies \( \b = \zero \iff \bfgamma_k = \zero \).\\
+    But \( \bfgamma_k = \zero \implies \dotp{\bfdelta_k}{\bfgamma_k} = 0 \), a contradiction.
+    Thus, \( \bfgamma_k \neq \zero \), and thereby \( \b \neq \zero \).
 
     In the equality case, we have that \( \a = \lambda \b, \; \lambda \in \R \), and since \( \mathbf{L}_k^\top \) is invertible, thereby
     \begin{align*}
@@ -3619,11 +3619,11 @@ The condition \( \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k} > 0 \) is k
         \dotp{\mathbf{L}_k}{\z}
         =
         \lambda
-        \dotp{\mathbf{L}_k}{\boldsymbol{\gamma}_k}
+        \dotp{\mathbf{L}_k}{\bfgamma_k}
         \iff
         \z
         =
-        \lambda \boldsymbol{\gamma}_k
+        \lambda \bfgamma_k
         \\
         \text{Now, }
         \because
@@ -3632,7 +3632,7 @@ The condition \( \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k} > 0 \) is k
         \neq
         \zero,
         \;
-        \boldsymbol{\gamma}_k
+        \bfgamma_k
         \neq
         \zero
         \implies
@@ -3641,14 +3641,14 @@ The condition \( \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k} > 0 \) is k
         0
         \\
         \implies
-        \dotp{\boldsymbol{\delta}_k}{\z}
+        \dotp{\bfdelta_k}{\z}
         & =
         \lambda
-        \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}
+        \dotp{\bfdelta_k}{\bfgamma_k}
         \neq 0,
         \quad
         \because
-        \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k} > 0,
+        \dotp{\bfdelta_k}{\bfgamma_k} > 0,
         \; \lambda \neq 0
         \\
         \implies
@@ -3656,8 +3656,8 @@ The condition \( \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k} > 0 \) is k
         & =
         \overbrace{
             \frac
-            {\pbrac{\dotp{\boldsymbol{\delta}_k}{\z}}^2}
-            {\dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}}
+            {\pbrac{\dotp{\bfdelta_k}{\z}}^2}
+            {\dotp{\bfdelta_k}{\bfgamma_k}}
         }^{> 0}
         +
         \overbrace{
@@ -3668,17 +3668,17 @@ The condition \( \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k} > 0 \) is k
             }
         }^{= 0}
         > 0,
-        \quad \forall \z \in \spanset{\boldsymbol{\gamma}_k} \setminus \set{\zero}
+        \quad \forall \z \in \spanset{\bfgamma_k} \setminus \set{\zero}
     \end{align*}
 
-    In the strict inequality case, we have \( \z \notin \spanset{\boldsymbol{\gamma}_k} \), thereby
+    In the strict inequality case, we have \( \z \notin \spanset{\bfgamma_k} \), thereby
     \begin{equation*}
         \qf{\z}{\A_{k+1}}
         =
         \overbrace{
             \frac
-            {\pbrac{\dotp{\boldsymbol{\delta}_k}{\z}}^2}
-            {\dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}}
+            {\pbrac{\dotp{\bfdelta_k}{\z}}^2}
+            {\dotp{\bfdelta_k}{\bfgamma_k}}
         }^{\geq 0}
         +
         \overbrace{
@@ -3689,7 +3689,7 @@ The condition \( \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k} > 0 \) is k
             }
         }^{> 0}
         > 0,
-        \quad \forall \z \notin \spanset{\boldsymbol{\gamma}_k}
+        \quad \forall \z \notin \spanset{\bfgamma_k}
     \end{equation*}
 
     Combining both the cases, we have \( \qf{\z}{\A_{k+1}} > 0, \; \forall \z \in \R^d \setminus \set{\zero} \implies \A_{k+1} \succ \zero \).
@@ -3708,9 +3708,9 @@ The condition \( \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k} > 0 \) is k
     and the iterates \( \set{\x^i}_{i = 0}^{k+1} \) satisfy
     \vspace{-0.5em}
     \begin{equation*}
-        \A_{k+1} \, \boldsymbol{\gamma}_i
+        \A_{k+1} \, \bfgamma_i
         =
-        \boldsymbol{\delta}_i,
+        \bfdelta_i,
         \quad \forall i \in \set{0, 1, \ldots, k}
     \end{equation*}
 \end{theorem}
@@ -3721,9 +3721,9 @@ The condition \( \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k} > 0 \) is k
     \paragraph{Base case:}
     For \( k = 0 \), the statement
     \(
-        \A_1 \, \boldsymbol{\gamma}_0
+        \A_1 \, \bfgamma_0
         =
-        \boldsymbol{\delta}_0
+        \bfdelta_0
     \)
     holds true by the Quasi-Newton condition~\peqref{eq:quasi-newton-condition}.
     \begin{align*}
@@ -3743,16 +3743,16 @@ The condition \( \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k} > 0 \) is k
         =
         \frac{1}{\alpha_0} \pbrac{\x^1 - \x^0}
         =
-        \frac{1}{\alpha_0} \boldsymbol{\delta}_0
+        \frac{1}{\alpha_0} \bfdelta_0
         \\
         \implies
         \qf{\u^1}{\Q}[\u^0]
         & =
-        -\frac{1}{\alpha_0} \qf{\grad{f}{\x^1}}{\A_1 \Q}[\boldsymbol{\delta}_0]
+        -\frac{1}{\alpha_0} \qf{\grad{f}{\x^1}}{\A_1 \Q}[\bfdelta_0]
         =
-        -\frac{1}{\alpha_0} \qf{\grad{f}{\x^1}}{\A_1}[\boldsymbol{\gamma}_0]
+        -\frac{1}{\alpha_0} \qf{\grad{f}{\x^1}}{\A_1}[\bfgamma_0]
         \\ & =
-        -\frac{1}{\alpha_0} \dotp{\grad{f}{\x^1}}{\boldsymbol{\delta}_0}
+        -\frac{1}{\alpha_0} \dotp{\grad{f}{\x^1}}{\bfdelta_0}
         =
         -\dotp{\grad{f}{\x^1}}{\u^0}
         = 0
@@ -3768,9 +3768,9 @@ The condition \( \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k} > 0 \) is k
         & = 0,
         \quad \forall i \in \set{0, 1, \ldots, m - 2}
         \\
-        \A_m \, \boldsymbol{\gamma}_i
+        \A_m \, \bfgamma_i
         & =
-        \boldsymbol{\delta}_i,
+        \bfdelta_i,
         \quad \forall i \in \set{0, 1, \ldots, m - 1}
     \end{align*}
     We need to show that the result holds true for \( k = m \), i.e.,
@@ -3779,9 +3779,9 @@ The condition \( \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k} > 0 \) is k
         & = 0,
         \quad \forall i \in \set{0, 1, \ldots, m - 1}
         \\
-        \A_{m+1} \, \boldsymbol{\gamma}_i
+        \A_{m+1} \, \bfgamma_i
         & =
-        \boldsymbol{\delta}_i,
+        \bfdelta_i,
         \quad \forall i \in \set{0, 1, \ldots, m}
     \end{align*}
 
@@ -3802,16 +3802,16 @@ The condition \( \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k} > 0 \) is k
         =
         \frac{1}{\alpha_i} \pbrac{\x^{i + 1} - \x^i}
         =
-        \frac{1}{\alpha_i} \boldsymbol{\delta}_i
+        \frac{1}{\alpha_i} \bfdelta_i
         \\
         \implies
         \qf{\u^m}{\Q}[\u^i]
         & =
-        -\frac{1}{\alpha_i} \qf{\grad{f}{\x^m}}{\A_m \Q}[\boldsymbol{\delta}_i]
+        -\frac{1}{\alpha_i} \qf{\grad{f}{\x^m}}{\A_m \Q}[\bfdelta_i]
         =
-        -\frac{1}{\alpha_i} \qf{\grad{f}{\x^m}}{\A_m}[\boldsymbol{\gamma}_i]
+        -\frac{1}{\alpha_i} \qf{\grad{f}{\x^m}}{\A_m}[\bfgamma_i]
         \\ & =
-        -\frac{1}{\alpha_i} \dotp{\grad{f}{\x^m}}{\boldsymbol{\delta}_i}
+        -\frac{1}{\alpha_i} \dotp{\grad{f}{\x^m}}{\bfdelta_i}
         =
         -\dotp{\grad{f}{\x^m}}{\u^i}
         = 0,
@@ -3822,9 +3822,9 @@ The condition \( \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k} > 0 \) is k
     Similarly, for any \( i \in \set{0, 1, \ldots, m - 1} \), we have
     \begin{align*}
         \implies
-        \dotp{\boldsymbol{\delta}_m}{\boldsymbol{\gamma}_i}
+        \dotp{\bfdelta_m}{\bfgamma_i}
         & =
-        \qf{\boldsymbol{\delta}_m}{\Q}[\boldsymbol{\delta}_i]
+        \qf{\bfdelta_m}{\Q}[\bfdelta_i]
         =
         \qf{\pbrac{\alpha_m \u^m}}{\Q}[\pbrac{\alpha_i \u^i}]
         =
@@ -3833,9 +3833,9 @@ The condition \( \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k} > 0 \) is k
         = 0
         \\
         \implies
-        \qf{\boldsymbol{\gamma}_m}{\A_m}[\boldsymbol{\gamma}_i]
+        \qf{\bfgamma_m}{\A_m}[\bfgamma_i]
         & =
-        \dotp{\boldsymbol{\gamma}_m}{\boldsymbol{\delta}_i}
+        \dotp{\bfgamma_m}{\bfdelta_i}
         =
         \dotp{\pbrac{\Q \u^m}}{\pbrac{\alpha_i \u^i}}
         =
@@ -3847,9 +3847,9 @@ The condition \( \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k} > 0 \) is k
     \begin{equation*}
         \implies
         \boxed{
-            \dotp{\boldsymbol{\delta}_m}{\boldsymbol{\gamma}_i}
+            \dotp{\bfdelta_m}{\bfgamma_i}
             =
-            \qf{\boldsymbol{\gamma}_m}{\A_m}[\boldsymbol{\gamma}_i]
+            \qf{\bfgamma_m}{\A_m}[\bfgamma_i]
             =
             0,
             \quad \forall i \in \set{0, 1, \ldots, m - 1}
@@ -3857,39 +3857,39 @@ The condition \( \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k} > 0 \) is k
     \end{equation*}
     \begin{equation*}
         \implies
-        \A_{m + 1} \, \boldsymbol{\gamma}_i
+        \A_{m + 1} \, \bfgamma_i
         =
         \pbrac{
             \A_m
             +
             \frac
-            {\outp{\boldsymbol{\delta}_m}{\boldsymbol{\delta}_m}}
-            {\dotp{\boldsymbol{\delta}_m}{\boldsymbol{\gamma}_m}}
+            {\outp{\bfdelta_m}{\bfdelta_m}}
+            {\dotp{\bfdelta_m}{\bfgamma_m}}
             -
             \frac
-            {\A_m \outp{\boldsymbol{\gamma}_m}{\boldsymbol{\gamma}_m} \A_m}
-            {\qf{\boldsymbol{\gamma}_m}{\A_m}}
-        } \, \boldsymbol{\gamma}_i
+            {\A_m \outp{\bfgamma_m}{\bfgamma_m} \A_m}
+            {\qf{\bfgamma_m}{\A_m}}
+        } \, \bfgamma_i
         =
-        \A_m \, \boldsymbol{\gamma}_i
+        \A_m \, \bfgamma_i
         =
-        \boldsymbol{\delta}_i,
+        \bfdelta_i,
         \quad \forall i \in \set{0, 1, \ldots, m - 1}
     \end{equation*}
 
     From the Quasi-Newton condition~\peqref{eq:quasi-newton-condition} for \( k = m \), we have
     \(
-        \A_{m + 1} \, \boldsymbol{\gamma}_m
+        \A_{m + 1} \, \bfgamma_m
         =
-        \boldsymbol{\delta}_m
+        \bfdelta_m
     \).
 
     Combining with the above result, we finally have
     \(
         \quad \therefore
-        \A_{m + 1} \, \boldsymbol{\gamma}_i
+        \A_{m + 1} \, \bfgamma_i
         =
-        \boldsymbol{\delta}_i,
+        \bfdelta_i,
         \quad \forall i \in \set{0, 1, \ldots, m}
     \).
 
@@ -3909,50 +3909,50 @@ Choose the update so that \( \A_k \) is symmetric, and
     \A_{k+1}
     =
     \A_k
-    + \beta_1 \, \outp{\boldsymbol{\delta}_k}{\boldsymbol{\delta}_k}
+    + \beta_1 \, \outp{\bfdelta_k}{\bfdelta_k}
     + \beta_2 \, \pbrac{
-        \boldsymbol{\delta}_k \dotp{\boldsymbol{\gamma}_k}{\A_k}
-        + \outp{\A_k \, \boldsymbol{\gamma}_k}{\boldsymbol{\delta}_k}
+        \bfdelta_k \dotp{\bfgamma_k}{\A_k}
+        + \outp{\A_k \, \bfgamma_k}{\bfdelta_k}
     }
-    + \beta_3 \, \A_k \outp{\boldsymbol{\gamma}_k}{\boldsymbol{\gamma}_k} \A_k,
+    + \beta_3 \, \A_k \outp{\bfgamma_k}{\bfgamma_k} \A_k,
     \quad \beta_1, \beta_2, \beta_3 \in \R
 \end{equation*}
 
 \begin{align*}
     \because
-    \boldsymbol{\delta}_k
+    \bfdelta_k
     & =
-    \A_{k+1} \, \boldsymbol{\gamma}_k
+    \A_{k+1} \, \bfgamma_k
     \\
     \implies
-    \boldsymbol{\delta}_k
-    - \A_k \, \boldsymbol{\gamma}_k
+    \bfdelta_k
+    - \A_k \, \bfgamma_k
     & =
-    \beta_1 \outp{\boldsymbol{\delta}_k}{\boldsymbol{\delta}_k} \boldsymbol{\gamma}_k
+    \beta_1 \outp{\bfdelta_k}{\bfdelta_k} \bfgamma_k
     + \beta_2 \pbrac{
-        \boldsymbol{\delta}_k \dotp{\boldsymbol{\gamma}_k}{\A_k} \boldsymbol{\gamma}_k
-        + \A_k \, \boldsymbol{\gamma}_k \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}
+        \bfdelta_k \dotp{\bfgamma_k}{\A_k} \bfgamma_k
+        + \A_k \, \bfgamma_k \dotp{\bfdelta_k}{\bfgamma_k}
     }
-    + \beta_3 \, \A_k \outp{\boldsymbol{\gamma}_k}{\boldsymbol{\gamma}_k} \A_k \boldsymbol{\gamma}_k
+    + \beta_3 \, \A_k \outp{\bfgamma_k}{\bfgamma_k} \A_k \bfgamma_k
     \\ & =
     \pbrac{
-        \beta_1 \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}
-        + \beta_2 \qf{\boldsymbol{\gamma}_k}{\A_k}
-    } \boldsymbol{\delta}_k
+        \beta_1 \dotp{\bfdelta_k}{\bfgamma_k}
+        + \beta_2 \qf{\bfgamma_k}{\A_k}
+    } \bfdelta_k
     + \pbrac{
-        \beta_2 \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}
-        + \beta_3 \qf{\boldsymbol{\gamma}_k}{\A_k}
-    } \A_k \, \boldsymbol{\gamma}_k
+        \beta_2 \dotp{\bfdelta_k}{\bfgamma_k}
+        + \beta_3 \qf{\bfgamma_k}{\A_k}
+    } \A_k \, \bfgamma_k
 \end{align*}
 
 \begin{align*}
     \implies
-    \beta_1 \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}
-    + \beta_2 \qf{\boldsymbol{\gamma}_k}{\A_k}
+    \beta_1 \dotp{\bfdelta_k}{\bfgamma_k}
+    + \beta_2 \qf{\bfgamma_k}{\A_k}
     & = 1
     \\
-    \beta_2 \dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}
-    + \beta_3 \qf{\boldsymbol{\gamma}_k}{\A_k}
+    \beta_2 \dotp{\bfdelta_k}{\bfgamma_k}
+    + \beta_3 \qf{\bfgamma_k}{\A_k}
     & = -1
 \end{align*}
 which is a system of 2 linear equations in 3 unknowns \( \beta_1, \beta_2, \beta_3 \), and hence has infinitely many solutions.
@@ -3962,16 +3962,16 @@ One such solution to the above system is
     \boxed{
         \beta_1
         =
-        \frac{1}{\dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}}
-        \pbrac{1 + \phi \, \frac{\qf{\boldsymbol{\gamma}_k}{\A_k}}{\dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}}},
+        \frac{1}{\dotp{\bfdelta_k}{\bfgamma_k}}
+        \pbrac{1 + \phi \, \frac{\qf{\bfgamma_k}{\A_k}}{\dotp{\bfdelta_k}{\bfgamma_k}}},
         \quad
         \beta_2
         =
-        -\frac{\phi}{\dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}},
+        -\frac{\phi}{\dotp{\bfdelta_k}{\bfgamma_k}},
         \quad
         \beta_3
         =
-        -\frac{\pbrac{1 - \phi}}{\qf{\boldsymbol{\gamma}_k}{\A_k}},
+        -\frac{\pbrac{1 - \phi}}{\qf{\bfgamma_k}{\A_k}},
         \quad
         \; \phi \in [0, 1]
     }
@@ -3985,50 +3985,50 @@ The Broyden family of updates is given by
     & =
     \A_k
     +
-    \frac{1}{\dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}}
-    \pbrac{1 + \phi \, \frac{\qf{\boldsymbol{\gamma}_k}{\A_k}}{\dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}}}
-    \, \outp{\boldsymbol{\delta}_k}{\boldsymbol{\delta}_k}
+    \frac{1}{\dotp{\bfdelta_k}{\bfgamma_k}}
+    \pbrac{1 + \phi \, \frac{\qf{\bfgamma_k}{\A_k}}{\dotp{\bfdelta_k}{\bfgamma_k}}}
+    \, \outp{\bfdelta_k}{\bfdelta_k}
     \\ & \qquad -
-    \frac{\phi}{\dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}}
+    \frac{\phi}{\dotp{\bfdelta_k}{\bfgamma_k}}
     \, \pbrac{
-        \boldsymbol{\delta}_k \dotp{\boldsymbol{\gamma}_k}{\A_k}
-        + \outp{\A_k \, \boldsymbol{\gamma}_k}{\boldsymbol{\delta}_k}
+        \bfdelta_k \dotp{\bfgamma_k}{\A_k}
+        + \outp{\A_k \, \bfgamma_k}{\bfdelta_k}
     }
     -
-    \frac{\pbrac{1 - \phi}}{\qf{\boldsymbol{\gamma}_k}{\A_k}}
-    \, \A_k \outp{\boldsymbol{\gamma}_k}{\boldsymbol{\gamma}_k} \A_k
+    \frac{\pbrac{1 - \phi}}{\qf{\bfgamma_k}{\A_k}}
+    \, \A_k \outp{\bfgamma_k}{\bfgamma_k} \A_k
     \\ & =
     \pbrac{
         \A_k
         +
         \frac
-        {\outp{\boldsymbol{\delta}_k}{\boldsymbol{\delta}_k}}
-        {\dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}}
+        {\outp{\bfdelta_k}{\bfdelta_k}}
+        {\dotp{\bfdelta_k}{\bfgamma_k}}
         -
         \frac
-        {\A_k \outp{\boldsymbol{\gamma}_k}{\boldsymbol{\gamma}_k} \A_k}
-        {\qf{\boldsymbol{\gamma}_k}{\A_k}}
+        {\A_k \outp{\bfgamma_k}{\bfgamma_k} \A_k}
+        {\qf{\bfgamma_k}{\A_k}}
     }
     \\ & \qquad +
     \phi \, \pbrac{
         \frac
-        {\qf{\boldsymbol{\gamma}_k}{\A_k}}
-        {\dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}}
+        {\qf{\bfgamma_k}{\A_k}}
+        {\dotp{\bfdelta_k}{\bfgamma_k}}
         \frac
-        {\outp{\boldsymbol{\delta}_k}{\boldsymbol{\delta}_k}}
-        {\dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}}
+        {\outp{\bfdelta_k}{\bfdelta_k}}
+        {\dotp{\bfdelta_k}{\bfgamma_k}}
         -
         \frac
         {
-            \boldsymbol{\delta}_k \dotp{\boldsymbol{\gamma}_k}{\A_k}
+            \bfdelta_k \dotp{\bfgamma_k}{\A_k}
             +
-            \outp{\A_k \, \boldsymbol{\gamma}_k}{\boldsymbol{\delta}_k}
+            \outp{\A_k \, \bfgamma_k}{\bfdelta_k}
         }
-        {\dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}}
+        {\dotp{\bfdelta_k}{\bfgamma_k}}
         +
         \frac
-        {\A_k \outp{\boldsymbol{\gamma}_k}{\boldsymbol{\gamma}_k} \A_k}
-        {\qf{\boldsymbol{\gamma}_k}{\A_k}}
+        {\A_k \outp{\bfgamma_k}{\bfgamma_k} \A_k}
+        {\qf{\bfgamma_k}{\A_k}}
     }
 \end{align*}
 \begin{equation*}
@@ -4042,15 +4042,15 @@ The Broyden family of updates is given by
         \quad
         \v
         =
-        \sqrt{\qf{\boldsymbol{\gamma}_k}{\A_k}}
+        \sqrt{\qf{\bfgamma_k}{\A_k}}
         \bbrac{
             \frac
-            {\boldsymbol{\delta}_k}
-            {\dotp{\boldsymbol{\delta}_k}{\boldsymbol{\gamma}_k}}
+            {\bfdelta_k}
+            {\dotp{\bfdelta_k}{\bfgamma_k}}
             -
             \frac
-            {\A_k \outp{\boldsymbol{\gamma}_k}{\boldsymbol{\gamma}_k} \A_k}
-            {\qf{\boldsymbol{\gamma}_k}{\A_k}}
+            {\A_k \outp{\bfgamma_k}{\bfgamma_k} \A_k}
+            {\qf{\bfgamma_k}{\A_k}}
         }
     }
 \end{equation*}
@@ -4064,7 +4064,7 @@ Thereby, the Broyden family is of the form
     \B_k
     =
     \begin{bmatrix}
-        \boldsymbol{\delta}_k & \A_k \, \boldsymbol{\gamma}_k
+        \bfdelta_k & \A_k \, \bfgamma_k
     \end{bmatrix}_{d \times 2},
     \quad
     \D
