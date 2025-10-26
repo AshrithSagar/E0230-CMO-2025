@@ -4,11 +4,12 @@
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
 \usepackage{amsfonts, amsmath, amssymb, amsthm, cancel, interval, latexsym, mathcommand, mathtools}
-\usepackage{booktabs, enumitem, geometry, graphicx, hyperref, microtype, titlesec, tocloft, xparse}
+\usepackage{booktabs, enumitem, geometry, graphicx, hyperref, makeidx, microtype, titlesec, tocloft, xparse}
 \usepackage[linesnumbered,ruled,vlined]{algorithm2e}
 \usepackage[most]{tcolorbox}
 \usepackage[numbers,sort]{natbib}
 \usepackage[dvipsnames]{xcolor}
+\usepackage[notion,quotation]{knowledge}
 
 \geometry{
     a4paper,
@@ -25,6 +26,7 @@
 }
 
 \raggedbottom{}
+\makeindex{}
 
 \makeatletter
 \renewcommand{\part}[1]{
@@ -89,6 +91,7 @@
 \newcommand{\palgref}[1]{(\hyperref[#1]{Alg.~\ref*{#1}})}
 
 \input{macros.tex}
+\input{knowledge.tex}
 
 \begin{document}
 
@@ -107,6 +110,8 @@
     \renewcommand{\bibname}{References}
     \bibliographystyle{IEEEtran}
     \bibliography{sections/references.bib}
+
+    \printindex{}
 }
 
 \end{document}

@@ -229,7 +229,7 @@ From the definition, we can see that the following holds true:
 
 \section{Optimisation standard form}\label{sec:constrained-optimisation-standard-form}
 
-An optimisation problem can be put into the following standard form
+A ""constrained optimisation problem"" can be put into the following standard form:
 \begin{align*}
     \minimize_{\x}
     \quad &
@@ -249,9 +249,9 @@ An optimisation problem can be put into the following standard form
 
     \item The functions \( g_i: \R^d \to \R, \; i \in \set{1, 2, \ldots, m}, \) and \( h_j: \R^d \to \R, \; j \in \set{1, 2, \ldots, p}, \) are called the \textbf{constraint functions}.
 
-    \item The constraints \( \func{g_i}{\x} \leq 0 \) are called \textbf{inequality constraints}.
+    \item \AP The constraints \( \func{g_i}{\x} \leq 0 \) are called \textbf{""inequality constraints""}.
 
-    \item The constraints \( \func{h_j}{\x} = 0 \) are called \textbf{equality constraints}.
+    \item \AP The constraints \( \func{h_j}{\x} = 0 \) are called \textbf{""equality constraints""}.
 
     \item If a point \( \x \in \R^d \) satisfies all the constraints, then it is called a \textbf{feasible point}.
 
@@ -277,7 +277,7 @@ An optimisation problem can be put into the following standard form
 \section{Lagrangian function}
 
 \begin{definition}{Lagrangian function}{}
-    The \textbf{Lagrangian} / \textbf{Lagrange function} \( \calL: \R^d \times \R^m \times \R^p \to \R \) associated with the constrained optimisation problem in~\psecref{sec:constrained-optimisation-standard-form} is defined as
+    The \textbf{Lagrangian} / \textbf{Lagrange function} \( \calL: \R^d \times \R^m \times \R^p \to \R \) associated with the "constrained optimisation problem" in~\psecref{sec:constrained-optimisation-standard-form} is defined as
     \vspace{-0.5em}
     \begin{equation*}
         \func{\calL}{\x, \bflambda, \bfmu}
@@ -296,7 +296,7 @@ The variables \( \lambda_i, \; i \in \set{1, 2, \ldots, m}, \) and \( \mu_j, \; 
 
 \section{Karush-Kuhn-Tucker (KKT) conditions}\label{sec:kkt-conditions}
 
-Consider the constrained optimisation problem as in~\psecref{sec:constrained-optimisation-standard-form} where \( f, g_i, h_j \) are differentiable functions.
+Consider the "constrained optimisation problem" as in~\psecref{sec:constrained-optimisation-standard-form} where \( f, g_i, h_j \) are differentiable functions.
 Let \( \xstar \) be a local minimum and suppose that the gradients of the active constraints at \( \xstar \) are linearly independent.
 Then, there exist \( \lambda_i \geq 0, \; i \in \set{1, 2, \ldots, m}, \ \mu_j \in \R, \; j \in \set{1, 2, \ldots, p} \) such that
 \begin{align*}
@@ -336,13 +336,13 @@ Then, there exist \( \lambda_i \geq 0, \; i \in \set{1, 2, \ldots, m}, \ \mu_j \
 
 \section{Primal problem}
 
-Consider the constrained optimisation problem as in~\psecref{sec:constrained-optimisation-standard-form}, referred to as the \textbf{primal problem}.
+Consider the "constrained optimisation problem" as in~\psecref{sec:constrained-optimisation-standard-form}, referred to as the \textbf{primal problem}.
 The \textbf{primal variables} are the variables \( \x \in \R^d \) being optimised.
 
 \section{Lagrange dual function}
 
 \begin{definition}{Lagrange dual function}{}
-    The \textbf{Lagrange dual function} \( q: \R^m \times \R^p \to \R \) associated with the constrained optimisation problem in~\psecref{sec:constrained-optimisation-standard-form} is defined as
+    The \textbf{Lagrange dual function} \( q: \R^m \times \R^p \to \R \) associated with the "constrained optimisation problem" in~\psecref{sec:constrained-optimisation-standard-form} is defined as
     \begin{equation*}
         \func{q}{\bflambda, \bfmu}
         \triangleq
@@ -420,7 +420,7 @@ The corresponding \textbf{Lagrange dual problem} of the primal problem in~\psecr
     \quad \subjectto \quad
     \func{f_i}{\x} \leq 0, \quad i \in \set{1, 2, \ldots, m}
 \end{equation*}
-where \( f, \,\, f_i, \, i \in \set{1, 2, \dots, m} \) are convex functions is called a \textbf{convex programming} problem.
+where \( f, \,\, f_i, \, i \in \set{1, 2, \dots, m} \) are "convex functions" is called a \textbf{""convex programming""} problem.
 
 For a convex programming problem satisfying the Slater's conditions, if \( \xstar \) and \( \bflambda^{\star} \) are optimal solutions of the primal and dual problems respectively, then the KKT conditions~\psecref{sec:kkt-conditions} are necessary and sufficient for optimality.
 
@@ -471,8 +471,19 @@ KKT conditions:
 
 \section{Quadratic programming (QP)}
 
+A \textbf{""quadratic programming""} problem is an optimisation problem where the objective function is a quadratic function and the constraints are linear.
+\begin{align*}
+    \minimize_{\x}
+    \quad &
+    \half \qf{\x}{\Q} + \dotp{\h}{\x} + c
+    \\ \subjectto \quad &
+    \A \x \leq \b
+\end{align*}
+where \( \Q \in \SD, \; \h \in \R^d, \; c \in \R, \; \A \in \R^{m \times d}, \; \b \in \R^m \).
+
 \subsection{Convex Equality Quadratic Programming (CEQP)}\label{sec:ceqp}
 
+A ""CEQP"" problem is a "convex@CP" "quadratic programming" problem with only "equality constraints".
 \begin{align*}
     \minimize_{\x}
     \quad &
@@ -511,6 +522,7 @@ KKT conditions:
 
 \subsection{Convex Inequality Quadratic Programming (CIQP)}\label{sec:ciqp}
 
+A ""CIQP"" problem is a "convex@CP" "quadratic programming" problem with only "inequality constraints".
 \begin{align*}
     \minimize_{\x}
     \quad &
@@ -567,7 +579,7 @@ The active set is updated based on the solution obtained at each iteration until
 \end{equation*}
 
 \begin{theorem}{Equivalence of CIQP and CEQP at optimality}{}
-    The CEQP~\psecref{sec:ceqp} built from the active set of a (strongly convex) CIQP~\psecref{sec:ciqp} at its optimal solution has the same optimal solution as the CIQP, i.e., given a (strongly convex) CIQP with an optimal solution \( (\xstar, \bflambda^\ast) \), the solution to the following CEQP with the active set \( \func{\calA}{\xstar} \) is \( (\xstar, \bfmu^\ast) \), where \( \bfmu^\ast = \bbrac{\bflambda^\ast}_j, \; \forall j \in \func{\calA}{\xstar} \).
+    The "CEQP" built from the active set of a (strongly convex) "CIQP" at its optimal solution has the same optimal solution as the CIQP, i.e., given a (strongly convex) CIQP with an optimal solution \( (\xstar, \bflambda^\ast) \), the solution to the following CEQP with the active set \( \func{\calA}{\xstar} \) is \( (\xstar, \bfmu^\ast) \), where \( \bfmu^\ast = \bbrac{\bflambda^\ast}_j, \; \forall j \in \func{\calA}{\xstar} \).
     \vspace{-0.5em}
     \begin{equation*}
         \begin{aligned}
@@ -668,7 +680,7 @@ The active set is updated based on the solution obtained at each iteration until
 
 \begin{algorithm}[H]
     \caption{
-        Active set method for (strongly convex) CIQP~\psecref{sec:ciqp} using CEQP~\psecref{sec:ceqp}
+        Active set method for (strongly convex) "CIQP" using "CEQP"
         \begin{align*}
             \minimize_{\x}
             \quad &
