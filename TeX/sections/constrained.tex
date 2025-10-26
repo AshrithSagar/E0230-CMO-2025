@@ -274,13 +274,6 @@ An optimisation problem can be put into the following standard form
     \item The case \( m = 0 \) corresponds to having no inequality constraints, the case \( p = 0 \) corresponds to having no equality constraints, and the case \( m = p = 0 \) corresponds to an unconstrained optimisation problem.
 \end{itemize}
 
-\chapter{Duality}
-
-\section{Primal problem}
-
-Consider the constrained optimisation problem as in~\psecref{sec:constrained-optimisation-standard-form}, referred to as the \textbf{primal problem}.
-The \textbf{primal variables} are the variables \( \x \in \R^d \) being optimised.
-
 \section{Lagrangian function}
 
 \begin{definition}{Lagrangian function}{}
@@ -300,52 +293,6 @@ The \textbf{primal variables} are the variables \( \x \in \R^d \) being optimise
 \subsection{Lagrange multipliers}
 
 The variables \( \lambda_i, \; i \in \set{1, 2, \ldots, m}, \) and \( \mu_j, \; j \in \set{1, 2, \ldots, p}, \) are called the \textbf{Lagrange multipliers} / \textbf{dual variables} associated with the inequality and equality constraints respectively.
-
-\section{Lagrange dual function}
-
-\begin{definition}{Lagrange dual function}{}
-    The \textbf{Lagrange dual function} \( q: \R^m \times \R^p \to \R \) associated with the constrained optimisation problem in~\psecref{sec:constrained-optimisation-standard-form} is defined as
-    \begin{equation*}
-        \func{q}{\bflambda, \bfmu}
-        \triangleq
-        \min_{\x} \func{\calL}{\x, \bflambda, \bfmu}
-    \end{equation*}
-\end{definition}
-
-\section{Lagrange dual problem}
-
-The corresponding \textbf{Lagrange dual problem} of the primal problem in~\psecref{sec:constrained-optimisation-standard-form} is given by
-\begin{align*}
-    \maximize_{\bflambda, \bfmu} \quad &
-    \func{q}{\bflambda, \bfmu}
-    \\ \subjectto \quad &
-    \lambda_i \geq 0,
-    \quad i \in \set{1, 2, \ldots, m}
-\end{align*}
-
-\section{Weak duality}
-
-\begin{theorem}{Weak duality}{}
-    If \( \xhat \) and \( (\hat{\bflambda}, \hat{\bfmu}) \) are any feasible solutions of the primal and dual problems respectively, then
-    \vspace{-0.5em}
-    \begin{equation*}
-        \func{q}{\hat{\bflambda}, \hat{\bfmu}}
-        \leq
-        \func{f}{\xhat}
-    \end{equation*}
-\end{theorem}
-
-\section{Strong duality}
-
-\begin{theorem}{Strong duality}{}
-    For a convex primal problem satisfying the Slater's conditions, if \( \xstar \) and \( (\bflambda^{\star}, \bfmu^{\star}) \) are optimal solutions of the primal and dual problems respectively, then
-    \vspace{-0.5em}
-    \begin{equation*}
-        \func{f}{\xstar}
-        =
-        \func{q}{\bflambda^{\star}, \bfmu^{\star}}
-    \end{equation*}
-\end{theorem}
 
 \section{Karush-Kuhn-Tucker (KKT) conditions}\label{sec:kkt-conditions}
 
@@ -385,9 +332,88 @@ Then, there exist \( \lambda_i \geq 0, \; i \in \set{1, 2, \ldots, m}, \ \mu_j \
     \tag{complementary slackness}
 \end{align*}
 
-\chapter{Constrained optimisation problem classes}
+\chapter{Duality}
 
-\section{Convex programming (CP)}
+\section{Primal problem}
+
+Consider the constrained optimisation problem as in~\psecref{sec:constrained-optimisation-standard-form}, referred to as the \textbf{primal problem}.
+The \textbf{primal variables} are the variables \( \x \in \R^d \) being optimised.
+
+\section{Lagrange dual function}
+
+\begin{definition}{Lagrange dual function}{}
+    The \textbf{Lagrange dual function} \( q: \R^m \times \R^p \to \R \) associated with the constrained optimisation problem in~\psecref{sec:constrained-optimisation-standard-form} is defined as
+    \begin{equation*}
+        \func{q}{\bflambda, \bfmu}
+        \triangleq
+        \min_{\x} \func{\calL}{\x, \bflambda, \bfmu}
+    \end{equation*}
+\end{definition}
+
+\section{Lagrange dual problem}
+
+The corresponding \textbf{Lagrange dual problem} of the primal problem in~\psecref{sec:constrained-optimisation-standard-form} is given by
+\begin{align*}
+    \maximize_{\bflambda, \bfmu} \quad &
+    \func{q}{\bflambda, \bfmu}
+    \\ \subjectto \quad &
+    \lambda_i \geq 0,
+    \quad i \in \set{1, 2, \ldots, m}
+\end{align*}
+
+\section{Weak duality}
+
+\begin{theorem}{Weak duality}{}
+    If \( \xhat \) and \( (\hat{\bflambda}, \hat{\bfmu}) \) are any feasible solutions of the primal and dual problems respectively, then
+    \vspace{-0.5em}
+    \begin{equation*}
+        \func{q}{\hat{\bflambda}, \hat{\bfmu}}
+        \leq
+        \func{f}{\xhat}
+    \end{equation*}
+\end{theorem}
+
+\begin{proof}
+    Since \( \xhat \) is feasible for the primal problem, we have
+    \begin{equation*}
+        \func{g_i}{\xhat} \leq 0,
+        \quad i \in \set{1, 2, \ldots, m},
+        \qquad
+        \func{h_j}{\xhat} = 0,
+        \quad j \in \set{1, 2, \ldots, p}
+    \end{equation*}
+    and since \( (\hat{\bflambda}, \hat{\bfmu}) \) is feasible for the dual problem, we have \( \hat{\lambda}_i \geq 0, \; i \in \set{1, 2, \ldots, m} \).
+    Thus,
+    \begin{equation*}
+        \func{q}{\hat{\bflambda}, \hat{\bfmu}}
+        =
+        \min_{\x} \func{\calL}{\x, \hat{\bflambda}, \hat{\bfmu}}
+        \leq
+        \func{\calL}{\xhat, \hat{\bflambda}, \hat{\bfmu}}
+        =
+        \func{f}{\xhat}
+        +
+        \sum_{i = 1}^{m} \hat{\lambda}_i \, \func{g_i}{\xhat}
+        +
+        \cancel{ \sum_{j = 1}^{p} \hat{\mu}_j \, \func{h_j}{\xhat} }
+        \leq
+        \func{f}{\xhat}
+    \end{equation*}
+\end{proof}
+
+\section{Strong duality}
+
+\begin{theorem}{Strong duality}{}
+    For a convex primal problem satisfying the Slater's conditions, if \( \xstar \) and \( (\bflambda^{\star}, \bfmu^{\star}) \) are optimal solutions of the primal and dual problems respectively, then
+    \vspace{-0.5em}
+    \begin{equation*}
+        \func{f}{\xstar}
+        =
+        \func{q}{\bflambda^{\star}, \bfmu^{\star}}
+    \end{equation*}
+\end{theorem}
+
+\chapter{Convex programming (CP)}
 
 \begin{equation*}
     \minimize_{\x} \func{f}{\x}
