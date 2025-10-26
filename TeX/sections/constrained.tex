@@ -229,7 +229,7 @@ From the definition, we can see that the following holds true:
 
 \section{Optimisation standard form}\label{sec:constrained-optimisation-standard-form}
 
-A ""constrained optimisation problem"" can be put into the following standard form:
+An ""optimisation problem@constrained optimisation problem"" can be put into the following standard form:
 \begin{align*}
     \minimize_{\x}
     \quad &
@@ -277,7 +277,7 @@ A ""constrained optimisation problem"" can be put into the following standard fo
 \section{Lagrangian function}
 
 \begin{definition}{Lagrangian function}{}
-    The \textbf{Lagrangian} / \textbf{Lagrange function} \( \calL: \R^d \times \R^m \times \R^p \to \R \) associated with the "constrained optimisation problem" in~\psecref{sec:constrained-optimisation-standard-form} is defined as
+    The ""\textbf{Lagrangian} / \textbf{Lagrange function}@Lagrange function"" \( \calL: \R^d \times \R^m \times \R^p \to \R \) associated with the "constrained optimisation problem" in~\psecref{sec:constrained-optimisation-standard-form} is defined as
     \vspace{-0.5em}
     \begin{equation*}
         \func{\calL}{\x, \bflambda, \bfmu}
@@ -296,6 +296,7 @@ The variables \( \lambda_i, \; i \in \set{1, 2, \ldots, m}, \) and \( \mu_j, \; 
 
 \section{Karush-Kuhn-Tucker (KKT) conditions}\label{sec:kkt-conditions}
 
+\nointro{KKT conditions}
 Consider the "constrained optimisation problem" as in~\psecref{sec:constrained-optimisation-standard-form} where \( f, g_i, h_j \) are differentiable functions.
 Let \( \xstar \) be a local minimum and suppose that the gradients of the active constraints at \( \xstar \) are linearly independent.
 Then, there exist \( \lambda_i \geq 0, \; i \in \set{1, 2, \ldots, m}, \ \mu_j \in \R, \; j \in \set{1, 2, \ldots, p} \) such that
@@ -422,7 +423,7 @@ The corresponding \textbf{Lagrange dual problem} of the primal problem in~\psecr
 \end{equation*}
 where \( f, \,\, f_i, \, i \in \set{1, 2, \dots, m} \) are "convex functions" is called a \textbf{""convex programming""} problem.
 
-For a convex programming problem satisfying the Slater's conditions, if \( \xstar \) and \( \bflambda^{\star} \) are optimal solutions of the primal and dual problems respectively, then the KKT conditions~\psecref{sec:kkt-conditions} are necessary and sufficient for optimality.
+For a convex programming problem satisfying the Slater's conditions, if \( \xstar \) and \( \bflambda^{\star} \) are optimal solutions of the primal and dual problems respectively, then the "KKT conditions"~\psecref{sec:kkt-conditions} are necessary and sufficient for optimality.
 
 \section{Linear programming (LP)}
 
@@ -435,7 +436,7 @@ For a convex programming problem satisfying the Slater's conditions, if \( \xsta
 \end{align*}
 where \( \c \in \R^d, \; \A \in \R^{m \times d}, \; \b \in \R^m \).
 
-The Lagrangian function is given by
+The "Lagrangian function" is given by
 \begin{align*}
     \func{\calL}{\x, \bflambda}
     & =
@@ -449,7 +450,7 @@ The Lagrangian function is given by
     \c - \dotp{\A}{\bflambda}
 \end{align*}
 
-KKT conditions:
+"KKT conditions":
 \begin{align*}
     \func{\nabla_{\x} \calL}{\xstar, \bflambda^\ast}
     & =
@@ -493,7 +494,7 @@ A ""CEQP"" problem is a "convex@CP" "quadratic programming" problem with only "e
 \end{align*}
 where \( \Q \in \PSD, \; \h \in \R^d, \; \A \in \R^{m \times d}, \; \b \in \R^m \).
 
-The Lagrangian function is given by
+The "Lagrangian function" is given by
 \begin{align*}
     \func{\calL}{\x, \bfmu}
     & =
@@ -507,7 +508,7 @@ The Lagrangian function is given by
     \Q \x + \h - \dotp{\A}{\bfmu}
 \end{align*}
 
-KKT conditions:
+"KKT conditions":
 \begin{align*}
     \func{\nabla_{\x} \calL}{\xstar, \bfmu^\ast}
     & =
@@ -532,7 +533,7 @@ A ""CIQP"" problem is a "convex@CP" "quadratic programming" problem with only "i
 \end{align*}
 where \( \Q \in \PSD, \; \h \in \R^d, \; \A \in \R^{m \times d}, \; \b \in \R^m \).
 
-The Lagrangian function is given by
+The "Lagrangian function" is given by
 \begin{align*}
     \func{\calL}{\x, \bflambda}
     & =
@@ -546,7 +547,7 @@ The Lagrangian function is given by
     \Q \x + \h - \dotp{\A}{\bflambda}
 \end{align*}
 
-KKT conditions:
+"KKT conditions":
 \begin{align*}
     \func{\nabla_{\x} \calL}{\xstar, \bflambda^\ast}
     & =
@@ -603,9 +604,9 @@ The active set is updated based on the solution obtained at each iteration until
 \end{theorem}
 
 \begin{proof}
-    The proof follows from the KKT conditions of the CIQP and CEQP.
+    The proof follows from the "KKT conditions" of the CIQP and CEQP.
 
-    Since \( (\xstar, \bflambda^\ast) \) is an optimal solution of the CIQP, we have from the KKT conditions that
+    Since \( (\xstar, \bflambda^\ast) \) is an optimal solution of the CIQP, we have from the "KKT conditions" that
     \begin{align*}
         \Q \xstar + \h - \sum_{i = 1}^{m} \bbrac{\bflambda^\ast}_i \, \a_i
         & =
@@ -656,7 +657,7 @@ The active set is updated based on the solution obtained at each iteration until
     \end{align*}
 
     For the CEQP constructed from the active set \( \func{\calA}{\xstar} \), let \( (\xhat, \hat{\bfmu}) \) be its optimal solution, and let \( p = \func{\#}{\func{\calA}{\xstar}} \).
-    From the KKT conditions of the CEQP, we have
+    From the "KKT conditions" of the CEQP, we have
     \begin{align*}
         \Q \xhat + \h - \sum_{
             \substack{
@@ -674,7 +675,7 @@ The active set is updated based on the solution obtained at each iteration until
         \quad &
         \forall j \in \func{\calA}{\xstar}
     \end{align*}
-    Thereby, the mapping \( \R^p \leftarrow \R_{\geq 0}^m \) defined by \( \bbrac{\hat{\bfmu}}_i \leftarrow \bbrac{\bflambda^\ast}_j, \; \forall j \in \func{\calA}{\xstar} \) and \( \xhat = \xstar \) satisfies the KKT conditions of the CEQP;
+    Thereby, the mapping \( \R^p \leftarrow \R_{\geq 0}^m \) defined by \( \bbrac{\hat{\bfmu}}_i \leftarrow \bbrac{\bflambda^\ast}_j, \; \forall j \in \func{\calA}{\xstar} \) and \( \xhat = \xstar \) satisfies the "KKT conditions" of the CEQP;
     \( \therefore (\xstar, \bfmu^\ast) \) is an optimal solution of the CEQP where \( \bfmu^\ast = \bbrac{\bflambda^\ast}_j, \; \forall j \in \func{\calA}{\xstar} \).
 \end{proof}
 
