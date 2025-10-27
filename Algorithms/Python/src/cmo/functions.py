@@ -59,6 +59,24 @@ class Function(ABC):
         raise NotImplementedError
 
 
+class LinearFunction(Function):
+    """A linear function of the form `f(x) = c^T x`"""
+
+    def __init__(self, dim: int, c: floatVec):
+        self.c: floatVec = np.asarray(c, dtype=np.float64)
+        assert self.c.shape == (dim,), "c must be of shape (dim,)."
+        super().__init__(dim=dim)
+
+    def eval(self, x: floatVec) -> float:
+        return float(self.c.T @ x)
+
+    def grad(self, x: floatVec) -> floatVec:
+        return self.c
+
+    def hess(self, x: floatVec) -> floatMat:
+        return np.zeros((self.dim, self.dim))
+
+
 class ConvexQuadratic(Function):
     """A convex quadratic function of the form `f(x) = 0.5 * x^T Q x + h^T x`"""
 

@@ -4,12 +4,14 @@ Problem classes
 src/cmo/problems.py
 """
 
+from typing import Sequence, Union
+
 from .constraint import (
     AbstractConstraint,
     LinearEqualityConstraint,
     LinearInequalityConstraint,
 )
-from .functions import ConvexQuadratic, Function
+from .functions import ConvexQuadratic, Function, LinearFunction
 from .oracle import AbstractOracle
 from .types import floatVec
 
@@ -29,17 +31,45 @@ class ConstrainedProblem(AbstractProblem):
         self,
         objective: Function,
         oracle: type[AbstractOracle],
-        constraints: list[AbstractConstraint],
+        constraints: Sequence[AbstractConstraint],
     ):
         super().__init__(objective, oracle)
-        self.constraints = constraints
+        self.constraints: Sequence[AbstractConstraint] = constraints
 
     def is_feasible(self, x: floatVec) -> bool:
         """Checks if point `x` satisfies all constraints."""
         return all(constraint.is_satisfied(x) for constraint in self.constraints)
 
 
-class CEQP(ConstrainedProblem):
+class LinearProgram(ConstrainedProblem):
+    """A class representing linear programming problems."""
+
+    def __init__(
+        self,
+        objective: LinearFunction,
+        oracle: type[AbstractOracle],
+        constraints: Sequence[
+            Union[LinearEqualityConstraint, LinearInequalityConstraint]
+        ],
+    ):
+        super().__init__(objective, oracle, constraints)
+
+
+class QuadraticProgram(ConstrainedProblem):
+    """A class representing quadratic programming problems."""
+
+    def __init__(
+        self,
+        objective: ConvexQuadratic,
+        oracle: type[AbstractOracle],
+        constraints: Sequence[
+            Union[LinearEqualityConstraint, LinearInequalityConstraint]
+        ],
+    ):
+        super().__init__(objective, oracle, constraints)
+
+
+class EqualityConstrainedQuadraticProgram(QuadraticProgram):
     """A class representing convex equality quadratic problems."""
 
     def __init__(
@@ -51,7 +81,7 @@ class CEQP(ConstrainedProblem):
         super().__init__(objective, oracle, [constraint])
 
 
-class CIQP(ConstrainedProblem):
+class InequalityConstrainedQuadraticProgram(QuadraticProgram):
     """A class representing convex inequality quadratic problems."""
 
     def __init__(
