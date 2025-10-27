@@ -4,90 +4,45 @@ Problem classes
 src/cmo/problems.py
 """
 
-from typing import Sequence, Union
-
 from .constraint import (
     AbstractConstraint,
+    LinearConstraint,
     LinearEqualityConstraint,
     LinearInequalityConstraint,
 )
 from .functions import ConvexQuadratic, Function, LinearFunction
 from .oracle import AbstractOracle
-from .types import floatVec
 
 
-class AbstractProblem:
+class AbstractProblem[F: Function]:
     """A base class for optimisation problems."""
 
-    def __init__(self, objective: Function, oracle: type[AbstractOracle]):
-        self.objective: Function = objective
+    def __init__(self, objective: F, oracle: type[AbstractOracle]):
+        self.objective = objective
         self.oracle = oracle(objective)
 
 
-class ConstrainedProblem(AbstractProblem):
+class ConstrainedProblem[F: Function, C: AbstractConstraint](AbstractProblem[F]):
     """A class representing constrained optimisation problems."""
 
-    def __init__(
-        self,
-        objective: Function,
-        oracle: type[AbstractOracle],
-        constraints: Sequence[AbstractConstraint],
-    ):
+    def __init__(self, objective: F, oracle: type[AbstractOracle], constraint: C):
         super().__init__(objective, oracle)
-        self.constraints: Sequence[AbstractConstraint] = constraints
-
-    def is_feasible(self, x: floatVec) -> bool:
-        """Checks if point `x` satisfies all constraints."""
-        return all(constraint.is_satisfied(x) for constraint in self.constraints)
+        self.constraint = constraint
 
 
-class LinearProgram(ConstrainedProblem):
+class LinearProgram[C: LinearConstraint](ConstrainedProblem[LinearFunction, C]):
     """A class representing linear programming problems."""
 
-    def __init__(
-        self,
-        objective: LinearFunction,
-        oracle: type[AbstractOracle],
-        constraints: Sequence[
-            Union[LinearEqualityConstraint, LinearInequalityConstraint]
-        ],
-    ):
-        super().__init__(objective, oracle, constraints)
+
+class QuadraticProgram[C: LinearConstraint](ConstrainedProblem[ConvexQuadratic, C]):
+    """A class representing convex quadratic programming problems."""
 
 
-class QuadraticProgram(ConstrainedProblem):
-    """A class representing quadratic programming problems."""
-
-    def __init__(
-        self,
-        objective: ConvexQuadratic,
-        oracle: type[AbstractOracle],
-        constraints: Sequence[
-            Union[LinearEqualityConstraint, LinearInequalityConstraint]
-        ],
-    ):
-        super().__init__(objective, oracle, constraints)
+class EqualityConstrainedQuadraticProgram(QuadraticProgram[LinearEqualityConstraint]):
+    """A class representing convex equality-constrained quadratic programming problems."""
 
 
-class EqualityConstrainedQuadraticProgram(QuadraticProgram):
-    """A class representing convex equality quadratic problems."""
-
-    def __init__(
-        self,
-        objective: ConvexQuadratic,
-        oracle: type[AbstractOracle],
-        constraint: LinearEqualityConstraint,
-    ):
-        super().__init__(objective, oracle, [constraint])
-
-
-class InequalityConstrainedQuadraticProgram(QuadraticProgram):
-    """A class representing convex inequality quadratic problems."""
-
-    def __init__(
-        self,
-        objective: ConvexQuadratic,
-        oracle: type[AbstractOracle],
-        constraint: LinearInequalityConstraint,
-    ):
-        super().__init__(objective, oracle, [constraint])
+class InequalityConstrainedQuadraticProgram(
+    QuadraticProgram[LinearInequalityConstraint]
+):
+    """A class representing convex inequality-constrained quadratic programming problems."""
