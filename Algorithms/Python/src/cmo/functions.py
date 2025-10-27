@@ -1,7 +1,7 @@
 """
-src/functions.py
-=======
 Optimisation test problems
+=======
+src/cmo/functions.py
 
 References
 -------

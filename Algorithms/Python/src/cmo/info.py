@@ -1,7 +1,7 @@
 """
-src/info.py
-=======
 Info structures
+=======
+src/cmo/info.py
 """
 
 from dataclasses import dataclass, field

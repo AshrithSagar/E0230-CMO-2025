@@ -1,7 +1,7 @@
 """
-src/utils.py
-=======
 Utilities
+=======
+src/cmo/utils.py
 """
 
 import numpy as np

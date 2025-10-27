@@ -1,7 +1,7 @@
 """
-src/stopping.py
-=======
 Stopping criteria
+=======
+src/cmo/stopping.py
 """
 
 from abc import ABC, abstractmethod

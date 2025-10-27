@@ -3,17 +3,17 @@ tests/test_rosenbrock.py
 """
 
 import numpy as np
-from src.base import IterativeOptimiser
-from src.functions import Rosenbrock
-from src.optimisers import (
+from cmo.base import IterativeOptimiser
+from cmo.functions import Rosenbrock
+from cmo.optimisers import (
     BFGSUpdate,
     DFPUpdate,
     GradientDescent,
     NewtonMethod,
     SR1Update,
 )
-from src.oracle import AbstractOracle, FirstOrderOracle, SecondOrderOracle
-from src.stopping import GradientNormCriterion, MaxIterationsCriterion
+from cmo.oracle import AbstractOracle, FirstOrderOracle, SecondOrderOracle
+from cmo.stopping import GradientNormCriterion, MaxIterationsCriterion
 
 
 def test_rosenbrock():

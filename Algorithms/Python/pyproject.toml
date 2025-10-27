@@ -1,10 +1,10 @@
 [project]
-name = "E0230-CMO-2025"
-version = "0.1.1"
-description = "Algorithms"
+name = "cmo"
+version = "0.1.2"
+description = "Optimisation algorithms"
 authors = [{ name = "Ashrith Sagar", email = "ashrithy@iisc.ac.in" }]
 readme = "./README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.14"
 dependencies = [
     "matplotlib>=3.10.7",
     "numpy>=2.3.4",
@@ -13,11 +13,8 @@ dependencies = [
 ]
 
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+requires = ["uv_build>=0.9.5,<0.10.0"]
+build-backend = "uv_build"
 
 [dependency-groups]
 dev = ["jupyter>=1.1.1", "pytest>=8.4.2", "pytest-memray>=1.8.0"]
-
-[tool.hatch.build.targets.wheel]
-packages = ["src"]

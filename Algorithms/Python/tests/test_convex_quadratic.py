@@ -3,10 +3,10 @@ tests/test_convex_quadratic.py
 """
 
 import numpy as np
-from src.functions import ConvexQuadratic
-from src.optimisers import ConjugateGradientMethod
-from src.oracle import FirstOrderOracle
-from src.stopping import GradientNormCriterion, MaxIterationsCriterion
+from cmo.functions import ConvexQuadratic
+from cmo.optimisers import ConjugateGradientMethod
+from cmo.oracle import FirstOrderOracle
+from cmo.stopping import GradientNormCriterion, MaxIterationsCriterion
 
 
 def test_convex_quadratic():

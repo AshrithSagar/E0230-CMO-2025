@@ -1,7 +1,7 @@
 """
-src/problems.py
-=======
 Problem classes
+=======
+src/cmo/problems.py
 """
 
 from .constraint import (

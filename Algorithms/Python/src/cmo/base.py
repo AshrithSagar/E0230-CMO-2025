@@ -1,7 +1,7 @@
 """
-src/base.py
-=======
 Algorithm base and mixin classes.
+=======
+src/cmo/base.py
 
 References
 -------

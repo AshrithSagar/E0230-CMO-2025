@@ -1,7 +1,7 @@
 """
-src/optimisers.py
-=======
 Optimisation algorithms.
+=======
+src/cmo/optimisers.py
 
 References
 -------

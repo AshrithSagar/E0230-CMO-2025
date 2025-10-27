@@ -1,7 +1,7 @@
 """
-src/constraint.py
-=======
 Constraint utils
+=======
+src/cmo/constraint.py
 """
 
 from abc import ABC, abstractmethod

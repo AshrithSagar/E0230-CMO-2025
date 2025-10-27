@@ -1,7 +1,7 @@
 """
-src/types.py
-=======
 Type aliases and utility types
+=======
+src/cmo/types.py
 """
 
 from typing import TypeAlias
