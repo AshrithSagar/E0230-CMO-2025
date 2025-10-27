@@ -713,7 +713,7 @@ The active set is updated based on the solution obtained at each iteration until
     \SetAlgoLined{}
     \KwIn{
         Initial point \( \x^0 \) feasible for the CIQP problem;\\
-        Initial active set \( \calW_0 \subseteq \func{\calA}{\x^0} \subseteq \set{1, 2, \ldots, m} \);
+        Initial (ordered) active set \( \calW_0 \subseteq \func{\calA}{\x^0} \subseteq \set{1, 2, \ldots, m} \);
     }
     \KwOut{
         Minimiser \( \xstar \) and the corresponding Lagrange multipliers \( \bflambda^\ast \) for the CIQP problem\;
@@ -738,11 +738,27 @@ The active set is updated based on the solution obtained at each iteration until
         \vspace{-0.5em}
         \eIf{\( \v_k = \zero \)}{
             \eIf{\( \bfmu_k \geq \zero \)}{
-                Optimality conditions met\;
+                \tcp{Optimality conditions met;}
 
-                \Return{\( \x^k, \, \bfmu_k \)\;}
+                \( \xstar = \x^k \)\;
+
+                Get \( \bflambda^\ast \in \R^m \) as
+                \quad
+                \(
+                    \bbrac{\bflambda^\ast}_i
+                    =
+                    \begin{cases}
+                        \bbrac{\bfmu_k}_{\func{\operatorname{index}\,}{i, \calW_k}},
+                        & i \in \calW_k
+                        \\
+                        0,
+                        & i \in \set{1, 2, \ldots, m} \setminus \calW_k
+                    \end{cases}
+                \)\;
+
+                \Return{\( \xstar, \, \bflambda^\ast \)\;}
             }{
-                Relax the most restrictive active constraint\;
+                \tcp{Relax the most restrictive active constraint;}
 
                 \( \x^{k+1} = \x^k \)\;
 
@@ -762,7 +778,7 @@ The active set is updated based on the solution obtained at each iteration until
             }
         }{
             \eIf{\( \dotp{\a_i}{\v_k} \geq 0, \; \forall i \in \set{1, 2, \ldots, m} \setminus \calW_k \)}{
-                All inactive constraints still remain feasible when taking a full step along \( \v_k \)\;
+                \tcp{All inactive constraints still remain feasible when taking a full step along \( \v_k \);}
 
                 \( \x^{k+1} = \x^k + \v_k \)\;
 
