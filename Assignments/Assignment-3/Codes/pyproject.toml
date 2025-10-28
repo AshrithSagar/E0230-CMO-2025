@@ -1,0 +1,17 @@
+[project]
+name = "CMO2025A3"
+version = "0.1.0"
+description = "E0230-CMO-2025 Assignment-3"
+authors = [{ name = "Ashrith Sagar", email = "ashrithy@iisc.ac.in" }]
+readme = "../README.md"
+requires-python = "==3.10.*"
+dependencies = [
+    "cvxpy>=1.7.3",
+    "matplotlib>=3.10.7",
+    "numpy>=2.2.6",
+    "pandas>=2.3.3",
+    "scipy>=1.15.3",
+]
+
+[dependency-groups]
+dev = ["jupyter>=1.1.1"]
