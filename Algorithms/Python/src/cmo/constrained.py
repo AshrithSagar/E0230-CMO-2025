@@ -58,7 +58,11 @@ class EQPSolver:
 
         KKT: floatMat = np.block([[Q, A_eq.T], [A_eq, np.zeros((m, m))]])
         rhs: floatVec = -np.hstack([h, b_eq])
-        sol: floatVec = np.asarray(np.linalg.solve(KKT, rhs), dtype=np.float64)
+
+        try:
+            sol: floatVec = np.asarray(np.linalg.solve(KKT, rhs), dtype=np.float64)
+        except np.linalg.LinAlgError as e:
+            raise ValueError("KKT system is singular") from e
 
         x: floatVec = sol[:n]
         mu: floatVec = sol[n:]
@@ -118,10 +122,16 @@ class ActiveSetMethod(LineSearchOptimiser[ActiveSetStepInfo]):
         dim: int = Q.shape[0]
         objective = ConvexQuadratic(dim=dim, Q=Q, h=h)
 
-        W = info.W
+        W = info.W if info.W is not None else []
         A: floatMat = self.problem.constraint.A
         b: floatVec = self.problem.constraint.b
-        constraint = LinearEqualityConstraint(A[W, :], b[W])
+        if len(W) == 0:  # No active constraints
+            A_eq = np.zeros((0, A.shape[1]))
+            b_eq = np.zeros((0,))
+        else:
+            A_eq = A[W, :]
+            b_eq = b[W]
+        constraint = LinearEqualityConstraint(A_eq, b_eq)
 
         ceqp = EqualityConstrainedQuadraticProgram(
             objective, FirstOrderOracle, constraint
@@ -134,14 +144,11 @@ class ActiveSetMethod(LineSearchOptimiser[ActiveSetStepInfo]):
         v = info.direction
         if v is None:
             raise ValueError("Direction has not been computed.")
-        W = info.W
-        if W is None:
-            W = list[int]()
-
         if np.allclose(v, 0):
             return 0
 
         x = info.x
+        W = info.W if info.W is not None else []
         A = self.problem.constraint.A
         b = self.problem.constraint.b
         m: int = A.shape[0]
@@ -169,8 +176,8 @@ class ActiveSetMethod(LineSearchOptimiser[ActiveSetStepInfo]):
         if info.W is None:
             raise ValueError("Active set W has not been initialised.")
         info_next.W = info.W.copy()
-        if info_next.blocking is not None:
+        if info_next.blocking is not None and info_next.blocking not in info_next.W:
             info_next.W.append(info_next.blocking)
-        if info_next.relax is not None:
+        if info_next.relax is not None and info_next.relax in info_next.W:
             info_next.W.remove(info_next.relax)
         return info_next
