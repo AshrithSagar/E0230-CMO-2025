@@ -31,6 +31,31 @@ assert isinstance(SRN, int) and len(str(SRN)) == 5, "SRN must be a 5-digit integ
 
 
 # ---------- Implementations ----------
+def LASSO_REGRESSION(X: Matrix, y: Vector, lam: float) -> Vector:
+    """
+    Solve the Lasso regression problem for the Linear objective function using CVXPY.
+
+    `min_{beta} 0.5 ||X beta - y||_2^2 + lam ||beta||_1`
+
+    Parameters:
+        X (NDArray): Feature matrix.
+        y (NDArray): Response vector.
+        lam (float): Regularisation parameter.
+
+    Returns:
+        beta (NDArray): Estimated coefficients.
+    """
+
+    n_features = X.shape[1]
+    beta = cp.Variable(n_features)
+
+    objective = cp.Minimize(0.5 * cp.sum_squares(X @ beta - y) + lam * cp.norm1(beta))
+    problem = cp.Problem(objective)
+    problem.solve()
+
+    return np.array(beta.value, dtype=np.float64).flatten()
+
+
 def PROJ_CIRCLE(
     y: Vector,
     center: Vector = np.array([0.0, 0.0]),
@@ -139,7 +164,7 @@ def CHECK_FARKAS() -> Tuple[bool, Optional[Vector], dict]:
                 y_vals.append(0.0)  # Fallback
         y: Vector = np.array(y_vals, dtype=np.float64)
         y: Vector = np.maximum(y, 0)  # Ensure nonnegativity
-        # Normalize certificate
+        # Normalise certificate
         if np.linalg.norm(A.T @ y) < 1e-6 and b @ y < -1e-6:
             return False, y, {"status": prob.status, "bTy": b @ y, "ATy": A.T @ y}
         else:
@@ -157,6 +182,28 @@ def question_1():
     data = pd.read_csv(filename)
     X: Matrix = data.values[:, :15]
     y: Vector = data.values[:, 15]
+
+    ## Q1 Part 3
+    lambdas: List[float] = [0.01, 0.1, 1]
+    nonzero_counts: List[np.bool] = []
+
+    for lam in lambdas:
+        beta_star = LASSO_REGRESSION(X, y, lam)
+        print(f"\nlambda: {lam}")
+        print("Estimated coefficients (beta_star):")
+        print(beta_star)
+
+        nonzero_count = np.sum(np.abs(beta_star) > 1e-4)
+        nonzero_counts.append(nonzero_count)
+
+    # Plot of sparsity vs lambda
+    plt.figure()
+    plt.plot(lambdas, nonzero_counts, marker="o", linestyle="--")
+    plt.xscale("log")
+    plt.xlabel(r"$\lambda$ (Regularisation parameter)")
+    plt.ylabel(r"Number of nonzero coefficients in $\beta^*$")
+    plt.title(r"Sparsity of $\beta^*$ vs $\lambda$ in LASSO Regression")
+    plt.grid(True)
 
 
 def question_2():
