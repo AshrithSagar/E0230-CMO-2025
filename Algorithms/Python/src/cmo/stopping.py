@@ -5,11 +5,16 @@ src/cmo/stopping.py
 """
 
 from abc import ABC, abstractmethod
-from typing import Iterable
+from typing import Iterable, Union
 
 import numpy as np
 
 from .info import FirstOrderStepInfo, StepInfo, ZeroOrderStepInfo
+
+StoppingCriterionType = Union[
+    "StoppingCriterion", "CompositeCriterion", Iterable["StoppingCriterion"]
+]
+"""Type alias for stopping criteria."""
 
 
 class StoppingCriterion[T: StepInfo](ABC):

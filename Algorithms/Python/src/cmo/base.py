@@ -10,7 +10,7 @@ References
 
 import time
 from abc import ABC, abstractmethod
-from typing import Iterable, Optional, Self, Union
+from typing import Iterable, Optional, Self
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -28,12 +28,12 @@ from .info import (
     SecondOrderLineSearchStepInfo,
     StepInfo,
 )
-from .oracle import AbstractOracle, FirstOrderOracle
+from .oracle import AbstractOracle
 from .stopping import (
     CompositeCriterion,
-    GradientNormCriterion,
     MaxIterationsCriterion,
     StoppingCriterion,
+    StoppingCriterionType,
 )
 from .types import floatMat, floatVec
 from .utils import format_float, format_time, show_solution
@@ -79,13 +79,16 @@ class IterativeOptimiser[T: StepInfo](ABC):
         """
         raise NotImplementedError
 
+    @property
+    def stopping(self) -> Optional[StoppingCriterionType]:
+        """Any stopping criteria defined by the optimiser itself."""
+        return None
+
     def run(
         self,
         oracle_fn: AbstractOracle,
         x0: floatVec,
-        criteria: Optional[
-            Union[StoppingCriterion, CompositeCriterion, Iterable[StoppingCriterion]]
-        ] = None,
+        criteria: Optional[StoppingCriterionType] = None,
         show_params: bool = True,
     ) -> RunInfo[T]:
         """
@@ -107,17 +110,15 @@ class IterativeOptimiser[T: StepInfo](ABC):
             console.print(f"params: {self.config}")
 
         _crit: list[StoppingCriterion] = []
-        if criteria is None:
-            criteria = _crit
-            if isinstance(oracle_fn, FirstOrderOracle):
-                # Default criterion for first-order methods, if unspecified
-                _crit.append(GradientNormCriterion(tol=1e-6))
-        elif isinstance(criteria, CompositeCriterion):
-            _crit.extend(criteria.criteria)
-        elif isinstance(criteria, StoppingCriterion):
-            _crit.append(criteria)
-        elif isinstance(criteria, Iterable):
-            _crit.extend(criteria)
+        for crit in [self.stopping, criteria]:
+            if crit is None:
+                continue
+            elif isinstance(crit, CompositeCriterion):
+                _crit.extend(crit.criteria)
+            elif isinstance(crit, StoppingCriterion):
+                _crit.append(crit)
+            elif isinstance(crit, Iterable):
+                _crit.extend(crit)
         maxiter: float = float("inf")
         for crit in _crit:
             if isinstance(crit, MaxIterationsCriterion):

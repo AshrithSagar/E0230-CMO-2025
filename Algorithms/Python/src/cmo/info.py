@@ -113,6 +113,21 @@ class QuasiNewtonStepInfo[T: FirstOrderOracle](FirstOrderLineSearchStepInfo[T]):
     """
 
 
+@dataclass
+class ActiveSetStepInfo[T: FirstOrderOracle](FirstOrderLineSearchStepInfo[T]):
+    W: Optional[list[int]] = None
+    """Indices of the active constraints at iteration `k`."""
+
+    mu: Optional[floatVec] = None
+    """The Lagrange multipliers associated with the active constraints at iteration `k`."""
+
+    blocking: Optional[int] = None
+    """Index of the blocking constraint, if any."""
+
+    relax: Optional[int] = None
+    """Index of the constraint relaxed, if any."""
+
+
 class RunInfo[T: StepInfo](TypedDict):
     """
     Dictionary type for storing run information of an optimiser.
