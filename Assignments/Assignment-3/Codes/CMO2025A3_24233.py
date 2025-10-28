@@ -7,6 +7,7 @@ from typing import Callable
 
 import numpy as np
 import numpy.typing as npt
+import pandas as pd
 
 sys.path.insert(0, os.path.abspath("oracle_2025A3"))
 from oracle_2025A3 import f1  # type: ignore
@@ -25,8 +26,29 @@ SRN: int = 24233
 assert isinstance(SRN, int) and len(str(SRN)) == 5, "SRN must be a 5-digit integer."
 
 
+# ---------- Questions ----------
+def question_1():
+    print("\n\033[1m\033[4mQuestion-1\033[0m:")
+
+    f1(SRN)
+    filename = f"data_{SRN}.csv"
+    data = pd.read_csv(filename)
+    X: Matrix = data.values[:, :15]
+    y: Vector = data.values[:, 15]
+
+
+def question_2():
+    print("\n\033[1m\033[4mQuestion-2\033[0m:")
+
+
+def question_3():
+    print("\n\033[1m\033[4mQuestion-3\033[0m:")
+
+
 # ---------- Main ----------
 if __name__ == "__main__":
     print(f"{SRN = }")
 
-    f1(SRN)
+    question_1()
+    question_2()
+    question_3()
