@@ -168,3 +168,25 @@ Hence, the optimal values of the primal and dual problems are equal, i.e.,
     p^\ast = d^\ast
 \end{equation*}
 where \( p^\ast \) and \( d^\ast \) denote the optimal values of the primal and dual problems, respectively.
+
+\subsection*{(5) Dual constraint \( \norm{\dotp{\bfX}{\bfmu}}_\infty \leq \lambda \) enforces sparsity in the primal solution \( \bfbeta^\ast \)}
+
+The dual constraint \( \norm{\dotp{\bfX}{\bfmu}}_\infty \leq \lambda \) can be rewritten as
+\begin{equation*}
+    \abs{\dotp{\bfx_j}{\bfmu}} \leq \lambda,
+    \qquad
+    \forall j \in \set{1, 2, \ldots, n}
+\end{equation*}
+where \( \bfx_j \in \R^m \) denotes the \( j \)th column of the data matrix \( \bfX \).
+From the complementary slackness condition, we have that for each \( j \),
+\begin{equation*}
+    \bfbeta_j^\ast \,\pbrac{
+        \abs{\dotp{\bfx_j}{\bfmu^\ast}} - \lambda
+    }
+    = 0,
+    \qquad
+    \forall j \in \set{1, 2, \ldots, n}
+\end{equation*}
+where \( \bfbeta_j^\ast \) denotes the \( j \)th component of the primal optimal solution \( \bfbeta^\ast \) and \( \bfmu^\ast \) denotes the dual optimal solution.
+This implies that if \( \abs{\dotp{\bfx_j}{\bfmu^\ast}} < \lambda \), then \( \bfbeta_j^\ast = 0 \).
+Thus, the dual constraint \( \norm{\dotp{\bfX}{\bfmu}}_\infty \leq \lambda \) enforces sparsity in the primal solution \( \bfbeta^\ast \) by forcing certain components to be zero when the corresponding dual constraint is not tight.
