@@ -24,7 +24,7 @@ LASSO regression dual problem:
     \norm{\dotp{\bfX}{\u}}_\infty \leq \lambda
 \end{equation}
 
-\subsection*{Derivation of the dual problem~\peqref{eq:lasso-dual}}
+\subsection*{(1) Derivation of the dual problem~\peqref{eq:lasso-dual}}
 
 The primal problem in \peqref{eq:lasso-primal} can be equivalently rewritten as
 \begin{equation*}
@@ -155,3 +155,16 @@ Thus, the LASSO regression dual problem is given by
     \norm{\dotp{\bfX}{\bfmu}}_\infty \leq \lambda
 \end{equation*}
 which is exactly the same as the dual problem in \peqref{eq:lasso-dual} with \( \u = \bfmu \).
+
+\subsection*{(2) Strong duality of the LASSO regression problem}
+
+The LASSO regression primal problem in \peqref{eq:lasso-primal} is a convex optimisation problem since the objective function is a sum of two convex functions (the squared \( \ell_2 \)-norm and the \( \ell_1 \)-norm) and there are no constraints.
+Thus, to show that strong duality holds between the LASSO regression primal and dual problems, it suffices to show that the primal problem satisfies Slater's condition.
+Slater's condition states that if there exists a strictly feasible point for a convex optimisation problem with inequality constraints, then strong duality holds.
+In the case of the LASSO regression primal problem, there are no inequality constraints, so any point in \( \R^n \) is strictly feasible.
+Therefore, Slater's condition is trivially satisfied, and strong duality holds between the LASSO regression primal and dual problems.
+Hence, the optimal values of the primal and dual problems are equal, i.e.,
+\begin{equation*}
+    p^\ast = d^\ast
+\end{equation*}
+where \( p^\ast \) and \( d^\ast \) denote the optimal values of the primal and dual problems, respectively.
