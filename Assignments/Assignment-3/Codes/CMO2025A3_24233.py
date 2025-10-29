@@ -30,6 +30,13 @@ SRN: int = 24233
 assert isinstance(SRN, int) and len(str(SRN)) == 5, "SRN must be a 5-digit integer."
 
 
+DUP_COL_IDX: int = 5
+"""Index of the feature column to duplicate in Question 1, Part 5."""
+assert isinstance(DUP_COL_IDX, int) and 0 <= DUP_COL_IDX < 15, (
+    "DUP_COL_IDX must be a valid column index in X."
+)
+
+
 # ---------- Implementations ----------
 def LASSO_REGRESSION(X: Matrix, y: Vector, lam: float) -> Vector:
     """
@@ -38,13 +45,15 @@ def LASSO_REGRESSION(X: Matrix, y: Vector, lam: float) -> Vector:
     `min_{beta} 0.5 ||X beta - y||_2^2 + lam ||beta||_1`
 
     Parameters:
-        X (NDArray): Feature matrix.
-        y (NDArray): Response vector.
-        lam (float): Regularisation parameter.
+        X (NDArray): Feature matrix. Shape (n_samples, n_features).
+        y (NDArray): Response vector. Shape (n_samples,).
+        lam (float): Regularisation parameter. Must be non-negative.
 
     Returns:
         beta (NDArray): Estimated coefficients.
     """
+
+    assert lam >= 0, "Regularisation parameter must be non-negative."
 
     n_features = X.shape[1]
     beta = cp.Variable(n_features)
@@ -52,6 +61,9 @@ def LASSO_REGRESSION(X: Matrix, y: Vector, lam: float) -> Vector:
     objective = cp.Minimize(0.5 * cp.sum_squares(X @ beta - y) + lam * cp.norm1(beta))
     problem = cp.Problem(objective)
     problem.solve()
+
+    if problem.status not in ["optimal", "optimal_inaccurate"]:
+        raise ValueError(f"Optimisation failed with status: {problem.status}")
 
     return np.array(beta.value, dtype=np.float64).flatten()
 
@@ -184,25 +196,53 @@ def question_1():
     y: Vector = data.values[:, 15]
 
     ## Q1 Part 3
+    print("\n\033[4mPart-3\033[0m:")
     lambdas: List[float] = [0.01, 0.1, 1]
     nonzero_counts: List[np.bool] = []
 
     for lam in lambdas:
         beta_star = LASSO_REGRESSION(X, y, lam)
-        print(f"\nlambda: {lam}")
+        print(f"lambda: {lam}")
         print("Estimated coefficients (beta_star):")
-        print(beta_star)
+        print(beta_star, end="\n\n")
 
-        nonzero_count = np.sum(np.abs(beta_star) > 1e-4)
+        nonzero_count = np.sum(np.abs(beta_star) > lam)
         nonzero_counts.append(nonzero_count)
 
     # Plot of sparsity vs lambda
-    plt.figure()
+    plt.figure(figsize=(7, 5))
     plt.plot(lambdas, nonzero_counts, marker="o", linestyle="--")
     plt.xscale("log")
+    plt.ylim(0, 17)
     plt.xlabel(r"$\lambda$ (Regularisation parameter)")
     plt.ylabel(r"Number of nonzero coefficients in $\beta^*$")
-    plt.title(r"Sparsity of $\beta^*$ vs $\lambda$ in LASSO Regression")
+    plt.title(r"Sparsity of $\beta^*$ in LASSO Regression")
+    plt.grid(True)
+
+    ## Q1 Part 5
+    # Duplicate one feature column in X and repeat the experiment in Part 3
+    print("\n\033[4mPart-5\033[0m:")
+    print("Duplicated feature column index:", DUP_COL_IDX, end="\n\n")
+    X_dup = np.hstack((X, X[:, DUP_COL_IDX : DUP_COL_IDX + 1]))
+    nonzero_counts_dup: List[np.bool] = []
+
+    for lam in lambdas:
+        beta_star = LASSO_REGRESSION(X_dup, y, lam)
+        print(f"lambda: {lam}")
+        print("Estimated coefficients (beta_star):")
+        print(beta_star, end="\n\n")
+
+        nonzero_count = np.sum(np.abs(beta_star) > lam)
+        nonzero_counts_dup.append(nonzero_count)
+
+    # Plot of sparsity vs lambda
+    plt.figure(figsize=(7, 5))
+    plt.plot(lambdas, nonzero_counts_dup, marker="o", linestyle="--")
+    plt.xscale("log")
+    plt.ylim(0, 17)
+    plt.xlabel(r"$\lambda$ (Regularisation parameter)")
+    plt.ylabel(r"Number of nonzero coefficients in $\beta^*$")
+    plt.title(r"Sparsity of $\beta^*$ in LASSO Regression with a duplicated feature")
     plt.grid(True)
 
 
@@ -295,6 +335,7 @@ def question_3():
 # ---------- Main ----------
 if __name__ == "__main__":
     print(f"{SRN = }")
+    print("Available CVXPY solvers:", cp.installed_solvers())
 
     question_1()
     question_2()
