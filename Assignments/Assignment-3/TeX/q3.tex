@@ -1,1 +1,92 @@
 \section*{Question 3}
+
+\subsection*{(1) Projections in a navigation problem}
+
+\paragraph{Given:}
+\begin{equation*}
+    \calC_1
+    =
+    \set{\x \in \R^2 \given \norm{\x}_2 \leq 5},
+    \qquad
+    \calC_2
+    =
+    \set{\x \in \R^2 \given -3 \leq x_1 \leq 3, \; 0 \leq x_2 \leq 4}
+\end{equation*}
+
+The projections of a point \( \y \in \R^2 \) onto the convex sets \( \calC_1 \) and \( \calC_2 \) are given by
+\begin{align*}
+    \implies
+    \func{\Pi_{\calC_1}}{\y}
+    & =
+    \begin{cases}
+        \y, & \text{if } \norm{\y}_2 \leq 5
+        \\
+        5 \frac{\y}{\norm{\y}_2}, & \text{otherwise}
+    \end{cases}
+    \\
+    \implies
+    \func{\Pi_{\calC_2}}{\y}
+    & =
+    \pbrac[\Big]{
+        \min{\pbrac{3, \max{\pbrac{-3, y_1}}}}
+        , \;
+        \min{\pbrac{4, \max{\pbrac{0, y_2}}}}
+    } \in \R^2
+\end{align*}
+
+\subsection*{(2) Separating hyperplane in a classification story}
+
+\paragraph{Given:}
+\begin{equation*}
+    \calC_A
+    =
+    \set{\x \in \R^2 \given \norm{\x}_2 \leq 1},
+    \qquad
+    \calC_B
+    =
+    \set{\x \in \R^2 \given x_1 \geq 3}
+\end{equation*}
+
+One separating hyperplane between the convex sets \( \calC_A \) and \( \calC_B \) can be seen as
+\begin{equation*}
+    \func{h}{\x}
+    =
+    \dotp{\bfw}{\x} + b
+    =
+    0,
+    \quad
+    \text{where }
+    \bfw
+    =
+    \pbrac{1, 0}^\top,
+    \quad
+    b
+    =
+    -2
+\end{equation*}
+
+\subsection*{(3) Farkas lemma in a supply-chain model}
+
+\paragraph{Given:}
+System:
+\begin{equation*}
+    x_1 + x_2 \leq -1
+    , \quad
+    -x_1 \leq 0
+    , \quad
+    -x_2 \leq 0
+\end{equation*}
+
+The problem can be stated as an optimisation problem as
+\begin{equation*}
+    \minimize_{\x \in \R^2}
+    \;\; 0
+    \qquad \subjectto \quad
+    \begin{cases}
+        x_1 + x_2 \leq -1
+        \\
+        -x_1 \leq 0
+        \\
+        -x_2 \leq 0
+    \end{cases}
+\end{equation*}
