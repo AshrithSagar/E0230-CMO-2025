@@ -14,6 +14,19 @@ Sparsity-promoting constrained optimisation problem:
     \end{aligned}
 \end{equation}
 
+\quad
+(Practical form):
+\begin{equation}\label{eq:sparsity-promoting-constrained-optimisation-practical}
+    \minimize_{\bfbeta \in \R^n}
+    \quad
+    \func{f}{\bfbeta}
+    + \lambda \norm{\bfbeta}_1,
+    \qquad
+    \lambda > 0
+\end{equation}
+\quad
+with regularisation parameter \( \lambda > 0 \).
+
 LASSO regression problem:
 \begin{equation}\label{eq:lasso}
     \minimize_{\bfbeta \in \R^n}
@@ -38,7 +51,9 @@ The Lagrangian of the constrained optimisation problem in \peqref{eq:sparsity-pr
     \qquad
     \lambda \geq 0
 \end{equation*}
-and the gradient of the Lagrangian with respect to \( \bfbeta \) can be computed as
+with Lagrange multiplier \( \lambda \geq 0 \) for the constraint \( \norm{\bfbeta}_1 \leq t \).
+
+The gradient of the Lagrangian with respect to \( \bfbeta \) can be computed as
 \begin{equation*}
     \func{\nabla_\bfbeta \, \calL}{\bfbeta, \lambda}
     =
@@ -92,3 +107,55 @@ where
     \end{cases},
     \qquad i = 1, 2, \ldots, n
 \end{equation*}
+
+\subsection*{(2) Equivalence of \peqref{eq:sparsity-promoting-constrained-optimisation} and \peqref{eq:sparsity-promoting-constrained-optimisation-practical}}
+
+We use the method of Lagrange multipliers.
+The constrained optimisation problem in \peqref{eq:sparsity-promoting-constrained-optimisation} can be transformed into an unconstrained optimisation problem by introducing a Lagrange multiplier \( \lambda \geq 0 \) for the constraint \( \norm{\bfbeta}_1 \leq t \).
+As seen earlier, the Lagrangian for the constrained optimisation problem in \peqref{eq:sparsity-promoting-constrained-optimisation} is given by
+\begin{equation*}
+    \func{\calL}{\bfbeta, \lambda}
+    =
+    \func{f}{\bfbeta}
+    + \lambda \pbrac[\big]{\norm{\bfbeta}_1 - t}
+    =
+    \func{f}{\bfbeta}
+    + \lambda \norm{\bfbeta}_1
+    - \lambda t
+\end{equation*}
+\begin{equation*}
+    \therefore
+    \qquad
+    \begin{aligned}
+        \minimize_{\bfbeta \in \R^n}
+        \quad &
+        \func{f}{\bfbeta}
+        \\ \subjectto \quad &
+        \norm{\bfbeta}_1 \leq t,
+        \quad
+        t > 0
+    \end{aligned}
+    \qquad \equiv \qquad
+    \minimize_{\bfbeta \in \R^n}
+    \quad
+    \func{\calL}{\bfbeta, \lambda}
+\end{equation*}
+Since \( - \lambda t \) is a constant with respect to \( \bfbeta \), minimising the Lagrangian \( \func{\calL}{\bfbeta, \lambda} \) with respect to \( \bfbeta \) is equivalent to minimising the function
+\(
+    \func{f}{\bfbeta}
+    + \lambda \norm{\bfbeta}_1
+\)
+with respect to \( \bfbeta \), i.e.,
+\begin{equation*}
+    \implies
+    \qquad
+    \minimize_{\bfbeta \in \R^n}
+    \quad
+    \func{\calL}{\bfbeta, \lambda}
+    \qquad \equiv \qquad
+    \minimize_{\bfbeta \in \R^n}
+    \quad
+    \func{f}{\bfbeta}
+    + \lambda \norm{\bfbeta}_1
+\end{equation*}
+which is exactly the practical form of the sparsity-promoting optimisation problem in \peqref{eq:sparsity-promoting-constrained-optimisation-practical}.
