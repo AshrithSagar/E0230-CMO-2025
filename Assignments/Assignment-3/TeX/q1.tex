@@ -1,1 +1,94 @@
-\section*{Question 1}
+\section*{Question 1: LASSO Regression and KKT Conditions}
+
+\paragraph{Given:}
+Sparsity-promoting constrained optimisation problem:
+\begin{equation}\label{eq:sparsity-promoting-constrained-optimisation}
+    \begin{aligned}
+        \minimize_{\bfbeta \in \R^n}
+        \quad &
+        \func{f}{\bfbeta}
+        \\ \subjectto \quad &
+        \norm{\bfbeta}_1 \leq t,
+        \qquad
+        t > 0
+    \end{aligned}
+\end{equation}
+
+LASSO regression problem:
+\begin{equation}\label{eq:lasso}
+    \minimize_{\bfbeta \in \R^n}
+    \quad
+    \half \norm{\bfX \bfbeta - \y}_2^2
+    + \lambda \norm{\bfbeta}_1,
+    \qquad
+    \bfX \in \R^{m \times n},
+    \; \y \in \R^m,
+    \; \lambda > 0
+\end{equation}
+with number of samples \( m = 50 \), and number of features \( n = 15 \).
+
+\subsection*{(1) Derivation of KKT Conditions of \peqref{eq:sparsity-promoting-constrained-optimisation}}
+
+The Lagrangian of the constrained optimisation problem in \peqref{eq:sparsity-promoting-constrained-optimisation} is given by
+\begin{equation*}
+    \func{\calL}{\bfbeta, \lambda}
+    =
+    \func{f}{\bfbeta}
+    + \lambda \pbrac[\big]{\norm{\bfbeta}_1 - t},
+    \qquad
+    \lambda \geq 0
+\end{equation*}
+and the gradient of the Lagrangian with respect to \( \bfbeta \) can be computed as
+\begin{equation*}
+    \func{\nabla_\bfbeta \, \calL}{\bfbeta, \lambda}
+    =
+    \func{\nabla_\bfbeta \, f}{\bfbeta}
+    + \lambda \; \nabla_\bfbeta \bbrac[\Big]{\norm{\bfbeta}_1 - t}
+    =
+    \func{\nabla_\bfbeta \, f}{\bfbeta}
+    + \lambda \; \nabla_\bfbeta \, \norm{\bfbeta}_1
+\end{equation*}
+
+The necessary conditions for optimality are given by the Karush-Kuhn-Tucker (KKT) conditions;
+If \( \bfbeta^\ast \) and \( \lambda^\ast \) are optimal, then they must satisfy the KKT conditions, given by
+\begin{equation*}
+    \begin{aligned}
+        \func{\nabla_\bfbeta \, \calL}{\bfbeta^\ast, \lambda^\ast}
+        & = \zero
+        \\
+        \lambda^\ast \pbrac[\big]{\norm{\bfbeta^\ast}_1 - t}
+        & = 0
+    \end{aligned}
+    \qquad
+    \implies
+    \boxed{
+        \begin{aligned}
+            \func{\nabla_\bfbeta \, f}{\bfbeta^\ast}
+            + \lambda^\ast \; \nabla_\bfbeta \, \norm{\bfbeta^\ast}_1
+            & = \zero
+            \\
+            \lambda^\ast \pbrac[\big]{\norm{\bfbeta^\ast}_1 - t}
+            & = 0
+        \end{aligned}
+    }
+\end{equation*}
+
+In addition, we have that
+\(
+    \nabla_\bfbeta \, \norm{\bfbeta}_1
+    =
+    \func{\operatorname{sign}}{\bfbeta}
+\),
+where
+\begin{equation*}
+    \bbrac{\func{\operatorname{sign}}{\bfbeta}}_i
+    =
+    \begin{cases}
+        1, & \text{if } \bbrac{\bfbeta}_i > 0
+        \\
+        -1, & \text{if } \bbrac{\bfbeta}_i < 0
+        \\
+        \text{undefined}, & \text{if } \bbrac{\bfbeta}_i = 0
+    \end{cases},
+    \qquad i = 1, 2, \ldots, n
+\end{equation*}
