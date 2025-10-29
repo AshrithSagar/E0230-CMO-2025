@@ -42,7 +42,7 @@ with number of samples \( m = 50 \), and number of features \( n = 15 \).
 
 \subsection*{(1) Derivation of KKT Conditions of \peqref{eq:sparsity-promoting-constrained-optimisation}}
 
-The Lagrangian of the constrained optimisation problem in \peqref{eq:sparsity-promoting-constrained-optimisation} is given by
+The Lagrangian function of the constrained optimisation problem in \peqref{eq:sparsity-promoting-constrained-optimisation} is given by
 \begin{equation*}
     \func{\calL}{\bfbeta, \lambda}
     =
@@ -53,7 +53,7 @@ The Lagrangian of the constrained optimisation problem in \peqref{eq:sparsity-pr
 \end{equation*}
 with Lagrange multiplier \( \lambda \geq 0 \) for the constraint \( \norm{\bfbeta}_1 \leq t \).
 
-The gradient of the Lagrangian with respect to \( \bfbeta \) can be computed as
+The gradient of the Lagrangian function with respect to \( \bfbeta \) can be computed as
 \begin{equation*}
     \func{\nabla_\bfbeta \, \calL}{\bfbeta, \lambda}
     =
@@ -112,7 +112,7 @@ where
 
 We use the method of Lagrange multipliers.
 The constrained optimisation problem in \peqref{eq:sparsity-promoting-constrained-optimisation} can be transformed into an unconstrained optimisation problem by introducing a Lagrange multiplier \( \lambda \geq 0 \) for the constraint \( \norm{\bfbeta}_1 \leq t \).
-As seen earlier, the Lagrangian for the constrained optimisation problem in \peqref{eq:sparsity-promoting-constrained-optimisation} is given by
+As seen earlier, the Lagrangian function for the constrained optimisation problem in \peqref{eq:sparsity-promoting-constrained-optimisation} is given by
 \begin{equation*}
     \func{\calL}{\bfbeta, \lambda}
     =
@@ -140,7 +140,7 @@ As seen earlier, the Lagrangian for the constrained optimisation problem in \peq
     \quad
     \func{\calL}{\bfbeta, \lambda}
 \end{equation*}
-Since \( - \lambda t \) is a constant with respect to \( \bfbeta \), minimising the Lagrangian \( \func{\calL}{\bfbeta, \lambda} \) with respect to \( \bfbeta \) is equivalent to minimising the function
+Since \( - \lambda t \) is a constant with respect to \( \bfbeta \), minimising the Lagrangian function \( \func{\calL}{\bfbeta, \lambda} \) with respect to \( \bfbeta \) is equivalent to minimising the function
 \(
     \func{f}{\bfbeta}
     + \lambda \norm{\bfbeta}_1

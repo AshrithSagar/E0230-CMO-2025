@@ -1,1 +1,157 @@
 \section*{Question 2}
+
+\paragraph{Given:}
+LASSO regression primal problem:
+\begin{equation}\label{eq:lasso-primal}
+    \minimize_{\bfbeta \in \R^n}
+    \quad
+    \half \norm{\bfX \bfbeta - \y}_2^2
+    + \lambda \norm{\bfbeta}_1,
+    \qquad
+    \bfX \in \R^{m \times n},
+    \; \y \in \R^m,
+    \; \lambda > 0
+\end{equation}
+with number of samples \( m \), number of features \( n \), and regularisation parameter \( \lambda > 0 \).
+
+LASSO regression dual problem:
+\begin{equation}\label{eq:lasso-dual}
+    \maximize_{\u \in \R^m}
+    \quad
+    - \half \norm{\u}_2^2
+    + \dotp{\y}{\u},
+    \quad\qquad \subjectto \quad
+    \norm{\dotp{\bfX}{\u}}_\infty \leq \lambda
+\end{equation}
+
+\subsection*{Derivation of the dual problem~\peqref{eq:lasso-dual}}
+
+The primal problem in \peqref{eq:lasso-primal} can be equivalently rewritten as
+\begin{equation*}
+    \minimize_{\bfbeta \in \R^n, \; \z \in \R^m}
+    \quad
+    \half \norm{\z}_2^2
+    + \lambda \norm{\bfbeta}_1,
+    \quad\qquad \subjectto \quad
+    \z = \bfX \bfbeta - \y
+\end{equation*}
+by introducing an auxiliary variable \( \z \in \R^m \).
+
+The Lagrangian function of the above constrained optimisation problem is given by
+\begin{equation*}
+    \func{\calL}{\bfbeta, \z, \bfmu}
+    =
+    \half \norm{\z}_2^2
+    + \lambda \norm{\bfbeta}_1
+    + \dotp{\bfmu}{\pbrac{\bfX \bfbeta - \y - \z}}
+\end{equation*}
+with Lagrange multiplier \( \bfmu \in \R^m \) for the constraint \( \z = \bfX \bfbeta - \y \).
+
+The Lagrangian dual function of the above constrained optimisation problem is given by
+\begin{equation*}
+    \func{g}{\bfmu}
+    =
+    \inf_{\bfbeta \in \R^n, \; \z \in \R^m}
+    \func{\calL}{\bfbeta, \z, \bfmu}
+\end{equation*}
+and the corresponding Lagrangian dual problem is given by
+\begin{equation*}
+    \maximize_{\bfmu \in \R^m}
+    \quad
+    \func{g}{\bfmu}
+\end{equation*}
+
+We can separate the infimum over \( \bfbeta \) and \( \z \) in the Lagrangian dual function as
+\begin{equation*}
+    \implies
+    \func{g}{\bfmu}
+    =
+    \inf_{\bfbeta \in \R^n}
+    \bbrac{
+        \lambda \norm{\bfbeta}_1
+        + \dotp{\bfmu}{\bfX \bfbeta}
+    }
+    +
+    \inf_{\z \in \R^m}
+    \bbrac{
+        \half \norm{\z}_2^2
+        - \dotp{\bfmu}{\z}
+    }
+    - \dotp{\bfmu}{\y}
+\end{equation*}
+
+The first term can be simplified to
+\begin{equation*}
+    \inf_{\bfbeta \in \R^n}
+    \bbrac{
+        \lambda \norm{\bfbeta}_1
+        + \dotp{\pbrac{\dotp{\bfX}{\bfmu}}}{\bfbeta}
+    }
+    =
+    \begin{cases}
+        0,
+        & \text{if }
+        \norm{\dotp{\bfX}{\bfmu}}_\infty \leq \lambda
+        \\
+        -\infty, & \text{otherwise}
+    \end{cases}
+\end{equation*}
+by the definition of the dual norm, since
+\begin{equation*}
+    \norm{\dotp{\bfX}{\bfmu}}_\infty
+    =
+    \sup_{\bfbeta \neq \zero}
+    \frac
+    {\dotp{\pbrac{\dotp{\bfX}{\bfmu}}}{\bfbeta}}
+    {\norm{\bfbeta}_1}
+\end{equation*}
+
+The second term can be simplified to
+\begin{equation*}
+    \inf_{\z \in \R^m}
+    \bbrac{
+        \half \norm{\z}_2^2
+        - \dotp{\bfmu}{\z}
+    }
+    =
+    - \half \norm{\bfmu}_2^2
+    \qquad
+    \because
+    \nabla_{\z} \,
+    \bbrac{
+        \half \norm{\z}_2^2
+        - \dotp{\bfmu}{\z}
+    }
+    =
+    \z - \bfmu
+    \implies
+    {\z}^\ast
+    =
+    \bfmu
+\end{equation*}
+by setting the gradient with respect to \( \z \) to zero.
+
+Combining the above results, we have that the Lagrangian dual function is given by
+\begin{equation*}
+    \func{g}{\bfmu}
+    =
+    \begin{cases}
+        - \half \norm{\bfmu}_2^2
+        - \dotp{\bfmu}{\y},
+        & \text{if }
+        \norm{\dotp{\bfX}{\bfmu}}_\infty \leq \lambda
+        \\
+        -\infty, & \text{otherwise}
+    \end{cases}
+\end{equation*}
+
+Thus, the LASSO regression dual problem is given by
+\begin{equation*}
+    \maximize_{\bfmu \in \R^m}
+    \quad
+    - \half \norm{\bfmu}_2^2
+    + \dotp{\y}{\bfmu},
+    \quad\qquad \subjectto \quad
+    \norm{\dotp{\bfX}{\bfmu}}_\infty \leq \lambda
+\end{equation*}
+which is exactly the same as the dual problem in \peqref{eq:lasso-dual} with \( \u = \bfmu \).
