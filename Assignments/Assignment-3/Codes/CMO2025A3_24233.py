@@ -68,6 +68,38 @@ def LASSO_REGRESSION(X: Matrix, y: Vector, lam: float) -> Vector:
     return np.array(beta.value, dtype=np.float64).flatten()
 
 
+def LASSO_REGRESSION_DUAL(X: Matrix, y: Vector, lam: float) -> Vector:
+    """
+    Solve the dual of the Lasso regression problem using CVXPY.
+
+    `max_{u} -0.5 ||u||_2^2 + y'u`\\
+    `subject to ||X'u||_infty <= lam`
+
+    Parameters:
+        X (NDArray): Feature matrix. Shape (n_samples, n_features).
+        y (NDArray): Response vector. Shape (n_samples,).
+        lam (float): Regularisation parameter. Must be non-negative.
+
+    Returns:
+        u (NDArray): Dual variable.
+    """
+
+    assert lam >= 0, "Regularisation parameter must be non-negative."
+
+    n_samples = X.shape[0]
+    u = cp.Variable(n_samples)
+
+    objective = cp.Maximize(-0.5 * cp.sum_squares(u) + y @ u)
+    constraints: List[cp.Constraint] = [cp.norm_inf(X.T @ u) <= lam]
+    problem = cp.Problem(objective, constraints)
+    problem.solve()
+
+    if problem.status not in ["optimal", "optimal_inaccurate"]:
+        raise ValueError(f"Optimisation failed with status: {problem.status}")
+
+    return np.array(u.value, dtype=np.float64).flatten()
+
+
 def PROJ_CIRCLE(
     y: Vector,
     center: Vector = np.array([0.0, 0.0]),
@@ -186,20 +218,13 @@ def CHECK_FARKAS() -> Tuple[bool, Optional[Vector], dict]:
 
 
 # ---------- Questions ----------
-def question_1():
+def question_1(X: Matrix, y: Vector, lambdas: List[float]):
     print("\n\033[1m\033[4mQuestion-1\033[0m:")
 
-    f1(SRN)
-    filename = f"data_{SRN}.csv"
-    data = pd.read_csv(filename)
-    X: Matrix = data.values[:, :15]
-    y: Vector = data.values[:, 15]
-
     ## Q1 Part 3
-    print("\n\033[4mPart-3\033[0m:")
-    lambdas: List[float] = [0.01, 0.1, 1]
-    nonzero_counts: List[np.bool] = []
+    print("\033[4mPart-3\033[0m:")
 
+    nonzero_counts: List[np.bool] = []
     for lam in lambdas:
         beta_star = LASSO_REGRESSION(X, y, lam)
         print(f"lambda: {lam}")
@@ -209,7 +234,7 @@ def question_1():
         nonzero_count = np.sum(np.abs(beta_star) > lam)
         nonzero_counts.append(nonzero_count)
 
-    # Plot of sparsity vs lambda
+    # Plot for sparsity of beta
     plt.figure(figsize=(7, 5))
     plt.plot(lambdas, nonzero_counts, marker="o", linestyle="--")
     plt.xscale("log")
@@ -221,11 +246,11 @@ def question_1():
 
     ## Q1 Part 5
     # Duplicate one feature column in X and repeat the experiment in Part 3
-    print("\n\033[4mPart-5\033[0m:")
+    print("\033[4mPart-5\033[0m:")
     print("Duplicated feature column index:", DUP_COL_IDX, end="\n\n")
     X_dup = np.hstack((X, X[:, DUP_COL_IDX : DUP_COL_IDX + 1]))
-    nonzero_counts_dup: List[np.bool] = []
 
+    nonzero_counts_dup: List[np.bool] = []
     for lam in lambdas:
         beta_star = LASSO_REGRESSION(X_dup, y, lam)
         print(f"lambda: {lam}")
@@ -235,7 +260,7 @@ def question_1():
         nonzero_count = np.sum(np.abs(beta_star) > lam)
         nonzero_counts_dup.append(nonzero_count)
 
-    # Plot of sparsity vs lambda
+    # Plot for sparsity of beta
     plt.figure(figsize=(7, 5))
     plt.plot(lambdas, nonzero_counts_dup, marker="o", linestyle="--")
     plt.xscale("log")
@@ -246,12 +271,20 @@ def question_1():
     plt.grid(True)
 
 
-def question_2():
-    print("\n\033[1m\033[4mQuestion-2\033[0m:")
+def question_2(X: Matrix, y: Vector, lambdas: List[float]):
+    print("\033[1m\033[4mQuestion-2\033[0m:")
+
+    ## Q2 Part 3
+    print("\033[4mPart-3\033[0m:")
+    for lam in lambdas:
+        u_star = LASSO_REGRESSION_DUAL(X, y, lam)
+        print(f"lambda: {lam}")
+        print("Estimated coefficients (u_star):")
+        print(u_star, end="\n\n")
 
 
 def question_3():
-    print("\n\033[1m\033[4mQuestion-3\033[0m:")
+    print("\033[1m\033[4mQuestion-3\033[0m:")
 
     ## Q3 Part 1
     # Projections in a navigation problem
@@ -337,8 +370,16 @@ if __name__ == "__main__":
     print(f"{SRN = }")
     print("Available CVXPY solvers:", cp.installed_solvers())
 
-    question_1()
-    question_2()
+    f1(SRN)
+    filename = f"data_{SRN}.csv"
+    data = pd.read_csv(filename)
+    X: Matrix = data.values[:, :15]
+    y: Vector = data.values[:, 15]
+
+    lambdas: List[float] = [0.01, 0.1, 1]
+
+    question_1(X, y, lambdas)
+    question_2(X, y, lambdas)
     question_3()
 
     plt.show()
