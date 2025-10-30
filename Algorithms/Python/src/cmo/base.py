@@ -134,7 +134,7 @@ class IterativeOptimiser[T: StepInfo](ABC):
         criteria.reset()
         k: int = 0
         x: floatVec = x0
-        info = self.StepInfoClass(x, k, oracle_fn)
+        info = self.StepInfoClass(k, x, oracle_fn)
         history: list[T] = [info]
 
         progress = Progress(
@@ -237,8 +237,8 @@ class LineSearchOptimiser[T: LineSearchStepInfo](IterativeOptimiser[T]):
         self.step_lengths.append(alpha_k)
 
         info_next = self.StepInfoClass(
-            x=info.x + alpha_k * p_k,
             k=info.k + 1,
+            x=info.x + alpha_k * p_k,
             oracle=info.oracle,
         )
         return info_next

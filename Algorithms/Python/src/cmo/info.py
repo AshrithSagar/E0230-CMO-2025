@@ -15,11 +15,11 @@ from .types import floatMat, floatVec
 class StepInfo[T: AbstractOracle]:
     """A dataclass for the state of the algorithm at iteration `k`."""
 
-    x: floatVec
-    """The current point `x_k` in the input space."""
-
     k: int
     """The current iteration number `k`."""
+
+    x: floatVec
+    """The current point `x_k` in the input space."""
 
     oracle: T
     """The oracle function used to evaluate `f`."""
