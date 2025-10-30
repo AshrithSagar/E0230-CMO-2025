@@ -4,6 +4,9 @@ Problem classes
 src/cmo/problems.py
 """
 
+from typing import Optional
+
+from .base import IterativeOptimiser
 from .constraint import (
     AbstractConstraint,
     LinearConstraint,
@@ -12,6 +15,8 @@ from .constraint import (
 )
 from .functions import ConvexQuadratic, Function, LinearFunction
 from .oracle import AbstractOracle
+from .stopping import StoppingCriterionType
+from .types import floatVec
 
 
 class AbstractProblem[F: Function]:
@@ -20,6 +25,23 @@ class AbstractProblem[F: Function]:
     def __init__(self, objective: F, oracle: type[AbstractOracle]):
         self.objective = objective
         self.oracle = oracle(objective)
+
+
+class UnconstrainedProblem[F: Function, M: IterativeOptimiser](AbstractProblem[F]):
+    """A class representing unconstrained optimisation problems."""
+
+    def solve(
+        self,
+        method: M,
+        x0: floatVec,
+        criteria: Optional[StoppingCriterionType] = None,
+        show_params: bool = True,
+    ):
+        """Solve the unconstrained optimisation problem."""
+        info = method.run(
+            oracle_fn=self.oracle, x0=x0, criteria=criteria, show_params=show_params
+        )
+        return info
 
 
 class ConstrainedProblem[F: Function, C: AbstractConstraint](AbstractProblem[F]):
