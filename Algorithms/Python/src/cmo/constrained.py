@@ -64,9 +64,9 @@ class EQPSolver:
         rhs: floatVec = -np.hstack([h, b_eq])
 
         try:
-            sol: floatVec = np.asarray(np.linalg.solve(KKT, rhs), dtype=np.double)
+            sol: floatVec = np.asarray(np.linalg.pinv(KKT) @ rhs, dtype=np.double)
         except np.linalg.LinAlgError as e:
-            raise ValueError("KKT system is singular") from e
+            raise e
 
         x: floatVec = sol[:n]
         mu: floatVec = sol[n:]
@@ -167,7 +167,7 @@ class ActiveSetMethod(LineSearchOptimiser[ActiveSetStepInfo]):
                 alpha_i = float(b[i] - a_i @ x) / denom
                 if alpha_i < alpha:
                     alpha = alpha_i
-                    blocking = min(blocking, i)
+                    blocking = i
 
         if not blocking == -1:
             info.blocking = blocking
@@ -180,8 +180,19 @@ class ActiveSetMethod(LineSearchOptimiser[ActiveSetStepInfo]):
         if info.W is None:
             raise ValueError("Active set W has not been initialised.")
         info_next.W = info.W.copy()
-        if info_next.blocking is not None and info_next.blocking not in info_next.W:
-            info_next.W.append(info_next.blocking)
-        if info_next.relax is not None and info_next.relax in info_next.W:
-            info_next.W.remove(info_next.relax)
+
+        blocking = info_next.blocking
+        if blocking is None:
+            blocking = info.blocking
+        if blocking is not None and blocking not in info_next.W:
+            info_next.W.append(blocking)
+            info_next.blocking = blocking
+
+        relax = info_next.relax
+        if relax is None:
+            relax = info.relax
+        if relax is not None and relax in info_next.W:
+            info_next.W.remove(relax)
+            info_next.relax = relax
+
         return info_next

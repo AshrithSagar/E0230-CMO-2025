@@ -13,13 +13,15 @@ from .types import floatVec
 
 
 def format_float(
-    obj: float | floatVec,
+    obj: float | floatVec | None,
     dprec: int = 2,
     fprec: int = 16,
     ffmt: str = "f",
     sep: str = ",\n",
     lim: int = 5,
-) -> str | None:
+) -> str:
+    if obj is None:
+        return "None"
     _fmt = f"{{:{dprec}.{fprec}{ffmt}}}"
     if isinstance(obj, float):
         return f"{_fmt.format(obj)}"
@@ -34,12 +36,13 @@ def format_float(
                 + [f"{_fmt.format(x)}" for x in obj[-2:]]
             )
         return "[" + sep.join(formatted) + "]"
+    return "None"
 
 
 def format_time(t: float | None) -> str:
     """Format time in seconds to an appropriate unit"""
     if t is None:
-        return "N/A"
+        return "None"
     abs_t = abs(t)
     if abs_t >= 60:
         minutes = int(t // 60)
