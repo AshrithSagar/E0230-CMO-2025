@@ -80,9 +80,9 @@ class IterativeOptimiser[T: StepInfo](ABC):
         raise NotImplementedError
 
     @property
-    def stopping(self) -> Optional[StoppingCriterionType]:
+    def stopping(self) -> list[StoppingCriterionType]:
         """Any stopping criteria defined by the optimiser itself."""
-        return None
+        return []
 
     def run(
         self,
@@ -154,6 +154,8 @@ class IterativeOptimiser[T: StepInfo](ABC):
                 if criteria.check(info):
                     break
                 info_next = self.step(info)
+                if criteria.check(info):
+                    break
                 history.append(info_next)
                 info = info_next
             x = info.x
@@ -242,6 +244,17 @@ class LineSearchOptimiser[T: LineSearchStepInfo](IterativeOptimiser[T]):
             oracle=info.oracle,
         )
         return info_next
+
+    @property
+    def stopping(self) -> list[StoppingCriterionType]:
+        class LineSearchStoppingCriterion(StoppingCriterion[LineSearchStepInfo]):
+            def check(self, info: LineSearchStepInfo) -> bool:
+                tol: float = 1e-16
+                if info.alpha is not None and abs(info.alpha) < tol:
+                    return True
+                return False
+
+        return super().stopping + [LineSearchStoppingCriterion()]
 
     def plot_step_lengths(self):
         """Plot step lengths vs iterations for the best run."""

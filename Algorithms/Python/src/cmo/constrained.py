@@ -4,8 +4,6 @@ Constrained optimisation
 src/cmo/constrained.py
 """
 
-from typing import Optional
-
 import numpy as np
 
 from .base import IterativeOptimiser, LineSearchOptimiser
@@ -83,7 +81,7 @@ class ActiveSetMethod(LineSearchOptimiser[ActiveSetStepInfo]):
         super().__init__(**kwargs)
 
     @property
-    def stopping(self) -> Optional[StoppingCriterionType]:
+    def stopping(self) -> list[StoppingCriterionType]:
         class ActiveSetStoppingCriterion(StoppingCriterion[ActiveSetStepInfo]):
             """
             Stops when all the Lagrange multipliers associated with the active constraints are non-negative.
@@ -98,22 +96,21 @@ class ActiveSetMethod(LineSearchOptimiser[ActiveSetStepInfo]):
                 W = info.W
                 if W is None:
                     return False
-                if np.allclose(v, 0):
+                tol: float = 1e-8
+                if np.allclose(v, 0, atol=tol, rtol=0):
                     mu = info.mu
                     if mu is None:
                         return False
-                    mu_min: float = np.inf
-                    relax: int = -1
-                    for mu_i, W_i in zip(mu, W):
-                        if mu_i < 0:
-                            mu_min = min(mu_min, mu_i)
-                            relax = W_i
-                    if mu_min >= 0:
+                    if mu.size != len(W):
+                        return False
+                    min_idx = int(np.argmin(mu))
+                    mu_min = float(mu[min_idx])
+                    if mu_min >= -tol:
                         return True
-                    info.relax = relax
+                    info.relax = W[min_idx]
                 return False
 
-        return ActiveSetStoppingCriterion()
+        return super().stopping + [ActiveSetStoppingCriterion()]
 
     def direction(self, info: ActiveSetStepInfo) -> floatVec:
         if not isinstance(info.oracle._oracle_f, ConvexQuadratic):
@@ -141,6 +138,12 @@ class ActiveSetMethod(LineSearchOptimiser[ActiveSetStepInfo]):
         )
         v, mu = EQPSolver().solve(ceqp)
         info.mu = mu
+
+        if np.allclose(v, 0) and len(W) > 0 and mu is not None and len(mu) > 0:
+            if np.any(mu < 0):
+                # Index in `mu` with the smallest (most negative) multiplier
+                idx = int(np.argmin(mu))
+                info.relax = W[idx]
         return v
 
     def step_length(self, info: ActiveSetStepInfo) -> float:
@@ -191,7 +194,13 @@ class ActiveSetMethod(LineSearchOptimiser[ActiveSetStepInfo]):
         if relax is None:
             relax = info.relax
         if relax is not None and relax in info_next.W:
-            info_next.W.remove(relax)
-            info_next.relax = relax
+            block = (
+                info_next.blocking if info_next.blocking is not None else info.blocking
+            )
+            if block == relax:
+                info_next.relax = None
+            else:
+                info_next.W.remove(relax)
+                info_next.relax = relax
 
         return info_next

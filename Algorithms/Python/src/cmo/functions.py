@@ -197,7 +197,7 @@ class Sphere(Function):
         return 0.0
 
     def eval(self, x: floatVec) -> float:
-        return np.sum(x**2)
+        return float(np.sum(x**2))
 
     def grad(self, x: floatVec) -> floatVec:
         return 2 * x
@@ -284,7 +284,7 @@ class Griewank(Function):
     def eval(self, x: floatVec) -> float:
         sum_term = np.sum(x**2) / 4000
         prod_term = np.prod(np.cos(x / np.sqrt(np.arange(1, self.dim + 1))))
-        return sum_term - prod_term + 1
+        return float(sum_term - prod_term + 1)
 
 
 class Levy(Function):

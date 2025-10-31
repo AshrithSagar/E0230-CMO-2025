@@ -88,6 +88,7 @@ class GradientDescentArmijo(SteepestDescentDirectionMixin):
             self.alpha_step,
             dtype=np.double,
         ):
+            alpha = float(alpha)
             f_new = self._phi(info, alpha)
             if f_new <= f + self.c * alpha * derphi0:
                 alpha_prev = alpha
