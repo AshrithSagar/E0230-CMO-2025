@@ -86,7 +86,7 @@ class GradientDescentArmijo(SteepestDescentDirectionMixin):
             self.alpha_start,
             self.alpha_stop + self.alpha_step,
             self.alpha_step,
-            dtype=np.float64,
+            dtype=np.double,
         ):
             f_new = self._phi(info, alpha)
             if f_new <= f + self.c * alpha * derphi0:
@@ -405,7 +405,7 @@ class SR1Update(QuasiNewtonOptimiser):
         y = info.y
         if info.k == 0:
             if H is None:
-                H = np.eye(info.x.shape[0], dtype=np.float64)
+                H = np.eye(info.x.shape[0], dtype=np.double)
             return H
         else:
             if H is None or s is None or y is None:
@@ -427,7 +427,7 @@ class DFPUpdate(QuasiNewtonOptimiser):
         y = info.y
         if info.k == 0:
             if H is None:
-                H = np.eye(info.x.shape[0], dtype=np.float64)
+                H = np.eye(info.x.shape[0], dtype=np.double)
             return H
         else:
             if H is None or s is None or y is None:
@@ -451,13 +451,13 @@ class BFGSUpdate(QuasiNewtonOptimiser):
         y = info.y
         if info.k == 0:
             if H is None:
-                H = np.eye(info.x.shape[0], dtype=np.float64)
+                H = np.eye(info.x.shape[0], dtype=np.double)
             return H
         else:
             if H is None or s is None or y is None:
                 raise ValueError("H, s, or y missing in QuasiNewtonStepInfo.")
             rho = 1 / float(y.T @ s)
-            eye = np.eye(H.shape[0], dtype=np.float64)
+            eye = np.eye(H.shape[0], dtype=np.double)
             term1 = eye - rho * np.outer(s, y)
             term2 = eye - rho * np.outer(y, s)
             return term1 @ H @ term2 + rho * np.outer(s, s)

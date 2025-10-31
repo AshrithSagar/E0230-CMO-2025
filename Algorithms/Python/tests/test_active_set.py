@@ -4,7 +4,7 @@ tests/test_active_set.py
 
 import numpy as np
 from cmo.constrained import ActiveSetMethod
-from cmo.constraint import LinearInequalityConstraint
+from cmo.constraint import LinearInequalityConstraintSet
 from cmo.functions import ConvexQuadratic
 from cmo.oracle import FirstOrderOracle
 from cmo.problems import InequalityConstrainedQuadraticProgram
@@ -19,7 +19,7 @@ def test_active_set():
 
     A_ineq = np.array([[-1.0, 2.0], [1.0, 2.0], [2.0, 1.0], [1.0, -1.0]])
     b_ineq = np.array([2.0, 6.0, 6.0, 2.0])
-    constraint = LinearInequalityConstraint(A=A_ineq, b=b_ineq)
+    constraint = LinearInequalityConstraintSet(A=A_ineq, b=b_ineq)
     problem = InequalityConstrainedQuadraticProgram(
         objective=func, oracle=FirstOrderOracle, constraint=constraint
     )

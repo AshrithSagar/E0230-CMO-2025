@@ -321,7 +321,7 @@ class NewtonDirectionMixin(LineSearchOptimiser[SecondOrderLineSearchStepInfo]):
         grad = info.dfx
         hess = info.d2fx
 
-        p_k = np.asarray(np.linalg.solve(hess, -grad), dtype=np.float64)
+        p_k = np.asarray(np.linalg.solve(hess, -grad), dtype=np.double)
         return p_k
 
 

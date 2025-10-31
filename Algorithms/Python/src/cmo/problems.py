@@ -9,9 +9,9 @@ from typing import Optional
 from .base import IterativeOptimiser
 from .constraint import (
     AbstractConstraint,
-    LinearConstraint,
-    LinearEqualityConstraint,
-    LinearInequalityConstraint,
+    LinearConstraintSet,
+    LinearEqualityConstraintSet,
+    LinearInequalityConstraintSet,
 )
 from .functions import ConvexQuadratic, Function, LinearFunction
 from .oracle import AbstractOracle
@@ -52,19 +52,21 @@ class ConstrainedProblem[F: Function, C: AbstractConstraint](AbstractProblem[F])
         self.constraint = constraint
 
 
-class LinearProgram[C: LinearConstraint](ConstrainedProblem[LinearFunction, C]):
+class LinearProgram[C: LinearConstraintSet](ConstrainedProblem[LinearFunction, C]):
     """A class representing linear programming problems."""
 
 
-class QuadraticProgram[C: LinearConstraint](ConstrainedProblem[ConvexQuadratic, C]):
+class QuadraticProgram[C: LinearConstraintSet](ConstrainedProblem[ConvexQuadratic, C]):
     """A class representing convex quadratic programming problems."""
 
 
-class EqualityConstrainedQuadraticProgram(QuadraticProgram[LinearEqualityConstraint]):
+class EqualityConstrainedQuadraticProgram(
+    QuadraticProgram[LinearEqualityConstraintSet]
+):
     """A class representing convex equality-constrained quadratic programming problems."""
 
 
 class InequalityConstrainedQuadraticProgram(
-    QuadraticProgram[LinearInequalityConstraint]
+    QuadraticProgram[LinearInequalityConstraintSet]
 ):
     """A class representing convex inequality-constrained quadratic programming problems."""

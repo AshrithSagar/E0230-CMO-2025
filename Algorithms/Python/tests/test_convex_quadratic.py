@@ -11,8 +11,8 @@ from cmo.stopping import GradientNormCriterion, MaxIterationsCriterion
 
 def test_convex_quadratic():
     dim: int = 2
-    Q = np.array([[3, 0], [0, 1]], dtype=np.float64)
-    h = np.array([-3, -1], dtype=np.float64)
+    Q = np.array([[3, 0], [0, 1]], dtype=np.double)
+    h = np.array([-3, -1], dtype=np.double)
     func = ConvexQuadratic(dim=dim, Q=Q, h=h)
     oracle = FirstOrderOracle(func)
     optimiser = ConjugateGradientMethod()

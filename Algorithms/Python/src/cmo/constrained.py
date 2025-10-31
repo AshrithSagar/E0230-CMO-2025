@@ -8,8 +8,8 @@ from typing import Optional
 
 import numpy as np
 
-from .base import LineSearchOptimiser
-from .constraint import LinearEqualityConstraint
+from .base import IterativeOptimiser, LineSearchOptimiser
+from .constraint import LinearEqualityConstraintSet
 from .functions import ConvexQuadratic
 from .info import ActiveSetStepInfo
 from .oracle import FirstOrderOracle
@@ -19,6 +19,10 @@ from .problems import (
 )
 from .stopping import StoppingCriterion, StoppingCriterionType
 from .types import floatMat, floatVec
+
+
+class ConstrainedOptimiser(IterativeOptimiser):
+    """Base class for iterative constrained optimisers."""
 
 
 class EQPSolver:
@@ -60,7 +64,7 @@ class EQPSolver:
         rhs: floatVec = -np.hstack([h, b_eq])
 
         try:
-            sol: floatVec = np.asarray(np.linalg.solve(KKT, rhs), dtype=np.float64)
+            sol: floatVec = np.asarray(np.linalg.solve(KKT, rhs), dtype=np.double)
         except np.linalg.LinAlgError as e:
             raise ValueError("KKT system is singular") from e
 
@@ -131,7 +135,7 @@ class ActiveSetMethod(LineSearchOptimiser[ActiveSetStepInfo]):
         else:
             A_eq = A[W, :]
             b_eq = b[W]
-        constraint = LinearEqualityConstraint(A_eq, b_eq)
+        constraint = LinearEqualityConstraintSet(A_eq, b_eq)
 
         ceqp = EqualityConstrainedQuadraticProgram(
             objective, FirstOrderOracle, constraint

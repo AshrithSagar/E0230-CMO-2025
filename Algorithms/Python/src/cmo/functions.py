@@ -30,7 +30,7 @@ class Function(ABC):
 
     def _verify_input(self, x: ArrayLike) -> floatVec:
         """Verify that the input `x` is of the correct shape and type."""
-        _x: floatVec = np.asarray(x, dtype=np.float64)
+        _x: floatVec = np.asarray(x, dtype=np.double)
         if _x.shape != (self.dim,):
             raise ValueError(f"Input must be of shape ({self.dim},), got {_x.shape}.")
         return _x
@@ -63,7 +63,7 @@ class LinearFunction(Function):
     """A linear function of the form `f(x) = c^T x`"""
 
     def __init__(self, dim: int, c: floatVec):
-        self.c: floatVec = np.asarray(c, dtype=np.float64)
+        self.c: floatVec = np.asarray(c, dtype=np.double)
         assert self.c.shape == (dim,), "c must be of shape (dim,)."
         super().__init__(dim=dim)
 
@@ -81,8 +81,8 @@ class ConvexQuadratic(Function):
     """A convex quadratic function of the form `f(x) = 0.5 * x^T Q x + h^T x`"""
 
     def __init__(self, dim: int, Q: floatMat, h: floatVec):
-        self.Q: floatMat = np.asarray(Q, dtype=np.float64)
-        self.h: floatVec = np.asarray(h, dtype=np.float64)
+        self.Q: floatMat = np.asarray(Q, dtype=np.double)
+        self.h: floatVec = np.asarray(h, dtype=np.double)
         assert self.Q.shape == (dim, dim), "Q must be of shape (dim, dim)."
         assert self.h.shape == (dim,), "h must be of shape (dim,)."
 
@@ -94,7 +94,7 @@ class ConvexQuadratic(Function):
 
     @property
     def x_star(self) -> floatVec:
-        return np.asarray(np.linalg.solve(self.Q, -self.h), dtype=np.float64)
+        return np.asarray(np.linalg.solve(self.Q, -self.h), dtype=np.double)
 
     def eval(self, x: floatVec) -> float:
         return float(0.5 * x.T @ self.Q @ x + self.h.T @ x)
