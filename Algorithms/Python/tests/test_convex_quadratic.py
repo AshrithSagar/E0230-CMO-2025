@@ -22,8 +22,8 @@ def test_convex_quadratic():
         GradientNormCriterion(tol=1e-6),
     ]
     info = optimiser.run(oracle_fn=oracle, x0=x0, criteria=criteria, show_params=False)
-    assert np.allclose(info["x_star"], func.x_star, atol=1e-4), (
-        f"Expected {func.x_star}, but got {info['x_star']}"
+    assert np.allclose(info.x_star, func.x_star, atol=1e-4), (
+        f"Expected {func.x_star}, but got {info.x_star}"
     )
 
 

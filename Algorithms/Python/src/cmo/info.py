@@ -4,7 +4,7 @@ Info structures
 src/cmo/info.py
 """
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, fields
 from typing import Optional
 
 from .oracle import AbstractOracle, FirstOrderOracle, SecondOrderOracle, ZeroOrderOracle
@@ -27,15 +27,17 @@ class StepInfo[T: AbstractOracle]:
 
     def __str__(self, spacing: str | int = 2, prefix: str | int = 0) -> str:
         """String representation of the StepInfo object."""
-        repr = [
-            f"k={self.k},",
-            f"x={format_float(self.x, sep=', ')},",
-        ]
+        name: str = self.__class__.__name__
         s: str = " " * spacing if isinstance(spacing, int) else spacing
         p: str = " " * prefix if isinstance(prefix, int) else prefix
-        return (
-            f"{p}{self.__class__.__name__}(\n{p}{s}" + f"\n{p}{s}".join(repr) + f"{p})"
-        )
+        repr: list[str] = []
+        for f in fields(self):
+            if f.name == "oracle":
+                continue
+            value = getattr(self, f.name)
+            pfx = p + s + " " * 6 if f.name == "_d2fx" else ""
+            repr.append(f"{f.name}={format_float(value, sep=', ', pfx=pfx)}")
+        return f"{p}{name}(\n{p}{s}" + f",\n{p}{s}".join(repr) + f"\n{p})"
 
 
 @dataclass
@@ -140,23 +142,6 @@ class ActiveSetStepInfo[T: FirstOrderOracle](FirstOrderLineSearchStepInfo[T]):
     relax: Optional[int] = None
     """Index of the constraint relaxed, if any."""
 
-    def __str__(self, spacing: str | int = 2, prefix: str | int = 0) -> str:
-        repr = [
-            f"k={self.k},",
-            f"x={format_float(self.x, sep=', ')},",
-            f"W={self.W},",
-            f"blocking={self.blocking},",
-            f"relax={self.relax},",
-            f"mu={format_float(self.mu, sep=', ')},",
-            f"direction={format_float(self.direction, sep=', ')},",
-            f"alpha={None if self.alpha is None else f'{float(self.alpha):.6g}'}\n",
-        ]
-        s: str = " " * spacing if isinstance(spacing, int) else spacing
-        p: str = " " * prefix if isinstance(prefix, int) else prefix
-        return (
-            f"{p}{self.__class__.__name__}(\n{p}{s}" + f"\n{p}{s}".join(repr) + f"{p})"
-        )
-
 
 @dataclass(kw_only=True)
 class RunInfo[T: StepInfo]:
@@ -179,15 +164,21 @@ class RunInfo[T: StepInfo]:
     oracle_call_count: int
     time_taken: float
 
-    def __repr__(self) -> str:
+    def __str__(self, spacing: str | int = 2) -> str:
+        name: str = self.__class__.__name__
+        s: str = " " * spacing if isinstance(spacing, int) else spacing
+        repr: list[str] = []
+        for f in fields(self):
+            value = getattr(self, f.name)
+            if f.name == "history":
+                continue
+            if f.name == "time_taken":
+                repr.append(f"{f.name}={format_time(value)}")
+            else:
+                repr.append(f"{f.name}={format_float(value, sep=', ')}")
         return (
-            "RunInfo(\n  "
-            f"x0={format_float(self.x0, sep=', ')},\n  "
-            f"x_star={format_float(self.x_star, sep=', ')},\n  "
-            f"f_star={self.f_star},\n  "
-            f"n_iters={self.n_iters},\n  "
-            f"history=[\n{',\n'.join(step.__str__(prefix=4, spacing=2) for step in self.history)},\n  ],\n  "
-            f"oracle_calls={self.oracle_call_count},\n  "
-            f"time_taken={format_time(self.time_taken)}\n"
-            ")"
+            f"{name}(\n{s}"
+            + f",\n{s}".join(repr)
+            + f",\n{s}history=[\n"
+            + f"{',\n'.join(step.__str__(prefix=spacing * 2, spacing=spacing) for step in self.history)}\n{s}]\n)"
         )

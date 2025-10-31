@@ -61,10 +61,10 @@ class EQPSolver:
         m: int = A_eq.shape[0]
 
         KKT: floatMat = np.block([[Q, A_eq.T], [A_eq, np.zeros((m, m))]])
-        rhs: floatVec = -np.hstack([h, b_eq])
+        rhs: floatVec = np.hstack([-h, b_eq])
 
         try:
-            sol: floatVec = np.asarray(np.linalg.pinv(KKT) @ rhs, dtype=np.double)
+            sol: floatVec = np.asarray(np.linalg.solve(KKT, rhs), dtype=np.double)
         except np.linalg.LinAlgError as e:
             raise e
 
@@ -128,13 +128,12 @@ class ActiveSetMethod(LineSearchOptimiser[ActiveSetStepInfo]):
 
         W = info.W if info.W is not None else []
         A: floatMat = self.problem.constraint.A
-        b: floatVec = self.problem.constraint.b
         if len(W) == 0:  # No active constraints
             A_eq = np.zeros((0, A.shape[1]))
             b_eq = np.zeros((0,))
         else:
             A_eq = A[W, :]
-            b_eq = b[W]
+            b_eq = np.zeros((len(W),))
         constraint = LinearEqualityConstraintSet(A_eq, b_eq)
 
         ceqp = EqualityConstrainedQuadraticProgram(

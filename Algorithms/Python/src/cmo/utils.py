@@ -9,34 +9,61 @@ from rich.console import Console
 from rich.table import Table
 from rich.text import TextType
 
-from .types import floatVec
+from .types import floatMat, floatVec
 
 
 def format_float(
-    obj: float | floatVec | None,
+    obj: float | int | list[float | int] | floatVec | floatMat | None,
     dprec: int = 2,
-    fprec: int = 16,
+    fprec: int = 6,
     ffmt: str = "f",
     sep: str = ",\n",
     lim: int = 5,
+    pfx: str = "",
+    spac: str = " ",
 ) -> str:
     if obj is None:
         return "None"
-    _fmt = f"{{:{dprec}.{fprec}{ffmt}}}"
-    if isinstance(obj, float):
-        return f"{_fmt.format(obj)}"
-    elif isinstance(obj, np.ndarray):
-        if obj.size <= lim:
-            formatted = [f"{_fmt.format(x)}" for x in obj]
+
+    def _fmtr(x: float | int) -> str:
+        if isinstance(x, int):
+            return str(x)
+        elif isinstance(x, float):
+            _fmt = f"{{:{dprec}.{fprec}{ffmt}}}"
+            s = _fmt.format(x)
+            # Strip trailing zeros
+            if "." in s:
+                s = s.rstrip("0").rstrip(".")
+                if "." not in s:
+                    s += ".0"
+            return s
+        else:
+            return "..."
+
+    if isinstance(obj, (float, int)):
+        return _fmtr(obj)
+
+    def _fmt_vec(vec: floatVec | list[float] | list[int]) -> str:
+        if isinstance(vec, np.ndarray):
+            size = vec.size
+        else:
+            size = len(vec)
+        if size <= lim:
+            s = [_fmtr(x) for x in vec]
         else:
             # Show first two and last two items
-            formatted = (
-                [f"{_fmt.format(x)}" for x in obj[:2]]
-                + ["..."]
-                + [f"{_fmt.format(x)}" for x in obj[-2:]]
-            )
-        return "[" + sep.join(formatted) + "]"
-    return "None"
+            s = [_fmtr(x) for x in vec[:2]] + ["..."] + [_fmtr(x) for x in vec[-2:]]
+        return "[" + sep.join(s) + "]"
+
+    if isinstance(obj, list):
+        return _fmt_vec(obj)
+    elif isinstance(obj, np.ndarray):
+        if obj.ndim == 1:
+            return _fmt_vec(obj)
+        elif obj.ndim == 2:
+            rows = [_fmt_vec(row) for row in obj]
+            return "[" + f",\n{pfx}{spac}".join(rows) + "]"
+    return "..."
 
 
 def format_time(t: float | None) -> str:
