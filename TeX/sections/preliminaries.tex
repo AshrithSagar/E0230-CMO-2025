@@ -547,12 +547,12 @@ Here, we denote \( f \in \classC^{1}_L \) to mean that \( f \) is \( L \)-smooth
     \item If \( f \in \classC^{2} \), then \( f \in \classC^{1}_L \) iff \( \hess{f}{\x} \preceq L \I, \; \forall \x \in \R^d \).
 
     \item If \( f \in \classC^{1}_L \), then
-        \begin{equation*}
+        \begin{equation}\label{eq:lipschitz-gradient-inequality}
             \abs{ \func{f}{\y} - \func{f}{\x} - {\grad{f}{\x}}^\top (\y - \x) }
             \leq
             \frac{L}{2} \norm[\big]{\y - \x}^2,
             \quad \forall \x, \y \in \R^d
-        \end{equation*}
+        \end{equation}
 
         \begin{proof}
             Follows from \( \func{f}{\x} \pm \frac{L}{2} \norm{\x}^2 \) being convex functions, given \( f \in \classC^{1}_L \).
@@ -644,26 +644,26 @@ This tells us that we can evaluate definite integrals using antiderivatives.
 
 \begin{theorem}{(Multivariate) Taylor's theorem~\cite{wiki}}{}
     Let \( f: \R^d \to \R \) be \( k \) times continuously differentiable at the point \( \a \in \R^d, \; k \in \N_{\geq 1} \).
-    Then there exist functions \( h_{\alpha}: \R^d \to \R, \; \abs{\alpha} = k \) such that
+    Then there exist functions \( h_{\bfalpha}: \R^d \to \R, \; \abs{\bfalpha} = k \) such that
     \vspace{-0.5em}
     \begin{equation*}
         \func{f}{\x}
         =
-        \sum_{\abs{\alpha} \leq k}
+        \sum_{\abs{\bfalpha} \leq k}
         \frac
-        {\partial^{\alpha} \func{f}{\a}}
-        {\alpha!}
-        \pbrac{\x - \a}^{\alpha}
+        {\partial^{\bfalpha} \func{f}{\a}}
+        {\bfalpha!}
+        \pbrac{\x - \a}^{\bfalpha}
         +
-        \sum_{\abs{\alpha} = k}
-        \func{h_{\alpha}}{\x}
-        \pbrac{\x - \a}^{\alpha},
+        \sum_{\abs{\bfalpha} = k}
+        \func{h_{\bfalpha}}{\x}
+        \pbrac{\x - \a}^{\bfalpha},
         \quad
-        \lim_{\x \to \a} \func{h_{\alpha}}{\x} = 0
+        \lim_{\x \to \a} \func{h_{\bfalpha}}{\x} = 0
     \end{equation*}
 
     \vspace{-0.5em}
-    See multi-index notation~\psecref{sec:multi-index-notation}.
+    See "multi-index notation"~\psecref{sec:multi-index-notation}.
 \end{theorem}
 
 \subsection{Forms of the remainder}
@@ -2091,7 +2091,7 @@ Note that the Cauchy-Schwarz inequality~\psecref{sec:cauchy-schwarz-inequality} 
     Such an \( f \) is said to be \( \mu \)-\textbf{PL} on \( \calD \).
 \end{definition}
 
-\section{Jensen's inequality}
+\section{Jensen's inequality}\label{sec:jensens-inequality}
 
 \begin{theorem}{Jensen's inequality~\citep{wiki}}{}
     For any convex function \( f: \R^d \to \R \), and for any set of points \( \set{\x_i}_{i = 1}^n, \; \x_i \in \R^d \) and weights \( \set{\alpha_i}_{i = 1}^n, \; \alpha_i \geq 0 \) such that \( \sum_{i = 1}^{n} \alpha_i = 1 \), we have
