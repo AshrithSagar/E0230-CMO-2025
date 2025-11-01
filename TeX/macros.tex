@@ -53,6 +53,7 @@
 \LoopCommands{{minimize}{maximize}}[#1]{\DeclareMathOperator*{#2}{#1}}
 \DeclareMathOperator{\subjectto}{subject~to}
 \newcommand{\smalloh}[1]{\func{{\scriptstyle\calO}}{#1}}
+\newcommand{\bigoh}[1]{\func{\calO}{#1}}
 
 \LoopCommands{xyzcheapbruv}[#1]{\declaremathcommandPIE#2{{\mathbf{#1}}##1##2\IfEmptyTF{##3}{}{^{(\GetExponent{##3})}}}}
 \LoopCommands\lettersGreekAll[bf#1]{\newmathcommand#2{{\boldsymbol{#3}}}}
@@ -63,6 +64,8 @@
 
 \newcommand{\xstar}{{{\mathbf{x}}^\ast}}
 \newcommand{\xhat}{{\hat{\x}}}
+\newcommand{\xbar}{{\bar{\x}}}
+\newcommand{\xtilde}{{\tilde{\x}}}
 \newcommand{\ppow}[1]{^{(#1)}}
 
 \newcommand{\half}{{\frac{1}{2}}}

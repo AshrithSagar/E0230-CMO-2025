@@ -816,3 +816,373 @@ The active set is updated based on the solution obtained at each iteration until
         \( k \gets k + 1 \)\;
     }
 \end{algorithm}
+
+\newpage
+\chapter{Gradient projection method}
+
+\begin{algorithm}[H]
+    \caption{
+        Gradient projection method for constrained minimisation
+    }\label{alg:gradient-projection-method}
+    \SetAlgoLined{}
+    \KwIn{
+        First-order oracle for the objective function \( \func{f}{\x} \);
+        Feasible initial point \( \x^0 \in \calC \);
+    }
+    \KwOut{
+        Approximate solution to the constrained minimisation problem \( \displaystyle \argmin_{\x \in \calC} \func{f}{\x} \)\;
+    }
+
+    \( k \leftarrow 0 \)\;
+
+    \While{\( \x^k \) is not optimal}{
+        Choose a descent direction \( \p^k \) from the set of descent directions
+        \begin{equation*}
+            \func{\mathcal{DS}}{\x^k}
+            =
+            \set{\p \in \R^d \given \dotp{\grad{f}{\x^k}}{\p} < 0}
+        \end{equation*}
+
+        Choose a step length \( \alpha_k \geq 0 \)\;
+
+        Update the current point: \( \x^{k+1} = \func{P_{\calC}}{\x^k + \alpha_k \p^k} \)\;
+
+        \( k \leftarrow k + 1 \)\;
+    }
+    \Return{\( \x^k \)\;}
+\end{algorithm}
+
+Since \( P_{\calC}: \R^d \to \calC \), we can see that \( \x^k \in \calC, \; \forall k \).
+
+\section{Rate of convergence}
+
+Consider the constant step length rule, i.e., \( \alpha_k = \alpha > 0, \; \forall k \), and the steepest descent direction, i.e., \( \p^k = - \grad{f}{\x^k}, \; \forall k \).
+Then, the update step in~\palgref{alg:gradient-projection-method} becomes
+\begin{equation*}
+    \x^{k+1}
+    =
+    \func{P_{\calC}}{\x^k - \alpha \, \grad{f}{\x^k}}
+\end{equation*}
+
+Let \( f \in \classC^1_L \) be a convex function.
+By the first-order condition of convexity, we have
+\begin{align*}
+    \func{f}{\x}
+    & \geq
+    \func{f}{\xstar}
+    +
+    \dotp
+    {\grad{f}{\xstar}}
+    {\pbrac{\x - \xstar}},
+    \quad \forall \x \in \calC
+    \\
+    \implies
+    \func{f}{\xstar}
+    & \geq
+    \func{f}{\x}
+    +
+    \dotp
+    {\grad{f}{\x}}
+    {\pbrac{\xstar - \x}},
+    \quad \forall \x \in \calC
+    \\
+    \implies
+    \func{f}{\x}
+    & \leq
+    \func{f}{\xstar}
+    +
+    \dotp
+    {\grad{f}{\x}}
+    {\pbrac{\x - \xstar}},
+    \quad \forall \x \in \calC
+    \\
+    \therefore
+    \func{f}{\x^k}
+    & \leq
+    \func{f}{\xstar}
+    +
+    \dotp
+    {\grad{f}{\x^k}}
+    {\pbrac{\x^k - \xstar}},
+    \quad \forall \x^k \in \calC
+\end{align*}
+Now, by the characterisation of projection onto convex sets, i.e.,
+\begin{equation*}
+    \dotp
+    {\pbrac{\func{P_{\calC}}{\z} - \z}}
+    {\pbrac{\x - \func{P_{\calC}}{\z}}}
+    \geq 0,
+    \quad \forall \x \in \calC,
+    \; \forall \z \in \R^d
+\end{equation*}
+Setting \( \z = \x^k - \alpha \, \grad{f}{\x^k} \) in the above, we have \( \func{P_{\calC}}{\z} = \x^{k+1} \), and thus
+\begin{equation*}
+    \therefore
+    \dotp
+    {\pbrac{\x^{k+1} - \x^k + \alpha \, \grad{f}{\x^k}}}
+    {\pbrac{\x - \x^{k+1}}}
+    \geq 0,
+    \quad \forall \x \in \calC
+\end{equation*}
+With \( \x = \x^k \in \calC \), we have
+\begin{align*}
+    \implies
+    \dotp
+    {\pbrac{\x^{k+1} - \x^k + \alpha \, \grad{f}{\x^k}}}
+    {\pbrac{\x^k - \x^{k+1}}}
+    & \geq 0
+    \\
+    \implies
+    \norm{\x^{k+1} - \x^k}_2^2
+    & \geq
+    \alpha \,
+    \dotp
+    {\grad{f}{\x^k}}
+    {\pbrac{\x^{k+1} - \x^k}}
+    \\
+    \therefore
+    \dotp
+    {\grad{f}{\x^k}}
+    {\pbrac{\x^{k+1} - \x^k}}
+    & \leq
+    \frac{1}{\alpha} \, \norm{\x^{k+1} - \x^k}_2^2
+\end{align*}
+With \( \x = \xstar \in \calC \), we have
+\begin{align*}
+    \implies
+    \dotp
+    {\pbrac{\x^{k+1} - \x^k + \alpha \, \grad{f}{\x^k}}}
+    {\pbrac{\xstar - \x^{k+1}}}
+    & \geq 0
+    \\
+    \implies
+    \alpha \,
+    \dotp
+    {\grad{f}{\x^k}}
+    {\pbrac{\xstar - \x^{k+1}}}
+    & \geq
+    \dotp
+    {\pbrac{\x^k - \x^{k+1}}}
+    {\pbrac{\xstar - \x^{k+1}}}
+    \\
+    \therefore
+    \dotp
+    {\grad{f}{\x^k}}
+    {\pbrac{\x^{k+1} - \xstar}}
+    & \leq
+    \frac{1}{\alpha} \,
+    \dotp
+    {\pbrac{\x^k - \x^{k+1}}}
+    {\pbrac{\x^{k+1} - \xstar}}
+\end{align*}
+Since \( f \in \classC^1_L \), we have
+\begin{align*}
+    \func{f}{\x^{k+1}}
+    & \leq
+    \func{f}{\x^k}
+    +
+    \dotp
+    {\grad{f}{\x^k}}
+    {\pbrac{\x^{k+1} - \x^k}}
+    +
+    \frac{L}{2} \, \norm{\x^{k+1} - \x^k}_2^2
+    \\ & \leq
+    \func{f}{\xstar}
+    +
+    \dotp
+    {\grad{f}{\x^k}}
+    {\pbrac{\cancel{\x^k} - \xstar}}
+    +
+    \dotp
+    {\grad{f}{\x^k}}
+    {\pbrac{\x^{k+1} - \cancel{\x^k}}}
+    +
+    \frac{L}{2} \, \norm{\x^{k+1} - \x^k}_2^2
+    \\ & =
+    \func{f}{\xstar}
+    +
+    \dotp
+    {\grad{f}{\x^k}}
+    {\pbrac{\x^{k+1} - \xstar}}
+    +
+    \frac{L}{2} \, \norm{\x^{k+1} - \x^k}_2^2
+    \\ & \leq
+    \func{f}{\xstar}
+    +
+    \frac{1}{\alpha} \,
+    \dotp
+    {\pbrac{\x^k - \x^{k+1}}}
+    {\pbrac{\x^{k+1} - \xstar}}
+    +
+    \frac{L}{2} \, \norm{\x^{k+1} - \x^k}_2^2
+\end{align*}
+\begin{equation*}
+    \therefore
+    \func{f}{\x^{k+1}}
+    \leq
+    \func{f}{\xstar}
+    -
+    \frac{1}{\alpha} \,
+    \dotp
+    {\pbrac{\x^k - \x^{k+1}}}
+    {\pbrac{\xstar - \x^{k+1}}}
+    +
+    \frac{L}{2} \, \norm{\x^{k+1} - \x^k}_2^2
+\end{equation*}
+Let \( \u_k \triangleq \x^k - \xstar \).
+Then, we have that
+\(
+    \x^{k+1} - \x^k
+    =
+    \u_{k+1} - \u_k
+\), and thus
+\begin{equation*}
+    \implies
+    \func{f}{\x^{k+1}}
+    \leq
+    \func{f}{\xstar}
+    -
+    \frac{1}{\alpha} \,
+    \dotp
+    {\pbrac{\u_k - \u_{k+1}}}
+    {\pbrac{- \u_{k+1}}}
+    +
+    \frac{L}{2} \, \norm{\u_{k+1} - \u_k}_2^2
+\end{equation*}
+Now, observe that
+\begin{align*}
+    \norm{\u_k}_2^2
+    =
+    \norm{\u_{k+1} + \pbrac{\u_k - \u_{k+1}}}_2^2
+    & =
+    \norm{\u_{k+1}}_2^2
+    +
+    2 \,
+    \dotp
+    {\pbrac{\u_k - \u_{k+1}}}
+    {\u_{k+1}}
+    +
+    \norm{\u_k - \u_{k+1}}_2^2
+    \\
+    \implies
+    \dotp
+    {\pbrac{\u_k - \u_{k+1}}}
+    {\u_{k+1}}
+    & =
+    \frac{1}{2} \,
+    \pbrac{
+        \norm{\u_k}_2^2
+        -
+        \norm{\u_{k+1}}_2^2
+        -
+        \norm{\u_k - \u_{k+1}}_2^2
+    }
+\end{align*}
+\begin{align*}
+    \implies
+    \func{f}{\x^{k+1}}
+    & \leq
+    \func{f}{\xstar}
+    +
+    \frac{1}{2 \alpha} \,
+    \pbrac{
+        \norm{\u_k}_2^2
+        -
+        \norm{\u_{k+1}}_2^2
+        -
+        \norm{\u_k - \u_{k+1}}_2^2
+    }
+    +
+    \frac{L}{2} \, \norm{\u_k - \u_{k+1}}_2^2
+    \\ & =
+    \func{f}{\xstar}
+    +
+    \frac{1}{2 \alpha}
+    \pbrac{
+        \norm{\u_k}_2^2
+        -
+        \norm{\u_{k+1}}_2^2
+    }
+    +
+    \half
+    \pbrac{
+        L
+        -
+        \frac{1}{\alpha}
+    }
+    \norm{\u_k - \u_{k+1}}_2^2
+\end{align*}
+If we choose the step length \( \alpha \) such that \( 0 < \alpha < \frac{1}{L} \), then we have
+\begin{align*}
+    \implies
+    \func{f}{\x^{k+1}}
+    & \leq
+    \func{f}{\xstar}
+    +
+    \frac{1}{2 \alpha}
+    \pbrac{
+        \norm{\u_k}_2^2
+        -
+        \norm{\u_{k+1}}_2^2
+    },
+    \qquad
+    \alpha \in \pbrac{0, \frac{1}{L}}
+    \\
+    \implies
+    \func{f}{\x^{k+1}} - \func{f}{\xstar}
+    & \leq
+    \frac{1}{2 \alpha}
+    \pbrac{
+        \norm{\x^k - \xstar}_2^2
+        -
+        \norm{\x^{k+1} - \xstar}_2^2
+    }
+    \\
+    \implies
+    \sum_{k = 0}^{T - 1}
+    \bbrac{
+        \func{f}{\x^{k+1}} - \func{f}{\xstar}
+    }
+    & \leq
+    \frac{1}{2 \alpha}
+    \pbrac{
+        \norm{\x^0 - \xstar}_2^2
+        -
+        \norm{\x^{T} - \xstar}_2^2
+    }
+    \leq
+    \frac{1}{2 \alpha}
+    \norm{\x^0 - \xstar}_2^2
+\end{align*}
+Let \( \func{g}{\x} \triangleq \func{f}{\x} - \func{f}{\xstar}, \; \forall \x \in \calC \).
+Then, with
+\(
+    \displaystyle
+    \xbar
+    \triangleq
+    \frac{1}{T}
+    \sum_{k = 0}^{T - 1} \x^{k+1}
+\), we have, from the convexity of \( g \), that
+\begin{align*}
+    \func{g}{\xbar}
+    \leq
+    \frac{1}{T}
+    \sum_{k = 0}^{T - 1}
+    \func{g}{\x^{k+1}}
+    & =
+    \frac{1}{T}
+    \sum_{k = 0}^{T - 1}
+    \bbrac{
+        \func{f}{\x^{k+1}} - \func{f}{\xstar}
+    }
+    \leq
+    \frac{1}{2 \alpha \, T}
+    \norm{\x^0 - \xstar}_2^2
+    \\
+    \therefore
+    \func{f}{\xbar} - \func{f}{\xstar}
+    & \leq
+    \frac{1}{2 \alpha \, T}
+    \norm{\x^0 - \xstar}_2^2
+\end{align*}
+Therefore, the rate of convergence is \( \bigoh{\frac{1}{T}} \), for convex functions.
