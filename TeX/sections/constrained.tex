@@ -236,24 +236,23 @@ An ""optimisation problem@constrained optimisation problem"" can be put into the
     \func{f}{\x}
     \\ \subjectto \quad &
     \func{g_i}{\x} \leq 0,
-    \quad i \in \set{1, 2, \ldots, m},
-    \quad m \geq 0
+    \quad i \in \calI
     \\ &
     \func{h_j}{\x} = 0,
-    \quad j \in \set{1, 2, \ldots, p},
-    \quad p \geq 0
+    \quad j \in \calE
 \end{align*}
+where \( \calI = \set{1, 2, \ldots, m}, \; \calE = \set{m + 1, m + 2, \ldots, m + p}. \)
 
 \begin{itemize}
     \item The function \( f: \R^d \to \R \) is called the \textbf{objective function}.
 
-    \item The functions \( g_i: \R^d \to \R, \; i \in \set{1, 2, \ldots, m}, \) and \( h_j: \R^d \to \R, \; j \in \set{1, 2, \ldots, p}, \) are called the \textbf{constraint functions}.
+    \item The functions \( g_i: \R^d \to \R, \; i \in \calI, \) and \( h_j: \R^d \to \R, \; j \in \calE, \) are called the \textbf{constraint functions}.
 
     \item \AP The constraints \( \func{g_i}{\x} \leq 0 \) are called \textbf{""inequality constraints""}.
 
     \item \AP The constraints \( \func{h_j}{\x} = 0 \) are called \textbf{""equality constraints""}.
 
-    \item If a point \( \x \in \R^d \) satisfies all the constraints, then it is called a \textbf{feasible point}.
+    \item If a point \( \x \in \R^d \) satisfies all the constraints, then it is called a \textbf{""feasible point""}.
 
     \item If a point \( \x \in \R^d \) violates any of the constraints, then it is called an \textbf{infeasible point}.
 
@@ -265,11 +264,21 @@ An ""optimisation problem@constrained optimisation problem"" can be put into the
     \item An \textbf{active constraint} is a constraint that is satisfied with equality at a given feasible point.
         An \textbf{inactive constraint} is a constraint that is satisfied with strict inequality at a given feasible point.
         All equality constraints are always active.
+        \( \text{Active constraints} \supseteq \text{Equality constraints} \).
 
-    \item A \textbf{binding constraint} is a constraint that is satisfied with equality at a given optimal point.
+    \item A \textbf{""binding constraint""} is a constraint that is satisfied with equality at a given optimal point.
         A \textbf{non-binding constraint} is a constraint that is satisfied with strict inequality at a given optimal point.
-        \( \text{Binding constraints} \subseteq \text{Active constraints} \), i.e., at an optimal point, all active constraints need not be binding.
-        An equality constraint is always binding at an optimal point.
+        \( \text{Equality constraints} \subseteq \text{Binding constraints} \subseteq \text{Active constraints} \), i.e., at an optimal point, all active constraints need not be binding, and an equality constraint is always binding.
+
+    \item The \textbf{""active set""} at a feasible point \( \x \) is the set of indices of the active constraints at \( \x \), i.e.,
+        \vspace{-0.5em}
+        \begin{equation*}
+            \func{\calA}{\x}
+            \triangleq
+            \set{i \given \func{g_i}{\x} = 0, \; i \in \calI}
+            \; \cup \;
+            \calE
+        \end{equation*}
 
     \item The case \( m = 0 \) corresponds to having no inequality constraints, the case \( p = 0 \) corresponds to having no equality constraints, and the case \( m = p = 0 \) corresponds to an unconstrained optimisation problem.
 \end{itemize}
@@ -284,22 +293,48 @@ An ""optimisation problem@constrained optimisation problem"" can be put into the
         \triangleq
         \func{f}{\x}
         +
-        \sum_{i = 1}^{m} \lambda_i \, \func{g_i}{\x}
+        \sum_{i \in \calI} \lambda_i \, \func{g_i}{\x}
         +
-        \sum_{j = 1}^{p} \mu_j \, \func{h_j}{\x}
+        \sum_{j \in \calE} \mu_j \, \func{h_j}{\x}
     \end{equation*}
+
+    \vspace{-1em}
+    where
+    \(
+        \bflambda
+        =
+        \begin{bmatrix}
+            \lambda_1 &
+            \lambda_2 &
+            \cdots &
+            \lambda_m
+        \end{bmatrix}^\top
+        \in \R^m
+    \)
+    and
+    \(
+        \bfmu
+        =
+        \begin{bmatrix}
+            \mu_{m + 1} &
+            \mu_{m + 2} &
+            \cdots &
+            \mu_{m + p}
+        \end{bmatrix}^\top
+        \in \R^p
+    \).
 \end{definition}
 
 \subsection{Lagrange multipliers}
 
-The variables \( \lambda_i, \; i \in \set{1, 2, \ldots, m}, \) and \( \mu_j, \; j \in \set{1, 2, \ldots, p}, \) are called the \textbf{Lagrange multipliers} / \textbf{dual variables} associated with the inequality and equality constraints respectively.
+The variables \( \lambda_i, \; i \in \calI \), and \( \mu_j, \; j \in \calE \), are called the \textbf{Lagrange multipliers} / \textbf{dual variables} associated with the inequality and equality constraints respectively.
 
 \section{Karush-Kuhn-Tucker (KKT) conditions}\label{sec:kkt-conditions}
 
 \nointro{KKT conditions}
 Consider the "constrained optimisation problem" as in~\psecref{sec:constrained-optimisation-standard-form} where \( f, g_i, h_j \) are differentiable functions.
 Let \( \xstar \) be a local minimum and suppose that the gradients of the active constraints at \( \xstar \) are linearly independent.
-Then, there exist \( \lambda_i \geq 0, \; i \in \set{1, 2, \ldots, m}, \ \mu_j \in \R, \; j \in \set{1, 2, \ldots, p} \) such that
+Then, there exist \( \lambda_i \geq 0, \; i \in \calI, \ \mu_j \in \R, \; j \in \calE \) such that
 \begin{align*}
     \func{\nabla_{\x} \calL}{\xstar, \bflambda, \bfmu}
     & =
@@ -314,22 +349,22 @@ Then, there exist \( \lambda_i \geq 0, \; i \in \set{1, 2, \ldots, m}, \ \mu_j \
     \begin{aligned}
         \func{g_i}{\xstar}
         & \leq 0,
-        \quad \forall i \in \set{1, 2, \ldots, m}
+        \quad \forall i \in \calI
         \\
         \func{h_j}{\xstar}
         & = 0,
-        \quad \forall j \in \set{1, 2, \ldots, p}
+        \quad \forall j \in \calE
     \end{aligned}
     \tag{primal feasibility}
     \\
     \lambda_i
     & \geq 0,
-    \quad \forall i \in \set{1, 2, \ldots, m}
+    \quad \forall i \in \calI
     \tag{dual feasibility}
     \\
     \lambda_i \, \func{g_i}{\xstar}
     & = 0,
-    \quad \forall i \in \set{1, 2, \ldots, m}
+    \quad \forall i \in \calI
     \tag{complementary slackness}
 \end{align*}
 
@@ -359,7 +394,7 @@ The corresponding \textbf{Lagrange dual problem} of the primal problem in~\psecr
     \func{q}{\bflambda, \bfmu}
     \\ \subjectto \quad &
     \lambda_i \geq 0,
-    \quad i \in \set{1, 2, \ldots, m}
+    \quad i \in \calI
 \end{align*}
 
 \section{Weak duality}
@@ -378,12 +413,12 @@ The corresponding \textbf{Lagrange dual problem} of the primal problem in~\psecr
     Since \( \xhat \) is feasible for the primal problem, we have
     \begin{equation*}
         \func{g_i}{\xhat} \leq 0,
-        \quad i \in \set{1, 2, \ldots, m},
+        \quad i \in \calI,
         \qquad
         \func{h_j}{\xhat} = 0,
-        \quad j \in \set{1, 2, \ldots, p}
+        \quad j \in \calE
     \end{equation*}
-    and since \( (\hat{\bflambda}, \hat{\bfmu}) \) is feasible for the dual problem, we have \( \hat{\lambda}_i \geq 0, \; i \in \set{1, 2, \ldots, m} \).
+    and since \( (\hat{\bflambda}, \hat{\bfmu}) \) is feasible for the dual problem, we have \( \hat{\lambda}_i \geq 0, \; i \in \calI \).
     Thus,
     \begin{equation*}
         \func{q}{\hat{\bflambda}, \hat{\bfmu}}
@@ -482,7 +517,7 @@ A \textbf{""quadratic programming""} problem is an optimisation problem where th
 \end{align*}
 where \( \Q \in \SD, \; \h \in \R^d, \; c \in \R, \; \A \in \R^{m \times d}, \; \b \in \R^m \).
 
-\subsection{Convex Equality Quadratic Programming (CEQP)}\label{sec:ceqp}
+\subsection{Equality-constrained Quadratic Programming (EQP)}\label{sec:eqp}
 
 A ""CEQP"" problem is a "convex@CP" "quadratic programming" problem with only "equality constraints".
 \begin{align*}
@@ -521,7 +556,7 @@ The "Lagrangian function" is given by
     \b
 \end{align*}
 
-\subsection{Convex Inequality Quadratic Programming (CIQP)}\label{sec:ciqp}
+\subsection{Inequality-constrained Quadratic Programming (IQP)}\label{sec:iqp}
 
 A ""CIQP"" problem is a "convex@CP" "quadratic programming" problem with only "inequality constraints".
 \begin{align*}
@@ -568,19 +603,21 @@ The "Lagrangian function" is given by
     0
 \end{align*}
 
+\newpage
 \chapter{Active set methods}
 
 Active set methods are iterative methods for solving convex constrained optimisation problems.
-At each iteration, an estimate of the active set of constraints is maintained and used to solve a simpler optimisation problem.
+At each iteration, an estimate of the active set of inequality constraints is maintained and used to solve a simpler optimisation problem with only equality constraints.
 The active set is updated based on the solution obtained at each iteration until convergence is achieved.
-\begin{equation*}
+We only consider active set for the inequality constraints, since the equality constraints are always active, i.e.,
+\(
     \func{\calA}{\x}
-    \triangleq
+    =
     \set{i \given \func{g_i}{\x} = 0, \; i \in \set{1, 2, \ldots, m}}
-\end{equation*}
+\).
 
 \begin{theorem}{Equivalence of CIQP and CEQP at optimality}{}
-    The "CEQP" built from the active set of a (strongly convex) "CIQP" at its optimal solution has the same optimal solution as the CIQP, i.e., given a (strongly convex) CIQP with an optimal solution \( (\xstar, \bflambda^\ast) \), the solution to the following CEQP with the active set \( \func{\calA}{\xstar} \) is \( (\xstar, \bfmu^\ast) \), where \( \bfmu^\ast = \bbrac{\bflambda^\ast}_j, \; \forall j \in \func{\calA}{\xstar} \).
+    The "CEQP" built from the active set of a (strongly convex) "CIQP" at its optimal solution has the same optimal solution as the "CIQP", i.e., given a (strongly convex) "CIQP" with an optimal solution \( (\xstar, \bflambda^\ast) \), the solution to the following CEQP with the active set \( \func{\calA}{\xstar} \) is \( (\xstar, \bfmu^\ast) \), where \( \bfmu^\ast = \bbrac{\bflambda^\ast}_j, \; \forall j \in \func{\calA}{\xstar} \).
     \vspace{-0.5em}
     \begin{equation*}
         \begin{aligned}
@@ -604,9 +641,9 @@ The active set is updated based on the solution obtained at each iteration until
 \end{theorem}
 
 \begin{proof}
-    The proof follows from the "KKT conditions" of the CIQP and CEQP.
+    The proof follows from the "KKT conditions" of the "CIQP" and "CEQP".
 
-    Since \( (\xstar, \bflambda^\ast) \) is an optimal solution of the CIQP, we have from the "KKT conditions" that
+    Since \( (\xstar, \bflambda^\ast) \) is an optimal solution of the "CIQP", we have from the "KKT conditions" that
     \begin{align*}
         \Q \xstar + \h - \sum_{i = 1}^{m} \bbrac{\bflambda^\ast}_i \, \a_i
         & =
@@ -628,7 +665,7 @@ The active set is updated based on the solution obtained at each iteration until
         \quad \forall i \in \set{1, 2, \ldots, m}
     \end{align*}
 
-    The active set of the CIQP at \( \xstar \) is given by
+    The active set of the "CIQP" at \( \xstar \) is given by
     \begin{equation*}
         \func{\calA}{\xstar}
         =
@@ -656,7 +693,7 @@ The active set is updated based on the solution obtained at each iteration until
         \quad \forall k \in \set{1, 2, \ldots, m} \setminus \func{\calA}{\xstar}
     \end{align*}
 
-    For the CEQP constructed from the active set \( \func{\calA}{\xstar} \), let \( (\xhat, \hat{\bfmu}) \) be its optimal solution, and let \( p = \func{\#}{\func{\calA}{\xstar}} \).
+    For the CEQP constructed from the active set \( \func{\calA}{\xstar} \), let \( (\xhat, \hat{\bfmu}) \) be its optimal solution, and let \( p = \abs{\func{\calA}{\xstar}} \).
     From the "KKT conditions" of the CEQP, we have
     \begin{align*}
         \Q \xhat + \h - \sum_{
