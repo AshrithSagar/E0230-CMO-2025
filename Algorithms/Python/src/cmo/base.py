@@ -36,7 +36,7 @@ from .stopping import (
     StoppingCriterionType,
 )
 from .types import Matrix, Scalar, Vector
-from .utils import format_float, format_time, show_solution
+from .utils import format_time, format_value, show_solution
 
 console = Console()
 
@@ -174,9 +174,9 @@ class IterativeOptimiser[T: StepInfo](ABC):
             x_star=x,
             f_star=fx,
             n_iters=n_iters,
-            history=history,
             oracle_call_count=n_oracle,
             time_taken=t,
+            history=history,
         )
         self._show_run_result(x, fx, x0, n_iters, n_oracle)
         console.print(f"[bright_black]Time taken: {format_time(t)}[/]")
@@ -195,7 +195,7 @@ class IterativeOptimiser[T: StepInfo](ABC):
         table = Table(title=title, title_justify="left", show_header=False)
         table.add_column(style="bold", justify="right")
         table.add_column()
-        table.add_row("x0", format_float(x0, sep=", "))
+        table.add_row("x0", format_value(x0, sep=", "))
         table.add_row("Iterations", str(n_iters))
         table.add_row("Oracle calls", str(n_oracle))
         table.add_section()

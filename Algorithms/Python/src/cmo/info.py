@@ -9,7 +9,7 @@ from typing import Optional
 
 from .oracle import AbstractOracle, FirstOrderOracle, SecondOrderOracle, ZeroOrderOracle
 from .types import Matrix, Scalar, Vector
-from .utils import format_float, format_time
+from .utils import format_time, format_value
 
 
 @dataclass
@@ -36,7 +36,7 @@ class StepInfo[T: AbstractOracle]:
                 continue
             value = getattr(self, f.name)
             pfx = p + s + " " * 6 if f.name == "_d2fx" else ""
-            repr.append(f"{f.name}={format_float(value, sep=', ', pfx=pfx)}")
+            repr.append(f"{f.name}={format_value(value, sep=', ', pfx=pfx)}")
         return f"{p}{name}(\n{p}{s}" + f",\n{p}{s}".join(repr) + f"\n{p})"
 
 
@@ -160,9 +160,9 @@ class RunInfo[T: StepInfo]:
     x_star: Vector
     f_star: Scalar
     n_iters: int
-    history: list[T]
     oracle_call_count: int
     time_taken: Scalar
+    history: list[T]
 
     def __str__(self, spacing: str | int = 2) -> str:
         name: str = self.__class__.__name__
@@ -175,7 +175,7 @@ class RunInfo[T: StepInfo]:
             if f.name == "time_taken":
                 repr.append(f"{f.name}={format_time(value)}")
             else:
-                repr.append(f"{f.name}={format_float(value, sep=', ')}")
+                repr.append(f"{f.name}={format_value(value, sep=', ')}")
         return (
             f"{name}(\n{s}"
             + f",\n{s}".join(repr)

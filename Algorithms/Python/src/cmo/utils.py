@@ -12,7 +12,7 @@ from rich.text import TextType
 from .types import Matrix, Scalar, Vector
 
 
-def format_float(
+def format_value(
     obj: Scalar | int | list[Scalar | int] | Vector | Matrix | None,
     dprec: int = 2,
     fprec: int = 6,
@@ -103,6 +103,6 @@ def show_solution(
         table.add_column()
     if console is None:
         console = Console()
-    table.add_row("x*", format_float(x, sep=", "))
-    table.add_row("f(x*)", format_float(fx))
+    table.add_row("x*", format_value(x, sep=", "))
+    table.add_row("f(x*)", format_value(fx))
     console.print(table)
