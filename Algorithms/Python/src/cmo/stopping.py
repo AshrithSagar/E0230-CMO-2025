@@ -10,6 +10,7 @@ from typing import Iterable, Union
 import numpy as np
 
 from .info import FirstOrderStepInfo, StepInfo, ZeroOrderStepInfo
+from .types import Scalar
 
 StoppingCriterionType = Union[
     "StoppingCriterion", "CompositeCriterion", Iterable["StoppingCriterion"]
@@ -76,8 +77,8 @@ class GradientNormCriterion(StoppingCriterion[FirstOrderStepInfo]):
     `||f'(x_k)|| < tol`
     """
 
-    def __init__(self, tol: float = 1e-6):
-        self.tol = float(tol)
+    def __init__(self, tol: Scalar = 1e-6):
+        self.tol = Scalar(tol)
         """Tolerance for the gradient norm."""
 
     def check(self, info: FirstOrderStepInfo) -> bool:
@@ -91,8 +92,8 @@ class FunctionValueCriterion(StoppingCriterion[ZeroOrderStepInfo]):
     `f(x_k) < tol`
     """
 
-    def __init__(self, tol: float = 1e-6):
-        self.tol = float(tol)
+    def __init__(self, tol: Scalar = 1e-6):
+        self.tol = Scalar(tol)
         """Tolerance for the function value."""
 
     def check(self, info: ZeroOrderStepInfo) -> bool:

@@ -14,7 +14,7 @@ from typing import Any, Callable, Sequence
 
 import numpy as np
 
-from .types import floatMat, floatOrVec, floatVec
+from .types import Matrix, Scalar, Vector
 
 
 class ConstraintType(Enum):
@@ -30,7 +30,7 @@ class ConstraintType(Enum):
     """Inequality constraint; `g(x) >= 0`."""
 
     @property
-    def op(self) -> Callable[[floatOrVec, floatOrVec], bool]:
+    def op(self) -> Callable[[Scalar | Vector, Scalar | Vector], bool]:
         """Returns the operation associated with the constraint type."""
         match self:
             case ConstraintType.EQUALITY:
@@ -75,13 +75,13 @@ class SingleConstraint[T: ConstraintType](AbstractConstraint[T], ABC):
     """A class representing a single constraint."""
 
     @abstractmethod
-    def residual(self, x: floatVec) -> float:
+    def residual(self, x: Vector) -> Scalar:
         raise NotImplementedError
 
-    def is_satisfied(self, x: floatVec) -> bool:
+    def is_satisfied(self, x: Vector) -> bool:
         return self.ctype.op(self.residual(x), 0)
 
-    def is_active(self, x: floatVec, tol: float = 1e-8) -> bool:
+    def is_active(self, x: Vector, tol: Scalar = 1e-8) -> bool:
         """Checks if the constraint is active at point `x` within a tolerance."""
         if self.is_equality():
             return self.is_satisfied(x)
@@ -96,15 +96,15 @@ class MultiConstraint[T: ConstraintType](AbstractConstraint[T], ABC):
     """The sequence of constraints."""
 
     @abstractmethod
-    def residual(self, x: floatVec) -> floatVec:
+    def residual(self, x: Vector) -> Vector:
         raise NotImplementedError
 
-    def is_satisfied(self, x: floatVec) -> bool:
+    def is_satisfied(self, x: Vector) -> bool:
         residual = self.residual(x)
         return self.ctype.op(residual, np.zeros_like(residual))
 
     def active_set(
-        self, x: floatVec, tol: float = 1e-8
+        self, x: Vector, tol: Scalar = 1e-8
     ) -> Sequence[SingleConstraint[T]]:
         """Returns the set of active constraints at point `x` within a tolerance."""
         return [c for c in self.constraints if c.is_active(x, tol)]
@@ -113,12 +113,12 @@ class MultiConstraint[T: ConstraintType](AbstractConstraint[T], ABC):
 class LinearConstraint[T: ConstraintType](SingleConstraint[T]):
     """A single linear constraint with residual `(a^T x - b)`."""
 
-    def __init__(self, a: floatVec, b: float):
+    def __init__(self, a: Vector, b: Scalar):
         self.a = np.asarray(a, dtype=np.double)
-        self.b = float(b)
+        self.b = Scalar(b)
 
-    def residual(self, x: floatVec) -> float:
-        return float(self.a @ x) - self.b
+    def residual(self, x: Vector) -> Scalar:
+        return Scalar(self.a @ x) - self.b
 
 
 class LinearInequalityConstraint(
@@ -140,9 +140,9 @@ class LinearConstraintSet[T: ConstraintType](MultiConstraint[T]):
 
     constraint: type[LinearConstraint[T]]
 
-    def __init__(self, A: floatMat, b: floatVec):
-        self.A: floatMat = np.atleast_2d(A)
-        self.b: floatVec = np.atleast_1d(b)
+    def __init__(self, A: Matrix, b: Vector):
+        self.A: Matrix = np.atleast_2d(A)
+        self.b: Vector = np.atleast_1d(b)
         assert self.A.shape[0] == self.b.shape[0], (
             "Incompatible dimensions between A and b."
         )
@@ -151,7 +151,7 @@ class LinearConstraintSet[T: ConstraintType](MultiConstraint[T]):
             self.constraint(a_i, b_i) for a_i, b_i in zip(self.A, self.b)
         ]
 
-    def residual(self, x: floatVec) -> floatVec:
+    def residual(self, x: Vector) -> Vector:
         return self.A @ x - self.b
 
 

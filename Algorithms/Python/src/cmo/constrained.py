@@ -16,7 +16,7 @@ from .problems import (
     InequalityConstrainedQuadraticProgram,
 )
 from .stopping import StoppingCriterion, StoppingCriterionType
-from .types import floatMat, floatVec
+from .types import Matrix, Scalar, Vector
 
 
 class ConstrainedOptimiser(IterativeOptimiser):
@@ -33,7 +33,7 @@ class EQPSolver:
 
     def solve(
         self, problem: EqualityConstrainedQuadraticProgram
-    ) -> tuple[floatVec, floatVec]:
+    ) -> tuple[Vector, Vector]:
         """
         Solve the equality-constrained quadratic program using KKT conditions.
 
@@ -44,30 +44,30 @@ class EQPSolver:
 
         Returns
         -------
-        x : floatVec
+        x : Vector
             The optimal solution vector.
-        mu : floatVec
+        mu : Vector
             The Lagrange multipliers associated with the equality constraints.
         """
 
-        Q: floatMat = problem.objective.Q
-        h: floatVec = problem.objective.h
-        A_eq: floatMat = problem.constraint.A
-        b_eq: floatVec = problem.constraint.b
+        Q: Matrix = problem.objective.Q
+        h: Vector = problem.objective.h
+        A_eq: Matrix = problem.constraint.A
+        b_eq: Vector = problem.constraint.b
 
         n: int = Q.shape[0]
         m: int = A_eq.shape[0]
 
-        KKT: floatMat = np.block([[Q, A_eq.T], [A_eq, np.zeros((m, m))]])
-        rhs: floatVec = np.hstack([-h, b_eq])
+        KKT: Matrix = np.block([[Q, A_eq.T], [A_eq, np.zeros((m, m))]])
+        rhs: Vector = np.hstack([-h, b_eq])
 
         try:
-            sol: floatVec = np.asarray(np.linalg.solve(KKT, rhs), dtype=np.double)
+            sol: Vector = np.asarray(np.linalg.solve(KKT, rhs), dtype=np.double)
         except np.linalg.LinAlgError as e:
             raise e
 
-        x: floatVec = sol[:n]
-        mu: floatVec = sol[n:]
+        x: Vector = sol[:n]
+        mu: Vector = sol[n:]
         return x, mu
 
 
@@ -96,7 +96,7 @@ class ActiveSetMethod(LineSearchOptimiser[ActiveSetStepInfo]):
                 W = info.W
                 if W is None:
                     return False
-                tol: float = 1e-8
+                tol: Scalar = 1e-8
                 if np.allclose(v, 0, atol=tol, rtol=0):
                     mu = info.mu
                     if mu is None:
@@ -104,7 +104,7 @@ class ActiveSetMethod(LineSearchOptimiser[ActiveSetStepInfo]):
                     if mu.size != len(W):
                         return False
                     min_idx = int(np.argmin(mu))
-                    mu_min = float(mu[min_idx])
+                    mu_min = Scalar(mu[min_idx])
                     if mu_min >= -tol:
                         return True
                     info.relax = W[min_idx]
@@ -112,19 +112,19 @@ class ActiveSetMethod(LineSearchOptimiser[ActiveSetStepInfo]):
 
         return super().stopping + [ActiveSetStoppingCriterion()]
 
-    def direction(self, info: ActiveSetStepInfo) -> floatVec:
+    def direction(self, info: ActiveSetStepInfo) -> Vector:
         if not isinstance(info.oracle._oracle_f, ConvexQuadratic):
             raise NotImplementedError(
                 f"This implementation of {self.__class__.__name__} requires a ConvexQuadratic Function."
             )
 
-        Q: floatMat = info.oracle._oracle_f.Q
-        h: floatVec = info.dfx
+        Q: Matrix = info.oracle._oracle_f.Q
+        h: Vector = info.dfx
         dim: int = Q.shape[0]
         objective = ConvexQuadratic(dim=dim, Q=Q, h=h)
 
         W = info.W if info.W is not None else []
-        A: floatMat = self.problem.constraint.A
+        A: Matrix = self.problem.constraint.A
         if len(W) == 0:  # No active constraints
             A_eq = np.zeros((0, A.shape[1]))
             b_eq = np.zeros((0,))
@@ -146,7 +146,7 @@ class ActiveSetMethod(LineSearchOptimiser[ActiveSetStepInfo]):
                 info.relax = W[idx]
         return v
 
-    def step_length(self, info: ActiveSetStepInfo) -> float:
+    def step_length(self, info: ActiveSetStepInfo) -> Scalar:
         v = info.direction
         if v is None:
             raise ValueError("Direction has not been computed.")
@@ -164,9 +164,9 @@ class ActiveSetMethod(LineSearchOptimiser[ActiveSetStepInfo]):
         alpha = 1.0
         for i in inds:
             a_i = A[i, :]
-            denom = float(a_i @ v)
+            denom = Scalar(a_i @ v)
             if denom < 0:
-                alpha_i = float(b[i] - a_i @ x) / denom
+                alpha_i = Scalar(b[i] - a_i @ x) / denom
                 if alpha_i < alpha:
                     alpha = alpha_i
                     blocking = i

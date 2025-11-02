@@ -7,7 +7,7 @@ src/cmo/oracle.py
 from typing import Self
 
 from .functions import Function
-from .types import floatVec
+from .types import Scalar, Vector
 
 
 class AbstractOracle:
@@ -41,7 +41,7 @@ class ZeroOrderOracle(AbstractOracle):
         self.eval_call_count: int = 0
         """Tracks the number of function evaluations."""
 
-    def eval(self, x: floatVec) -> float:
+    def eval(self, x: Vector) -> Scalar:
         self.call_count += 1
         self.eval_call_count += 1
         return self._oracle_f.eval(x)
@@ -59,7 +59,7 @@ class FirstOrderOracle(ZeroOrderOracle):
         self.grad_call_count: int = 0
         """Tracks the number of gradient evaluations."""
 
-    def grad(self, x: floatVec) -> floatVec:
+    def grad(self, x: Vector) -> Vector:
         self.call_count += 1
         self.grad_call_count += 1
         return self._oracle_f.grad(x)
@@ -77,7 +77,7 @@ class SecondOrderOracle(FirstOrderOracle):
         self.hess_call_count: int = 0
         """Tracks the number of Hessian evaluations."""
 
-    def hess(self, x: floatVec) -> floatVec:
+    def hess(self, x: Vector) -> Vector:
         self.call_count += 1
         self.hess_call_count += 1
         return self._oracle_f.hess(x)

@@ -35,7 +35,7 @@ from .stopping import (
     StoppingCriterion,
     StoppingCriterionType,
 )
-from .types import floatMat, floatVec
+from .types import Matrix, Scalar, Vector
 from .utils import format_float, format_time, show_solution
 
 console = Console()
@@ -87,7 +87,7 @@ class IterativeOptimiser[T: StepInfo](ABC):
     def run(
         self,
         oracle_fn: AbstractOracle,
-        x0: floatVec,
+        x0: Vector,
         criteria: Optional[StoppingCriterionType] = None,
         show_params: bool = True,
     ) -> RunInfo[T]:
@@ -119,11 +119,11 @@ class IterativeOptimiser[T: StepInfo](ABC):
                 _crit.append(crit)
             elif isinstance(crit, Iterable):
                 _crit.extend(crit)
-        maxiter: float = float("inf")
+        maxiter: Scalar = Scalar("inf")
         for crit in _crit:
             if isinstance(crit, MaxIterationsCriterion):
                 maxiter = min(maxiter, crit.maxiter)
-        if maxiter == float("inf"):
+        if maxiter == Scalar("inf"):
             maxiter = 1000  # Default maxiter, if unspecified
             _crit.append(MaxIterationsCriterion(maxiter))
         maxiter = int(maxiter)
@@ -133,7 +133,7 @@ class IterativeOptimiser[T: StepInfo](ABC):
         oracle_fn.reset()
         criteria.reset()
         k: int = 0
-        x: floatVec = x0
+        x: Vector = x0
         info = self.StepInfoClass(k, x, oracle_fn)
         history: list[T] = [info]
 
@@ -184,9 +184,9 @@ class IterativeOptimiser[T: StepInfo](ABC):
 
     def _show_run_result(
         self,
-        x: floatVec,
-        fx: float,
-        x0: floatVec,
+        x: Vector,
+        fx: Scalar,
+        x0: Vector,
         n_iters: int | str,
         n_oracle: int | str,
         title: TextType | None = None,
@@ -211,18 +211,18 @@ class LineSearchOptimiser[T: LineSearchStepInfo](IterativeOptimiser[T]):
     """
 
     def reset(self) -> Self:
-        self.step_lengths: list[float] = []
-        self.step_directions: list[floatVec] = []
+        self.step_lengths: list[Scalar] = []
+        self.step_directions: list[Vector] = []
         return super().reset()
 
-    def direction(self, info: T) -> floatVec:
+    def direction(self, info: T) -> Vector:
         """
         Returns the descent direction `p_k` to move towards from `x_k`.\\
         [Required]: This method should be implemented by subclasses to define the specific direction strategy.
         """
         raise NotImplementedError
 
-    def step_length(self, info: T) -> float:
+    def step_length(self, info: T) -> Scalar:
         """
         Returns step length `alpha_k` to take along the descent direction `p_k`.\\
         [Required]: This method should be implemented by subclasses to define the specific step length strategy.
@@ -249,7 +249,7 @@ class LineSearchOptimiser[T: LineSearchStepInfo](IterativeOptimiser[T]):
     def stopping(self) -> list[StoppingCriterionType]:
         class LineSearchStoppingCriterion(StoppingCriterion[LineSearchStepInfo]):
             def check(self, info: LineSearchStepInfo) -> bool:
-                tol: float = 1e-16
+                tol: Scalar = 1e-16
                 if info.alpha is not None and abs(info.alpha) < tol:
                     return True
                 return False
@@ -260,17 +260,17 @@ class LineSearchOptimiser[T: LineSearchStepInfo](IterativeOptimiser[T]):
         """Plot step lengths vs iterations for the best run."""
         plt.plot(self.step_lengths, marker="o", label=self.name)
 
-    def _phi(self, info: FirstOrderLineSearchStepInfo, alpha: float) -> float:
+    def _phi(self, info: FirstOrderLineSearchStepInfo, alpha: Scalar) -> Scalar:
         """`phi(alpha) = f(x + alpha * d)`"""
         if info.direction is None:
             raise ValueError("Direction not set in StepInfo.")
         return info.eval(info.x + alpha * info.direction)
 
-    def _derphi(self, info: FirstOrderLineSearchStepInfo, alpha: float) -> float:
+    def _derphi(self, info: FirstOrderLineSearchStepInfo, alpha: Scalar) -> Scalar:
         """`phi'(alpha) = f'(x + alpha * d)^T d`"""
         if info.direction is None:
             raise ValueError("Direction not set in StepInfo.")
-        return float(info.grad(info.x + alpha * info.direction).T @ info.direction)
+        return Scalar(info.grad(info.x + alpha * info.direction).T @ info.direction)
 
 
 class SteepestDescentDirectionMixin(LineSearchOptimiser[FirstOrderLineSearchStepInfo]):
@@ -283,7 +283,7 @@ class SteepestDescentDirectionMixin(LineSearchOptimiser[FirstOrderLineSearchStep
 
     StepInfoClass = FirstOrderLineSearchStepInfo
 
-    def direction(self, info: FirstOrderLineSearchStepInfo) -> floatVec:
+    def direction(self, info: FirstOrderLineSearchStepInfo) -> Vector:
         grad = info.dfx
         return -grad
 
@@ -298,7 +298,7 @@ class ExactLineSearchMixin(LineSearchOptimiser[FirstOrderLineSearchStepInfo]):
 
     StepInfoClass = FirstOrderLineSearchStepInfo
 
-    def step_length(self, info: FirstOrderLineSearchStepInfo) -> float:
+    def step_length(self, info: FirstOrderLineSearchStepInfo) -> Scalar:
         if not isinstance(info.oracle._oracle_f, ConvexQuadratic):
             raise NotImplementedError(
                 f"This implementation of {self.__class__.__name__} requires a ConvexQuadratic Function."
@@ -310,8 +310,8 @@ class ExactLineSearchMixin(LineSearchOptimiser[FirstOrderLineSearchStepInfo]):
         grad = info.dfx
         Q = info.oracle._oracle_f.Q
 
-        numer = float(grad.T @ d)
-        denom = float(d.T @ Q @ d)
+        numer = Scalar(grad.T @ d)
+        denom = Scalar(d.T @ Q @ d)
         alpha = -numer / denom
 
         if alpha < 0:
@@ -330,7 +330,7 @@ class NewtonDirectionMixin(LineSearchOptimiser[SecondOrderLineSearchStepInfo]):
 
     StepInfoClass = SecondOrderLineSearchStepInfo
 
-    def direction(self, info) -> floatVec:
+    def direction(self, info) -> Vector:
         grad = info.dfx
         hess = info.d2fx
 
@@ -345,7 +345,7 @@ class UnitStepLengthMixin[T: LineSearchStepInfo](LineSearchOptimiser[T]):
     `alpha_k = 1`
     """
 
-    def step_length(self, info: T) -> float:
+    def step_length(self, info: T) -> Scalar:
         return 1.0
 
 
@@ -365,7 +365,7 @@ class QuasiNewtonOptimiser(UnitStepLengthMixin[QuasiNewtonStepInfo], ABC):
     StepInfoClass = QuasiNewtonStepInfo
 
     @abstractmethod
-    def hess_inv(self, info: QuasiNewtonStepInfo) -> floatMat:
+    def hess_inv(self, info: QuasiNewtonStepInfo) -> Matrix:
         """
         Updates and returns the approximate inverse Hessian matrix `H_k`.\\
         [Required]: This method should be implemented by subclasses to define the specific update rule.
@@ -376,7 +376,7 @@ class QuasiNewtonOptimiser(UnitStepLengthMixin[QuasiNewtonStepInfo], ABC):
         """
         raise NotImplementedError
 
-    def direction(self, info: QuasiNewtonStepInfo) -> floatVec:
+    def direction(self, info: QuasiNewtonStepInfo) -> Vector:
         grad = info.dfx
         H = self.hess_inv(info)
         info.H = H

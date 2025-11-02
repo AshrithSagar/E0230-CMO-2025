@@ -20,7 +20,7 @@ from .base import (
 )
 from .functions import ConvexQuadratic
 from .info import FirstOrderLineSearchStepInfo, QuasiNewtonStepInfo
-from .types import floatMat, floatVec
+from .types import Matrix, Scalar, Vector
 
 
 class GradientDescent(SteepestDescentDirectionMixin):
@@ -31,10 +31,10 @@ class GradientDescent(SteepestDescentDirectionMixin):
     """
 
     def reset(self):
-        self.lr = float(self.config.get("lr", 1e-3))
+        self.lr = Scalar(self.config.get("lr", 1e-3))
         return super().reset()
 
-    def step_length(self, info: FirstOrderLineSearchStepInfo) -> float:
+    def step_length(self, info: FirstOrderLineSearchStepInfo) -> Scalar:
         return self.lr
 
 
@@ -60,35 +60,35 @@ class GradientDescentArmijo(SteepestDescentDirectionMixin):
     """
 
     def reset(self):
-        self.c = float(self.config.get("c", 1e-4))  # Armijo parameter
-        self.alpha_min = float(self.config.get("alpha_min", 1e-14))
-        self.alpha_start = float(self.config.get("alpha_start", 0.0))
-        self.alpha_step = float(self.config.get("alpha_step", 1e-1))
-        self.alpha_stop = float(self.config.get("alpha_stop", 1.0))
+        self.c = Scalar(self.config.get("c", 1e-4))  # Armijo parameter
+        self.alpha_min = Scalar(self.config.get("alpha_min", 1e-14))
+        self.alpha_start = Scalar(self.config.get("alpha_start", 0.0))
+        self.alpha_step = Scalar(self.config.get("alpha_step", 1e-1))
+        self.alpha_stop = Scalar(self.config.get("alpha_stop", 1.0))
 
         assert 0 < self.c < 1, "c must be in (0, 1)"
         return super().reset()
 
-    def step_length(self, info: FirstOrderLineSearchStepInfo) -> float:
+    def step_length(self, info: FirstOrderLineSearchStepInfo) -> Scalar:
         if info.direction is None:
             raise ValueError("Direction must be provided for line search.")
         d = info.direction
         f = info.fx
         grad = info.dfx
-        derphi0 = float(grad.T @ d)
+        derphi0 = Scalar(grad.T @ d)
         # Fallback if directional derivative is non-negative
         if derphi0 >= 0:
             return self.alpha_min
 
         # Forward expansion
-        alpha_prev: float | None = None
+        alpha_prev: Scalar | None = None
         for alpha in np.arange(
             self.alpha_start,
             self.alpha_stop + self.alpha_step,
             self.alpha_step,
             dtype=np.double,
         ):
-            alpha = float(alpha)
+            alpha = Scalar(alpha)
             f_new = self._phi(info, alpha)
             if f_new <= f + self.c * alpha * derphi0:
                 alpha_prev = alpha
@@ -106,23 +106,23 @@ class GradientDescentBacktracking(SteepestDescentDirectionMixin):
     """
 
     def reset(self):
-        self.c = float(self.config.get("c", 1e-4))  # Armijo parameter
-        self.beta = float(self.config.get("beta", 0.5))
-        self.alpha_init = float(self.config.get("alpha_init", 1.0))
-        self.alpha_min = float(self.config.get("alpha_min", 1e-14))
-        self.alpha_max = float(self.config.get("alpha_max", 1e6))
+        self.c = Scalar(self.config.get("c", 1e-4))  # Armijo parameter
+        self.beta = Scalar(self.config.get("beta", 0.5))
+        self.alpha_init = Scalar(self.config.get("alpha_init", 1.0))
+        self.alpha_min = Scalar(self.config.get("alpha_min", 1e-14))
+        self.alpha_max = Scalar(self.config.get("alpha_max", 1e6))
         self.maxiter = int(self.config.get("maxiter", 10))
 
         assert 0 < self.c < 1, "c must be in (0, 1)"
         return super().reset()
 
-    def step_length(self, info: FirstOrderLineSearchStepInfo) -> float:
+    def step_length(self, info: FirstOrderLineSearchStepInfo) -> Scalar:
         if info.direction is None:
             raise ValueError("Direction must be provided for line search.")
         d = info.direction
         f = info.fx
         grad = info.dfx
-        derphi0 = float(grad.T @ d)
+        derphi0 = Scalar(grad.T @ d)
         # Fallback if directional derivative is non-negative
         if derphi0 >= 0:
             return self.alpha_min
@@ -146,23 +146,23 @@ class GradientDescentArmijoGoldstein(SteepestDescentDirectionMixin):
     """
 
     def reset(self):
-        self.c = float(self.config.get("c", 1e-4))  # Armijo-Goldstein parameter
-        self.beta = float(self.config.get("beta", 0.5))
-        self.alpha_init = float(self.config.get("alpha_init", 1.0))
-        self.alpha_min = float(self.config.get("alpha_min", 1e-14))
-        self.alpha_max = float(self.config.get("alpha_max", 1e6))
+        self.c = Scalar(self.config.get("c", 1e-4))  # Armijo-Goldstein parameter
+        self.beta = Scalar(self.config.get("beta", 0.5))
+        self.alpha_init = Scalar(self.config.get("alpha_init", 1.0))
+        self.alpha_min = Scalar(self.config.get("alpha_min", 1e-14))
+        self.alpha_max = Scalar(self.config.get("alpha_max", 1e6))
         self.maxiter = int(self.config.get("maxiter", 10))
 
         assert 0 < self.c < 0.5, "c must be in (0, 0.5)"
         return super().reset()
 
-    def step_length(self, info: FirstOrderLineSearchStepInfo) -> float:
+    def step_length(self, info: FirstOrderLineSearchStepInfo) -> Scalar:
         if info.direction is None:
             raise ValueError("Direction must be provided for line search.")
         d = info.direction
         f = info.fx
         grad = info.dfx
-        derphi0 = float(grad.T @ d)
+        derphi0 = Scalar(grad.T @ d)
         # Fallback if directional derivative is non-negative
         if derphi0 >= 0:
             return self.alpha_min
@@ -214,24 +214,24 @@ class GradientDescentWolfe(SteepestDescentDirectionMixin):
     """
 
     def reset(self):
-        self.c1 = float(self.config.get("c1", 1e-4))
-        self.c2 = float(self.config.get("c2", 0.9))
-        self.beta = float(self.config.get("beta", 0.5))
-        self.alpha_init = float(self.config.get("alpha_init", 1.0))
-        self.alpha_min = float(self.config.get("alpha_min", 1e-14))
-        self.alpha_max = float(self.config.get("alpha_max", 1e6))
+        self.c1 = Scalar(self.config.get("c1", 1e-4))
+        self.c2 = Scalar(self.config.get("c2", 0.9))
+        self.beta = Scalar(self.config.get("beta", 0.5))
+        self.alpha_init = Scalar(self.config.get("alpha_init", 1.0))
+        self.alpha_min = Scalar(self.config.get("alpha_min", 1e-14))
+        self.alpha_max = Scalar(self.config.get("alpha_max", 1e6))
         self.maxiter = int(self.config.get("maxiter", 10))
 
         assert 0 < self.c1 < self.c2 < 1, "0 < c1 < c2 < 1 must be satisfied"
         return super().reset()
 
-    def step_length(self, info: FirstOrderLineSearchStepInfo) -> float:
+    def step_length(self, info: FirstOrderLineSearchStepInfo) -> Scalar:
         if info.direction is None:
             raise ValueError("Direction must be provided for line search.")
         d = info.direction
         f = info.fx
         grad = info.dfx
-        derphi0 = float(grad.T @ d)
+        derphi0 = Scalar(grad.T @ d)
         # Fallback if directional derivative is non-negative
         if derphi0 >= 0:
             return self.alpha_min
@@ -266,10 +266,10 @@ class GradientDescentWolfe(SteepestDescentDirectionMixin):
     def _zoom(
         self,
         info: FirstOrderLineSearchStepInfo,
-        alpha_lo: float,
-        alpha_hi: float,
-        phi0: float,
-        derphi0: float,
+        alpha_lo: Scalar,
+        alpha_hi: Scalar,
+        phi0: Scalar,
+        derphi0: Scalar,
         maxiter: int = 50,
     ):
         """
@@ -318,11 +318,11 @@ class ConjugateDirectionMethod(LineSearchOptimiser[FirstOrderLineSearchStepInfo]
 
         if self.config.get("directions") is None:
             raise ValueError(f"{self.__class__.__name__} requires directions apriori.")
-        self.directions: list[floatVec] = self.config.get("directions", [])
+        self.directions: list[Vector] = self.config.get("directions", [])
 
         return super().reset()
 
-    def direction(self, info: FirstOrderLineSearchStepInfo) -> floatVec:
+    def direction(self, info: FirstOrderLineSearchStepInfo) -> Vector:
         k = info.k
         if k < len(self.directions):
             direction = self.directions[k]
@@ -331,7 +331,7 @@ class ConjugateDirectionMethod(LineSearchOptimiser[FirstOrderLineSearchStepInfo]
         else:
             raise IndexError(f"No more directions available for iteration {k}.")
 
-    def step_length(self, info: FirstOrderLineSearchStepInfo) -> float:
+    def step_length(self, info: FirstOrderLineSearchStepInfo) -> Scalar:
         if not isinstance(info.oracle._oracle_f, ConvexQuadratic):
             raise NotImplementedError(
                 f"This implementation of {self.__class__.__name__} requires a ConvexQuadratic Function."
@@ -353,10 +353,10 @@ class ConjugateGradientMethod(LineSearchOptimiser[FirstOrderLineSearchStepInfo])
 
     def reset(self):
         self.line_search = ExactLineSearchMixin().reset()
-        self.rTr_prev: float
+        self.rTr_prev: Scalar
         return super().reset()
 
-    def direction(self, info: FirstOrderLineSearchStepInfo) -> floatVec:
+    def direction(self, info: FirstOrderLineSearchStepInfo) -> Vector:
         if not isinstance(info.oracle._oracle_f, ConvexQuadratic):
             raise NotImplementedError(
                 f"This implementation of {self.__class__.__name__} requires a ConvexQuadratic Function."
@@ -366,10 +366,10 @@ class ConjugateGradientMethod(LineSearchOptimiser[FirstOrderLineSearchStepInfo])
         grad = info.dfx
 
         if k == 0:
-            self.rTr_prev = float(grad.T @ grad)
+            self.rTr_prev = Scalar(grad.T @ grad)
             direction = -grad
         else:
-            rTr = float(grad.T @ grad)
+            rTr = Scalar(grad.T @ grad)
             beta = rTr / self.rTr_prev
             direction = grad + beta * self.step_directions[-1]
             self.rTr_prev = rTr
@@ -377,7 +377,7 @@ class ConjugateGradientMethod(LineSearchOptimiser[FirstOrderLineSearchStepInfo])
         self.line_search.step_directions.append(direction)
         return direction
 
-    def step_length(self, info: FirstOrderLineSearchStepInfo) -> float:
+    def step_length(self, info: FirstOrderLineSearchStepInfo) -> Scalar:
         alpha = self.line_search.step_length(info)
         self.step_directions[-1] = self.line_search.step_directions[-1]
         return alpha
@@ -400,7 +400,7 @@ class SR1Update(QuasiNewtonOptimiser):
     `H_{k+1} = H_k + ((s_k - H_k y_k)(s_k - H_k y_k)^T) / ((s_k - H_k y_k)^T y_k)`
     """
 
-    def hess_inv(self, info: QuasiNewtonStepInfo) -> floatMat:
+    def hess_inv(self, info: QuasiNewtonStepInfo) -> Matrix:
         H = info.H
         s = info.s
         y = info.y
@@ -412,7 +412,7 @@ class SR1Update(QuasiNewtonOptimiser):
             if H is None or s is None or y is None:
                 raise ValueError("H, s, or y missing in QuasiNewtonStepInfo.")
             u = s - H @ y
-            return H + np.outer(u, u) / float(u.T @ y)
+            return H + np.outer(u, u) / Scalar(u.T @ y)
 
 
 class DFPUpdate(QuasiNewtonOptimiser):
@@ -422,7 +422,7 @@ class DFPUpdate(QuasiNewtonOptimiser):
     `H_{k+1} = H_k + (s_k s_k^T) / (y_k^T s_k) - (H_k y_k y_k^T H_k) / (y_k^T H_k y_k)`
     """
 
-    def hess_inv(self, info: QuasiNewtonStepInfo) -> floatMat:
+    def hess_inv(self, info: QuasiNewtonStepInfo) -> Matrix:
         H = info.H
         s = info.s
         y = info.y
@@ -435,7 +435,9 @@ class DFPUpdate(QuasiNewtonOptimiser):
                 raise ValueError("H, s, or y missing in QuasiNewtonStepInfo.")
             Hy = H @ y
             return (
-                H + np.outer(s, s) / float(y.T @ s) - np.outer(Hy, Hy) / float(y.T @ Hy)
+                H
+                + np.outer(s, s) / Scalar(y.T @ s)
+                - np.outer(Hy, Hy) / Scalar(y.T @ Hy)
             )
 
 
@@ -446,7 +448,7 @@ class BFGSUpdate(QuasiNewtonOptimiser):
     `H_{k+1} = (I - (s_k y_k^T) / (y_k^T s_k)) H_k (I - (y_k s_k^T) / (y_k^T s_k)) + (s_k s_k^T) / (y_k^T s_k)`
     """
 
-    def hess_inv(self, info: QuasiNewtonStepInfo) -> floatMat:
+    def hess_inv(self, info: QuasiNewtonStepInfo) -> Matrix:
         H = info.H
         s = info.s
         y = info.y
@@ -457,7 +459,7 @@ class BFGSUpdate(QuasiNewtonOptimiser):
         else:
             if H is None or s is None or y is None:
                 raise ValueError("H, s, or y missing in QuasiNewtonStepInfo.")
-            rho = 1 / float(y.T @ s)
+            rho = 1 / Scalar(y.T @ s)
             eye = np.eye(H.shape[0], dtype=np.double)
             term1 = eye - rho * np.outer(s, y)
             term2 = eye - rho * np.outer(y, s)

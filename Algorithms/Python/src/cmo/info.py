@@ -8,7 +8,7 @@ from dataclasses import dataclass, field, fields
 from typing import Optional
 
 from .oracle import AbstractOracle, FirstOrderOracle, SecondOrderOracle, ZeroOrderOracle
-from .types import floatMat, floatVec
+from .types import Matrix, Scalar, Vector
 from .utils import format_float, format_time
 
 
@@ -19,7 +19,7 @@ class StepInfo[T: AbstractOracle]:
     k: int
     """The current iteration number `k`."""
 
-    x: floatVec
+    x: Vector
     """The current point `x_k` in the input space."""
 
     oracle: T
@@ -42,56 +42,56 @@ class StepInfo[T: AbstractOracle]:
 
 @dataclass
 class ZeroOrderStepInfo[T: ZeroOrderOracle](StepInfo[T]):
-    _fx: Optional[float] = field(init=False, default=None)
+    _fx: Optional[Scalar] = field(init=False, default=None)
     """Internal function value at `x_k`."""
 
     @property
-    def fx(self) -> float:
+    def fx(self) -> Scalar:
         """The function value `f(x_k)` at the current point."""
         if self._fx is None:
             self._fx = self.eval(self.x)
         return self._fx
 
-    def eval(self, x: floatVec) -> float:
+    def eval(self, x: Vector) -> Scalar:
         return self.oracle.eval(x)
 
 
 @dataclass
 class FirstOrderStepInfo[T: FirstOrderOracle](ZeroOrderStepInfo[T]):
-    _dfx: Optional[floatVec] = field(init=False, default=None)
+    _dfx: Optional[Vector] = field(init=False, default=None)
     """Internal gradient at `x_k`."""
 
     @property
-    def dfx(self) -> floatVec:
+    def dfx(self) -> Vector:
         """The gradient `f'(x_k)` at the current point."""
         if self._dfx is None:
             self._dfx = self.grad(self.x)
         return self._dfx
 
-    def grad(self, x: floatVec) -> floatVec:
+    def grad(self, x: Vector) -> Vector:
         return self.oracle.grad(x)
 
 
 @dataclass
 class SecondOrderStepInfo[T: SecondOrderOracle](FirstOrderStepInfo[T]):
-    _d2fx: Optional[floatMat] = field(init=False, default=None)
+    _d2fx: Optional[Matrix] = field(init=False, default=None)
     """Internal Hessian at `x_k`."""
 
     @property
-    def d2fx(self) -> floatMat:
+    def d2fx(self) -> Matrix:
         """The Hessian `f''(x_k)` at the current point."""
         if self._d2fx is None:
             self._d2fx = self.hess(self.x)
         return self._d2fx
 
-    def hess(self, x: floatVec) -> floatMat:
+    def hess(self, x: Vector) -> Matrix:
         return self.oracle.hess(x)
 
 
 @dataclass
 class LineSearchStepInfo[T: AbstractOracle](StepInfo[T]):
-    direction: Optional[floatVec] = None
-    alpha: Optional[float] = None
+    direction: Optional[Vector] = None
+    alpha: Optional[Scalar] = None
 
 
 @dataclass
@@ -110,17 +110,17 @@ class SecondOrderLineSearchStepInfo[T: SecondOrderOracle](
 
 @dataclass
 class QuasiNewtonStepInfo[T: FirstOrderOracle](FirstOrderLineSearchStepInfo[T]):
-    H: Optional[floatMat] = None
+    H: Optional[Matrix] = None
     """Approximate inverse Hessian matrix at iteration `k`."""
 
-    s: Optional[floatVec] = None
+    s: Optional[Vector] = None
     """
     Step taken after the previous iteration, i.e., iteration `k-1`.
 
     `s_k = x_k - x_{k-1}`
     """
 
-    y: Optional[floatVec] = None
+    y: Optional[Vector] = None
     """
     Gradient difference after the previous iteration, i.e., iteration `k-1`.
 
@@ -133,7 +133,7 @@ class ActiveSetStepInfo[T: FirstOrderOracle](FirstOrderLineSearchStepInfo[T]):
     W: Optional[list[int]] = None
     """Indices of the active constraints at iteration `k`."""
 
-    mu: Optional[floatVec] = None
+    mu: Optional[Vector] = None
     """The Lagrange multipliers associated with the active constraints at iteration `k`."""
 
     blocking: Optional[int] = None
@@ -156,13 +156,13 @@ class RunInfo[T: StepInfo]:
     - 'time_taken': Total time taken for the optimisation run.
     """
 
-    x0: floatVec
-    x_star: floatVec
-    f_star: float
+    x0: Vector
+    x_star: Vector
+    f_star: Scalar
     n_iters: int
     history: list[T]
     oracle_call_count: int
-    time_taken: float
+    time_taken: Scalar
 
     def __str__(self, spacing: str | int = 2) -> str:
         name: str = self.__class__.__name__

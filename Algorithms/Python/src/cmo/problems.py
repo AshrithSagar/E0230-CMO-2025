@@ -16,7 +16,7 @@ from .constraint import (
 from .functions import ConvexQuadratic, Function, LinearFunction
 from .oracle import AbstractOracle
 from .stopping import StoppingCriterionType
-from .types import floatVec
+from .types import Vector
 
 
 class AbstractProblem[F: Function]:
@@ -33,7 +33,7 @@ class UnconstrainedProblem[F: Function, M: IterativeOptimiser](AbstractProblem[F
     def solve(
         self,
         method: M,
-        x0: floatVec,
+        x0: Vector,
         criteria: Optional[StoppingCriterionType] = None,
         show_params: bool = True,
     ):

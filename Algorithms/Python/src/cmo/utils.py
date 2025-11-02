@@ -9,11 +9,11 @@ from rich.console import Console
 from rich.table import Table
 from rich.text import TextType
 
-from .types import floatMat, floatVec
+from .types import Matrix, Scalar, Vector
 
 
 def format_float(
-    obj: float | int | list[float | int] | floatVec | floatMat | None,
+    obj: Scalar | int | list[Scalar | int] | Vector | Matrix | None,
     dprec: int = 2,
     fprec: int = 6,
     ffmt: str = "f",
@@ -25,10 +25,10 @@ def format_float(
     if obj is None:
         return "None"
 
-    def _fmtr(x: float | int) -> str:
+    def _fmtr(x: Scalar | int) -> str:
         if isinstance(x, int):
             return str(x)
-        elif isinstance(x, float):
+        elif isinstance(x, Scalar):
             _fmt = f"{{:{dprec}.{fprec}{ffmt}}}"
             s = _fmt.format(x)
             # Strip trailing zeros
@@ -40,10 +40,10 @@ def format_float(
         else:
             return "..."
 
-    if isinstance(obj, (float, int)):
+    if isinstance(obj, (Scalar, int)):
         return _fmtr(obj)
 
-    def _fmt_vec(vec: floatVec | list[float] | list[int]) -> str:
+    def _fmt_vec(vec: Vector | list[Scalar] | list[int]) -> str:
         if isinstance(vec, np.ndarray):
             size = vec.size
         else:
@@ -66,7 +66,7 @@ def format_float(
     return "..."
 
 
-def format_time(t: float | None) -> str:
+def format_time(t: Scalar | None) -> str:
     """Format time in seconds to an appropriate unit"""
     if t is None:
         return "None"
@@ -77,7 +77,7 @@ def format_time(t: float | None) -> str:
         if seconds < 1e-3:
             return f"{minutes} min"
         return f"{minutes} min {round(seconds)} s"
-    units: list[tuple[str, float]] = [("s", 1), ("ms", 1e-3), ("\u03bcs", 1e-6)]
+    units: list[tuple[str, Scalar]] = [("s", 1), ("ms", 1e-3), ("\u03bcs", 1e-6)]
     for unit, thresh in units:
         if abs_t >= thresh:
             val = t / thresh
@@ -90,8 +90,8 @@ def format_time(t: float | None) -> str:
 
 
 def show_solution(
-    x: floatVec,
-    fx: float,
+    x: Vector,
+    fx: Scalar,
     table: Table | None = None,
     title: TextType | None = None,
     console: Console | None = None,
