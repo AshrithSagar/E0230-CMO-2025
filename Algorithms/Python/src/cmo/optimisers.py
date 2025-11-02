@@ -30,9 +30,10 @@ class GradientDescent(SteepestDescentDirectionMixin):
     `x_{k+1} = x_k - alpha_k * f'(x_k)`
     """
 
-    def reset(self):
-        self.lr = Scalar(self.config.get("lr", 1e-3))
-        return super().reset()
+    def __init__(self, lr: Scalar = 1e-3, **kwargs):
+        super().__init__(lr=lr, **kwargs)
+        self.lr = Scalar(lr)
+        """Learning rate (step length)"""
 
     def step_length(self, info: FirstOrderLineSearchStepInfo) -> Scalar:
         return self.lr
@@ -59,13 +60,32 @@ class GradientDescentArmijo(SteepestDescentDirectionMixin):
     `f(x_k + alpha_k * p_k) <= f(x_k) + c * alpha_k * f'(x_k)^T p_k`
     """
 
-    def reset(self):
-        self.c = Scalar(self.config.get("c", 1e-4))  # Armijo parameter
-        self.alpha_min = Scalar(self.config.get("alpha_min", 1e-14))
-        self.alpha_start = Scalar(self.config.get("alpha_start", 0.0))
-        self.alpha_step = Scalar(self.config.get("alpha_step", 1e-1))
-        self.alpha_stop = Scalar(self.config.get("alpha_stop", 1.0))
+    def __init__(
+        self,
+        c: Scalar = 1e-4,
+        alpha_min: Scalar = 1e-14,
+        alpha_start: Scalar = 0.0,
+        alpha_step: Scalar = 1e-1,
+        alpha_stop: Scalar = 1.0,
+        **kwargs,
+    ):
+        super().__init__(
+            c=c,
+            alpha_min=alpha_min,
+            alpha_start=alpha_start,
+            alpha_step=alpha_step,
+            alpha_stop=alpha_stop,
+            **kwargs,
+        )
 
+        self.c = Scalar(c)
+        """Armijo parameter"""
+        self.alpha_min = Scalar(alpha_min)
+        self.alpha_start = Scalar(alpha_start)
+        self.alpha_step = Scalar(alpha_step)
+        self.alpha_stop = Scalar(alpha_stop)
+
+    def reset(self):
         assert 0 < self.c < 1, "c must be in (0, 1)"
         return super().reset()
 
@@ -105,14 +125,36 @@ class GradientDescentBacktracking(SteepestDescentDirectionMixin):
     Standard backtracking Armijo (decreasing alpha).
     """
 
-    def reset(self):
-        self.c = Scalar(self.config.get("c", 1e-4))  # Armijo parameter
-        self.beta = Scalar(self.config.get("beta", 0.5))
-        self.alpha_init = Scalar(self.config.get("alpha_init", 1.0))
-        self.alpha_min = Scalar(self.config.get("alpha_min", 1e-14))
-        self.alpha_max = Scalar(self.config.get("alpha_max", 1e6))
-        self.maxiter = int(self.config.get("maxiter", 10))
+    def __init__(
+        self,
+        c: Scalar = 1e-4,
+        beta: Scalar = 0.5,
+        alpha_init: Scalar = 1.0,
+        alpha_min: Scalar = 1e-14,
+        alpha_max: Scalar = 1e6,
+        maxiter: int = 10,
+        **kwargs,
+    ):
+        super().__init__(
+            c=c,
+            beta=beta,
+            alpha_init=alpha_init,
+            alpha_min=alpha_min,
+            alpha_max=alpha_max,
+            maxiter=maxiter,
+            **kwargs,
+        )
 
+        self.c = Scalar(c)
+        """Armijo parameter"""
+        self.beta = Scalar(beta)
+        """Step length reduction factor"""
+        self.alpha_init = Scalar(alpha_init)
+        self.alpha_min = Scalar(alpha_min)
+        self.alpha_max = Scalar(alpha_max)
+        self.maxiter = int(maxiter)
+
+    def reset(self):
         assert 0 < self.c < 1, "c must be in (0, 1)"
         return super().reset()
 
@@ -145,14 +187,36 @@ class GradientDescentArmijoGoldstein(SteepestDescentDirectionMixin):
     `f(x_k + alpha_k * p_k) >= f(x_k) + (1 - c) * alpha_k * f'(x_k)^T p_k` (Goldstein)
     """
 
-    def reset(self):
-        self.c = Scalar(self.config.get("c", 1e-4))  # Armijo-Goldstein parameter
-        self.beta = Scalar(self.config.get("beta", 0.5))
-        self.alpha_init = Scalar(self.config.get("alpha_init", 1.0))
-        self.alpha_min = Scalar(self.config.get("alpha_min", 1e-14))
-        self.alpha_max = Scalar(self.config.get("alpha_max", 1e6))
-        self.maxiter = int(self.config.get("maxiter", 10))
+    def __init__(
+        self,
+        c: Scalar = 1e-4,
+        beta: Scalar = 0.5,
+        alpha_init: Scalar = 1.0,
+        alpha_min: Scalar = 1e-14,
+        alpha_max: Scalar = 1e6,
+        maxiter: int = 10,
+        **kwargs,
+    ):
+        super().__init__(
+            c=c,
+            beta=beta,
+            alpha_init=alpha_init,
+            alpha_min=alpha_min,
+            alpha_max=alpha_max,
+            maxiter=maxiter,
+            **kwargs,
+        )
 
+        self.c = Scalar(c)
+        """Armijo-Goldstein parameter"""
+        self.beta = Scalar(beta)
+        """Step length reduction factor"""
+        self.alpha_init = Scalar(alpha_init)
+        self.alpha_min = Scalar(alpha_min)
+        self.alpha_max = Scalar(alpha_max)
+        self.maxiter = int(maxiter)
+
+    def reset(self):
         assert 0 < self.c < 0.5, "c must be in (0, 0.5)"
         return super().reset()
 
@@ -213,15 +277,40 @@ class GradientDescentWolfe(SteepestDescentDirectionMixin):
     where `phi(alpha_k) = f(x_k + alpha_k * p_k)`, `phi'(alpha_k) = f'(x_k + alpha_k * p_k)^T p_k`.
     """
 
-    def reset(self):
-        self.c1 = Scalar(self.config.get("c1", 1e-4))
-        self.c2 = Scalar(self.config.get("c2", 0.9))
-        self.beta = Scalar(self.config.get("beta", 0.5))
-        self.alpha_init = Scalar(self.config.get("alpha_init", 1.0))
-        self.alpha_min = Scalar(self.config.get("alpha_min", 1e-14))
-        self.alpha_max = Scalar(self.config.get("alpha_max", 1e6))
-        self.maxiter = int(self.config.get("maxiter", 10))
+    def __init__(
+        self,
+        c1: Scalar = 1e-4,
+        c2: Scalar = 0.9,
+        beta: Scalar = 0.5,
+        alpha_init: Scalar = 1.0,
+        alpha_min: Scalar = 1e-14,
+        alpha_max: Scalar = 1e6,
+        maxiter: int = 10,
+        **kwargs,
+    ):
+        super().__init__(
+            c1=c1,
+            c2=c2,
+            beta=beta,
+            alpha_init=alpha_init,
+            alpha_min=alpha_min,
+            alpha_max=alpha_max,
+            maxiter=maxiter,
+            **kwargs,
+        )
 
+        self.c1 = Scalar(c1)
+        """Armijo parameter"""
+        self.c2 = Scalar(c2)
+        """Curvature parameter"""
+        self.beta = Scalar(beta)
+        """Step length reduction factor"""
+        self.alpha_init = Scalar(alpha_init)
+        self.alpha_min = Scalar(alpha_min)
+        self.alpha_max = Scalar(alpha_max)
+        self.maxiter = int(maxiter)
+
+    def reset(self):
         assert 0 < self.c1 < self.c2 < 1, "0 < c1 < c2 < 1 must be satisfied"
         return super().reset()
 
@@ -313,13 +402,13 @@ class ConjugateDirectionMethod(LineSearchOptimiser[FirstOrderLineSearchStepInfo]
 
     StepInfoClass = FirstOrderLineSearchStepInfo
 
+    def __init__(self, directions: list[Vector], **kwargs):
+        super().__init__(directions=directions, **kwargs)
+        self.directions: list[Vector] = directions
+        self.line_search = ExactLineSearchMixin()
+
     def reset(self):
-        self.line_search = ExactLineSearchMixin().reset()
-
-        if self.config.get("directions") is None:
-            raise ValueError(f"{self.__class__.__name__} requires directions apriori.")
-        self.directions: list[Vector] = self.config.get("directions", [])
-
+        self.line_search.reset()
         return super().reset()
 
     def direction(self, info: FirstOrderLineSearchStepInfo) -> Vector:
@@ -351,9 +440,13 @@ class ConjugateGradientMethod(LineSearchOptimiser[FirstOrderLineSearchStepInfo])
 
     StepInfoClass = FirstOrderLineSearchStepInfo
 
-    def reset(self):
-        self.line_search = ExactLineSearchMixin().reset()
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.line_search = ExactLineSearchMixin()
         self.rTr_prev: Scalar
+
+    def reset(self):
+        self.line_search.reset()
         return super().reset()
 
     def direction(self, info: FirstOrderLineSearchStepInfo) -> Vector:
