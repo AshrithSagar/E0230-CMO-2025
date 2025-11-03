@@ -19,10 +19,13 @@ from oracle_2025A3 import f1  # type: ignore
 # Type aliases
 Scalar: TypeAlias = float
 """A type alias for a scalar real number."""
+
 Vector: TypeAlias = npt.NDArray[np.double]
 """A type alias for a 1D numpy array of real numbers."""
+
 Matrix: TypeAlias = npt.NDArray[np.double]
 """A type alias for a 2D numpy array of real numbers."""
+
 
 # Oracle signatures
 f1: Callable[[int], None]
@@ -49,12 +52,12 @@ def LASSO_REGRESSION(X: Matrix, y: Vector, lam: Scalar) -> Vector:
     `min_{beta} 0.5 ||X beta - y||_2^2 + lam ||beta||_1`
 
     Parameters:
-        X (NDArray): Feature matrix. Shape (n_samples, n_features).
-        y (NDArray): Response vector. Shape (n_samples,).
+        X (Matrix): Feature matrix. Shape (n_samples, n_features).
+        y (Vector): Response vector. Shape (n_samples,).
         lam (Scalar): Regularisation parameter. Must be non-negative.
 
     Returns:
-        beta (NDArray): Estimated coefficients.
+        beta (Vector): Estimated coefficients.
     """
 
     assert lam >= 0, "Regularisation parameter must be non-negative."
@@ -80,12 +83,12 @@ def LASSO_REGRESSION_DUAL(X: Matrix, y: Vector, lam: Scalar) -> Vector:
     `subject to ||X^T u||_infty <= lam`
 
     Parameters:
-        X (NDArray): Feature matrix. Shape (n_samples, n_features).
-        y (NDArray): Response vector. Shape (n_samples,).
+        X (Matrix): Feature matrix. Shape (n_samples, n_features).
+        y (Vector): Response vector. Shape (n_samples,).
         lam (Scalar): Regularisation parameter. Must be non-negative.
 
     Returns:
-        u (NDArray): Dual variable.
+        u (Vector): Dual variable.
     """
 
     assert lam >= 0, "Regularisation parameter must be non-negative."
@@ -113,12 +116,12 @@ def PROJ_CIRCLE(
     Projection onto circle.
 
     Parameters:
-        y (NDArray): Point to project (NumPy array of length 2).
-        center (NDArray, optional): Centre of circle. Defaults to np.array([0.0, 0.0]).
+        y (Vector): Point to project (NumPy array of length 2).
+        center (Vector, optional): Centre of circle. Defaults to np.array([0.0, 0.0]).
         radius (Scalar, optional): Radius of circle. Defaults to 5.0.
 
     Returns:
-        y_proj (NDArray): Projection of `y` on the closed Euclidean ball (NumPy array of length 2).
+        y_proj (Vector): Projection of `y` on the closed Euclidean ball (NumPy array of length 2).
     """
 
     direction: Vector = y - center
@@ -139,12 +142,12 @@ def PROJ_BOX(
     Projection onto box.
 
     Parameters:
-        y (NDArray): Point to project (NumPy array of length 2).
-        low (NDArray, optional): Lower corner of box. Defaults to np.array([-3.0, 0.0]).
-        high (NDArray, optional): Upper corner of box. Defaults to np.array([3.0, 4.0]).
+        y (Vector): Point to project (NumPy array of length 2).
+        low (Vector, optional): Lower corner of box. Defaults to np.array([-3.0, 0.0]).
+        high (Vector, optional): Upper corner of box. Defaults to np.array([3.0, 4.0]).
 
     Returns:
-        y_proj (NDArray): Projection of `y` on the box (NumPy array of length 2).
+        y_proj (Vector): Projection of `y` on the box (NumPy array of length 2).
     """
 
     y_proj: Vector = np.minimum(np.maximum(y, low), high)
@@ -168,17 +171,17 @@ def SEPARATE_HYPERPLANE(
     Parameters
     ----------
         constraints_CA (Callable[[cp.Variable], cp.Constraint | List[cp.Constraint]], optional):
-            Function that takes a CVXPY variable and returns a CVXPY constraint or a list of CVXPY constraints, defining set `C_A`.
+            A function that takes a CVXPY variable and returns a CVXPY constraint or a list of CVXPY constraints, defining set `C_A`.
             If None, uses the canonical instance (unit circle). Defaults to None.
         constraints_CB (Callable[[cp.Variable], cp.Constraint | List[cp.Constraint]], optional):
-            Function that takes a CVXPY variable and returns a CVXPY constraint or a list of CVXPY constraints, defining set `C_B`.
+            A function that takes a CVXPY variable and returns a CVXPY constraint or a list of CVXPY constraints, defining set `C_B`.
             If None, uses the canonical instance (half-space). Defaults to None.
 
     Returns
     -------
-        n (NDArray): Normal vector of hyperplane (NumPy array of length 2).
+        n (Vector): Normal vector of hyperplane (NumPy array of length 2).
         c (Scalar): Offset (scalar) so that hyperplane is {x: n^T x = c}.
-        a_closest, b_closest (tuple[NDArray, NDArray]): The closest points in `C_A` and `C_B` used to construct the hyperplane.
+        a_closest, b_closest (tuple[Vector, Vector]): The closest points in `C_A` and `C_B` used to construct the hyperplane.
     """
 
     a = cp.Variable(2)
@@ -245,7 +248,7 @@ def CHECK_FARKAS() -> Tuple[bool, Optional[Vector], dict]:
         feasible: boolean flag (True if feasible).
 
         If infeasible:
-        y_cert: (NDArray) a Farkas certificate satisfying `y >= 0`, `A^T y = 0` (numerically), and `b^T y < 0` (numerically).
+        y_cert: (Vector) a Farkas certificate satisfying `y >= 0`, `A^T y = 0` (numerically), and `b^T y < 0` (numerically).
 
         Diagnostic info (objective value, solver status).
     """
@@ -306,8 +309,8 @@ def question_1(X: Matrix, y: Vector, lambdas: List[Scalar]):
     plt.xscale("log")
     plt.ylim(0, 17)
     plt.xlabel(r"$\lambda$ (Regularisation parameter)")
-    plt.ylabel(r"Number of nonzero coefficients in $\beta^*$")
-    plt.title(r"Sparsity of $\beta^*$ in LASSO Regression")
+    plt.ylabel(r"Number of nonzero coefficients in $\beta^\ast$")
+    plt.title(r"Sparsity of $\beta^\ast$ in LASSO Regression")
     plt.grid(True)
 
     ## Q1 Part 5
@@ -332,9 +335,9 @@ def question_1(X: Matrix, y: Vector, lambdas: List[Scalar]):
     plt.xscale("log")
     plt.ylim(0, 17)
     plt.xlabel(r"$\lambda$ (Regularisation parameter)")
-    plt.ylabel(r"Number of nonzero coefficients in $\beta^*$")
+    plt.ylabel(r"Number of nonzero coefficients in $\beta^\ast$")
     plt.title(
-        rf"Sparsity of $\beta^*$ in LASSO Regression with a duplicated feature (column {DUP_COL_IDX})"
+        rf"Sparsity of $\beta^\ast$ in LASSO Regression with a duplicated feature (column {DUP_COL_IDX})"
     )
     plt.grid(True)
 
