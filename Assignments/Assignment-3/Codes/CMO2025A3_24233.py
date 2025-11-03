@@ -3,7 +3,7 @@
 # ---------- Imports ----------
 import os
 import sys
-from typing import Callable, List, Optional, Tuple
+from typing import Callable, List, Optional, Tuple, TypeAlias
 
 import cvxpy as cp
 import matplotlib.pyplot as plt
@@ -17,8 +17,12 @@ sys.path.insert(0, os.path.abspath("oracle_2025A3"))
 from oracle_2025A3 import f1  # type: ignore
 
 # Type aliases
-Vector = npt.NDArray[np.float64]
-Matrix = npt.NDArray[np.float64]
+Scalar: TypeAlias = float
+"""A type alias for a scalar real number."""
+Vector: TypeAlias = npt.NDArray[np.double]
+"""A type alias for a 1D numpy array of real numbers."""
+Matrix: TypeAlias = npt.NDArray[np.double]
+"""A type alias for a 2D numpy array of real numbers."""
 
 # Oracle signatures
 f1: Callable[[int], None]
@@ -38,7 +42,7 @@ assert isinstance(DUP_COL_IDX, int) and 0 <= DUP_COL_IDX < 15, (
 
 
 # ---------- Implementations ----------
-def LASSO_REGRESSION(X: Matrix, y: Vector, lam: float) -> Vector:
+def LASSO_REGRESSION(X: Matrix, y: Vector, lam: Scalar) -> Vector:
     """
     Solve the Lasso regression problem for the Linear objective function using CVXPY.
 
@@ -47,7 +51,7 @@ def LASSO_REGRESSION(X: Matrix, y: Vector, lam: float) -> Vector:
     Parameters:
         X (NDArray): Feature matrix. Shape (n_samples, n_features).
         y (NDArray): Response vector. Shape (n_samples,).
-        lam (float): Regularisation parameter. Must be non-negative.
+        lam (Scalar): Regularisation parameter. Must be non-negative.
 
     Returns:
         beta (NDArray): Estimated coefficients.
@@ -65,10 +69,10 @@ def LASSO_REGRESSION(X: Matrix, y: Vector, lam: float) -> Vector:
     if problem.status not in ["optimal", "optimal_inaccurate"]:
         raise ValueError(f"Optimisation failed with status: {problem.status}")
 
-    return np.array(beta.value, dtype=np.float64).flatten()
+    return np.array(beta.value, dtype=np.double).flatten()
 
 
-def LASSO_REGRESSION_DUAL(X: Matrix, y: Vector, lam: float) -> Vector:
+def LASSO_REGRESSION_DUAL(X: Matrix, y: Vector, lam: Scalar) -> Vector:
     """
     Solve the dual of the Lasso regression problem using CVXPY.
 
@@ -78,7 +82,7 @@ def LASSO_REGRESSION_DUAL(X: Matrix, y: Vector, lam: float) -> Vector:
     Parameters:
         X (NDArray): Feature matrix. Shape (n_samples, n_features).
         y (NDArray): Response vector. Shape (n_samples,).
-        lam (float): Regularisation parameter. Must be non-negative.
+        lam (Scalar): Regularisation parameter. Must be non-negative.
 
     Returns:
         u (NDArray): Dual variable.
@@ -97,13 +101,13 @@ def LASSO_REGRESSION_DUAL(X: Matrix, y: Vector, lam: float) -> Vector:
     if problem.status not in ["optimal", "optimal_inaccurate"]:
         raise ValueError(f"Optimisation failed with status: {problem.status}")
 
-    return np.array(u.value, dtype=np.float64).flatten()
+    return np.array(u.value, dtype=np.double).flatten()
 
 
 def PROJ_CIRCLE(
     y: Vector,
     center: Vector = np.array([0.0, 0.0]),
-    radius: float = 5.0,
+    radius: Scalar = 5.0,
 ) -> Vector:
     """
     Projection onto circle.
@@ -111,14 +115,14 @@ def PROJ_CIRCLE(
     Parameters:
         y (NDArray): Point to project (NumPy array of length 2).
         center (NDArray, optional): Centre of circle. Defaults to np.array([0.0, 0.0]).
-        radius (float, optional): Radius of circle. Defaults to 5.0.
+        radius (Scalar, optional): Radius of circle. Defaults to 5.0.
 
     Returns:
         y_proj (NDArray): Projection of `y` on the closed Euclidean ball (NumPy array of length 2).
     """
 
     direction: Vector = y - center
-    distance: float = float(np.linalg.norm(direction))
+    distance: Scalar = Scalar(np.linalg.norm(direction))
     if distance <= radius:
         return y.copy()
     else:
@@ -147,13 +151,13 @@ def PROJ_BOX(
     return y_proj
 
 
-def SEPARATE_HYPERPLANE() -> Tuple[Vector, float, Tuple[Vector, Vector]]:
+def SEPARATE_HYPERPLANE() -> Tuple[Vector, Scalar, Tuple[Vector, Vector]]:
     """
     Separating hyperplane (geometry / classification).
 
     Returns:
         n (NDArray): Normal vector of hyperplane (NumPy array of length 2).
-        c (float): Offset (scalar) so that hyperplane is {x: n'x = c}.
+        c (Scalar): Offset (scalar) so that hyperplane is {x: n'x = c}.
         a_closest, b_closest (tuple[NDArray, NDArray]): The closest points in `C_A` and `C_B` used to construct the hyperplane.
     """
 
@@ -166,7 +170,7 @@ def SEPARATE_HYPERPLANE() -> Tuple[Vector, float, Tuple[Vector, Vector]]:
 
     # Offset
     m: Vector = (a_closest + b_closest) / 2  # Midpoint
-    c: float = float(n @ m)
+    c: Scalar = Scalar(n @ m)
 
     return n, c, (a_closest, b_closest)
 
@@ -183,8 +187,8 @@ def CHECK_FARKAS() -> Tuple[bool, Optional[Vector], dict]:
 
         Diagnostic info (objective value, solver status).
     """
-    A: Matrix = np.array([[1, 1], [-1, 0], [0, -1]], dtype=np.float64)
-    b: Vector = np.array([-1, 0, 0], dtype=np.float64)
+    A: Matrix = np.array([[1, 1], [-1, 0], [0, -1]], dtype=np.double)
+    b: Vector = np.array([-1, 0, 0], dtype=np.double)
 
     # Primal feasibility problem
     x = cp.Variable(2)
@@ -194,19 +198,19 @@ def CHECK_FARKAS() -> Tuple[bool, Optional[Vector], dict]:
     prob.solve()
     if prob.status in ["infeasible", "infeasible_inaccurate"]:
         # Extract dual multipliers
-        y_vals: List[float] = []
+        y_vals: List[Scalar] = []
         for c in constraints:
             if c.dual_value is not None:
                 val = c.dual_value
                 if isinstance(val, (np.ndarray, list)):
                     val = val[0]
                 if val is not None:
-                    y_vals.append(float(val))
+                    y_vals.append(Scalar(val))
                 else:
                     y_vals.append(0.0)  # Fallback
             else:
                 y_vals.append(0.0)  # Fallback
-        y: Vector = np.array(y_vals, dtype=np.float64)
+        y: Vector = np.array(y_vals, dtype=np.double)
         y: Vector = np.maximum(y, 0)  # Ensure nonnegativity
         # Normalise certificate
         if np.linalg.norm(A.T @ y) < 1e-6 and b @ y < -1e-6:
@@ -218,7 +222,7 @@ def CHECK_FARKAS() -> Tuple[bool, Optional[Vector], dict]:
 
 
 # ---------- Questions ----------
-def question_1(X: Matrix, y: Vector, lambdas: List[float]):
+def question_1(X: Matrix, y: Vector, lambdas: List[Scalar]):
     print("\n\033[1m\033[4mQuestion-1\033[0m:")
 
     ## Q1 Part 3
@@ -273,7 +277,7 @@ def question_1(X: Matrix, y: Vector, lambdas: List[float]):
     plt.grid(True)
 
 
-def question_2(X: Matrix, y: Vector, lambdas: List[float]):
+def question_2(X: Matrix, y: Vector, lambdas: List[Scalar]):
     print("\033[1m\033[4mQuestion-2\033[0m:")
 
     ## Q2 Part 3
@@ -393,7 +397,7 @@ if __name__ == "__main__":
     X: Matrix = data.values[:, :15]
     y: Vector = data.values[:, 15]
 
-    lambdas: List[float] = [0.01, 0.1, 1]
+    lambdas: List[Scalar] = [0.01, 0.1, 1]
 
     question_1(X, y, lambdas)
     question_2(X, y, lambdas)
