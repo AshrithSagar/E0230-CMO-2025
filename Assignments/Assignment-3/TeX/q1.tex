@@ -172,6 +172,30 @@ which is exactly the practical form of the sparsity-promoting optimisation probl
     }
 \end{figure}
 
+\subsection*{(4) Verification of KKT conditions for optimal \( \beta^\ast \)}
+
+For \( \lambda = 0.01 \), the estimated coefficients \( \beta^\ast \) obtained are
+\begin{verbatim}
+[ 2.42893529 -0.0821506  -0.16435941  0.13798978  1.80153319 -0.14876385
+  0.02172414 -0.1001286  -0.19886349 -0.17817296  0.18376004  0.01026027
+  2.27626349  0.328471    0.1730505 ]
+\end{verbatim}
+
+For \( \lambda = 0.1 \), the estimated coefficients \( \beta^\ast \) obtained are
+\begin{verbatim}
+[ 2.42544676 -0.07602968 -0.15159893  0.13839134  1.79015623 -0.13976299
+  0.02467282 -0.09358195 -0.19649837 -0.170963    0.17615336  0.00766717
+  2.2706338   0.31608294  0.16572506]
+\end{verbatim}
+
+For \( \lambda = 1 \), the estimated coefficients \( \beta^\ast \) obtained are
+\begin{verbatim}
+[ 2.39034708e+00 -1.00862398e-02 -2.90320126e-02  1.43143486e-01
+  1.67398859e+00 -5.09159445e-02  5.27888873e-02 -2.72017447e-02
+ -1.73514244e-01 -1.02827788e-01  9.56998788e-02  2.14513594e-21
+  2.21051100e+00  1.93916743e-01  9.02177795e-02]
+\end{verbatim}
+
 \subsection*{(5) Effect of highly correlated features on LASSO Regression}
 
 \begin{figure}[h!]
