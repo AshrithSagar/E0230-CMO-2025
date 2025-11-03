@@ -25,7 +25,6 @@ Vector: TypeAlias = npt.NDArray[np.double]
 Matrix: TypeAlias = npt.NDArray[np.double]
 """A type alias for a 2D numpy array of real numbers."""
 
-
 # Oracle signatures
 f1: Callable[[int], None]
 
@@ -35,12 +34,19 @@ SRN: int = 24233
 """The 5-digit Student Registration Number (SRN) for the assignment."""
 assert isinstance(SRN, int) and len(str(SRN)) == 5, "SRN must be a 5-digit integer."
 
-
 DUP_COL_IDX: int = 5
 """Index of the feature column to duplicate in Question 1, Part 5."""
 assert isinstance(DUP_COL_IDX, int) and 0 <= DUP_COL_IDX < 15, (
     "DUP_COL_IDX must be a valid column index in X."
 )
+
+SAVE_FIGS: bool = True
+"""Boolean flag to save the generated plots as PNG files."""
+
+FIGS_DIR: str = "figures"
+"""Directory to save the generated plots."""
+if SAVE_FIGS and not os.path.exists(FIGS_DIR):
+    os.makedirs(FIGS_DIR)
 
 
 # ---------- Implementations ----------
@@ -337,6 +343,9 @@ def question_1(X: Matrix, y: Vector, lambdas: List[Scalar]):
     plt.ylabel(r"Number of nonzero coefficients in $\beta^\ast$")
     plt.title(r"Sparsity of $\beta^\ast$ in LASSO Regression")
     plt.grid(True)
+    if SAVE_FIGS:
+        filename = f"Q1-3-Sparsity-LASSO-{SRN}.jpeg"
+        plt.savefig(os.path.join(FIGS_DIR, filename))
 
     ## Q1 Part 5
     # Duplicate one feature column in X and repeat the experiment in Part 3
@@ -365,6 +374,9 @@ def question_1(X: Matrix, y: Vector, lambdas: List[Scalar]):
         rf"Sparsity of $\beta^\ast$ in LASSO Regression with a duplicated feature (column {DUP_COL_IDX})"
     )
     plt.grid(True)
+    if SAVE_FIGS:
+        filename = f"Q1-5-Sparsity-LASSO-DupFeature-{SRN}.jpeg"
+        plt.savefig(os.path.join(FIGS_DIR, filename))
 
 
 def question_2(X: Matrix, y: Vector, lambdas: List[Scalar]):
@@ -425,6 +437,9 @@ def question_3():
     plt.grid(True)
     plt.tight_layout()
     print("Plot generated for projections onto circle and box.")
+    if SAVE_FIGS:
+        filename = f"Q3-1-Projections-{SRN}.jpeg"
+        plt.savefig(os.path.join(FIGS_DIR, filename))
 
     ## Q3 Part 2
     # Separating hyperplane in a classification story
@@ -465,6 +480,9 @@ def question_3():
     plt.ylabel(r"$x_2$")
     plt.tight_layout()
     print("Plot generated for separating hyperplane between two groups.")
+    if SAVE_FIGS:
+        filename = f"Q3-2-Separating-Hyperplane-{SRN}.jpeg"
+        plt.savefig(os.path.join(FIGS_DIR, filename))
 
     ## Q3 Part 3
     # Farkas lemma in a supply-chain model
@@ -492,4 +510,6 @@ if __name__ == "__main__":
     question_2(X, y, lambdas)
     question_3()
 
-    plt.show()
+    if not SAVE_FIGS:
+        plt.show()
+    plt.close("all")
