@@ -258,7 +258,7 @@ def CHECK_FARKAS(
     Returns
     -------
         feasible (bool): Boolean flag (True if feasible).
-        y_cert (Vector): A Farkas certificate satisfying `y >= 0`, `A^T y = 0` (numerically), and `b^T y < 0` (numerically).
+        y_cert (Vector, optional): If infeasible, return a Farkas certificate `y_cert`, else None.
         info (dict): Diagnostic info (objective value, solver status).
     """
 
@@ -276,43 +276,35 @@ def CHECK_FARKAS(
 
     # Primal feasibility problem
     x = cp.Variable(n)
-    constraints: List[cp.Constraint] = [A[i] @ x <= b[i] for i in range(m)]
-    objective = cp.Minimize(0)
-    problem = cp.Problem(objective, constraints)
-    problem.solve()
+    primal_constraints: List[cp.Constraint] = [A[i] @ x <= b[i] for i in range(m)]
+    primal_objective = cp.Minimize(0)
+    primal_problem = cp.Problem(primal_objective, primal_constraints)
+    primal_problem.solve()
 
-    info.update({"status": problem.status})
-    info.update({"objective_value": problem.value})
-    info.update({"solver_stats": problem.solver_stats})
+    info.update({"primal_status": primal_problem.status})
+    info.update({"primal_objective_value": primal_problem.value})
+    info.update({"primal_solver_stats": primal_problem.solver_stats})
 
-    if problem.status in ["infeasible", "infeasible_inaccurate"]:
-        # Extract dual multipliers
-        y_vals: List[Scalar] = []
-        for c in constraints:
-            if c.dual_value is not None:
-                val = c.dual_value
-                if isinstance(val, (np.ndarray, list)):
-                    val = val[0]
-                if val is not None:
-                    y_vals.append(Scalar(val))
-                else:
-                    y_vals.append(0.0)  # Fallback
-            else:
-                y_vals.append(0.0)  # Fallback
+    if primal_problem.status in ["infeasible", "infeasible_inaccurate"]:
+        # Farkas certificate problem
+        y = cp.Variable(m, nonneg=True)
+        dual_objective = cp.Maximize(b.T @ y)
+        dual_constraints: List[cp.Constraint] = [A.T @ y == 0]
+        dual_problem = cp.Problem(dual_objective, dual_constraints)
+        dual_problem.solve()
 
-        y: Vector = np.array(y_vals, dtype=np.double)
-        y: Vector = np.maximum(y, 0)  # Ensure nonnegativity
+        if dual_problem.status not in ["optimal", "optimal_inaccurate"]:
+            raise ValueError(f"Optimisation failed with status: {dual_problem.status}")
 
-        # Normalise certificate
-        tol: Scalar = 1e-6
-        ATy: Vector = A.T @ y
-        bTy: Scalar = Scalar(b.T @ y)
-        if np.linalg.norm(ATy) < tol and abs(bTy) < -tol:
-            y_cert = y
-            info.update({"dual_feasibility": True})
-            info.update({"bTy": bTy, "ATy": ATy})
-        else:
-            info.update({"dual_feasibility": False})
+        y_cert = np.array(y.value, dtype=np.double).flatten()
+        ATy: Vector = A.T @ y_cert
+
+        info.update({"dual_status": dual_problem.status})
+        info.update({"dual_objective_value": dual_problem.value})  # b^T y_cert
+        info.update({"dual_solver_stats": dual_problem.solver_stats})
+        info.update({"dual_constraints_residual": ATy})
+        info.update({"dual_constraints_residual_norm": np.linalg.norm(ATy)})
+
     else:
         feasible = True
 
