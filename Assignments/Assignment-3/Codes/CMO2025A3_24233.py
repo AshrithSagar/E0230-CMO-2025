@@ -3,14 +3,13 @@
 # ---------- Imports ----------
 import os
 import sys
-from typing import Callable, List, Optional, Tuple, TypeAlias
+from typing import Any, Callable, Dict, List, Optional, Tuple, TypeAlias
 
 import cvxpy as cp
 import matplotlib.pyplot as plt
 import numpy as np
 import numpy.typing as npt
 import pandas as pd
-from matplotlib.axes import Axes
 from matplotlib.patches import Circle, Rectangle
 
 sys.path.insert(0, os.path.abspath("oracle_2025A3"))
@@ -126,6 +125,7 @@ def PROJ_CIRCLE(
 
     direction: Vector = y - center
     distance: Scalar = Scalar(np.linalg.norm(direction))
+
     if distance <= radius:
         return y.copy()
     else:
@@ -240,27 +240,51 @@ def SEPARATE_HYPERPLANE(
     return n, c, (a_closest, b_closest)
 
 
-def CHECK_FARKAS() -> Tuple[bool, Optional[Vector], dict]:
+def CHECK_FARKAS(
+    A: Optional[Matrix] = None,
+    b: Optional[Vector] = None,
+) -> Tuple[bool, Optional[Vector], Dict[str, Any]]:
     """
     Farkas lemma / infeasibility check.
 
-    Returns:
-        feasible: boolean flag (True if feasible).
+    Considers the feasibility problem `find x such that A x <= b`.\\
+    If infeasible, finds a Farkas certificate `y` satisfying `y >= 0`, `A^T y = 0` (numerically), and `b^T y < 0` (numerically).
 
-        If infeasible:
-        y_cert: (Vector) a Farkas certificate satisfying `y >= 0`, `A^T y = 0` (numerically), and `b^T y < 0` (numerically).
+    Parameters
+    ----------
+        A (Matrix, optional): Coefficient matrix. Shape (m, n). If None, uses default instance. Defaults to None.
+        b (Vector, optional): Right-hand side vector. Shape (m,). If None, uses default instance. Defaults to None.
 
-        Diagnostic info (objective value, solver status).
+    Returns
+    -------
+        feasible (bool): Boolean flag (True if feasible).
+        y_cert (Vector): A Farkas certificate satisfying `y >= 0`, `A^T y = 0` (numerically), and `b^T y < 0` (numerically).
+        info (dict): Diagnostic info (objective value, solver status).
     """
-    A: Matrix = np.array([[1, 1], [-1, 0], [0, -1]], dtype=np.double)
-    b: Vector = np.array([-1, 0, 0], dtype=np.double)
+
+    feasible: bool = False
+    y_cert: Optional[Vector] = None
+    info: Dict[str, Any] = {}
+
+    if A is None:
+        A = np.array([[1, 1], [-1, 0], [0, -1]], dtype=np.double)
+    if b is None:
+        b = np.array([-1, 0, 0], dtype=np.double)
+
+    m, n = A.shape
+    assert b.shape == (m,), "Incompatible dimensions between A and b."
 
     # Primal feasibility problem
-    x = cp.Variable(2)
-    constraints: List[cp.Constraint] = [A[i] @ x <= b[i] for i in range(len(b))]
+    x = cp.Variable(n)
+    constraints: List[cp.Constraint] = [A[i] @ x <= b[i] for i in range(m)]
     objective = cp.Minimize(0)
     problem = cp.Problem(objective, constraints)
     problem.solve()
+
+    info.update({"status": problem.status})
+    info.update({"objective_value": problem.value})
+    info.update({"solver_stats": problem.solver_stats})
+
     if problem.status in ["infeasible", "infeasible_inaccurate"]:
         # Extract dual multipliers
         y_vals: List[Scalar] = []
@@ -275,15 +299,24 @@ def CHECK_FARKAS() -> Tuple[bool, Optional[Vector], dict]:
                     y_vals.append(0.0)  # Fallback
             else:
                 y_vals.append(0.0)  # Fallback
+
         y: Vector = np.array(y_vals, dtype=np.double)
         y: Vector = np.maximum(y, 0)  # Ensure nonnegativity
+
         # Normalise certificate
-        if np.linalg.norm(A.T @ y) < 1e-6 and b @ y < -1e-6:
-            return False, y, {"status": problem.status, "bTy": b @ y, "ATy": A.T @ y}
+        tol: Scalar = 1e-6
+        ATy: Vector = A.T @ y
+        bTy: Scalar = Scalar(b.T @ y)
+        if np.linalg.norm(ATy) < tol and abs(bTy) < -tol:
+            y_cert = y
+            info.update({"dual_feasibility": True})
+            info.update({"bTy": bTy, "ATy": ATy})
         else:
-            return False, None, {"status": problem.status, "dual_failed": True}
+            info.update({"dual_feasibility": False})
     else:
-        return True, None, {"status": problem.status}
+        feasible = True
+
+    return feasible, y_cert, info
 
 
 # ---------- Questions ----------
@@ -381,7 +414,6 @@ def question_3():
         np.array([-4.0, -1.0]),
     ]
 
-    ax: Axes
     fig, ax = plt.subplots(figsize=(7, 7))
     circle = Circle((0, 0), 5, color="lightblue", alpha=0.5)
     ax.add_artist(circle)
