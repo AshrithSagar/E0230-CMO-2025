@@ -159,3 +159,26 @@ with respect to \( \bfbeta \), i.e.,
     + \lambda \norm{\bfbeta}_1
 \end{equation*}
 which is exactly the practical form of the sparsity-promoting optimisation problem in \peqref{eq:sparsity-promoting-constrained-optimisation-practical}.
+
+\subsection*{(3) Sparsity of LASSO Regression solution}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.9\textwidth]
+    {../Codes/figures/Q1-3-Sparsity-LASSO-24233.jpeg}% chktex 8
+    \caption{
+        Sparsity of \( \beta^\ast \) in LASSO Regression.
+        As the regularisation parameter \( \lambda \) increases, the number of non-zero coefficients in the LASSO regression solution \( \beta^\ast \) decreases, demonstrating the sparsity-promoting effect of the \( \ell_1 \)-norm regularisation.
+    }
+\end{figure}
+
+\subsection*{(5) Effect of highly correlated features on LASSO Regression}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.9\textwidth]
+    {../Codes/figures/Q1-5-Sparsity-LASSO-DupFeature-24233.jpeg}% chktex 8
+    \caption{
+        Sparsity of \( \beta^\ast \) in LASSO Regression with a duplicated feature (here, column 5 is duplicated).
+    }
+\end{figure}
