@@ -76,8 +76,8 @@ def LASSO_REGRESSION_DUAL(X: Matrix, y: Vector, lam: Scalar) -> Vector:
     """
     Solve the dual of the Lasso regression problem using CVXPY.
 
-    `max_{u} -0.5 ||u||_2^2 + y'u`\\
-    `subject to ||X'u||_infty <= lam`
+    `max_{u} -0.5 ||u||_2^2 + y^T u`\\
+    `subject to ||X^T u||_infty <= lam`
 
     Parameters:
         X (NDArray): Feature matrix. Shape (n_samples, n_features).
@@ -151,22 +151,84 @@ def PROJ_BOX(
     return y_proj
 
 
-def SEPARATE_HYPERPLANE() -> Tuple[Vector, Scalar, Tuple[Vector, Vector]]:
+def SEPARATE_HYPERPLANE(
+    constraints_CA: Optional[
+        Callable[[cp.Variable], cp.Constraint | List[cp.Constraint]]
+    ] = None,
+    constraints_CB: Optional[
+        Callable[[cp.Variable], cp.Constraint | List[cp.Constraint]]
+    ] = None,
+) -> Tuple[Vector, Scalar, Tuple[Vector, Vector]]:
     """
     Separating hyperplane (geometry / classification).
 
-    Returns:
+    Finds a hyperplane that separates two convex sets `C_A` and `C_B`.\\
+    Canonical instance: unit circle vs half-space.
+
+    Parameters
+    ----------
+        constraints_CA (Callable[[cp.Variable], cp.Constraint | List[cp.Constraint]], optional):
+            Function that takes a CVXPY variable and returns a CVXPY constraint or a list of CVXPY constraints, defining set `C_A`.
+            If None, uses the canonical instance (unit circle). Defaults to None.
+        constraints_CB (Callable[[cp.Variable], cp.Constraint | List[cp.Constraint]], optional):
+            Function that takes a CVXPY variable and returns a CVXPY constraint or a list of CVXPY constraints, defining set `C_B`.
+            If None, uses the canonical instance (half-space). Defaults to None.
+
+    Returns
+    -------
         n (NDArray): Normal vector of hyperplane (NumPy array of length 2).
-        c (Scalar): Offset (scalar) so that hyperplane is {x: n'x = c}.
+        c (Scalar): Offset (scalar) so that hyperplane is {x: n^T x = c}.
         a_closest, b_closest (tuple[NDArray, NDArray]): The closest points in `C_A` and `C_B` used to construct the hyperplane.
     """
 
-    a_closest = np.array([1.0, 0.0])
-    b_closest = np.array([3.0, 0.0])
+    a = cp.Variable(2)
+    b = cp.Variable(2)
+
+    if constraints_CA is not None and constraints_CB is not None:
+
+        def cons_CA(x: cp.Variable) -> cp.Constraint | List[cp.Constraint]:
+            return constraints_CA(x)
+
+        def cons_CB(x: cp.Variable) -> cp.Constraint | List[cp.Constraint]:
+            return constraints_CB(x)
+
+    else:
+        ## Canonical instance
+
+        # Unit circle, ||x||_2 <= 1
+        def cons_CA(x: cp.Variable) -> cp.Constraint | List[cp.Constraint]:
+            return cp.norm2(x) <= 1
+
+        # Half-space, x1 >= 3
+        def cons_CB(x: cp.Variable) -> cp.Constraint | List[cp.Constraint]:
+            return x[0] >= 3.0
+
+    try:
+        consA = cons_CA(a)
+        consB = cons_CB(b)
+    except Exception as e:
+        raise ValueError("Possible invalid callables") from e
+
+    constraints: List[cp.Constraint] = []
+    for cons in [consA, consB]:
+        if isinstance(cons, list):
+            constraints.extend(cons)
+        else:
+            constraints.append(cons)
+
+    objective = cp.Minimize(cp.norm(a - b))
+    problem = cp.Problem(objective, constraints)
+    problem.solve()
+
+    if problem.status not in ["optimal", "optimal_inaccurate"]:
+        raise ValueError(f"Optimisation failed with status: {problem.status}")
+
+    a_closest: Vector = np.asarray(a.value, dtype=np.double).flatten()
+    b_closest: Vector = np.asarray(b.value, dtype=np.double).flatten()
 
     # Normal vector
-    n = b_closest - a_closest
-    n = n / np.linalg.norm(n)
+    n: Vector = a_closest - b_closest
+    n: Vector = n / np.linalg.norm(n)  # Normalise
 
     # Offset
     m: Vector = (a_closest + b_closest) / 2  # Midpoint
@@ -183,7 +245,7 @@ def CHECK_FARKAS() -> Tuple[bool, Optional[Vector], dict]:
         feasible: boolean flag (True if feasible).
 
         If infeasible:
-        y_cert: (NDArray) a Farkas certificate satisfying `y >= 0`, `A'y = 0` (numerically), and `b'y < 0` (numerically).
+        y_cert: (NDArray) a Farkas certificate satisfying `y >= 0`, `A^T y = 0` (numerically), and `b^T y < 0` (numerically).
 
         Diagnostic info (objective value, solver status).
     """
@@ -193,10 +255,10 @@ def CHECK_FARKAS() -> Tuple[bool, Optional[Vector], dict]:
     # Primal feasibility problem
     x = cp.Variable(2)
     constraints: List[cp.Constraint] = [A[i] @ x <= b[i] for i in range(len(b))]
-    obj = cp.Minimize(0)
-    prob = cp.Problem(obj, constraints)
-    prob.solve()
-    if prob.status in ["infeasible", "infeasible_inaccurate"]:
+    objective = cp.Minimize(0)
+    problem = cp.Problem(objective, constraints)
+    problem.solve()
+    if problem.status in ["infeasible", "infeasible_inaccurate"]:
         # Extract dual multipliers
         y_vals: List[Scalar] = []
         for c in constraints:
@@ -214,11 +276,11 @@ def CHECK_FARKAS() -> Tuple[bool, Optional[Vector], dict]:
         y: Vector = np.maximum(y, 0)  # Ensure nonnegativity
         # Normalise certificate
         if np.linalg.norm(A.T @ y) < 1e-6 and b @ y < -1e-6:
-            return False, y, {"status": prob.status, "bTy": b @ y, "ATy": A.T @ y}
+            return False, y, {"status": problem.status, "bTy": b @ y, "ATy": A.T @ y}
         else:
-            return False, None, {"status": prob.status, "dual_failed": True}
+            return False, None, {"status": problem.status, "dual_failed": True}
     else:
-        return True, None, {"status": prob.status}
+        return True, None, {"status": problem.status}
 
 
 # ---------- Questions ----------
@@ -362,7 +424,7 @@ def question_3():
         y_vals = (c - n[0] * x_vals) / n[1]
         ax.plot(x_vals, y_vals, "k--", label="Separating Hyperplane")
     else:
-        # vertical line x = c / n[0]
+        # vertical line x1 = c / n1
         x_hyper = c / n[0]
         ax.axvline(x=x_hyper, color="k", linestyle="--", label="Separating Hyperplane")
 
