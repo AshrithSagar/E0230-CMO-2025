@@ -96,7 +96,7 @@ System:
     -x_2 \leq 0
 \end{equation*}
 
-The problem can be stated as an optimisation problem as
+The problem can be stated as an optimisation problem (more specifically, as a feasibility problem) as
 \begin{equation*}
     \minimize_{\x \in \R^2}
     \;\; 0
@@ -109,3 +109,65 @@ The problem can be stated as an optimisation problem as
         -x_2 \leq 0
     \end{cases}
 \end{equation*}
+where we want to find if there exists any \( \x \in \R^2 \) that satisfies all the constraints.
+
+The problem can be posed in a more general form as
+\begin{equation*}
+    \minimize_{\x \in \R^d}
+    \;\; 0
+    \qquad \subjectto \quad
+    \A \x \leq \b,
+    \qquad
+    \A \in \R^{m \times d},
+    \quad
+    \b \in \R^m
+\end{equation*}
+
+The Lagrangian function for the above constrained optimisation problem is given by
+\begin{equation*}
+    \func{\calL}{\x, \bflambda}
+    =
+    0
+    + \dotp{\bflambda}{\pbrac{\A \x - \b}}
+    =
+    \dotp{\bflambda}{\A \x}
+    - \dotp{\bflambda}{\b}
+\end{equation*}
+and the corresponding Lagrangian dual function is given by
+\begin{equation*}
+    \func{g}{\bflambda}
+    =
+    \inf_{\x \in \R^d}
+    \func{\calL}{\x, \bflambda}
+    =
+    \inf_{\x \in \R^d}
+    \pbrac[\Big]{
+        \dotp{\bflambda}{\A \x}
+        - \dotp{\bflambda}{\b}
+    }
+    =
+    \begin{cases}
+        - \dotp{\bflambda}{\b}, & \text{if } \A^\top \bflambda = \zero
+        \\
+        -\infty, & \text{otherwise}
+    \end{cases}
+\end{equation*}
+since \( \dotp{\pbrac{\dotp{\A}{\bflambda}}}{\x} - \dotp{\bflambda}{\b} \) is linear in \( \x \) and is unbounded below unless \( \A^\top \bflambda = \zero \).
+
+Thereby, the Lagrangian dual problem can be stated as
+\begin{equation*}
+    \maximize_{\bflambda \in \R^m}
+    \quad
+    - \dotp{\bflambda}{\b}
+    \qquad \subjectto \quad
+    \dotp{\A}{\bflambda} = \zero,
+    \quad
+    \bflambda \geq \zero
+\end{equation*}
+which is equivalent to the problem stated in Farkas lemma, aiming to find a dual certificate of infeasibility, i.e., a \( \bflambda \geq \zero \) such that \( \dotp{\A}{\bflambda} = \zero \) and \( \dotp{\bflambda}{\b} < 0 \).
+
+\paragraph{Meaning of \( \y \) in the supply-chain context}
+
+In the supply-chain context, the Farkas certificate \( \y \geq \zero \) represents a combination of the system's capacity constraints that proves the infeasibility of the demand requirements.
+Specifically, \( \y \) can be interpreted as a set of weights assigned to each constraint, indicating how much each constraint contributes to the overall infeasibility of the system.
+If such a \( \y \) exists, it implies that the current supply-chain configuration cannot meet the demands without violating at least one of the capacity constraints, thus highlighting the need for adjustments in supply, logistics, or resource allocation to achieve feasibility.
