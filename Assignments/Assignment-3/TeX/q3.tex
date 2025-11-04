@@ -54,10 +54,99 @@ The projections of a point \( \y \in \R^2 \) onto the convex sets \( \calC_1 \) 
     \qquad
     \calC_B
     =
-    \set{\x \in \R^2 \given x_1 \geq 3}
+    \set{\x \in \R^2 \given \bbrac{\x}_1 \geq 3}
+\end{equation*}
+where the notation \( \bbrac{\x}_i \) denotes the \( i \)-th component of the vector \( \x \).
+
+We can see that both \( \calA \) and \( \calB \) are convex sets in \( \R^2 \) since
+\vspace{-0.5em}
+\begin{align*}
+    &
+    \forall \x_1, \x_2 \in \calC_A,
+    \quad
+    \forall \theta \in [0, 1],
+    \quad
+    \\ &
+    \implies
+    \norm{\theta \x_1 + (1 - \theta) \x_2}_2
+    \leq
+    \theta \norm{\x_1}_2
+    + (1 - \theta) \norm{\x_2}_2
+    \leq
+    \theta \cdot 1
+    + (1 - \theta) \cdot 1
+    = 1
+    \\ &
+    \therefore
+    \quad
+    \theta \x_1 + (1 - \theta) \x_2 \in \calC_A
+    \\[5pt] &
+    \forall \x_1, \x_2 \in \calC_B,
+    \quad
+    \forall \theta \in [0, 1],
+    \quad
+    \\ &
+    \implies
+    \bbrac[\Big]{\theta \x_1 + (1 - \theta) \x_2}_1
+    =
+    \theta \bbrac{\x_1}_1 + (1 - \theta) \bbrac{\x_2}_1
+    \geq
+    \theta \cdot 3 + (1 - \theta) \cdot 3
+    = 3
+    \\ &
+    \therefore
+    \quad
+    \theta \x_1 + (1 - \theta) \x_2 \in \calC_B
+\end{align*}
+
+\vspace{-0.5em}
+We can see that \( \calC_A \) and \( \calC_B \) are disjoint due to the relation \( \bbrac{\x}_1 \leq \norm{\x}_2, \; \forall \x \in \R^2 \), giving
+\vspace{-0.5em}
+\begin{align*}
+    \forall \x \in \calC_A,
+    \quad
+    \bbrac{\x}_1 \leq \norm{\x}_2 \leq 1
+    \quad \implies \quad
+    \x \notin \calC_B
+    \\[5pt]
+    \forall \x \in \calC_B,
+    \quad
+    3 \leq \bbrac{\x}_1 \leq \norm{\x}_2
+    \quad \implies \quad
+    \x \notin \calC_A
+\end{align*}
+
+\vspace{-0.5em}
+Since both \( \calC_A \) and \( \calC_B \) are convex and disjoint sets, by the separating hyperplane theorem, which states that for any two non-empty, disjoint convex sets, there exists at least one hyperplane that separates them, we can conclude that there exists a hyperplane that separates the two sets \( \calC_A \) and \( \calC_B \).
+
+One way to find such a hyperplane is to consider the optimisation problem of minimising the distance between points in the two sets, i.e.,
+\vspace{-0.5em}
+\begin{equation*}
+    \minimize_{\x_A \in \calC_A, \; \x_B \in \calC_B}
+    \quad
+    \norm{\x_A - \x_B}_2
+\end{equation*}
+which can be solved using CVXPY, representing \( \calC_A \) and \( \calC_B \) using the respective constraints.
+
+The optimal solution to this problem will give us the closest points \( {\x}^\ast_A \in \calC_A \) and \( {\x}^\ast_B \in \calC_B \).
+The hyperplane that separates the two sets can then be seen as being perpendicular to the line segment connecting \( {\x}^\ast_A\) and \( {\x}^\ast_B \) and passes through any interior point on this line segment, which for simplicity, we can take the midpoint \( \frac{1}{2} \pbrac{ {\x}^\ast_A + {\x}^\ast_B } \).
+
+For the above problem, the optimal solutions can be seen to be
+\vspace{-0.5em}
+\begin{equation*}
+    {\x}^\ast_A
+    =
+    \pbrac{1, 0}^\top,
+    \quad
+    {\x}^\ast_B
+    =
+    \pbrac{3, 0}^\top
 \end{equation*}
 
-One separating hyperplane between the convex sets \( \calC_A \) and \( \calC_B \) can be seen as
+\vspace{-0.5em}
+Thereby, the normal vector of the separating hyperplane with respect to \( \calC_A \) is given by \( \bfn = {\x}^\ast_B - {\x}^\ast_A = \pbrac{2, 0}^\top \), and the midpoint on the line segment connecting \( {\x}^\ast_A \) and \( {\x}^\ast_B \) is given by \( \bfm = \frac{1}{2} \pbrac{ {\x}^\ast_A + {\x}^\ast_B } = \pbrac{2, 0}^\top \).
+Thereby, one such separating hyperplane between the convex sets \( \calC_A \) and \( \calC_B \) can be seen as
+\vspace{-0.5em}
 \begin{equation*}
     \func{h}{\x}
     =
@@ -68,12 +157,18 @@ One separating hyperplane between the convex sets \( \calC_A \) and \( \calC_B \
     \text{where }
     \bfw
     =
+    \hat{\bfn}
+    =
     \pbrac{1, 0}^\top,
     \quad
     b
     =
+    - \dotp{\bfw}{\bfm}
+    =
     -2
 \end{equation*}
+
+\( \therefore \) The separating hyperplane between \( \calC_A \) and \( \calC_B \) is given by \( \boxed{ \set{\x \in \R^2 \given \bbrac{\x}_1 = 2} } \).
 
 \begin{figure}[h!]
     \centering
