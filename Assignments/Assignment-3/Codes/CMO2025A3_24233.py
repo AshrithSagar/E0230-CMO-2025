@@ -481,8 +481,8 @@ def question_3():
     ax.fill_betweenx(y, 3, 5, color="red", alpha=0.3, label=r"Group B ($C_B$)")
 
     # Closest points
-    ax.plot(*a_closest, "bo", label="Closest point in C_A")
-    ax.plot(*b_closest, "ro", label="Closest point in C_B")
+    ax.plot(*a_closest, "bo", label=r"Closest point in $C_A$")
+    ax.plot(*b_closest, "ro", label=r"Closest point in $C_B$")
 
     # Separating hyperplane: n^T x = c
     # Solve for x2 given x1: n1 * x1 + n2 * x2 = c => x2 = (c - n1 * x1) / n2
