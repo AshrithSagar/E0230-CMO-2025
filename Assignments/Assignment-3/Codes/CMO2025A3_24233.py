@@ -413,27 +413,52 @@ def question_3():
     # Projections in a navigation problem
     print("\033[4mPart-1\033[0m:")
     points: List[Vector] = [
-        np.array([6.0, 6.0]),
-        np.array([2.0, 3.0]),
-        np.array([-4.0, -1.0]),
+        np.array([-2, -6]),
+        np.array([-2, 6]),
+        np.array([-4, -1]),
+        np.array([-5, 3]),
+        np.array([1, -2]),
+        np.array([2, 3]),
+        np.array([4, 1]),
+        np.array([6, 6]),
     ]
 
     fig, ax = plt.subplots(figsize=(7, 7))
-    circle = Circle((0, 0), 5, color="lightblue", alpha=0.5)
-    ax.add_artist(circle)
-    ax.add_patch(Rectangle((-3, 0), 6, 4, color="orange", alpha=0.5))
     ax.set_xlim(-7, 7)
     ax.set_ylim(-7, 7)
     ax.set_aspect("equal")
-    ax.set_title(r"Projections onto Circle ($C_1$) and Box ($C_2$)")
-    for p in points:
-        for proj in [PROJ_CIRCLE(p), PROJ_BOX(p)]:
-            ax.plot(*p, "ro")
-            ax.plot(*proj, "go")
-            ax.arrow(*p, *(proj - p), head_width=0.2, color="gray", linestyle="--")
-    ax.legend([r"Circle ($C_1$)", r"Box ($C_2$)", "Original point", "Projected point"])
     ax.set_xlabel(r"$x_1$")
     ax.set_ylabel(r"$x_2$")
+    ax.set_title(r"Projections onto Circle ($C_1$) and Box ($C_2$)")
+
+    # Safe zones C_1, C_2
+    ax.add_artist(Circle((0, 0), 5, color="lightblue", alpha=0.5))
+    ax.add_patch(Rectangle((-3, 0), 6, 4, color="orange", alpha=0.5))
+
+    for p in points:
+        proj_circle = PROJ_CIRCLE(p)
+        proj_box = PROJ_BOX(p)
+
+        ax.plot(*p, "g*", zorder=3, markersize=16)
+
+        # Projections
+        ax.plot(*proj_circle, "bo", zorder=5, markersize=6)
+        ax.plot(*proj_box, "rs", zorder=4, markersize=8)
+
+        # Arrows
+        ax.arrow(*p, *(proj_box - p), color="red", linestyle="--", alpha=0.6, zorder=2)
+        ax.arrow(
+            *p, *(proj_circle - p), color="blue", linestyle="--", alpha=0.6, zorder=2
+        )
+    ax.legend(
+        [
+            r"Circle ($C_1$)",
+            r"Box ($C_2$)",
+            "Original point",
+            r"Projection on $C_1$",
+            r"Projection on $C_2$",
+        ]
+    )
     plt.grid(True)
     plt.tight_layout()
     print("Plot generated for projections onto circle and box.")
