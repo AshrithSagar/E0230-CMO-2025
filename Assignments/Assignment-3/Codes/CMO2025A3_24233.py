@@ -347,6 +347,17 @@ def question_1(X: Matrix, y: Vector, lambdas: List[Scalar]):
         filename = f"Q1-3-Sparsity-LASSO-{SRN}.jpeg"
         plt.savefig(os.path.join(FIGS_DIR, filename))
 
+    ## Q1 Part 4
+    # KKT conditions verification
+    print("\033[4mPart-4\033[0m:")
+    for lam in lambdas:
+        beta_star = LASSO_REGRESSION(X, y, lam)
+        residual: Vector = X @ beta_star - y
+        gradient: Vector = X.T @ residual
+        kkt_check = bool(np.all(np.abs(gradient) <= lam + 1e-6))
+        print(f"\u03bb = {lam}")
+        print("KKT conditions satisfied:", kkt_check, end="\n\n")
+
     ## Q1 Part 5
     # Duplicate one feature column in X and repeat the experiment in Part 3
     print("\033[4mPart-5\033[0m:")
