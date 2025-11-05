@@ -262,6 +262,38 @@ Thereby, the Lagrangian dual problem can be stated as
 \end{equation*}
 which is equivalent to the problem stated in Farkas lemma~\citep{Nocedal2006}, aiming to find a dual certificate of infeasibility, i.e., a \( \bflambda \geq \zero \) such that \( \dotp{\A}{\bflambda} = \zero \) and \( \dotp{\bflambda}{\b} < 0 \).
 
+\newpage
+We solve the dual problem using CVXPY to obtain the Farkas certificate \( \bflambda^\ast \) as
+
+\begin{verbatim}
+Is feasible: False
+Certificate y: [9.5163699e-10 9.5163699e-10 9.5163699e-10]
+Diagnostics: {
+'primal_status': 'infeasible',
+'primal_objective_value': inf,
+'primal_solver_stats': SolverStats(
+    solver_name='CLARABEL',
+    solve_time=2.9209e-05,
+    setup_time=None,
+    num_iters=5,
+    extra_stats=None
+),
+'dual_status': 'optimal',
+'dual_objective_value': np.float64(-9.516369896651987e-10),
+'dual_solver_stats': SolverStats(
+    solver_name='CLARABEL',
+    solve_time=2.2418e-05,
+    setup_time=None,
+    num_iters=5,
+    extra_stats=None
+),
+'dual_constraints_residual': array([-9.47221063e-20, -9.47221063e-20]),
+'dual_constraints_residual_norm': np.float64(1.3395728739261362e-19)
+}
+\end{verbatim}
+
+As can be seen from the values, the \verb|dual_constraints_residual| which is \( - \dotp{\bflambda}{\b} \) is indeed negative, and we've found a Farkas certificate \( \y = \bflambda^\ast \geq \zero \) such that \( \dotp{\A}{\y} = \zero \) and \( \dotp{\y}{\b} < 0 \), thereby proving that the original system of inequalities is infeasible.
+
 \paragraph{Meaning of \( \y \) in the supply-chain context}
 
 In the supply-chain context, the Farkas certificate \( \y \geq \zero \) represents a combination of the system's capacity constraints that proves the infeasibility of the demand requirements.
