@@ -356,6 +356,8 @@ def question_1(X: Matrix, y: Vector, lambdas: List[Scalar]):
         gradient: Vector = X.T @ residual
         kkt_check = bool(np.all(np.abs(gradient) <= lam + 1e-6))
         print(f"\u03bb = {lam}")
+        print(f"Residual (X \u03b2\u2217 - y) =\n{residual}", end="\n")
+        print(f"Gradient X\u1d40(X \u03b2\u2217 - y) =\n{gradient}", end="\n")
         print("KKT conditions satisfied:", kkt_check, end="\n\n")
 
     ## Q1 Part 5
