@@ -169,6 +169,72 @@ Hence, the optimal values of the primal and dual problems are equal, i.e.,
 \end{equation*}
 where \( p^\ast \) and \( d^\ast \) denote the optimal values of the primal and dual problems, respectively.
 
+\newpage
+\subsection*{(3) Dual formulation implementation}
+
+For \( \lambda = 0.01 \), the optimal \( {\u}^\ast \) obtained is
+\begin{verbatim}
+[-0.27906611 -0.30735772  0.07400798  0.21453129 -0.40423741 -0.17552416
+ -0.46164546  0.35671177 -0.20424238 -0.48974195  0.39455506  0.2797047
+  0.11443163 -0.52188669 -0.23231429  0.01246941 -0.6397258   0.20340596
+  0.32000668 -0.09736558 -0.39834473 -0.01119577 -0.14848126 -0.53054913
+  0.22672293 -0.01669374  0.10093836  0.62469666  0.35862479 -0.13146829
+ -0.26718118 -0.92025994  0.12886891 -0.162096   -0.2682515   0.17349895
+  0.82497091  0.07614388  0.01321095  0.67548456 -0.30903005 -0.34999142
+ -0.02364681  0.47076441  0.26800765  0.18671772 -0.19787046  0.03805798
+ -0.31172933  0.11393497]
+\end{verbatim}
+
+For \( \lambda = 0.1 \), the optimal \( {\u}^\ast \) obtained is
+\begin{verbatim}
+[-0.26779729 -0.30168898  0.06813849  0.20831275 -0.40718449 -0.18360129
+ -0.47497596  0.37410827 -0.19951182 -0.46962704  0.38749465  0.27852618
+  0.10333258 -0.51666772 -0.24826256  0.02047764 -0.63381238  0.19680066
+  0.32414693 -0.10045459 -0.42454573 -0.00115188 -0.15582766 -0.51459336
+  0.21663822 -0.01806736  0.09115342  0.63912848  0.35320847 -0.1397563
+ -0.25471758 -0.92021717  0.13830227 -0.15053965 -0.26853859  0.21112191
+  0.82709515  0.07271357 -0.005116    0.64788282 -0.32115776 -0.36617175
+ -0.02671521  0.48482926  0.26673393  0.21064144 -0.20477912  0.03477054
+ -0.30670347  0.08998157]
+\end{verbatim}
+
+For \( \lambda = 1 \), the optimal \( {\u}^\ast \) obtained is
+\begin{verbatim}
+[-0.15471848 -0.23868775  0.00402674  0.14654693 -0.43315943 -0.26705604
+ -0.58507223  0.53164534 -0.17735213 -0.24757887  0.33738435  0.2708471
+ -0.00740536 -0.48172205 -0.4123128   0.08480357 -0.54848484  0.10218745
+  0.37591057 -0.13911179 -0.69193688  0.1105446  -0.22100673 -0.36023855
+  0.12237722 -0.03113544 -0.00979083  0.77129737  0.29197266 -0.22197056
+ -0.14102803 -0.94591744  0.21982808 -0.05137512 -0.26173185  0.58668418
+  0.84126793  0.0391666  -0.17174096  0.37927227 -0.45065179 -0.52780213
+ -0.05816314  0.62089612  0.26220618  0.45880655 -0.27354903 -0.00973597
+ -0.25878235 -0.14445547]
+\end{verbatim}
+
+\newpage
+\subsection*{(4) Relation between \( \bfbeta^\ast \) and \( {\u}^\ast \) in terms of the \( \ell_2 \) norm}
+
+From the KKT conditions, we can verify the relation between the primal and dual optimal solutions \( \bfbeta^\ast \) and \( {\u}^\ast \) to satisfy
+\begin{equation*}
+    \dotp{\bfX}{{\u}^\ast}
+    =
+    \lambda \, \func{\operatorname{sign}}{\bfbeta^\ast}
+\end{equation*}
+
+The computed values of \( \norm{\dotp{\bfX}{{\u}^\ast} - \lambda \, \func{\operatorname{sign}}{\bfbeta^\ast}}_2 \) for different values of \( \lambda \) are tabulated below:
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{cc}
+        \toprule
+        \( \lambda \) & \( \norm{\dotp{\bfX}{{\u}^\ast} - \lambda \, \func{\operatorname{sign}}{\bfbeta^\ast}}_2 \) \\
+        \midrule
+        \( 0.01 \) & \( 3.588793227075831e^{-15} \) \\
+        \( 0.1 \) & \( 1.8674779632692878e^{-15} \) \\
+        \( 1 \) & \( 0.3973636588204761 \) \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
 \subsection*{(5) Dual constraint \( \norm{\dotp{\bfX}{\bfmu}}_\infty \leq \lambda \) enforces sparsity in the primal solution \( \bfbeta^\ast \)}
 
 The dual constraint \( \norm{\dotp{\bfX}{\bfmu}}_\infty \leq \lambda \) can be rewritten as

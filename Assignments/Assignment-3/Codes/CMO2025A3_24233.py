@@ -400,23 +400,32 @@ def question_2(X: Matrix, y: Vector, lambdas: List[Scalar]):
     for lam in lambdas:
         u_star = LASSO_REGRESSION_DUAL(X, y, lam)
         print(f"\u03bb = {lam}")
-        print("Estimated coefficients u\u2217 =")
+        print("Optimal u\u2217 =")
         print(u_star, end="\n\n")
 
     ## Q2 Part 4
     # Closeness of optimum values u_star and beta_star
     print("\033[4mPart-4\033[0m:")
     for lam in lambdas:
+        print(f"\u03bb = {lam}")
         beta_star = LASSO_REGRESSION(X, y, lam)
         u_star = LASSO_REGRESSION_DUAL(X, y, lam)
+
         relation_lhs = X.T @ u_star
         relation_rhs = lam * np.sign(beta_star)
         l2_norm_diff = np.linalg.norm(relation_lhs - relation_rhs)
-        print(f"\u03bb = {lam}")
         print(
-            f"\u2016X\u1d40u\u2217 \u2013 \u03bb sign(\u03b2\u2217)\u2016\u2082 = {l2_norm_diff}",
-            end="\n\n",
+            f"\u2016X\u1d40u\u2217 \u2013 \u03bb sign(\u03b2\u2217)\u2016\u2082 = {l2_norm_diff}"
         )
+
+        primal_obj = Scalar(
+            0.5 * np.linalg.norm(X @ beta_star - y) ** 2
+            + lam * np.linalg.norm(beta_star, 1)
+        )
+        dual_obj = Scalar(-0.5 * np.linalg.norm(u_star) ** 2 + y @ u_star)
+        print(f"Primal objective value: {primal_obj}")
+        print(f"Dual objective value: {dual_obj}")
+        print(f"Duality gap |primal - dual| = {primal_obj - dual_obj}", end="\n\n")
 
 
 def question_3():
