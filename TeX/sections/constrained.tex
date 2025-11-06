@@ -36,42 +36,42 @@ If \( \calC = \emptyset \), then the problem is said to be \textbf{infeasible}.
 \subsection{Global minimum}
 
 \begin{definition}{Global minimum}{global-minimum-constrained}
-    The point \( \xstar \in \calD \) is a \textbf{global minimum} of the function \( f: \calD \subseteq \R^d \to \R \) if
+    The point \( \xstar \in \calC \subseteq \calD \) is a \textbf{global minimum} of the function \( f: \calD \subseteq \R^d \to \R \) if
     \vspace{-0.5em}
     \begin{equation*}
         \func{f}{\xstar} \leq \func{f}{\x},
-        \quad \forall \x \in \calD
+        \quad \forall \x \in \calC
     \end{equation*}
 \end{definition}
 
 \subsection{Strict global minimum}
 
 \begin{definition}{Strict global minimum}{}
-    The point \( \xstar \in \calD \) is a \textbf{strict global minimum} of the function \( f: \calD \subseteq \R^d \to \R \) if
+    The point \( \xstar \in \calC \subseteq \calD \) is a \textbf{strict global minimum} of the function \( f: \calD \subseteq \R^d \to \R \) if
     \vspace{-0.5em}
     \begin{equation*}
         \func{f}{\xstar} < \func{f}{\x},
-        \quad \forall \x \in \calD \setminus \set{\xstar}
+        \quad \forall \x \in \calC \setminus \set{\xstar}
     \end{equation*}
 \end{definition}
 
 \subsection{Local minimum}
 
 \begin{definition}{Local minimum}{local-minimum-constrained}
-    The point \( \xstar \in \calD \) is a \textbf{local minimum} of the function \( f: \calD \subseteq \R^d \to \R \) if there exists a \( \delta > 0 \) such that for all \( \x \in \calD \) in the \( \delta \)-neighborhood of \( \xstar \), we have \( \func{f}{\xstar} \leq \func{f}{\x} \), i.e.,
+    The point \( \xstar \in \calC \subseteq \calD \) is a \textbf{local minimum} of the function \( f: \calD \subseteq \R^d \to \R \) if there exists a \( \delta > 0 \) such that for all \( \x \in \calC \) in the \( \delta \)-neighborhood of \( \xstar \), we have \( \func{f}{\xstar} \leq \func{f}{\x} \), i.e.,
     \vspace{-0.5em}
     \begin{equation*}
         \func{f}{\xstar} \leq \func{f}{\x},
-        \quad \forall \x \in \calD \cap B_{\delta}(\xstar)
+        \quad \forall \x \in \calC \cap B_{\delta}(\xstar)
     \end{equation*}
 \end{definition}
 
 \begin{definition}{Strict local minimum}{}
-    The point \( \xstar \in \calD \) is a \textbf{strict local minimum} of the function \( f: \calD \subseteq \R^d \to \R \) if there exists a \( \delta > 0 \) such that for all \( \x \in \calD \) in the \( \delta \)-neighborhood of \( \xstar \) except \( \xstar \) itself, we have \( \func{f}{\xstar} < \func{f}{\x} \), i.e.,
+    The point \( \xstar \in \calC \subseteq \calD \) is a \textbf{strict local minimum} of the function \( f: \calD \subseteq \R^d \to \R \) if there exists a \( \delta > 0 \) such that for all \( \x \in \calC \) in the \( \delta \)-neighborhood of \( \xstar \) except \( \xstar \) itself, we have \( \func{f}{\xstar} < \func{f}{\x} \), i.e.,
     \vspace{-0.5em}
     \begin{equation*}
         \func{f}{\xstar} < \func{f}{\x},
-        \quad \forall \x \in \calD \cap B_{\delta}(\xstar) \setminus \set{\xstar}
+        \quad \forall \x \in \calC \cap B_{\delta}(\xstar) \setminus \set{\xstar}
     \end{equation*}
 \end{definition}
 
@@ -235,28 +235,41 @@ An ""optimisation problem@constrained optimisation problem"" can be put into the
     \quad &
     \func{f}{\x}
     \\ \subjectto \quad &
-    \func{g_i}{\x} \leq 0,
-    \quad i \in \calI
+    \func{c_i}{\x} = 0,
+    \quad i \in \calE
     \\ &
-    \func{h_j}{\x} = 0,
-    \quad j \in \calE
+    \func{c_i}{\x} \leq 0,
+    \quad i \in \calI
 \end{align*}
-where \( \calI = \set{1, 2, \ldots, m}, \; \calE = \set{m + 1, m + 2, \ldots, m + p}. \)
+where \( \calE = \set{1, 2, \ldots, p}, \; \calI = \set{p + 1, p + 2, \ldots, p + m}. \)
 
 \begin{itemize}
     \item The function \( f: \R^d \to \R \) is called the \textbf{objective function}.
 
-    \item The functions \( g_i: \R^d \to \R, \; i \in \calI, \) and \( h_j: \R^d \to \R, \; j \in \calE, \) are called the \textbf{constraint functions}.
+    \item The functions \( c_i: \R^d \to \R, \; i \in \calI \cup \calE \) are called the \textbf{constraint functions}.
 
-    \item \AP The constraints \( \func{g_i}{\x} \leq 0 \) are called \textbf{""inequality constraints""}.
+    \item \AP The constraints \( \func{c_i}{\x} = 0, \; i \in \calE \) are called \textbf{""equality constraints""}.
 
-    \item \AP The constraints \( \func{h_j}{\x} = 0 \) are called \textbf{""equality constraints""}.
+    \item \AP The constraints \( \func{c_i}{\x} \leq 0, \; i \in \calI \) are called \textbf{""inequality constraints""}.
 
     \item If a point \( \x \in \R^d \) satisfies all the constraints, then it is called a \textbf{""feasible point""}.
 
     \item If a point \( \x \in \R^d \) violates any of the constraints, then it is called an \textbf{infeasible point}.
 
     \item The set of all feasible points is called the \textbf{feasible set}.
+        \begin{equation*}
+            \Omega
+            =
+            \set{
+                \x \in \R^d
+                \given
+                \func{c_i}{\x} = 0,
+                \; i \in \calE
+                \quad
+                \func{c_i}{\x} \leq 0,
+                \; i \in \calI,
+            }
+        \end{equation*}
 
     \item An \textbf{optimal point} \( \xstar \) is a feasible point that minimises the objective function, i.e.,\\
         \( \func{f}{\xstar} \leq \func{f}{\x}, \; \forall \x \) feasible.
@@ -275,13 +288,28 @@ where \( \calI = \set{1, 2, \ldots, m}, \; \calE = \set{m + 1, m + 2, \ldots, m 
         \begin{equation*}
             \func{\calA}{\x}
             \triangleq
-            \set{i \given \func{g_i}{\x} = 0, \; i \in \calI}
+            \set{i \given \func{c_i}{\x} = 0, \; i \in \calI}
             \; \cup \;
             \calE
         \end{equation*}
 
-    \item The case \( m = 0 \) corresponds to having no inequality constraints, the case \( p = 0 \) corresponds to having no equality constraints, and the case \( m = p = 0 \) corresponds to an unconstrained optimisation problem.
+    \item The case \( \calI = \emptyset \), i.e., \( m = 0 \) corresponds to having no inequality constraints, \\
+        the case \( \calE = \emptyset \), i.e., \( p = 0 \) corresponds to having no equality constraints, and \\
+        the case \( \calI = \calE = \emptyset \), i.e., \( m = p = 0 \) corresponds to an unconstrained optimisation problem.
 \end{itemize}
+
+Alternatively, the "constrained optimisation problem" can be written as
+\begin{align*}
+    \minimize_{\x}
+    \quad &
+    \func{f}{\x}
+    \\ \subjectto \quad &
+    \func{g_i}{\x} \leq 0,
+    \quad i \in \set{1, 2, \ldots, m}
+    \\ &
+    \func{h_j}{\x} = 0,
+    \quad j \in \set{1, 2, \ldots, p}
+\end{align*}
 
 \section{Lagrangian function}
 
@@ -451,17 +479,35 @@ The corresponding \textbf{Lagrange dual problem} of the primal problem in~\psecr
 
 \chapter{Convex programming (CP)}
 
-\begin{equation*}
-    \minimize_{\x} \func{f}{\x}
-    \quad \subjectto \quad
-    \func{f_i}{\x} \leq 0, \quad i \in \set{1, 2, \ldots, m}
-\end{equation*}
-where \( f, \,\, f_i, \, i \in \set{1, 2, \dots, m} \) are "convex functions" is called a \textbf{""convex programming""} problem.
+A \textbf{""convex programming""} problem is a "constrained optimisation problem" where the objective function is a "convex function" and the feasible region is a "convex set".
+
+\paragraph{Abstract form}
+\begin{align*}
+    \minimize_{\x \in \calC}
+    \quad &
+    \func{f}{\x}
+\end{align*}
+where \( f: \calD \subseteq \R^d \to \R \) is a "convex function" and \( \calC \subseteq \calD \) is a "convex set".
+
+\paragraph{Standard form}
+\begin{align*}
+    \minimize_{\x}
+    \quad &
+    \func{f}{\x}
+    \\ \subjectto \quad &
+    \func{g_i}{\x} \leq 0,
+    \quad i \in \set{1, 2, \ldots, m}
+    \\ &
+    \func{h_j}{\x} = 0,
+    \quad j \in \set{1, 2, \ldots, p}
+\end{align*}
+where \( f, \,\, g_i, \, i \in \set{1, 2, \dots, m} \) are "convex functions" and \( h_j, \, j \in \set{1, 2, \dots, p} \) are "affine functions".
 
 For a convex programming problem satisfying the Slater's conditions, if \( \xstar \) and \( \bflambda^{\star} \) are optimal solutions of the primal and dual problems respectively, then the "KKT conditions"~\psecref{sec:kkt-conditions} are necessary and sufficient for optimality.
 
 \section{Linear programming (LP)}
 
+A \textbf{""linear programming""} problem is a "constrained optimisation problem" where the objective function is a "linear function" and the constraints are linear.
 \begin{align*}
     \minimize_{\x}
     \quad &
@@ -507,7 +553,7 @@ The "Lagrangian function" is given by
 
 \section{Quadratic programming (QP)}
 
-A \textbf{""quadratic programming""} problem is an optimisation problem where the objective function is a quadratic function and the constraints are linear.
+A \textbf{""quadratic programming""} problem is a "constrained optimisation problem" where the objective function is a quadratic function and the constraints are linear.
 \begin{align*}
     \minimize_{\x}
     \quad &
@@ -609,7 +655,7 @@ The "Lagrangian function" is given by
 Active set methods are iterative methods for solving convex constrained optimisation problems.
 At each iteration, an estimate of the active set of inequality constraints is maintained and used to solve a simpler optimisation problem with only equality constraints.
 The active set is updated based on the solution obtained at each iteration until convergence is achieved.
-We only consider active set for the inequality constraints, since the equality constraints are always active, i.e.,
+We only consider "active set" for the inequality constraints, since the equality constraints are always active, i.e.,
 \(
     \func{\calA}{\x}
     =

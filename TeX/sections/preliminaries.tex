@@ -346,6 +346,26 @@ A sequence of real numbers \( \set{a_k}_{k = 1}^{\infty} \) is a \textbf{Cauchy 
 
 In \( \R \), every Cauchy sequence is convergent, and every convergent sequence is Cauchy, since \( \R \) is complete.
 
+\section{Affine functions}
+
+A function \( f: \R^d \to \R \) is \textbf{""affine""} if it can be expressed as
+\begin{equation*}
+    \func{f}{\x}
+    =
+    \dotp{\a}{\x} + b,
+    \quad \a \in \R^d,
+    \; b \in \R
+\end{equation*}
+
+A function \( f: \R^d \to \R \) is \textbf{""linear@linear function""} if it can be expressed as
+\begin{equation*}
+    \func{f}{\x}
+    =
+    \dotp{\a}{\x},
+    \quad \a \in \R^d
+\end{equation*}
+i.e., a linear function is an affine function with \( b = 0 \).
+
 \chapter{Calculus}
 
 \section{Limits}
