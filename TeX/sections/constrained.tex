@@ -31,6 +31,90 @@ If \( f \) is unbounded below on \( \calC \), then the problem is said to be \te
 
 If \( \calC = \emptyset \), then the problem is said to be \textbf{infeasible}.
 
+\section{Optimisation standard form}\label{sec:constrained-optimisation-standard-form}
+
+An ""optimisation problem@constrained optimisation problem"" can be put into the following standard form:
+\begin{align*}
+    \minimize_{\x}
+    \quad &
+    \func{f}{\x}
+    \\ \subjectto \quad &
+    \func{c_i}{\x} = 0,
+    \quad i \in \calE
+    \\ &
+    \func{c_i}{\x} \leq 0,
+    \quad i \in \calI
+\end{align*}
+where \( \calE = \set{1, 2, \ldots, p}, \; \calI = \set{p + 1, p + 2, \ldots, p + m}. \)
+
+\begin{itemize}
+    \item The function \( f: \R^d \to \R \) is called the \textbf{objective function}.
+
+    \item The functions \( c_i: \R^d \to \R, \; i \in \calI \cup \calE \) are called the \textbf{constraint functions}.
+
+    \item \AP The constraints \( \func{c_i}{\x} = 0, \; i \in \calE \) are called \textbf{""equality constraints""}.
+
+    \item \AP The constraints \( \func{c_i}{\x} \leq 0, \; i \in \calI \) are called \textbf{""inequality constraints""}.
+
+    \item If a point \( \x \in \R^d \) satisfies all the constraints, then it is called a \textbf{""feasible point""}.
+
+    \item If a point \( \x \in \R^d \) violates any of the constraints, then it is called an \textbf{infeasible point}.
+
+    \item The set of all feasible points is called the \textbf{feasible set}.
+        \begin{equation*}
+            \Omega
+            =
+            \set{
+                \x \in \R^d
+                \given
+                \func{c_i}{\x} = 0,
+                \; i \in \calE
+                \quad
+                \func{c_i}{\x} \leq 0,
+                \; i \in \calI,
+            }
+        \end{equation*}
+
+    \item An \textbf{optimal point} \( \xstar \) is a feasible point that minimises the objective function, i.e.,\\
+        \( \func{f}{\xstar} \leq \func{f}{\x}, \; \forall \x \) feasible.
+
+    \item An \textbf{active constraint} is a constraint that is satisfied with equality at a given feasible point.
+        An \textbf{inactive constraint} is a constraint that is satisfied with strict inequality at a given feasible point.
+        All equality constraints are always active.
+        \( \text{Active constraints} \supseteq \text{Equality constraints} \).
+
+    \item A \textbf{""binding constraint""} is a constraint that is satisfied with equality at a given optimal point.
+        A \textbf{non-binding constraint} is a constraint that is satisfied with strict inequality at a given optimal point.
+        \( \text{Equality constraints} \subseteq \text{Binding constraints} \subseteq \text{Active constraints} \), i.e., at an optimal point, all active constraints need not be binding, and an equality constraint is always binding.
+
+    \item The \textbf{""active set""} at a feasible point \( \x \) is the set of indices of the active constraints at \( \x \), i.e.,
+        \vspace{-0.5em}
+        \begin{equation*}
+            \func{\calA}{\x}
+            \triangleq
+            \set{i \given \func{c_i}{\x} = 0, \; i \in \calI}
+            \; \cup \;
+            \calE
+        \end{equation*}
+
+    \item The case \( \calI = \emptyset \), i.e., \( m = 0 \) corresponds to having no inequality constraints, \\
+        the case \( \calE = \emptyset \), i.e., \( p = 0 \) corresponds to having no equality constraints, and \\
+        the case \( \calI = \calE = \emptyset \), i.e., \( m = p = 0 \) corresponds to an unconstrained optimisation problem.
+\end{itemize}
+
+Alternatively, the "constrained optimisation problem" can be written as
+\begin{align*}
+    \minimize_{\x}
+    \quad &
+    \func{f}{\x}
+    \\ \subjectto \quad &
+    \func{g_i}{\x} \leq 0,
+    \quad i \in \set{1, 2, \ldots, m}
+    \\ &
+    \func{h_j}{\x} = 0,
+    \quad j \in \set{1, 2, \ldots, p}
+\end{align*}
+
 \section{Types of minimum}
 
 \subsection{Global minimum}
@@ -74,6 +158,52 @@ If \( \calC = \emptyset \), then the problem is said to be \textbf{infeasible}.
         \quad \forall \x \in \calC \cap B_{\delta}(\xstar) \setminus \set{\xstar}
     \end{equation*}
 \end{definition}
+
+\section{Lagrangian function}
+
+\begin{definition}{Lagrangian function}{}
+    The ""\textbf{Lagrangian} / \textbf{Lagrange function}@Lagrange function"" \( \calL: \R^d \times \R^m \times \R^p \to \R \) associated with the "constrained optimisation problem" in~\psecref{sec:constrained-optimisation-standard-form} is defined as
+    \vspace{-0.5em}
+    \begin{equation*}
+        \func{\calL}{\x, \bflambda, \bfmu}
+        \triangleq
+        \func{f}{\x}
+        +
+        \sum_{i \in \calI} \lambda_i \, \func{g_i}{\x}
+        +
+        \sum_{j \in \calE} \mu_j \, \func{h_j}{\x}
+    \end{equation*}
+
+    \vspace{-1em}
+    where
+    \(
+        \bflambda
+        =
+        \begin{bmatrix}
+            \lambda_1 &
+            \lambda_2 &
+            \cdots &
+            \lambda_m
+        \end{bmatrix}^\top
+        \in \R^m
+    \)
+    and
+    \(
+        \bfmu
+        =
+        \begin{bmatrix}
+            \mu_{m + 1} &
+            \mu_{m + 2} &
+            \cdots &
+            \mu_{m + p}
+        \end{bmatrix}^\top
+        \in \R^p
+    \).
+\end{definition}
+
+\subsection{Lagrange multipliers}
+
+The variables \( \lambda_i, \; i \in \calI \), and \( \mu_j, \; j \in \calE \), are called the \textbf{Lagrange multipliers} / \textbf{dual variables} associated with the inequality and equality constraints respectively.
 
 \section{Projection onto a convex set}
 
@@ -226,136 +356,6 @@ From the definition, we can see that the following holds true:
     Since this holds \( \forall \x \geq 0, \; c > 0, \) we must have \( \dotp{\A}{\y} \geq 0 \),
     Thus, the second statement is true.
 \end{proof}
-
-\section{Optimisation standard form}\label{sec:constrained-optimisation-standard-form}
-
-An ""optimisation problem@constrained optimisation problem"" can be put into the following standard form:
-\begin{align*}
-    \minimize_{\x}
-    \quad &
-    \func{f}{\x}
-    \\ \subjectto \quad &
-    \func{c_i}{\x} = 0,
-    \quad i \in \calE
-    \\ &
-    \func{c_i}{\x} \leq 0,
-    \quad i \in \calI
-\end{align*}
-where \( \calE = \set{1, 2, \ldots, p}, \; \calI = \set{p + 1, p + 2, \ldots, p + m}. \)
-
-\begin{itemize}
-    \item The function \( f: \R^d \to \R \) is called the \textbf{objective function}.
-
-    \item The functions \( c_i: \R^d \to \R, \; i \in \calI \cup \calE \) are called the \textbf{constraint functions}.
-
-    \item \AP The constraints \( \func{c_i}{\x} = 0, \; i \in \calE \) are called \textbf{""equality constraints""}.
-
-    \item \AP The constraints \( \func{c_i}{\x} \leq 0, \; i \in \calI \) are called \textbf{""inequality constraints""}.
-
-    \item If a point \( \x \in \R^d \) satisfies all the constraints, then it is called a \textbf{""feasible point""}.
-
-    \item If a point \( \x \in \R^d \) violates any of the constraints, then it is called an \textbf{infeasible point}.
-
-    \item The set of all feasible points is called the \textbf{feasible set}.
-        \begin{equation*}
-            \Omega
-            =
-            \set{
-                \x \in \R^d
-                \given
-                \func{c_i}{\x} = 0,
-                \; i \in \calE
-                \quad
-                \func{c_i}{\x} \leq 0,
-                \; i \in \calI,
-            }
-        \end{equation*}
-
-    \item An \textbf{optimal point} \( \xstar \) is a feasible point that minimises the objective function, i.e.,\\
-        \( \func{f}{\xstar} \leq \func{f}{\x}, \; \forall \x \) feasible.
-
-    \item An \textbf{active constraint} is a constraint that is satisfied with equality at a given feasible point.
-        An \textbf{inactive constraint} is a constraint that is satisfied with strict inequality at a given feasible point.
-        All equality constraints are always active.
-        \( \text{Active constraints} \supseteq \text{Equality constraints} \).
-
-    \item A \textbf{""binding constraint""} is a constraint that is satisfied with equality at a given optimal point.
-        A \textbf{non-binding constraint} is a constraint that is satisfied with strict inequality at a given optimal point.
-        \( \text{Equality constraints} \subseteq \text{Binding constraints} \subseteq \text{Active constraints} \), i.e., at an optimal point, all active constraints need not be binding, and an equality constraint is always binding.
-
-    \item The \textbf{""active set""} at a feasible point \( \x \) is the set of indices of the active constraints at \( \x \), i.e.,
-        \vspace{-0.5em}
-        \begin{equation*}
-            \func{\calA}{\x}
-            \triangleq
-            \set{i \given \func{c_i}{\x} = 0, \; i \in \calI}
-            \; \cup \;
-            \calE
-        \end{equation*}
-
-    \item The case \( \calI = \emptyset \), i.e., \( m = 0 \) corresponds to having no inequality constraints, \\
-        the case \( \calE = \emptyset \), i.e., \( p = 0 \) corresponds to having no equality constraints, and \\
-        the case \( \calI = \calE = \emptyset \), i.e., \( m = p = 0 \) corresponds to an unconstrained optimisation problem.
-\end{itemize}
-
-Alternatively, the "constrained optimisation problem" can be written as
-\begin{align*}
-    \minimize_{\x}
-    \quad &
-    \func{f}{\x}
-    \\ \subjectto \quad &
-    \func{g_i}{\x} \leq 0,
-    \quad i \in \set{1, 2, \ldots, m}
-    \\ &
-    \func{h_j}{\x} = 0,
-    \quad j \in \set{1, 2, \ldots, p}
-\end{align*}
-
-\section{Lagrangian function}
-
-\begin{definition}{Lagrangian function}{}
-    The ""\textbf{Lagrangian} / \textbf{Lagrange function}@Lagrange function"" \( \calL: \R^d \times \R^m \times \R^p \to \R \) associated with the "constrained optimisation problem" in~\psecref{sec:constrained-optimisation-standard-form} is defined as
-    \vspace{-0.5em}
-    \begin{equation*}
-        \func{\calL}{\x, \bflambda, \bfmu}
-        \triangleq
-        \func{f}{\x}
-        +
-        \sum_{i \in \calI} \lambda_i \, \func{g_i}{\x}
-        +
-        \sum_{j \in \calE} \mu_j \, \func{h_j}{\x}
-    \end{equation*}
-
-    \vspace{-1em}
-    where
-    \(
-        \bflambda
-        =
-        \begin{bmatrix}
-            \lambda_1 &
-            \lambda_2 &
-            \cdots &
-            \lambda_m
-        \end{bmatrix}^\top
-        \in \R^m
-    \)
-    and
-    \(
-        \bfmu
-        =
-        \begin{bmatrix}
-            \mu_{m + 1} &
-            \mu_{m + 2} &
-            \cdots &
-            \mu_{m + p}
-        \end{bmatrix}^\top
-        \in \R^p
-    \).
-\end{definition}
-
-\subsection{Lagrange multipliers}
-
-The variables \( \lambda_i, \; i \in \calI \), and \( \mu_j, \; j \in \calE \), are called the \textbf{Lagrange multipliers} / \textbf{dual variables} associated with the inequality and equality constraints respectively.
 
 \section{Karush-Kuhn-Tucker (KKT) conditions}\label{sec:kkt-conditions}
 
