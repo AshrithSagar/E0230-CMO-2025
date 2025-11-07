@@ -50,15 +50,15 @@ where \( \calE = \set{1, 2, \ldots, p}, \; \calI = \set{p + 1, p + 2, \ldots, p 
 \begin{itemize}
     \item The function \( f: \R^d \to \R \) is called the \textbf{objective function}.
 
-    \item The functions \( c_i: \R^d \to \R, \; i \in \calI \cup \calE \) are called the \textbf{constraint functions}.
+    \item \AP The functions \( c_i: \R^d \to \R, \; i \in \calI \cup \calE \) are called the \textbf{""constraint functions""}.
 
     \item \AP The constraints \( \func{c_i}{\x} = 0, \; i \in \calE \) are called \textbf{""equality constraints""}.
 
     \item \AP The constraints \( \func{c_i}{\x} \leq 0, \; i \in \calI \) are called \textbf{""inequality constraints""}.
 
-    \item If a point \( \x \in \R^d \) satisfies all the constraints, then it is called a \textbf{""feasible point""}.
+    \item A point \( \x \in \R^d \) that satisfies all the constraints is called a \textbf{""feasible point""} / \textbf{candidate solution}.
 
-    \item If a point \( \x \in \R^d \) violates any of the constraints, then it is called an \textbf{infeasible point}.
+    \item \AP If a point \( \x \in \R^d \) violates any of the constraints, then it is called an \textbf{infeasible point}.
 
     \item The set of all feasible points is called the \textbf{feasible set}.
         \begin{equation*}
@@ -83,11 +83,11 @@ where \( \calE = \set{1, 2, \ldots, p}, \; \calI = \set{p + 1, p + 2, \ldots, p 
         All equality constraints are always active.
         \( \text{Active constraints} \supseteq \text{Equality constraints} \).
 
-    \item A \textbf{""binding constraint""} is a constraint that is satisfied with equality at a given optimal point.
+    \item \AP A \textbf{""binding constraint""} is a constraint that is satisfied with equality at a given optimal point.
         A \textbf{non-binding constraint} is a constraint that is satisfied with strict inequality at a given optimal point.
         \( \text{Equality constraints} \subseteq \text{Binding constraints} \subseteq \text{Active constraints} \), i.e., at an optimal point, all active constraints need not be binding, and an equality constraint is always binding.
 
-    \item The \textbf{""active set""} at a feasible point \( \x \) is the set of indices of the active constraints at \( \x \), i.e.,
+    \item \AP The \textbf{""active set""} at a feasible point \( \x \) is the set of indices of the active constraints at \( \x \), i.e.,
         \vspace{-0.5em}
         \begin{equation*}
             \func{\calA}{\x}
@@ -203,7 +203,11 @@ Alternatively, the "constrained optimisation problem" can be written as
 
 \subsection{Lagrange multipliers}
 
-The variables \( \lambda_i, \; i \in \calI \), and \( \mu_j, \; j \in \calE \), are called the \textbf{Lagrange multipliers} / \textbf{dual variables} associated with the inequality and equality constraints respectively.
+The variables \( \lambda_i, \; i \in \calI \), and \( \mu_j, \; j \in \calE \), are called the \textbf{Lagrange multipliers} / \textbf{dual variables} associated with the "inequality@inequality constraints" and "equality constraints" respectively.
+
+\section{Regularity conditions}
+
+The \textbf{regularity conditions} / \textbf{constraint qualifications} are a set of conditions on the "constraint functions" that ensure the validity of certain optimality conditions for "constrained optimisation problems".
 
 \section{Projection onto a convex set}
 
@@ -258,6 +262,19 @@ From the definition, we can see that the following holds true:
     \end{align*}
     Dividing by \( t > 0 \) and letting \( t \to 0^+ \), we get \( 0 \leq -2\dotp{\pbrac{\x - \z}}{\pbrac{\y - \z}} \), i.e., \( \dotp{\pbrac{\x - \z}}{\pbrac{\y - \z}} \leq 0, \; \forall \y \in \calC. \)
 \end{proof}
+
+\begin{equation*}
+    \therefore
+    \boxed{
+        \dotp
+        {\pbrac{\func{P_{\calC}}{\x} - \x}}
+        {\pbrac{\y - \func{P_{\calC}}{\x}}}
+        \geq 0,
+        \quad
+        \forall \y \in \calC,
+        \; \forall \x \in \R^d
+    }
+\end{equation*}
 
 \section{Separating hyperplane theorem}
 
@@ -357,9 +374,23 @@ From the definition, we can see that the following holds true:
     Thus, the second statement is true.
 \end{proof}
 
+\section{Method of Lagrange multipliers}\label{sec:method-of-lagrange-multipliers}
+
+Consider the "constrained optimisation problem" as in~\psecref{sec:constrained-optimisation-standard-form} with only "equality constraints", i.e., \( \calI = \emptyset \).
+Let \( \xstar \) be a local minimum and suppose that the gradients of the "equality constraints" at \( \xstar \) are linearly independent.
+Then, there exist \( \mu_j \in \R, \; j \in \calE \) such that
+\begin{equation*}
+    \func{\nabla_{\x} \calL}{\xstar, \bfmu}
+    =
+    \func{\nabla_{\x} f}{\xstar}
+    +
+    \sum_{j = 1}^{p} \mu_j \, \func{\nabla_{\x} h_j}{\xstar}
+    = \zero
+\end{equation*}
+
 \section{Karush-Kuhn-Tucker (KKT) conditions}\label{sec:kkt-conditions}
 
-\nointro{KKT conditions}
+\textbf{""KKT conditions""} generalise the method of Lagrange multipliers~\psecref{sec:method-of-lagrange-multipliers} to handle inequality constraints.
 Consider the "constrained optimisation problem" as in~\psecref{sec:constrained-optimisation-standard-form} where \( f, g_i, h_j \) are differentiable functions.
 Let \( \xstar \) be a local minimum and suppose that the gradients of the active constraints at \( \xstar \) are linearly independent.
 Then, there exist \( \lambda_i \geq 0, \; i \in \calI, \ \mu_j \in \R, \; j \in \calE \) such that
