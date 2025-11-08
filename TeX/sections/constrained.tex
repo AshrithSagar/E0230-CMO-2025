@@ -50,7 +50,7 @@ where \( \calE = \set{1, 2, \ldots, p}, \; \calI = \set{p + 1, p + 2, \ldots, p 
 \begin{itemize}
     \item The function \( f: \R^d \to \R \) is called the \textbf{objective function}.
 
-    \item \AP The functions \( c_i: \R^d \to \R, \; i \in \calI \cup \calE \) are called the \textbf{""constraint functions""}.
+    \item \AP The functions \( c_i: \R^d \to \R, \; i \in \calE \cup \calI \) are called the \textbf{""constraint functions""}.
 
     \item \AP The constraints \( \func{c_i}{\x} = 0, \; i \in \calE \) are called \textbf{""equality constraints""}.
 
@@ -162,44 +162,27 @@ Alternatively, the "constrained optimisation problem" can be written as
 \section{Lagrangian function}
 
 \begin{definition}{Lagrangian function}{}
-    The ""\textbf{Lagrangian} / \textbf{Lagrange function}@Lagrange function"" \( \calL: \R^d \times \R^m \times \R^p \to \R \) associated with the "constrained optimisation problem" in~\psecref{sec:constrained-optimisation-standard-form} is defined as
+    The \textbf{""Lagrangian function""} \( \calL: \R^d \times \R^{m+p} \to \R \) associated with the "constrained optimisation problem" in~\psecref{sec:constrained-optimisation-standard-form} is defined as
     \vspace{-0.5em}
     \begin{equation*}
-        \func{\calL}{\x, \bflambda, \bfmu}
+        \func{\calL}{\x, \bflambda}
         \triangleq
         \func{f}{\x}
         -
-        \sum_{i \in \calI} \lambda_i \, \func{g_i}{\x}
-        +
-        \sum_{j \in \calE} \mu_j \, \func{h_j}{\x}
+        \sum_{i \in \calE \cup \calI} \bbrac{\bflambda}_i \, \func{c_i}{\x}
     \end{equation*}
-
-    \vspace{-1em}
-    where
-    \(
-        \bflambda
-        =
-        \begin{bmatrix}
-            \lambda_1 &
-            \lambda_2 &
-            \cdots &
-            \lambda_m
-        \end{bmatrix}^\top
-        \in \R^m
-    \)
-    and
-    \(
-        \bfmu
-        =
-        \begin{bmatrix}
-            \mu_{m + 1} &
-            \mu_{m + 2} &
-            \cdots &
-            \mu_{m + p}
-        \end{bmatrix}^\top
-        \in \R^p
-    \).
 \end{definition}
+
+Alternatively, the Lagrangian function can be written as
+\begin{equation*}
+    \func{\calL}{\x, \bflambda, \bfmu}
+    \triangleq
+    \func{f}{\x}
+    -
+    \sum_{i \in \calI} \lambda_i \, \func{g_i}{\x}
+    +
+    \sum_{j \in \calE} \mu_j \, \func{h_j}{\x}
+\end{equation*}
 
 \subsection{Lagrange multipliers}
 
@@ -383,15 +366,34 @@ From the definition, we can see that the following holds true:
 \section{Method of Lagrange multipliers}\label{sec:method-of-lagrange-multipliers}
 
 Consider the "constrained optimisation problem" as in~\psecref{sec:constrained-optimisation-standard-form} with only "equality constraints", i.e., \( \calI = \emptyset \).
-Let \( \xstar \) be a local minimum and suppose that the gradients of the "equality constraints" at \( \xstar \) are linearly independent.
-Then, there exist \( \mu_j \in \R, \; j \in \calE \) such that
+The solution corresponding to this problem is always a saddle point of the associated "Lagrangian function".
 \begin{equation*}
-    \func{\nabla_{\x} \calL}{\xstar, \bfmu}
-    =
-    \func{\nabla_{\x} f}{\xstar}
-    +
-    \sum_{j = 1}^{p} \mu_j \, \func{\nabla_{\x} h_j}{\xstar}
-    = \zero
+    \begin{aligned}
+        &
+        \func{\nabla_{\x} \calL}{\xstar, \bfmu^\ast}
+        = \zero
+        \\
+        \implies
+        &
+        \func{\nabla_{\x} f}{\xstar}
+        +
+        \sum_{i \in \calE} \bbrac{\bfmu^\ast}_i \, \func{\nabla_{\x} c_i}{\xstar}
+        =
+        \zero
+    \end{aligned}
+    \qquad\qquad
+    \begin{aligned}
+        &
+        \func{\nabla_{\bfmu} \calL}{\xstar, \bfmu^\ast}
+        =
+        \zero
+        \\
+        \implies
+        &
+        \func{c_i}{\xstar}
+        = 0,
+        \quad \forall i \in \calE
+    \end{aligned}
 \end{equation*}
 
 \section{Karush-Kuhn-Tucker (KKT) conditions}\label{sec:kkt-conditions}
@@ -400,8 +402,8 @@ Then, there exist \( \mu_j \in \R, \; j \in \calE \) such that
 
 \begin{theorem}{Karush-Kuhn-Tucker (KKT) conditions / Saddle point theorem~\cite{Nocedal2006,wiki}}{}
     Consider the "constrained optimisation problem" as in~\psecref{sec:constrained-optimisation-standard-form} where \( f, c_i \in \classC^1 \) are continuously differentiable functions.
-    Let \( \xstar \) be a local minimum of \( f \) and suppose that "LICQ" holds at \( \xstar \), i.e., the gradients of the active constraints at \( \xstar \) are linearly independent.
-    Then, there exist Lagrange multipliers \( \bbrac{\bflambda^\ast}_i \geq 0, \; i \in \calI \cup \calE \) such that
+    Let \( \xstar \) be a local minimum of \( f \) and suppose that "LICQ" holds at \( \xstar \), i.e., the gradients of the "active constraints" at \( \xstar \) are linearly independent.
+    Then, there exist Lagrange multipliers \( \bbrac{\bflambda^\ast}_i \geq 0, \; i \in \calE \cup \calI \) such that
     \vspace{-0.5em}
     \begin{align*}
         &
@@ -427,7 +429,7 @@ Then, there exist \( \mu_j \in \R, \; j \in \calE \) such that
         \\ &
         \bbrac{\bflambda^\ast}_i \, \func{c_i}{\xstar}
         = 0,
-        \quad \forall i \in \calI \cup \calE
+        \quad \forall i \in \calE \cup \calI
         \tag{complementary slackness}
     \end{align*}
 \end{theorem}
