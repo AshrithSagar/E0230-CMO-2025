@@ -1384,8 +1384,6 @@ Now, since \( \sum_{k = 0}^{T - 1} \frac{1}{T} = 1 \), we can apply Jensen's ine
 
 \chapter{Linear programming}
 
-\section{Basic feasible solution (BFS)}
-
 Consider the standard form of a "linear programming" problem:
 \begin{align*}
     \minimize_{\x}
@@ -1398,7 +1396,15 @@ Consider the standard form of a "linear programming" problem:
 \end{align*}
 where \( \c \in \R^d, \; \A \in \R^{m \times d}, \; \b \in \R^m \).
 
-A ""basic feasible solution"" (BFS) is a feasible solution \( \xhat \) of the "LP" problem where at most \( m \) components of \( \xhat \) are non-zero, and the corresponding columns of \( \A \) are linearly independent.
+\section{Basic solution}
+
+\begin{definition}{Basic solution}{}
+    A ""basic solution"" is a solution \( \xhat \) of the "LP" problem where at most \( l \) components of \( \xhat \) are non-zero, and the corresponding columns of \( \A \) are linearly independent.
+\end{definition}
+
+\section{Basic feasible solution (BFS)}
+
+A ""basic feasible solution"" (BFS) is a "basic solution" that is also feasible for the "LP" problem, i.e., \( \xhat \geq \zero \).
 
 \begin{theorem}{Existence of an optimal BFS}{}
     If the "LP" problem has an optimal solution, then at least one optimal solution is a basic feasible solution.
