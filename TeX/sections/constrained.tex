@@ -363,6 +363,74 @@ From the definition, we can see that the following holds true:
     Thus, the second statement is true.
 \end{proof}
 
+\subsection{Variants}
+
+\begin{itemize}
+    \item Either \( \A \x = \b \) has a solution \( \x \geq \zero \), or \( \dotp{\A}{\y} \geq \zero \) has a solution \( \y \in \R^m \) with \( \dotp{\b}{\y} < 0 \).
+
+    \item Either \( \A \x \leq \b \) has a solution \( \x \geq \zero \), or \( \dotp{\A}{\y} \geq \zero \) has a solution \( \y \geq \zero \) with \( \dotp{\b}{\y} < 0 \).
+
+    \item Either \( \A \x \leq \b \) has a solution \( \x \in \R^n \), or \( \dotp{\A}{\y} = \zero \) has a solution \( \y \geq \zero \) with \( \dotp{\b}{\y} < 0 \).
+
+    \item Either \( \A \x = \b \) has a solution \( \x \in \R^n \), or \( \dotp{\A}{\y} = \zero \) has a solution \( \y \in \R^m \) with \( \dotp{\b}{\y} \neq 0 \).
+\end{itemize}
+
+\begin{table}[htbp]
+    \centering
+    \caption{
+        Variants of Farkas' lemma.
+    }
+    \begin{tabular}{cccc}
+        \toprule
+        System
+        &
+        Constraints on \( \x \)
+        &
+        Alternate system
+        &
+        Constraints on \( \y \)
+        \\
+        \midrule
+        \( \A \x = \b \)
+        &
+        \( \x \in \R^n, \; \x \geq \zero \)
+        &
+        \( \dotp{\A}{\y} \geq \zero, \; \dotp{\b}{\y} < 0 \)
+        &
+        \( \y \in \R^m \)
+        \\
+        \midrule
+        \( \A \x \leq \b \)
+        &
+        \( \x \in \R^n, \; \x \geq \zero \)
+        &
+        \( \dotp{\A}{\y} \geq \zero, \; \dotp{\b}{\y} < 0 \)
+        &
+        \( \y \in \R^m, \; \y \geq \zero \)
+        \\
+        \midrule
+        \( \A \x \leq \b \)
+        &
+        \( \x \in \R^n \)
+        &
+        \( \dotp{\A}{\y} = \zero, \; \dotp{\b}{\y} < 0 \)
+        &
+        \( \y \in \R^m, \; \y \geq \zero \)
+        \\
+        \midrule
+        \( \A \x = \b \)
+        &
+        \( \x \in \R^n \)
+        &
+        \( \dotp{\A}{\y} = \zero, \; \dotp{\b}{\y} \neq 0 \)
+        &
+        \( \y \in \R^m \)
+        \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\newpage
 \section{Method of Lagrange multipliers}\label{sec:method-of-lagrange-multipliers}
 
 Consider the "constrained optimisation problem" as in~\psecref{sec:constrained-optimisation-standard-form} with only "equality constraints", i.e., \( \calI = \emptyset \).
