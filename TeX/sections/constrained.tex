@@ -168,7 +168,7 @@ Alternatively, the "constrained optimisation problem" can be written as
         \func{\calL}{\x, \bflambda}
         \triangleq
         \func{f}{\x}
-        -
+        +
         \sum_{i \in \calE \cup \calI} \bbrac{\bflambda}_i \, \func{c_i}{\x}
     \end{equation*}
 \end{definition}
@@ -178,7 +178,7 @@ Alternatively, the Lagrangian function can be written as
     \func{\calL}{\x, \bflambda, \bfmu}
     \triangleq
     \func{f}{\x}
-    -
+    +
     \sum_{i \in \calI} \lambda_i \, \func{g_i}{\x}
     +
     \sum_{j \in \calE} \mu_j \, \func{h_j}{\x}
@@ -613,7 +613,6 @@ For a convex programming problem satisfying the Slater's conditions, if \( \xsta
 
 \section{Linear programming (LP)}
 
-\AP
 A \textbf{""linear programming""} problem is a "constrained optimisation problem" where the objective function is a "linear function" and the constraints are linear.
 \begin{align*}
     \minimize_{\x}
@@ -629,20 +628,20 @@ The "Lagrangian function" is given by
     \func{\calL}{\x, \bflambda}
     & =
     \dotp{\c}{\x}
-    -
+    +
     \dotp{\bflambda}{\pbrac{\A \x - \b}}
     \\
     \implies
     \func{\nabla_{\x} \calL}{\x, \bflambda}
     & =
-    \c - \dotp{\A}{\bflambda}
+    \c + \dotp{\A}{\bflambda}
 \end{align*}
 
 "KKT conditions":
 \begin{align*}
     \func{\nabla_{\x} \calL}{\xstar, \bflambda^\ast}
     & =
-    \c - \dotp{\A}{\bflambda^\ast}
+    \c + \dotp{\A}{\bflambda^\ast}
     = \zero
     \\
     \A \xstar
@@ -687,20 +686,20 @@ The "Lagrangian function" is given by
     \func{\calL}{\x, \bfmu}
     & =
     \half \qf{\x}{\Q} + \dotp{\h}{\x} + c
-    -
+    +
     \dotp{\bfmu}{\pbrac{\A \x - \b}}
     \\
     \implies
     \func{\nabla_{\x} \calL}{\x, \bfmu}
     & =
-    \Q \x + \h - \dotp{\A}{\bfmu}
+    \Q \x + \h + \dotp{\A}{\bfmu}
 \end{align*}
 
 "KKT conditions":
 \begin{align*}
     \func{\nabla_{\x} \calL}{\xstar, \bfmu^\ast}
     & =
-    \Q \xstar + \h - \dotp{\A}{\bfmu^\ast}
+    \Q \xstar + \h + \dotp{\A}{\bfmu^\ast}
     =
     \zero
     \\
@@ -717,7 +716,7 @@ A ""CIQP"" problem is a "convex@CP" "quadratic programming" problem with only "i
     \quad &
     \half \qf{\x}{\Q} + \dotp{\h}{\x} + c
     \\ \subjectto \quad &
-    \A \x \geq \b
+    \A \x \leq \b
 \end{align*}
 where \( \Q \in \PSD, \; \h \in \R^d, \; \A \in \R^{m \times d}, \; \b \in \R^m \).
 
@@ -726,20 +725,20 @@ The "Lagrangian function" is given by
     \func{\calL}{\x, \bflambda}
     & =
     \half \qf{\x}{\Q} + \dotp{\h}{\x} + c
-    -
+    +
     \dotp{\bflambda}{\pbrac{\A \x - \b}}
     \\
     \implies
     \func{\nabla_{\x} \calL}{\x, \bflambda}
     & =
-    \Q \x + \h - \dotp{\A}{\bflambda}
+    \Q \x + \h + \dotp{\A}{\bflambda}
 \end{align*}
 
 "KKT conditions":
 \begin{align*}
     \func{\nabla_{\x} \calL}{\xstar, \bflambda^\ast}
     & =
-    \Q \xstar + \h - \dotp{\A}{\bflambda^\ast}
+    \Q \xstar + \h + \dotp{\A}{\bflambda^\ast}
     =
     \zero
     \\
