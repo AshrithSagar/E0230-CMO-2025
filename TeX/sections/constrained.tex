@@ -78,7 +78,7 @@ where \( \calE = \set{1, 2, \ldots, p}, \; \calI = \set{p + 1, p + 2, \ldots, p 
     \item An \textbf{optimal point} \( \xstar \) is a feasible point that minimises the objective function, i.e.,\\
         \( \func{f}{\xstar} \leq \func{f}{\x}, \; \forall \x \) feasible.
 
-    \item An \textbf{active constraint} is a constraint that is satisfied with equality at a given feasible point.
+    \item \AP An \textbf{""active constraint""} is a constraint that is satisfied with equality at a given feasible point.
         An \textbf{inactive constraint} is a constraint that is satisfied with strict inequality at a given feasible point.
         All equality constraints are always active.
         \( \text{Active constraints} \supseteq \text{Equality constraints} \).
@@ -168,7 +168,7 @@ Alternatively, the "constrained optimisation problem" can be written as
         \func{\calL}{\x, \bflambda, \bfmu}
         \triangleq
         \func{f}{\x}
-        +
+        -
         \sum_{i \in \calI} \lambda_i \, \func{g_i}{\x}
         +
         \sum_{j \in \calE} \mu_j \, \func{h_j}{\x}
@@ -207,7 +207,13 @@ The variables \( \lambda_i, \; i \in \calI \), and \( \mu_j, \; j \in \calE \), 
 
 \section{Regularity conditions}
 
-The \textbf{regularity conditions} / \textbf{constraint qualifications} are a set of conditions on the "constraint functions" that ensure the validity of certain optimality conditions for "constrained optimisation problems".
+The \textbf{""regularity conditions""} / \textbf{constraint qualifications} are a set of conditions on the "constraint functions" that ensure the validity of certain optimality conditions for "constrained optimisation problems".
+
+\subsection{Linear independence constraint qualification (LICQ)}
+
+\begin{definition}{Linear independence constraint qualification (LICQ)~\cite{wiki}}{}
+    The \textbf{""linear independence constraint qualification""} (LICQ) holds at a "feasible point" \( \x \) if the gradients of the "active constraints" at \( \x \) are linearly independent, i.e., the gradients of the active "inequality constraints" at \( \x \) and the gradients of the "equality constraints" at \( \x \) form a linearly independent set.
+\end{definition}
 
 \section{Projection onto a convex set}
 
@@ -390,42 +396,41 @@ Then, there exist \( \mu_j \in \R, \; j \in \calE \) such that
 
 \section{Karush-Kuhn-Tucker (KKT) conditions}\label{sec:kkt-conditions}
 
-\textbf{""KKT conditions""} generalise the method of Lagrange multipliers~\psecref{sec:method-of-lagrange-multipliers} to handle inequality constraints.
-Consider the "constrained optimisation problem" as in~\psecref{sec:constrained-optimisation-standard-form} where \( f, g_i, h_j \) are differentiable functions.
-Let \( \xstar \) be a local minimum and suppose that the gradients of the active constraints at \( \xstar \) are linearly independent.
-Then, there exist \( \lambda_i \geq 0, \; i \in \calI, \ \mu_j \in \R, \; j \in \calE \) such that
-\begin{align*}
-    \func{\nabla_{\x} \calL}{\xstar, \bflambda, \bfmu}
-    & =
-    \func{\nabla_{\x} f}{\xstar}
-    +
-    \sum_{i = 1}^{m} \lambda_i \, \func{\nabla_{\x} g_i}{\xstar}
-    +
-    \sum_{j = 1}^{p} \mu_j \, \func{\nabla_{\x} h_j}{\xstar}
-    = \zero
-    \tag{stationarity}
-    \\ &
-    \begin{aligned}
-        \func{g_i}{\xstar}
-        & \leq 0,
+\textbf{""KKT conditions""} generalise the method of Lagrange multipliers~\psecref{sec:method-of-lagrange-multipliers} to handle inequality constraints, and are a set of first-order necessary conditions for a solution in nonlinear programming to be optimal, provided that some "regularity conditions" are satisfied.
+
+\begin{theorem}{Karush-Kuhn-Tucker (KKT) conditions / Saddle point theorem~\cite{Nocedal2006,wiki}}{}
+    Consider the "constrained optimisation problem" as in~\psecref{sec:constrained-optimisation-standard-form} where \( f, c_i \in \classC^1 \) are continuously differentiable functions.
+    Let \( \xstar \) be a local minimum of \( f \) and suppose that "LICQ" holds at \( \xstar \), i.e., the gradients of the active constraints at \( \xstar \) are linearly independent.
+    Then, there exist Lagrange multipliers \( \bbrac{\bflambda^\ast}_i \geq 0, \; i \in \calI \cup \calE \) such that
+    \vspace{-0.5em}
+    \begin{align*}
+        &
+        \func{\nabla_{\x} \calL}{\xstar, \bflambda^\ast}
+        = \zero
+        \tag{stationarity}
+        \\ &
+        \begin{aligned}
+            \func{c_i}{\xstar}
+            & = 0,
+            \quad \forall i \in \calE
+            \\
+            \func{c_i}{\xstar}
+            & \leq 0,
+            \quad \forall i \in \calI
+        \end{aligned}
+        \tag{primal feasibility}
+        \\ &
+        \bbrac{\bflambda^\ast}_i
+        \geq 0,
         \quad \forall i \in \calI
-        \\
-        \func{h_j}{\xstar}
-        & = 0,
-        \quad \forall j \in \calE
-    \end{aligned}
-    \tag{primal feasibility}
-    \\
-    \lambda_i
-    & \geq 0,
-    \quad \forall i \in \calI
-    \tag{dual feasibility}
-    \\
-    \lambda_i \, \func{g_i}{\xstar}
-    & = 0,
-    \quad \forall i \in \calI
-    \tag{complementary slackness}
-\end{align*}
+        \tag{dual feasibility}
+        \\ &
+        \bbrac{\bflambda^\ast}_i \, \func{c_i}{\xstar}
+        = 0,
+        \quad \forall i \in \calI \cup \calE
+        \tag{complementary slackness}
+    \end{align*}
+\end{theorem}
 
 \chapter{Duality}
 
