@@ -63,9 +63,7 @@ class ArmijoMixin(LineSearchOptimiser[FirstOrderLineSearchStepInfo]):
         return super().reset()
 
     def step_length(self, info: FirstOrderLineSearchStepInfo) -> Scalar:
-        if info.direction is None:
-            raise ValueError("Direction must be provided for line search.")
-        d = info.direction
+        d = info.ensure(info.direction)
         f = info.fx
         grad = info.dfx
         derphi0 = Scalar(grad.T @ d)
@@ -134,9 +132,7 @@ class BacktrackingMixin(LineSearchOptimiser[FirstOrderLineSearchStepInfo]):
         return super().reset()
 
     def step_length(self, info: FirstOrderLineSearchStepInfo) -> Scalar:
-        if info.direction is None:
-            raise ValueError("Direction must be provided for line search.")
-        d = info.direction
+        d = info.ensure(info.direction)
         f = info.fx
         grad = info.dfx
         derphi0 = Scalar(grad.T @ d)
@@ -199,9 +195,7 @@ class ArmijoGoldsteinMixin(LineSearchOptimiser[FirstOrderLineSearchStepInfo]):
         return super().reset()
 
     def step_length(self, info: FirstOrderLineSearchStepInfo) -> Scalar:
-        if info.direction is None:
-            raise ValueError("Direction must be provided for line search.")
-        d = info.direction
+        d = info.ensure(info.direction)
         f = info.fx
         grad = info.dfx
         derphi0 = Scalar(grad.T @ d)
@@ -298,9 +292,7 @@ class StrongWolfeMixin(LineSearchOptimiser[FirstOrderLineSearchStepInfo]):
         return super().reset()
 
     def step_length(self, info: FirstOrderLineSearchStepInfo) -> Scalar:
-        if info.direction is None:
-            raise ValueError("Direction must be provided for line search.")
-        d = info.direction
+        d = info.ensure(info.direction)
         f = info.fx
         grad = info.dfx
         derphi0 = Scalar(grad.T @ d)
@@ -348,8 +340,6 @@ class StrongWolfeMixin(LineSearchOptimiser[FirstOrderLineSearchStepInfo]):
         Zoom procedure as in Nocedal & Wright (uses safe bisection interpolation).
         Returns an alpha that satisfies strong Wolfe (if found), otherwise the best found.
         """
-        if info.direction is None:
-            raise ValueError("Direction must be provided for line search.")
         phi_lo = self._phi(info, alpha_lo)
         _derphi_lo = self._derphi(info, alpha_lo)
         for _ in range(maxiter):
@@ -554,16 +544,12 @@ class SR1Update(QuasiNewtonOptimiser):
     """
 
     def hess_inv(self, info: QuasiNewtonStepInfo) -> Matrix:
-        H = info.H
-        s = info.s
-        y = info.y
         if info.k == 0:
-            if H is None:
-                H = np.eye(info.x.shape[0], dtype=np.double)
-            return H
+            if info.H is None:
+                info.H = np.eye(info.x.shape[0], dtype=np.double)
+            return info.H
         else:
-            if H is None or s is None or y is None:
-                raise ValueError("H, s, or y missing in QuasiNewtonStepInfo.")
+            H, s, y = info.ensure(info.H), info.ensure(info.s), info.ensure(info.y)
             u = s - H @ y
             return H + np.outer(u, u) / Scalar(u.T @ y)
 
@@ -576,22 +562,16 @@ class DFPUpdate(QuasiNewtonOptimiser):
     """
 
     def hess_inv(self, info: QuasiNewtonStepInfo) -> Matrix:
-        H = info.H
-        s = info.s
-        y = info.y
         if info.k == 0:
-            if H is None:
-                H = np.eye(info.x.shape[0], dtype=np.double)
-            return H
+            if info.H is None:
+                info.H = np.eye(info.x.shape[0], dtype=np.double)
+            return info.H
         else:
-            if H is None or s is None or y is None:
-                raise ValueError("H, s, or y missing in QuasiNewtonStepInfo.")
+            H, s, y = info.ensure(info.H), info.ensure(info.s), info.ensure(info.y)
             Hy = H @ y
-            return (
-                H
-                + np.outer(s, s) / Scalar(y.T @ s)
-                - np.outer(Hy, Hy) / Scalar(y.T @ Hy)
-            )
+            term1 = np.outer(s, s) / Scalar(y.T @ s)
+            term2 = np.outer(Hy, Hy) / Scalar(y.T @ Hy)
+            return H + term1 - term2
 
 
 class BFGSUpdate(QuasiNewtonOptimiser):
@@ -602,16 +582,12 @@ class BFGSUpdate(QuasiNewtonOptimiser):
     """
 
     def hess_inv(self, info: QuasiNewtonStepInfo) -> Matrix:
-        H = info.H
-        s = info.s
-        y = info.y
         if info.k == 0:
-            if H is None:
-                H = np.eye(info.x.shape[0], dtype=np.double)
-            return H
+            if info.H is None:
+                info.H = np.eye(info.x.shape[0], dtype=np.double)
+            return info.H
         else:
-            if H is None or s is None or y is None:
-                raise ValueError("H, s, or y missing in QuasiNewtonStepInfo.")
+            H, s, y = info.ensure(info.H), info.ensure(info.s), info.ensure(info.y)
             rho = 1 / Scalar(y.T @ s)
             eye = np.eye(H.shape[0], dtype=np.double)
             term1 = eye - rho * np.outer(s, y)

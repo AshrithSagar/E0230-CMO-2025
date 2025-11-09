@@ -123,7 +123,7 @@ class ActiveSetMethod(LineSearchOptimiser[ActiveSetStepInfo]):
         dim: int = Q.shape[0]
         objective = ConvexQuadratic(dim=dim, Q=Q, h=h)
 
-        W = info.W if info.W is not None else []
+        W = info.ensure(info.W, fallback=[])
         A: Matrix = self.problem.constraint.A
         if len(W) == 0:  # No active constraints
             A_eq = np.zeros((0, A.shape[1]))
@@ -139,7 +139,7 @@ class ActiveSetMethod(LineSearchOptimiser[ActiveSetStepInfo]):
         v, mu = EQPSolver().solve(ceqp)
         info.mu = mu
 
-        if np.allclose(v, 0) and len(W) > 0 and mu is not None and len(mu) > 0:
+        if np.allclose(v, 0) and len(W) > 0 and len(mu) > 0:
             if np.any(mu < 0):
                 # Index in `mu` with the smallest (most negative) multiplier
                 idx = int(np.argmin(mu))
@@ -147,14 +147,12 @@ class ActiveSetMethod(LineSearchOptimiser[ActiveSetStepInfo]):
         return v
 
     def step_length(self, info: ActiveSetStepInfo) -> Scalar:
-        v = info.direction
-        if v is None:
-            raise ValueError("Direction has not been computed.")
+        v = info.ensure(info.direction, message="Direction has not been computed.")
         if np.allclose(v, 0):
             return 0
 
         x = info.x
-        W = info.W if info.W is not None else []
+        W = info.ensure(info.W, fallback=[])
         A = self.problem.constraint.A
         b = self.problem.constraint.b
         m: int = A.shape[0]
@@ -179,8 +177,7 @@ class ActiveSetMethod(LineSearchOptimiser[ActiveSetStepInfo]):
 
     def step(self, info: ActiveSetStepInfo) -> ActiveSetStepInfo:
         info_next = super().step(info)
-        if info.W is None:
-            raise ValueError("Active set W has not been initialised.")
+        info.W = info.ensure(info.W, message="Active set W has not been initialised.")
         info_next.W = info.W.copy()
 
         blocking = info_next.blocking

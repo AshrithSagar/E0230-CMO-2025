@@ -4,6 +4,7 @@ Info structures
 src/cmo/info.py
 """
 
+import inspect
 from dataclasses import dataclass, field, fields
 from typing import Optional
 
@@ -38,6 +39,45 @@ class StepInfo[T: AbstractOracle]:
             pfx = p + s + " " * 6 if f.name == "_d2fx" else ""
             repr.append(f"{f.name}={format_value(value, sep=', ', pfx=pfx)}")
         return f"{p}{name}(\n{p}{s}" + f",\n{p}{s}".join(repr) + f"\n{p})"
+
+    def ensure[A](
+        self,
+        attr: Optional[A],
+        fallback: Optional[A] = None,
+        message: Optional[str] = None,
+    ) -> A:
+        """
+        Ensure that the attribute of type `A` is not `None`.
+
+        Parameters
+        ----------
+        attr : Optional[A]
+            The attribute to check.
+        fallback : Optional[A], optional
+            The fallback value to return if `attr` is `None`.
+            Defaults to `None`, in which case an error is raised.
+        message : Optional[str], optional
+            The message to raise in the ValueError if `attr` is `None` and no fallback is provided.
+            Defaults to `None`, in which case a generic message is used.
+        """
+        if attr is None:
+            if fallback is not None:
+                return fallback
+            if message is not None:
+                raise ValueError(message)
+            expr = "value"
+            frame = inspect.currentframe()
+            caller = frame.f_back if frame is not None else None
+            if caller is not None:
+                try:
+                    code_ctx = inspect.getframeinfo(caller).code_context
+                    if code_ctx:
+                        code = code_ctx[0]
+                        expr = code.split("ensure(")[1].split(")")[0].strip()
+                except Exception:
+                    expr = "value"
+            raise ValueError(f"{expr} is None.")
+        return attr
 
 
 @dataclass

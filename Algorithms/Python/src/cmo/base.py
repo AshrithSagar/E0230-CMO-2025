@@ -260,17 +260,29 @@ class LineSearchOptimiser[T: LineSearchStepInfo](IterativeOptimiser[T]):
         """Plot step lengths vs iterations for the best run."""
         plt.plot(self.step_lengths, marker="o", label=self.name)
 
-    def _phi(self, info: FirstOrderLineSearchStepInfo, alpha: Scalar) -> Scalar:
+    def _phi(
+        self,
+        info: FirstOrderLineSearchStepInfo,
+        alpha: Scalar,
+        x: Optional[Vector] = None,
+        direction: Optional[Vector] = None,
+    ) -> Scalar:
         """`phi(alpha) = f(x + alpha * d)`"""
-        if info.direction is None:
-            raise ValueError("Direction not set in StepInfo.")
-        return info.eval(info.x + alpha * info.direction)
+        x = info.ensure(x if x is not None else info.x)
+        direction = info.ensure(direction if direction is not None else info.direction)
+        return info.eval(x + alpha * direction)
 
-    def _derphi(self, info: FirstOrderLineSearchStepInfo, alpha: Scalar) -> Scalar:
+    def _derphi(
+        self,
+        info: FirstOrderLineSearchStepInfo,
+        alpha: Scalar,
+        x: Optional[Vector] = None,
+        direction: Optional[Vector] = None,
+    ) -> Scalar:
         """`phi'(alpha) = f'(x + alpha * d)^T d`"""
-        if info.direction is None:
-            raise ValueError("Direction not set in StepInfo.")
-        return Scalar(info.grad(info.x + alpha * info.direction).T @ info.direction)
+        x = info.ensure(x if x is not None else info.x)
+        direction = info.ensure(direction if direction is not None else info.direction)
+        return Scalar(info.grad(x + alpha * direction).T @ direction)
 
 
 class SteepestDescentDirectionMixin(LineSearchOptimiser[FirstOrderLineSearchStepInfo]):
@@ -303,10 +315,8 @@ class ExactLineSearchMixin(LineSearchOptimiser[FirstOrderLineSearchStepInfo]):
             raise NotImplementedError(
                 f"This implementation of {self.__class__.__name__} requires a ConvexQuadratic Function."
             )
-        if info.direction is None:
-            raise ValueError("Direction not set in StepInfo.")
 
-        d = info.direction
+        d = info.ensure(info.direction)
         grad = info.dfx
         Q = info.oracle._oracle_f.Q
 
