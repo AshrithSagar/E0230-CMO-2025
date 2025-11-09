@@ -4,6 +4,7 @@ tests/test_convex_quadratic.py
 
 import numpy as np
 from cmo.functions import ConvexQuadratic
+from cmo.helpers import optimise
 from cmo.optimisers import ConjugateGradientMethod
 from cmo.oracle import FirstOrderOracle
 from cmo.stopping import GradientNormCriterion, MaxIterationsCriterion
@@ -27,5 +28,23 @@ def test_convex_quadratic():
     )
 
 
+def test_convex_quadratic2():
+    optimise(
+        objective=ConvexQuadratic(
+            dim=2,
+            Q=np.array([[3, 0], [0, 1]]),
+            h=np.array([-3, -1]),
+        ),
+        oracle=FirstOrderOracle,
+        method=ConjugateGradientMethod(),
+        x0=np.zeros(2),
+        criteria=[
+            MaxIterationsCriterion(maxiter=int(1e2)),
+            GradientNormCriterion(tol=1e-6),
+        ],
+    )
+
+
 if __name__ == "__main__":
     test_convex_quadratic()
+    test_convex_quadratic2()
