@@ -10,7 +10,7 @@ References
 
 from abc import ABC, abstractmethod
 from enum import Enum, auto
-from typing import Any, Callable, Sequence
+from typing import Any, Callable, Optional, Sequence
 
 import numpy as np
 
@@ -237,8 +237,22 @@ class LinearEqualityConstraintSet(LinearConstraintSet[ConstraintType.EQUALITY]):
     ctype = ConstraintType.EQUALITY
     constraint = LinearEqualityConstraint
 
+    def __init__(self, A: Matrix, b: Vector):
+        super().__init__(A, b)
+        self._AT_AAT_pinv: Optional[Matrix] = None
+
     def project(self, x: Vector) -> Vector:
-        A = self.A
         residual = self.residual(x)
-        x_proj = x - A.T @ np.linalg.pinv(A @ A.T) @ residual
+        x_proj = x - self.AT_AAT_pinv @ residual
         return x_proj
+
+    @property
+    def AT_AAT_pinv(self) -> Matrix:
+        """Returns the pseudo-inverse of `A A^T`."""
+        if self._AT_AAT_pinv is not None:
+            return self._AT_AAT_pinv
+        A = self.A
+        AT = A.T
+        _AT_AAT_pinv = AT @ np.linalg.pinv(A @ AT)
+        self._AT_AAT_pinv = _AT_AAT_pinv
+        return _AT_AAT_pinv
