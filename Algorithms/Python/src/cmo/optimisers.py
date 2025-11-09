@@ -23,42 +23,15 @@ from .info import FirstOrderLineSearchStepInfo, QuasiNewtonStepInfo
 from .types import Matrix, Scalar, Vector
 
 
-class GradientDescent(SteepestDescentDirectionMixin):
+class ArmijoMixin(LineSearchOptimiser[FirstOrderLineSearchStepInfo]):
     """
-    Standard gradient descent.
-
-    `x_{k+1} = x_k - alpha_k * f'(x_k)`
-    """
-
-    def __init__(self, lr: Scalar = 1e-3, **kwargs):
-        super().__init__(lr=lr, **kwargs)
-        self.lr = Scalar(lr)
-        """Learning rate (step length)"""
-
-    def step_length(self, info: FirstOrderLineSearchStepInfo) -> Scalar:
-        return self.lr
-
-
-class GradientDescentExactLineSearch(
-    SteepestDescentDirectionMixin, ExactLineSearchMixin
-):
-    """
-    Gradient descent with exact line search for convex quadratic functions.
-
-    `x_{k+1} = x_k - alpha_k * f'(x_k)`\\
-    where `alpha_k = (f'(x_k)^T f'(x_k)) / (f'(x_k)^T Q f'(x_k))`
-    """
-
-    pass  # All methods are provided by the mixins
-
-
-class GradientDescentArmijo(SteepestDescentDirectionMixin):
-    """
-    Forward-expansion Armijo line search:\\
+    A mixin class that provides the forward-expansion Armijo line search step length strategy.\\
     Increase alpha until Armijo condition holds (or until safe cap).
 
     `f(x_k + alpha_k * p_k) <= f(x_k) + c * alpha_k * f'(x_k)^T p_k`
     """
+
+    StepInfoClass = FirstOrderLineSearchStepInfo
 
     def __init__(
         self,
@@ -120,10 +93,12 @@ class GradientDescentArmijo(SteepestDescentDirectionMixin):
             return self.alpha_min
 
 
-class GradientDescentBacktracking(SteepestDescentDirectionMixin):
+class BacktrackingMixin(LineSearchOptimiser[FirstOrderLineSearchStepInfo]):
     """
-    Standard backtracking Armijo (decreasing alpha).
+    A mixin class for the standard backtracking Armijo (decreasing alpha).
     """
+
+    StepInfoClass = FirstOrderLineSearchStepInfo
 
     def __init__(
         self,
@@ -180,12 +155,15 @@ class GradientDescentBacktracking(SteepestDescentDirectionMixin):
         return alpha
 
 
-class GradientDescentArmijoGoldstein(SteepestDescentDirectionMixin):
+class ArmijoGoldsteinMixin(LineSearchOptimiser[FirstOrderLineSearchStepInfo]):
     """
-    Armijo-Goldstein via expansion to bracket and then bisection.\\
+    A mixin class for Armijo-Goldstein via expansion to bracket and then bisection.
+
     `f(x_k + alpha_k * p_k) <= f(x_k) + c * alpha_k * f'(x_k)^T p_k` (Armijo)\\
     `f(x_k + alpha_k * p_k) >= f(x_k) + (1 - c) * alpha_k * f'(x_k)^T p_k` (Goldstein)
     """
+
+    StepInfoClass = FirstOrderLineSearchStepInfo
 
     def __init__(
         self,
@@ -269,13 +247,18 @@ class GradientDescentArmijoGoldstein(SteepestDescentDirectionMixin):
         return 0.5 * (alpha_lo + alpha_hi)
 
 
-class GradientDescentWolfe(SteepestDescentDirectionMixin):
+class StrongWolfeMixin(LineSearchOptimiser[FirstOrderLineSearchStepInfo]):
     """
-    Strong Wolfe line search using bracket + zoom (Nocedal & Wright).\\
+    A mixin class for the strong Wolfe line search using bracket + zoom (Nocedal & Wright).
+
     `phi(alpha_k) <= phi(0) + c1 * alpha_k * phi'(0)` (Armijo)\\
     `|phi'(alpha_k)| <= c2 * |phi'(0)|` (Strong curvature)\\
-    where `phi(alpha_k) = f(x_k + alpha_k * p_k)`, `phi'(alpha_k) = f'(x_k + alpha_k * p_k)^T p_k`.
+    where\\
+    `phi(alpha_k) = f(x_k + alpha_k * p_k)`,\\
+    `phi'(alpha_k) = f'(x_k + alpha_k * p_k)^T p_k`.
     """
+
+    StepInfoClass = FirstOrderLineSearchStepInfo
 
     def __init__(
         self,
@@ -393,9 +376,85 @@ class GradientDescentWolfe(SteepestDescentDirectionMixin):
         return 0.5 * (alpha_lo + alpha_hi)
 
 
+class GradientDescent(SteepestDescentDirectionMixin):
+    """
+    Standard gradient descent.
+
+    `x_{k+1} = x_k - alpha_k * f'(x_k)`
+    """
+
+    def __init__(self, lr: Scalar = 1e-3, **kwargs):
+        super().__init__(lr=lr, **kwargs)
+        self.lr = Scalar(lr)
+        """Learning rate (step length)"""
+
+    def step_length(self, info: FirstOrderLineSearchStepInfo) -> Scalar:
+        return self.lr
+
+
+class GradientDescentExactLineSearch(
+    SteepestDescentDirectionMixin, ExactLineSearchMixin
+):
+    """
+    Gradient descent with exact line search for convex quadratic functions.
+
+    `x_{k+1} = x_k - alpha_k * f'(x_k)`\\
+    where `alpha_k = (f'(x_k)^T f'(x_k)) / (f'(x_k)^T Q f'(x_k))`
+    """
+
+    pass  # All methods are provided by the mixins
+
+
+class GradientDescentArmijo(SteepestDescentDirectionMixin, ArmijoMixin):
+    """
+    Forward-expansion Armijo line search:\\
+    Increase alpha until Armijo condition holds (or until safe cap).
+
+    `f(x_k + alpha_k * p_k) <= f(x_k) + c * alpha_k * f'(x_k)^T p_k`
+    """
+
+    pass  # All methods are provided by the mixins
+
+
+class GradientDescentBacktracking(SteepestDescentDirectionMixin, BacktrackingMixin):
+    """
+    Standard backtracking Armijo (decreasing alpha).
+    """
+
+    pass  # All methods are provided by the mixins
+
+
+class GradientDescentArmijoGoldstein(
+    SteepestDescentDirectionMixin, ArmijoGoldsteinMixin
+):
+    """
+    Armijo-Goldstein via expansion to bracket and then bisection.
+
+    `f(x_k + alpha_k * p_k) <= f(x_k) + c * alpha_k * f'(x_k)^T p_k` (Armijo)\\
+    `f(x_k + alpha_k * p_k) >= f(x_k) + (1 - c) * alpha_k * f'(x_k)^T p_k` (Goldstein)
+    """
+
+    pass  # All methods are provided by the mixins
+
+
+class GradientDescentWolfe(SteepestDescentDirectionMixin, StrongWolfeMixin):
+    """
+    Strong Wolfe line search using bracket + zoom (Nocedal & Wright).
+
+    `phi(alpha_k) <= phi(0) + c1 * alpha_k * phi'(0)` (Armijo)\\
+    `|phi'(alpha_k)| <= c2 * |phi'(0)|` (Strong curvature)\\
+    where\\
+    `phi(alpha_k) = f(x_k + alpha_k * p_k)`,\\
+    `phi'(alpha_k) = f'(x_k + alpha_k * p_k)^T p_k`.
+    """
+
+    pass  # All methods are provided by the mixins
+
+
 class ConjugateDirectionMethod(LineSearchOptimiser[FirstOrderLineSearchStepInfo]):
     """
-    Linear conjugate direction method for convex quadratic functions.\\
+    Linear conjugate direction method for convex quadratic functions.
+
     `x_{k+1} = x_k + alpha_k * p_k`\\
     where `p_k` are conjugate directions and `alpha_k` is the exact line search step length.
     """
@@ -433,7 +492,8 @@ class ConjugateDirectionMethod(LineSearchOptimiser[FirstOrderLineSearchStepInfo]
 
 class ConjugateGradientMethod(LineSearchOptimiser[FirstOrderLineSearchStepInfo]):
     """
-    Linear conjugate gradient method for convex quadratic functions.\\
+    Linear conjugate gradient method for convex quadratic functions.
+
     `x_{k+1} = x_k + alpha_k * p_k`\\
     where `p_k` are conjugate directions and `alpha_k` is the exact line search step length.
     """
