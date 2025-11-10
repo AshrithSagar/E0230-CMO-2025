@@ -37,6 +37,9 @@ class StoppingCriterion[T: StepInfo](ABC):
         """
         raise NotImplementedError
 
+    def __str__(self) -> str:
+        return f"{self.__class__.__name__}({self.__dict__})"
+
 
 class CompositeCriterion(StoppingCriterion[StepInfo]):
     """

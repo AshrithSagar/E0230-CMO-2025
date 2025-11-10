@@ -6,9 +6,12 @@ import numpy as np
 from cmo.constrained import ActiveSetMethod
 from cmo.constraint import LinearInequalityConstraintSet
 from cmo.functions import ConvexQuadratic
+from cmo.logging import Logger
 from cmo.oracle import FirstOrderOracle
 from cmo.problems import InequalityConstrainedQuadraticProgram
 from cmo.stopping import MaxIterationsCriterion
+
+Logger.configure(level="INFO")
 
 
 def test_active_set():

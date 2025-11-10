@@ -28,6 +28,7 @@ from .info import (
     SecondOrderLineSearchStepInfo,
     StepInfo,
 )
+from .logging import logger
 from .oracle import AbstractOracle
 from .stopping import (
     CompositeCriterion,
@@ -109,6 +110,11 @@ class IterativeOptimiser[T: StepInfo](ABC):
         if show_params and self.config:
             console.print(f"params: {self.config}")
 
+        logger.info(f"Optimiser: [violet]{self.name}[/]")
+        logger.info(f"Oracle: [violet]{oracle_fn.__class__.__name__}[/]")
+        logger.info(f"Initial point [bold cyan]x0[/] = {format_value(x0, sep=', ')}")
+        logger.info(f"Config parameters: {self.config}")
+
         _crit: list[StoppingCriterion] = []
         for crit in [self.stopping, criteria]:
             if crit is None:
@@ -128,6 +134,10 @@ class IterativeOptimiser[T: StepInfo](ABC):
             _crit.append(MaxIterationsCriterion(maxiter))
         maxiter = int(maxiter)
         criteria = CompositeCriterion(_crit)
+
+        logger.info("Stopping criteria:")
+        for crit in criteria.criteria:
+            logger.info(f"-> {crit}")
 
         self.reset()
         oracle_fn.reset()

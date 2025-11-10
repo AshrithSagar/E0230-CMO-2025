@@ -5,9 +5,12 @@ tests/test_convex_quadratic.py
 import numpy as np
 from cmo.functions import ConvexQuadratic
 from cmo.helpers import optimise
+from cmo.logging import Logger
 from cmo.optimisers import ConjugateGradientMethod
 from cmo.oracle import FirstOrderOracle
 from cmo.stopping import GradientNormCriterion, MaxIterationsCriterion
+
+Logger.configure(level="INFO")
 
 
 def test_convex_quadratic():

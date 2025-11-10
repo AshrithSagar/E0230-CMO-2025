@@ -5,6 +5,7 @@ tests/test_rosenbrock.py
 import numpy as np
 from cmo.base import IterativeOptimiser
 from cmo.functions import Rosenbrock
+from cmo.logging import Logger
 from cmo.optimisers import (
     BFGSUpdate,
     DFPUpdate,
@@ -14,6 +15,8 @@ from cmo.optimisers import (
 )
 from cmo.oracle import AbstractOracle, FirstOrderOracle, SecondOrderOracle
 from cmo.stopping import GradientNormCriterion, MaxIterationsCriterion
+
+Logger.configure(level="INFO")
 
 
 def test_rosenbrock():
