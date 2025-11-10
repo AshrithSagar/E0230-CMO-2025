@@ -58,7 +58,7 @@ class EQPSolver:
         n: int = Q.shape[0]
         m: int = A_eq.shape[0]
 
-        KKT: Matrix = np.block([[Q, A_eq.T], [A_eq, np.zeros((m, m))]])
+        KKT: Matrix = np.block([[Q, -A_eq.T], [A_eq, np.zeros((m, m))]])
         rhs: Vector = np.hstack([-h, b_eq])
 
         try:

@@ -247,14 +247,14 @@ class LineSearchOptimiser[T: LineSearchStepInfo](IterativeOptimiser[T]):
 
     @property
     def stopping(self) -> list[StoppingCriterionType]:
-        class LineSearchStoppingCriterion(StoppingCriterion[LineSearchStepInfo]):
+        class StepLengthCriterion(StoppingCriterion[LineSearchStepInfo]):
             def check(self, info: LineSearchStepInfo) -> bool:
                 tol: Scalar = 1e-16
-                if info.alpha is not None and abs(info.alpha) < tol:
-                    return True
-                return False
+                if info.alpha is None:
+                    return False
+                return abs(info.alpha) < tol
 
-        return super().stopping + [LineSearchStoppingCriterion()]
+        return super().stopping + [StepLengthCriterion()]
 
     def plot_step_lengths(self):
         """Plot step lengths vs iterations for the best run."""
