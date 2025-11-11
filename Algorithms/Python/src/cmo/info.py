@@ -8,9 +8,10 @@ import inspect
 from dataclasses import dataclass, field, fields
 from typing import Optional
 
+from .logging import logger
 from .oracle import AbstractOracle, FirstOrderOracle, SecondOrderOracle, ZeroOrderOracle
 from .types import Matrix, Scalar, Vector
-from .utils import format_time, format_value
+from .utils import format_subscript, format_time, format_value
 
 
 @dataclass
@@ -90,9 +91,15 @@ class ZeroOrderStepInfo[T: ZeroOrderOracle](StepInfo[T]):
         """The function value `f(x_k)` at the current point."""
         if self._fx is None:
             self._fx = self.eval(self.x)
+            logger.debug(
+                f"=> Function value [bold magenta]\U0001d453(\U0001d431{format_subscript(self.k)})[/] = {format_value(self._fx)}"
+            )
         return self._fx
 
     def eval(self, x: Vector) -> Scalar:
+        logger.debug(
+            f"Computing function value at \U0001d431 = {format_value(x, sep=', ')}"
+        )
         return self.oracle.eval(x)
 
 
@@ -106,9 +113,13 @@ class FirstOrderStepInfo[T: FirstOrderOracle](ZeroOrderStepInfo[T]):
         """The gradient `f'(x_k)` at the current point."""
         if self._dfx is None:
             self._dfx = self.grad(self.x)
+            logger.debug(
+                f"=> Gradient [bold magenta]\U0001d6c1\U0001d453(\U0001d431{format_subscript(self.k)})[/] = {format_value(self._dfx, sep=', ')}"
+            )
         return self._dfx
 
     def grad(self, x: Vector) -> Vector:
+        logger.debug(f"Computing gradient at \U0001d431 = {format_value(x, sep=', ')}")
         return self.oracle.grad(x)
 
 
@@ -122,9 +133,13 @@ class SecondOrderStepInfo[T: SecondOrderOracle](FirstOrderStepInfo[T]):
         """The Hessian `f''(x_k)` at the current point."""
         if self._d2fx is None:
             self._d2fx = self.hess(self.x)
+            logger.debug(
+                f"=> Hessian [bold magenta]\U0001d6c1\u00b2\U0001d453(\U0001d431{format_subscript(self.k)})[/] = {format_value(self._d2fx, sep=', ')}"
+            )
         return self._d2fx
 
     def hess(self, x: Vector) -> Matrix:
+        logger.debug(f"Computing Hessian at \U0001d431 = {format_value(x, sep=', ')}")
         return self.oracle.hess(x)
 
 

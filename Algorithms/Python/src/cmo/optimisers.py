@@ -20,6 +20,7 @@ from .base import (
 )
 from .functions import ConvexQuadratic
 from .info import FirstOrderLineSearchStepInfo, QuasiNewtonStepInfo
+from .logging import logger
 from .types import Matrix, Scalar, Vector
 
 
@@ -546,9 +547,11 @@ class SR1Update(QuasiNewtonOptimiser):
     def hess_inv(self, info: QuasiNewtonStepInfo) -> Matrix:
         if info.k == 0:
             if info.H is None:
+                logger.debug("Initialising Hessian inverse approximation to identity.")
                 info.H = np.eye(info.x.shape[0], dtype=np.double)
             return info.H
         else:
+            logger.debug("Performing SR1 Hessian inverse update.")
             H, s, y = info.ensure(info.H), info.ensure(info.s), info.ensure(info.y)
             u = s - H @ y
             return H + np.outer(u, u) / Scalar(u.T @ y)
@@ -564,9 +567,11 @@ class DFPUpdate(QuasiNewtonOptimiser):
     def hess_inv(self, info: QuasiNewtonStepInfo) -> Matrix:
         if info.k == 0:
             if info.H is None:
+                logger.debug("Initialising Hessian inverse approximation to identity.")
                 info.H = np.eye(info.x.shape[0], dtype=np.double)
             return info.H
         else:
+            logger.debug("Performing DFP Hessian inverse update.")
             H, s, y = info.ensure(info.H), info.ensure(info.s), info.ensure(info.y)
             Hy = H @ y
             term1 = np.outer(s, s) / Scalar(y.T @ s)
@@ -584,9 +589,11 @@ class BFGSUpdate(QuasiNewtonOptimiser):
     def hess_inv(self, info: QuasiNewtonStepInfo) -> Matrix:
         if info.k == 0:
             if info.H is None:
+                logger.debug("Initialising Hessian inverse approximation to identity.")
                 info.H = np.eye(info.x.shape[0], dtype=np.double)
             return info.H
         else:
+            logger.debug("Performing BFGS Hessian inverse update.")
             H, s, y = info.ensure(info.H), info.ensure(info.s), info.ensure(info.y)
             rho = 1 / Scalar(y.T @ s)
             eye = np.eye(H.shape[0], dtype=np.double)

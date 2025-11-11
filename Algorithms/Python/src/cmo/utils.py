@@ -89,6 +89,14 @@ def format_time(t: Scalar | None) -> str:
     return f"{int(round(t / 1e-6))} \u03bcs"  # Fallback for very small values
 
 
+def format_subscript(index: int | str) -> str:
+    """Format an integer as a subscript string."""
+    subscript_digits = str.maketrans(
+        "0123456789", "\u2080\u2081\u2082\u2083\u2084\u2085\u2086\u2087\u2088\u2089"
+    )
+    return str(index).translate(subscript_digits)
+
+
 def show_solution(
     x: Vector,
     fx: Scalar,

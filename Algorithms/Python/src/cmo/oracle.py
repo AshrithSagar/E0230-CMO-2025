@@ -7,6 +7,7 @@ src/cmo/oracle.py
 from typing import Self
 
 from .functions import Function
+from .logging import logger
 from .types import Scalar, Vector
 
 
@@ -29,6 +30,7 @@ class AbstractOracle:
     def reset(self) -> Self:
         """Resets the internal call counts."""
         self.call_count = 0
+        logger.debug(f"Oracle [yellow]{self.__class__.__name__}[/] has been reset.")
         return self
 
 

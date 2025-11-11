@@ -10,7 +10,7 @@ from cmo.optimisers import ConjugateGradientMethod
 from cmo.oracle import FirstOrderOracle
 from cmo.stopping import GradientNormCriterion, MaxIterationsCriterion
 
-Logger.configure(level="INFO")
+Logger.configure(level="DEBUG")
 
 
 def test_convex_quadratic():

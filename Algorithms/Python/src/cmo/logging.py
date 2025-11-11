@@ -38,7 +38,7 @@ class Logger:
         No-op if already configured unless `force=True`.
 
         Parameters:
-            level: `int` or `str` name (E.g. "DEBUG", "INFO") or `None` (uses `CMO_LOG_LEVEL` env or `WARNING`).
+            level: `int` or `str` name (e.g. "DEBUG", "INFO") or `None` (uses `CMO_LOG_LEVEL` env or `WARNING`).
             name: `str` name of the logger.
             force: `bool`, if `True`, re-configure even if already configured.
         """
@@ -49,17 +49,17 @@ class Logger:
             logger.setLevel(lvl)
             return logger
 
+        if force:
+            for h in logger.handlers:
+                logger.removeHandler(h)
+
         handler = RichHandler(
             show_time=False, show_path=False, markup=True, rich_tracebacks=True
         )
         fmt = "%(message)s"
         handler.setFormatter(logging.Formatter(fmt))
-
-        if force:
-            for h in logger.handlers:
-                logger.removeHandler(h)
-
         logger.addHandler(handler)
+
         logger.setLevel(lvl)
         logger.propagate = False
 

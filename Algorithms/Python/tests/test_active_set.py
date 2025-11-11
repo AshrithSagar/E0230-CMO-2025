@@ -11,7 +11,7 @@ from cmo.oracle import FirstOrderOracle
 from cmo.problems import InequalityConstrainedQuadraticProgram
 from cmo.stopping import MaxIterationsCriterion
 
-Logger.configure(level="INFO")
+Logger.configure(level="DEBUG")
 
 
 def test_active_set():

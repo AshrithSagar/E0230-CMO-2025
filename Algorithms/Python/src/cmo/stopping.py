@@ -10,6 +10,7 @@ from typing import Iterable, Union
 import numpy as np
 
 from .info import FirstOrderStepInfo, StepInfo, ZeroOrderStepInfo
+from .logging import logger
 from .types import Scalar
 
 StoppingCriterionType = Union[
@@ -23,6 +24,8 @@ class StoppingCriterion[T: StepInfo](ABC):
 
     def reset(self):
         """Reset internal state, if any. Called at the beginning of each run."""
+        name = self.__class__.__name__
+        logger.debug(f"Stopping criterion [yellow]{name}[/] has been reset.")
         pass
 
     @abstractmethod
@@ -38,7 +41,9 @@ class StoppingCriterion[T: StepInfo](ABC):
         raise NotImplementedError
 
     def __str__(self) -> str:
-        return f"{self.__class__.__name__}({self.__dict__})"
+        name = self.__class__.__name__
+        params = self.__dict__ if self.__dict__ else ""
+        return f"{name}({params})"
 
 
 class CompositeCriterion(StoppingCriterion[StepInfo]):
@@ -55,6 +60,9 @@ class CompositeCriterion(StoppingCriterion[StepInfo]):
             criterion.reset()
 
     def check(self, info: StepInfo) -> bool:
+        logger.debug(
+            f"Checking stopping criteria for {info.__class__.__name__}(k={info.k})"
+        )
         return any(criterion.check(info) for criterion in self.criteria)
 
 

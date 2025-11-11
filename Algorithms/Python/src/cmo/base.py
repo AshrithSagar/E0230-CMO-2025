@@ -8,6 +8,7 @@ References
 - Nocedal, J., & Wright, S. J. (2006). Numerical optimization. Springer.
 """
 
+import logging
 import time
 from abc import ABC, abstractmethod
 from typing import Iterable, Optional, Self
@@ -18,6 +19,7 @@ from rich.console import Console
 from rich.progress import Progress, TextColumn, TimeElapsedColumn
 from rich.table import Table
 from rich.text import TextType
+from rich.tree import Tree
 
 from .functions import ConvexQuadratic
 from .info import (
@@ -37,7 +39,7 @@ from .stopping import (
     StoppingCriterionType,
 )
 from .types import Matrix, Scalar, Vector
-from .utils import format_time, format_value, show_solution
+from .utils import format_subscript, format_time, format_value, show_solution
 
 console = Console()
 
@@ -66,6 +68,7 @@ class IterativeOptimiser[T: StepInfo](ABC):
         Resets the internal state of the algorithm before a new run.\\
         [Optional]: This method can be overridden by subclasses to set up any necessary state if needed.
         """
+        logger.debug(f"Optimiser [yellow]{self.name}[/] state has been reset.")
         return self
 
     @abstractmethod
@@ -110,9 +113,11 @@ class IterativeOptimiser[T: StepInfo](ABC):
         if show_params and self.config:
             console.print(f"params: {self.config}")
 
-        logger.info(f"Optimiser: [violet]{self.name}[/]")
-        logger.info(f"Oracle: [violet]{oracle_fn.__class__.__name__}[/]")
-        logger.info(f"Initial point [bold cyan]x0[/] = {format_value(x0, sep=', ')}")
+        logger.info(f"Optimiser: [bold violet]{self.name}[/]")
+        logger.info(f"Oracle: [bold violet]{oracle_fn.__class__.__name__}[/]")
+        logger.info(
+            f"Initial point [bold magenta]\U0001d431\u2080[/] = {format_value(x0, sep=', ')}"
+        )
         logger.info(f"Config parameters: {self.config}")
 
         _crit: list[StoppingCriterion] = []
@@ -135,47 +140,68 @@ class IterativeOptimiser[T: StepInfo](ABC):
         maxiter = int(maxiter)
         criteria = CompositeCriterion(_crit)
 
-        logger.info("Stopping criteria:")
+        tree = Tree("Stopping criteria")
         for crit in criteria.criteria:
-            logger.info(f"-> {crit}")
+            tree.add(f"{crit}")
+        with console.capture() as capture:
+            console.print(tree)
+        tree_str = capture.get()
+        logger.info(tree_str.strip())
 
         self.reset()
         oracle_fn.reset()
         criteria.reset()
+
         k: int = 0
         x: Vector = x0
         info = self.StepInfoClass(k, x, oracle_fn)
         history: list[T] = [info]
 
-        progress = Progress(
-            TextColumn("[progress.description]{task.description}"),
-            TextColumn("iter:{task.completed:04},"),
-            TextColumn("Oracle calls: {task.fields[oracle_calls]:04}"),
-            TimeElapsedColumn(),
-            console=console,
-            transient=True,
-        )
-        progress.start()
+        progress = None
+        if not logger.isEnabledFor(logging.DEBUG):
+            progress = Progress(
+                TextColumn("[progress.description]{task.description}"),
+                TextColumn("iter:{task.completed:04},"),
+                TextColumn("Oracle calls: {task.fields[oracle_calls]:04}"),
+                TimeElapsedColumn(),
+                console=console,
+                transient=True,
+            )
+            progress.start()
+
         t0 = time.perf_counter()
         try:
-            task = progress.add_task("Running...", total=maxiter, oracle_calls=0)
+            task = None
+            if progress is not None:
+                task = progress.add_task("Running...", total=maxiter, oracle_calls=0)
+
             for k in range(maxiter):
-                progress.update(task, advance=1, oracle_calls=oracle_fn.call_count)
+                logger.debug(f"[bold underline]Iteration {k}[/]:")
+                if progress is not None and task is not None:
+                    progress.update(task, advance=1, oracle_calls=oracle_fn.call_count)
+
                 if criteria.check(info):
                     break
                 info_next = self.step(info)
                 if criteria.check(info):
                     break
+
                 history.append(info_next)
                 info = info_next
+
             x = info.x
+
         except OverflowError:  # Fallback, in case of non-convergence
             x = np.full(oracle_fn.dim, np.nan)
+
         finally:
-            progress.stop()
+            if progress is not None:
+                progress.stop()
+
         t1 = time.perf_counter()
         t = t1 - t0
 
+        logger.info(f"Optimisation finished in {k + 1} iterations.")
         fx = oracle_fn._oracle_f.eval(x)
         n_iters = k + 1
         n_oracle = oracle_fn.call_count
@@ -189,7 +215,7 @@ class IterativeOptimiser[T: StepInfo](ABC):
             history=history,
         )
         self._show_run_result(x, fx, x0, n_iters, n_oracle)
-        console.print(f"[bright_black]Time taken: {format_time(t)}[/]")
+        console.print(f"[dim]Time taken: [bold default]{format_time(t)}[/]")
         return info
 
     def _show_run_result(
@@ -241,17 +267,33 @@ class LineSearchOptimiser[T: LineSearchStepInfo](IterativeOptimiser[T]):
 
     def step(self, info: T) -> T:
         p_k = self.direction(info)
+        logger.debug(
+            f"Step direction [bold magenta]\U0001d429{format_subscript(info.k)}[/] = {format_value(p_k, sep=', ')}"
+        )
         info.direction = p_k
         self.step_directions.append(p_k)
 
         alpha_k = self.step_length(info)
+        logger.debug(
+            f"Step length [bold magenta]\U0001d770{format_subscript(info.k)}[/] = {alpha_k}"
+        )
         info.alpha = alpha_k
         self.step_lengths.append(alpha_k)
 
+        logger.debug(
+            "Updating point: [bold yellow]"
+            f"\U0001d431{format_subscript(info.k + 1)} \u2190 "
+            f"\U0001d431{format_subscript(info.k)} \u002b "
+            f"\U0001d770{format_subscript(info.k)} \u00d7 "
+            f"\U0001d429{format_subscript(info.k)}[/]"
+        )
         info_next = self.StepInfoClass(
             k=info.k + 1,
             x=info.x + alpha_k * p_k,
             oracle=info.oracle,
+        )
+        logger.debug(
+            f"=> New point [bold magenta]\U0001d431{format_subscript(info_next.k)}[/] = {format_value(info_next.x, sep=', ')}"
         )
         return info_next
 
