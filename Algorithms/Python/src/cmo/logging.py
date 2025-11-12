@@ -8,6 +8,7 @@ import logging
 import os
 from typing import Optional, Union
 
+from rich.console import Console
 from rich.logging import RichHandler
 
 
@@ -78,4 +79,5 @@ class Logger:
         return logger
 
 
+console = Console()
 logger = Logger.configure()

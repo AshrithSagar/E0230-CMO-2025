@@ -6,7 +6,7 @@ import numpy as np
 from cmo.constrained import ActiveSetMethod
 from cmo.constraint import LinearInequalityConstraintSet
 from cmo.functions import ConvexQuadratic
-from cmo.logging import Logger
+from cmo.logging import Logger, console
 from cmo.oracle import FirstOrderOracle
 from cmo.problems import InequalityConstrainedQuadraticProgram
 from cmo.stopping import MaxIterationsCriterion
@@ -34,7 +34,7 @@ def test_active_set():
 
     assert constraint.is_satisfied(x0), "Initial point is not feasible."
     info = optimiser.run(oracle_fn=oracle, x0=x0, criteria=criteria)
-    print(info)
+    console.print(str(info))
 
 
 if __name__ == "__main__":

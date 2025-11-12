@@ -41,8 +41,6 @@ from .stopping import (
 from .types import Matrix, Scalar, Vector
 from .utils import format_subscript, format_time, format_value, show_solution
 
-console = Console()
-
 
 class IterativeOptimiser[T: StepInfo](ABC):
     """
