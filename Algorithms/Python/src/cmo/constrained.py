@@ -16,7 +16,7 @@ from .problems import (
     InequalityConstrainedQuadraticProgram,
 )
 from .stopping import StoppingCriterion, StoppingCriterionType
-from .types import Matrix, Scalar, Vector
+from .types import Matrix, Scalar, Vector, asVector, dtype
 
 
 class ConstrainedOptimiser(IterativeOptimiser):
@@ -62,7 +62,7 @@ class EQPSolver:
         rhs: Vector = np.hstack([-h, b_eq])
 
         try:
-            sol: Vector = np.asarray(np.linalg.solve(KKT, rhs), dtype=np.double)
+            sol: Vector = asVector(np.linalg.solve(KKT, rhs))
         except np.linalg.LinAlgError as e:
             raise e
 
@@ -126,11 +126,11 @@ class ActiveSetMethod(LineSearchOptimiser[ActiveSetStepInfo]):
         W = info.ensure(info.W, fallback=[])
         A: Matrix = self.problem.constraint.A
         if len(W) == 0:  # No active constraints
-            A_eq = np.zeros((0, A.shape[1]))
-            b_eq = np.zeros((0,))
+            A_eq = np.zeros((0, A.shape[1]), dtype=dtype)
+            b_eq = np.zeros((0,), dtype=dtype)
         else:
-            A_eq = A[W, :]
-            b_eq = np.zeros((len(W),))
+            A_eq: Matrix = A[W, :]
+            b_eq = np.zeros((len(W),), dtype=dtype)
         constraint = LinearEqualityConstraintSet(A_eq, b_eq)
 
         ceqp = EqualityConstrainedQuadraticProgram(

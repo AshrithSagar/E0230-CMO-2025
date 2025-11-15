@@ -8,7 +8,7 @@ from typing import Self
 
 from .functions import Function
 from .logging import logger
-from .types import Scalar, Vector
+from .types import Matrix, Scalar, Vector
 
 
 class AbstractOracle:
@@ -79,7 +79,7 @@ class SecondOrderOracle(FirstOrderOracle):
         self.hess_call_count: int = 0
         """Tracks the number of Hessian evaluations."""
 
-    def hess(self, x: Vector) -> Vector:
+    def hess(self, x: Vector) -> Matrix:
         self.call_count += 1
         self.hess_call_count += 1
         return self._oracle_f.hess(x)

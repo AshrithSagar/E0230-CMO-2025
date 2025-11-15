@@ -10,18 +10,19 @@ from cmo.logging import Logger, console
 from cmo.oracle import FirstOrderOracle
 from cmo.problems import InequalityConstrainedQuadraticProgram
 from cmo.stopping import MaxIterationsCriterion
+from cmo.types import dtype
 
 Logger.configure(level="DEBUG")
 
 
 def test_active_set():
     dim: int = 2
-    Q = np.array([[3.0, 0.0], [0.0, 2.0]])
-    h = np.array([-2.0, -5.0])
+    Q = np.array([[3.0, 0.0], [0.0, 2.0]], dtype=dtype)
+    h = np.array([-2.0, -5.0], dtype=dtype)
     func = ConvexQuadratic(dim=dim, Q=Q, h=h)
 
-    A_ineq = np.array([[-1.0, 2.0], [1.0, 2.0], [2.0, 1.0], [1.0, -1.0]])
-    b_ineq = np.array([2.0, 6.0, 6.0, 2.0])
+    A_ineq = np.array([[-1.0, 2.0], [1.0, 2.0], [2.0, 1.0], [1.0, -1.0]], dtype=dtype)
+    b_ineq = np.array([2.0, 6.0, 6.0, 2.0], dtype=dtype)
     constraint = LinearInequalityConstraintSet(A=A_ineq, b=b_ineq)
     problem = InequalityConstrainedQuadraticProgram(
         objective=func, oracle=FirstOrderOracle, constraint=constraint
@@ -29,7 +30,7 @@ def test_active_set():
 
     optimiser = ActiveSetMethod(problem)
     oracle = FirstOrderOracle(func)
-    x0 = np.zeros(dim)
+    x0 = np.zeros(dim, dtype=dtype)
     criteria = MaxIterationsCriterion(maxiter=int(1e2))
 
     assert constraint.is_satisfied(x0), "Initial point is not feasible."

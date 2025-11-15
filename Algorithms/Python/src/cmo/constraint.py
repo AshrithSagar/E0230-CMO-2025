@@ -14,7 +14,7 @@ from typing import Any, Callable, Optional, Sequence
 
 import numpy as np
 
-from .types import Matrix, Scalar, Vector
+from .types import Matrix, Scalar, Vector, asMatrix, asVector
 
 
 class ConstraintType(Enum):
@@ -129,7 +129,7 @@ class LowerBoundConstraint(AbstractConstraint[ConstraintType.GREATER_THAN_OR_EQU
     ctype = ConstraintType.GREATER_THAN_OR_EQUAL_TO
 
     def __init__(self, lb: Vector):
-        self.lb = np.asarray(lb, dtype=np.double)
+        self.lb = asVector(lb)
 
     def residual(self, x: Vector) -> Vector:
         return x - self.lb
@@ -147,7 +147,7 @@ class UpperBoundConstraint(AbstractConstraint[ConstraintType.LESS_THAN_OR_EQUAL_
     ctype = ConstraintType.LESS_THAN_OR_EQUAL_TO
 
     def __init__(self, ub: Vector):
-        self.ub = np.asarray(ub, dtype=np.double)
+        self.ub = asVector(ub)
 
     def residual(self, x: Vector) -> Vector:
         return x - self.ub
@@ -163,7 +163,7 @@ class LinearConstraint[T: ConstraintType](SingleConstraint[T]):
     """A single linear constraint with residual `(a^T x - b)`."""
 
     def __init__(self, a: Vector, b: Scalar):
-        self.a = np.asarray(a, dtype=np.double)
+        self.a = asVector(a)
         self.b = Scalar(b)
 
     def residual(self, x: Vector) -> Scalar:
@@ -209,7 +209,7 @@ class LinearConstraintSet[T: ConstraintType](MultiConstraint[T]):
         )
 
         self.constraints = [
-            self.constraint(a_i, b_i) for a_i, b_i in zip(self.A, self.b)
+            self.constraint(a_i, Scalar(b_i)) for a_i, b_i in zip(self.A, self.b)
         ]
 
     def residual(self, x: Vector) -> Vector:
@@ -243,7 +243,7 @@ class LinearEqualityConstraintSet(LinearConstraintSet[ConstraintType.EQUALITY]):
 
     def project(self, x: Vector) -> Vector:
         residual = self.residual(x)
-        x_proj = x - self.AT_AAT_pinv @ residual
+        x_proj: Vector = x - asVector(self.AT_AAT_pinv @ residual)
         return x_proj
 
     @property
@@ -254,5 +254,5 @@ class LinearEqualityConstraintSet(LinearConstraintSet[ConstraintType.EQUALITY]):
         A = self.A
         AT = A.T
         _AT_AAT_pinv = AT @ np.linalg.pinv(A @ AT)
-        self._AT_AAT_pinv = _AT_AAT_pinv
-        return _AT_AAT_pinv
+        self._AT_AAT_pinv = asMatrix(_AT_AAT_pinv)
+        return self._AT_AAT_pinv

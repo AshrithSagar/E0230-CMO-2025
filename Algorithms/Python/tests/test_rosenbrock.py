@@ -15,6 +15,7 @@ from cmo.optimisers import (
 )
 from cmo.oracle import AbstractOracle, FirstOrderOracle, SecondOrderOracle
 from cmo.stopping import GradientNormCriterion, MaxIterationsCriterion
+from cmo.types import dtype
 
 Logger.configure(level="INFO")
 
@@ -22,7 +23,7 @@ Logger.configure(level="INFO")
 def test_rosenbrock():
     dim: int = 2
     func = Rosenbrock(dim=dim, a=1.0, b=100.0)
-    x0 = np.zeros(dim)
+    x0 = np.zeros(dim, dtype=dtype)
     criteria = [
         MaxIterationsCriterion(maxiter=int(1e6)),
         GradientNormCriterion(tol=1e-6),

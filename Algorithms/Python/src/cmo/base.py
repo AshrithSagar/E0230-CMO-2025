@@ -38,7 +38,7 @@ from .stopping import (
     StoppingCriterion,
     StoppingCriterionType,
 )
-from .types import Matrix, Scalar, Vector
+from .types import Matrix, Scalar, Vector, asVector
 from .utils import format_subscript, format_time, format_value, show_solution
 
 
@@ -287,7 +287,7 @@ class LineSearchOptimiser[T: LineSearchStepInfo](IterativeOptimiser[T]):
         )
         info_next = self.StepInfoClass(
             k=info.k + 1,
-            x=info.x + alpha_k * p_k,
+            x=asVector(info.x + alpha_k * p_k),
             oracle=info.oracle,
         )
         logger.debug(
@@ -320,7 +320,7 @@ class LineSearchOptimiser[T: LineSearchStepInfo](IterativeOptimiser[T]):
         """`phi(alpha) = f(x + alpha * d)`"""
         x = info.ensure(x if x is not None else info.x)
         direction = info.ensure(direction if direction is not None else info.direction)
-        return info.eval(x + alpha * direction)
+        return info.eval(asVector(x + alpha * direction))
 
     def _derphi(
         self,
@@ -332,7 +332,7 @@ class LineSearchOptimiser[T: LineSearchStepInfo](IterativeOptimiser[T]):
         """`phi'(alpha) = f'(x + alpha * d)^T d`"""
         x = info.ensure(x if x is not None else info.x)
         direction = info.ensure(direction if direction is not None else info.direction)
-        return Scalar(info.grad(x + alpha * direction).T @ direction)
+        return Scalar(info.grad(asVector(x + alpha * direction)).T @ direction)
 
 
 class SteepestDescentDirectionMixin(LineSearchOptimiser[FirstOrderLineSearchStepInfo]):
@@ -394,7 +394,7 @@ class NewtonDirectionMixin(LineSearchOptimiser[SecondOrderLineSearchStepInfo]):
         grad = info.dfx
         hess = info.d2fx
 
-        p_k = np.asarray(np.linalg.solve(hess, -grad), dtype=np.double)
+        p_k = asVector(np.linalg.solve(hess, -grad))
         return p_k
 
 

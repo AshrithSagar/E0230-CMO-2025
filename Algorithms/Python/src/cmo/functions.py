@@ -12,9 +12,8 @@ References
 from abc import ABC, abstractmethod
 
 import numpy as np
-from numpy.typing import ArrayLike
 
-from .types import Matrix, Scalar, Vector
+from .types import Matrix, Scalar, Vector, asMatrix, asVector, dtype
 
 
 class Function(ABC):
@@ -27,13 +26,6 @@ class Function(ABC):
     def __init__(self, dim: int):
         self.dim: int = dim
         """Dimension of the input `x` for the function."""
-
-    def _verify_input(self, x: ArrayLike) -> Vector:
-        """Verify that the input `x` is of the correct shape and type."""
-        _x: Vector = np.asarray(x, dtype=np.double)
-        if _x.shape != (self.dim,):
-            raise ValueError(f"Input must be of shape ({self.dim},), got {_x.shape}.")
-        return _x
 
     @property
     def x_star(self) -> Vector:
@@ -63,7 +55,7 @@ class LinearFunction(Function):
     """A linear function of the form `f(x) = c^T x`"""
 
     def __init__(self, dim: int, c: Vector):
-        self.c: Vector = np.asarray(c, dtype=np.double)
+        self.c: Vector = asVector(c)
         assert self.c.shape == (dim,), "c must be of shape (dim,)."
         super().__init__(dim=dim)
 
@@ -74,15 +66,15 @@ class LinearFunction(Function):
         return self.c
 
     def hess(self, x: Vector) -> Matrix:
-        return np.zeros((self.dim, self.dim))
+        return np.zeros((self.dim, self.dim), dtype=dtype)
 
 
 class ConvexQuadratic(Function):
     """A convex quadratic function of the form `f(x) = 0.5 * x^T Q x + h^T x`"""
 
     def __init__(self, dim: int, Q: Matrix, h: Vector):
-        self.Q: Matrix = np.asarray(Q, dtype=np.double)
-        self.h: Vector = np.asarray(h, dtype=np.double)
+        self.Q: Matrix = asMatrix(Q)
+        self.h: Vector = asVector(h)
         assert self.Q.shape == (dim, dim), "Q must be of shape (dim, dim)."
         assert self.h.shape == (dim,), "h must be of shape (dim,)."
 
@@ -94,7 +86,7 @@ class ConvexQuadratic(Function):
 
     @property
     def x_star(self) -> Vector:
-        return np.asarray(np.linalg.solve(self.Q, -self.h), dtype=np.double)
+        return asVector(np.linalg.solve(self.Q, -self.h))
 
     def eval(self, x: Vector) -> Scalar:
         return Scalar(0.5 * x.T @ self.Q @ x + self.h.T @ x)
@@ -117,9 +109,9 @@ class Rosenbrock(Function):
     @property
     def x_star(self) -> Vector:
         if self.dim == 2:
-            return np.array([self.a, self.a**2])
+            return np.array([self.a, self.a**2], dtype=dtype)
         elif self.a == 0.0 or self.a == 1.0:
-            return np.full(self.dim, self.a)
+            return np.full(self.dim, self.a, dtype=dtype)
         else:
             raise NotImplementedError
 
@@ -148,7 +140,7 @@ class Rosenbrock(Function):
         return grad
 
     def hess(self, x: Vector) -> Matrix:
-        H = np.zeros((len(x), len(x)))
+        H = np.zeros((len(x), len(x)), dtype=dtype)
         H[0, 0] = 2 - 4 * self.b * (x[1] - 3 * x[0] ** 2)
         H[0, 1] = -4 * self.b * x[0]
         for i in range(1, len(x) - 1):
@@ -169,7 +161,7 @@ class Rastrigin(Function):
 
     @property
     def x_star(self) -> Vector:
-        return np.zeros(self.dim)
+        return np.zeros(self.dim, dtype=dtype)
 
     @property
     def f_star(self) -> Scalar:
@@ -179,10 +171,10 @@ class Rastrigin(Function):
         return self.A * len(x) + sum(x**2 - self.A * np.cos(2 * np.pi * x))
 
     def grad(self, x: Vector) -> Vector:
-        return 2 * x + 2 * np.pi * self.A * np.sin(2 * np.pi * x)
+        return asVector(2 * x + 2 * np.pi * self.A * np.sin(2 * np.pi * x))
 
     def hess(self, x: Vector) -> Matrix:
-        return np.diag(2 + 4 * np.pi**2 * self.A * np.cos(2 * np.pi * x))
+        return asMatrix(np.diag(2 + 4 * np.pi**2 * self.A * np.cos(2 * np.pi * x)))
 
 
 class Sphere(Function):
@@ -190,7 +182,7 @@ class Sphere(Function):
 
     @property
     def x_star(self) -> Vector:
-        return np.zeros(self.dim)
+        return np.zeros(self.dim, dtype=dtype)
 
     @property
     def f_star(self) -> Scalar:
@@ -203,7 +195,7 @@ class Sphere(Function):
         return 2 * x
 
     def hess(self, x: Vector) -> Matrix:
-        return 2 * np.eye(self.dim)
+        return 2 * np.eye(self.dim, dtype=dtype)
 
 
 class Ackley(Function):
@@ -219,7 +211,7 @@ class Ackley(Function):
 
     @property
     def x_star(self) -> Vector:
-        return np.zeros(self.dim)
+        return np.zeros(self.dim, dtype=dtype)
 
     @property
     def f_star(self) -> Scalar:
@@ -239,7 +231,7 @@ class DropWave(Function):
 
     @property
     def x_star(self) -> Vector:
-        return np.zeros(self.dim)
+        return np.zeros(self.dim, dtype=dtype)
 
     @property
     def f_star(self) -> Scalar:
@@ -277,7 +269,7 @@ class Griewank(Function):
 
     @property
     def x_star(self) -> Vector:
-        return np.zeros(self.dim)
+        return np.zeros(self.dim, dtype=dtype)
 
     @property
     def f_star(self) -> Scalar:
@@ -294,7 +286,7 @@ class Levy(Function):
 
     @property
     def x_star(self) -> Vector:
-        return np.ones(self.dim)
+        return np.ones(self.dim, dtype=dtype)
 
     @property
     def f_star(self) -> Scalar:
@@ -316,7 +308,7 @@ class Levy13(Function):
 
     @property
     def x_star(self) -> Vector:
-        return np.ones(self.dim)
+        return np.ones(self.dim, dtype=dtype)
 
     @property
     def f_star(self) -> Scalar:
@@ -391,7 +383,7 @@ class Matyas(Function):
 
     @property
     def x_star(self) -> Vector:
-        return np.zeros(self.dim)
+        return np.zeros(self.dim, dtype=dtype)
 
     @property
     def f_star(self) -> Scalar:
@@ -406,7 +398,7 @@ class SumSquares(Function):
 
     @property
     def x_star(self) -> Vector:
-        return np.zeros(self.dim)
+        return np.zeros(self.dim, dtype=dtype)
 
     @property
     def f_star(self) -> Scalar:
@@ -421,7 +413,7 @@ class Zakharov(Function):
 
     @property
     def x_star(self) -> Vector:
-        return np.zeros(self.dim)
+        return np.zeros(self.dim, dtype=dtype)
 
     @property
     def f_star(self) -> Scalar:
@@ -441,7 +433,7 @@ class ThreeHumpCamel(Function):
 
     @property
     def x_star(self) -> Vector:
-        return np.zeros(self.dim)
+        return np.zeros(self.dim, dtype=dtype)
 
     @property
     def f_star(self) -> Scalar:

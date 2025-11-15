@@ -9,7 +9,7 @@ from rich.console import Console
 from rich.table import Table
 from rich.text import TextType
 
-from .types import Matrix, Scalar, Vector
+from .types import Matrix, Scalar, Vector, asMatrix, asVector, dtype
 
 
 def format_value(
@@ -25,10 +25,12 @@ def format_value(
     if obj is None:
         return "None"
 
-    def _fmtr(x: Scalar | int) -> str:
+    def _fmtr(x: Scalar | int | dtype) -> str:
         if isinstance(x, int):
             return str(x)
-        elif isinstance(x, Scalar):
+        if isinstance(x, np.generic):
+            x = Scalar(x)
+        if isinstance(x, Scalar):
             _fmt = f"{{:{dprec}.{fprec}{ffmt}}}"
             s = _fmt.format(x)
             # Strip trailing zeros
@@ -59,9 +61,9 @@ def format_value(
         return _fmt_vec(obj)
     elif isinstance(obj, np.ndarray):
         if obj.ndim == 1:
-            return _fmt_vec(obj)
+            return _fmt_vec(asVector(obj))
         elif obj.ndim == 2:
-            rows = [_fmt_vec(row) for row in obj]
+            rows = [_fmt_vec(row) for row in asMatrix(obj)]
             return "[" + f",\n{pfx}{spac}".join(rows) + "]"
     return "..."
 
