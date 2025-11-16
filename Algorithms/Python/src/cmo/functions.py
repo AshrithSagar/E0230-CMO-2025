@@ -92,7 +92,7 @@ class ConvexQuadratic(Function):
         return Scalar(0.5 * x.T @ self.Q @ x + self.h.T @ x)
 
     def grad(self, x: Vector) -> Vector:
-        return self.Q @ x + self.h
+        return asVector(self.Q @ x + self.h)
 
     def hess(self, x: Vector) -> Matrix:
         return self.Q
@@ -109,7 +109,7 @@ class Rosenbrock(Function):
     @property
     def x_star(self) -> Vector:
         if self.dim == 2:
-            return np.array([self.a, self.a**2], dtype=dtype)
+            return asVector([self.a, self.a**2])
         elif self.a == 0.0 or self.a == 1.0:
             return np.full(self.dim, self.a, dtype=dtype)
         else:
@@ -128,7 +128,7 @@ class Rosenbrock(Function):
         return sum((self.a - x[:-1]) ** 2.0 + self.b * (x[1:] - x[:-1] ** 2.0) ** 2.0)
 
     def grad(self, x: Vector) -> Vector:
-        grad = np.zeros_like(x)
+        grad: Vector = np.zeros_like(x, dtype=dtype)
         grad[0] = -2 * (self.a - x[0]) - 4 * self.b * x[0] * (x[1] - x[0] ** 2)
         for i in range(1, len(x) - 1):
             grad[i] = (
@@ -140,7 +140,7 @@ class Rosenbrock(Function):
         return grad
 
     def hess(self, x: Vector) -> Matrix:
-        H = np.zeros((len(x), len(x)), dtype=dtype)
+        H: Matrix = np.zeros((len(x), len(x)), dtype=dtype)
         H[0, 0] = 2 - 4 * self.b * (x[1] - 3 * x[0] ** 2)
         H[0, 1] = -4 * self.b * x[0]
         for i in range(1, len(x) - 1):
@@ -168,7 +168,7 @@ class Rastrigin(Function):
         return 0.0
 
     def eval(self, x: Vector) -> Scalar:
-        return self.A * len(x) + sum(x**2 - self.A * np.cos(2 * np.pi * x))
+        return self.A * len(x) + np.sum(x**2 - self.A * np.cos(2 * np.pi * x))
 
     def grad(self, x: Vector) -> Vector:
         return asVector(2 * x + 2 * np.pi * self.A * np.sin(2 * np.pi * x))
@@ -220,7 +220,7 @@ class Ackley(Function):
     def eval(self, x: Vector) -> Scalar:
         term1 = -self.a * np.exp(-self.b * np.sqrt(np.sum(x**2) / self.dim))
         term2 = -np.exp(np.sum(np.cos(self.c * x)) / self.dim)
-        return term1 + term2 + self.a + np.exp(1)
+        return Scalar(term1 + term2 + self.a + np.exp(1))
 
 
 class DropWave(Function):
@@ -240,7 +240,7 @@ class DropWave(Function):
     def eval(self, x: Vector) -> Scalar:
         r2 = sum(x**2)
         r = np.sqrt(r2)
-        return -(1 + np.cos(12 * r)) / (0.5 * r2 + 2)
+        return Scalar(-(1 + np.cos(12 * r)) / (0.5 * r2 + 2))
 
 
 class Eggholder(Function):
@@ -251,7 +251,7 @@ class Eggholder(Function):
 
     @property
     def x_star(self) -> Vector:
-        return np.array([512.0, 404.2319])
+        return asVector([512.0, 404.2319])
 
     @property
     def f_star(self) -> Scalar:
@@ -261,7 +261,7 @@ class Eggholder(Function):
         a = x[1] + 47
         term1 = -a * np.sin(np.sqrt(abs(x[0] / 2 + a)))
         term2 = -x[0] * np.sin(np.sqrt(abs(x[0] - a)))
-        return term1 + term2
+        return Scalar(term1 + term2)
 
 
 class Griewank(Function):
@@ -297,7 +297,7 @@ class Levy(Function):
         term1 = np.sin(np.pi * w[0]) ** 2
         term3 = (w[-1] - 1) ** 2 * (1 + np.sin(2 * np.pi * w[-1]) ** 2)
         term2 = sum((w[:-1] - 1) ** 2 * (1 + 10 * np.sin(np.pi * w[:-1] + 1) ** 2))
-        return term1 + term2 + term3
+        return Scalar(term1 + term2 + term3)
 
 
 class Levy13(Function):
@@ -318,7 +318,7 @@ class Levy13(Function):
         term1 = np.sin(3 * np.pi * x[0]) ** 2
         term2 = (x[0] - 1) ** 2 * (1 + np.sin(3 * np.pi * x[1]) ** 2)
         term3 = (x[1] - 1) ** 2 * (1 + np.sin(2 * np.pi * x[1]) ** 2)
-        return term1 + term2 + term3
+        return Scalar(term1 + term2 + term3)
 
 
 class Schwefel(Function):
@@ -333,7 +333,7 @@ class Schwefel(Function):
         return 0.0
 
     def eval(self, x: Vector) -> Scalar:
-        return 418.9829 * self.dim - sum(x * np.sin(np.sqrt(abs(x))))
+        return Scalar(418.9829 * self.dim - sum(x * np.sin(np.sqrt(abs(x)))))
 
 
 class Booth(Function):
@@ -351,7 +351,7 @@ class Booth(Function):
         return 0.0
 
     def eval(self, x: Vector) -> Scalar:
-        return (x[0] + 2 * x[1] - 7) ** 2 + (2 * x[0] + x[1] - 5) ** 2
+        return Scalar((x[0] + 2 * x[1] - 7) ** 2 + (2 * x[0] + x[1] - 5) ** 2)
 
 
 class Beale(Function):
@@ -372,7 +372,7 @@ class Beale(Function):
         term1 = (1.5 - x[0] + x[0] * x[1]) ** 2
         term2 = (2.25 - x[0] + x[0] * x[1] ** 2) ** 2
         term3 = (2.625 - x[0] + x[0] * x[1] ** 3) ** 2
-        return term1 + term2 + term3
+        return Scalar(term1 + term2 + term3)
 
 
 class Matyas(Function):
@@ -390,7 +390,7 @@ class Matyas(Function):
         return 0.0
 
     def eval(self, x: Vector) -> Scalar:
-        return 0.26 * sum(x**2) - 0.48 * x[0] * x[1]
+        return Scalar(0.26 * sum(x**2) - 0.48 * x[0] * x[1])
 
 
 class SumSquares(Function):

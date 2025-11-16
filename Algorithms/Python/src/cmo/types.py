@@ -22,13 +22,15 @@ Matrix: TypeAlias = np.ndarray[tuple[int, int], np.dtype[dtype]]
 """A type alias for a 2D numpy array of real numbers"""
 
 
-def asVector(x: npt.NDArray, dtype=dtype) -> Vector:
-    """Helper to convert a numpy ndarray to a `Vector` (1D numpy array)."""
-    assert x.ndim == 1, "Input array must be 1-dimensional."
-    return x.astype(dtype)
+def asVector(arr: npt.ArrayLike, dtype=dtype) -> Vector:
+    """Helper to convert an ArrayLike to a `Vector` (1D numpy array)."""
+    arr = np.asarray(arr, dtype=dtype)
+    assert arr.ndim == 1, "Input array must be 1-dimensional."
+    return arr
 
 
-def asMatrix(x: npt.NDArray, dtype=dtype) -> Matrix:
-    """Helper to convert a numpy ndarray to a `Matrix` (2D numpy array)."""
-    assert x.ndim == 2, "Input array must be 2-dimensional."
-    return x.astype(dtype)
+def asMatrix(arr: npt.ArrayLike, dtype=dtype) -> Matrix:
+    """Helper to convert an ArrayLike to a `Matrix` (2D numpy array)."""
+    arr = np.asarray(arr, dtype=dtype)
+    assert arr.ndim == 2, "Input array must be 2-dimensional."
+    return arr
