@@ -9,19 +9,19 @@ from cmo.logging import Logger
 from cmo.optimisers import ConjugateGradientMethod
 from cmo.oracle import FirstOrderOracle
 from cmo.stopping import GradientNormCriterion, MaxIterationsCriterion
-from cmo.types import dtype
+from cmo.types import Matrix, Vector, dtype
 
 Logger.configure(level="DEBUG")
 
 
 def test_convex_quadratic():
     dim: int = 2
-    Q = np.array([[3, 0], [0, 1]], dtype=dtype)
-    h = np.array([-3, -1], dtype=dtype)
+    Q = Matrix([[3, 0], [0, 1]], dtype=dtype)
+    h = Vector([-3, -1], dtype=dtype)
     func = ConvexQuadratic(dim=dim, Q=Q, h=h)
     oracle = FirstOrderOracle(func)
     optimiser = ConjugateGradientMethod()
-    x0 = np.zeros(dim, dtype=dtype)
+    x0 = Vector(np.zeros(dim, dtype=dtype))
     criteria = [
         MaxIterationsCriterion(maxiter=int(1e2)),
         GradientNormCriterion(tol=1e-6),
@@ -36,12 +36,12 @@ def test_convex_quadratic2():
     optimise(
         objective=ConvexQuadratic(
             dim=2,
-            Q=np.array([[3, 0], [0, 1]], dtype=dtype),
-            h=np.array([-3, -1], dtype=dtype),
+            Q=Matrix([[3, 0], [0, 1]], dtype=dtype),
+            h=Vector([-3, -1], dtype=dtype),
         ),
         oracle=FirstOrderOracle,
         method=ConjugateGradientMethod(),
-        x0=np.zeros(2, dtype=dtype),
+        x0=Vector(np.zeros(2, dtype=dtype)),
         criteria=[
             MaxIterationsCriterion(maxiter=int(1e2)),
             GradientNormCriterion(tol=1e-6),

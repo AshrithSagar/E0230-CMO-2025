@@ -9,7 +9,7 @@ from rich.console import Console
 from rich.table import Table
 from rich.text import TextType
 
-from .types import Matrix, Scalar, Vector, asMatrix, asVector, dtype
+from .types import Matrix, Scalar, Vector, dtype
 
 
 def format_value(
@@ -61,9 +61,9 @@ def format_value(
         return _fmt_vec(obj)
     elif isinstance(obj, np.ndarray):
         if obj.ndim == 1:
-            return _fmt_vec(asVector(obj))
+            return _fmt_vec(Vector(obj))
         elif obj.ndim == 2:
-            rows = [_fmt_vec(row) for row in asMatrix(obj)]
+            rows = [_fmt_vec(Vector(row)) for row in Matrix(obj)]
             return "[" + f",\n{pfx}{spac}".join(rows) + "]"
     return "..."
 

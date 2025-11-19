@@ -21,7 +21,7 @@ from .base import (
 from .functions import ConvexQuadratic
 from .info import FirstOrderLineSearchStepInfo, QuasiNewtonStepInfo
 from .logging import logger
-from .types import Matrix, Scalar, Vector, asMatrix, asVector, dtype
+from .types import Matrix, Scalar, Vector, dtype
 
 
 class ArmijoMixin(LineSearchOptimiser[FirstOrderLineSearchStepInfo]):
@@ -74,13 +74,13 @@ class ArmijoMixin(LineSearchOptimiser[FirstOrderLineSearchStepInfo]):
 
         # Forward expansion
         alpha_prev: Scalar | None = None
-        for alpha in np.arange(
+        for _alpha in np.arange(
             self.alpha_start,
             self.alpha_stop + self.alpha_step,
             self.alpha_step,
             dtype=dtype,
         ):
-            alpha = Scalar(alpha)
+            alpha = Scalar(_alpha)
             f_new = self._phi(info, alpha)
             if f_new <= f + self.c * alpha * derphi0:
                 alpha_prev = alpha
@@ -515,7 +515,7 @@ class ConjugateGradientMethod(LineSearchOptimiser[FirstOrderLineSearchStepInfo])
         else:
             rTr = Scalar(grad.T @ grad)
             beta = rTr / self.rTr_prev
-            direction = asVector(grad + beta * self.step_directions[-1])
+            direction = Vector(grad + beta * self.step_directions[-1])
             self.rTr_prev = rTr
 
         self.line_search.step_directions.append(direction)
@@ -548,13 +548,13 @@ class SR1Update(QuasiNewtonOptimiser):
         if info.k == 0:
             if info.H is None:
                 logger.debug("Initialising Hessian inverse approximation to identity.")
-                info.H = np.eye(info.x.shape[0], dtype=dtype)
+                info.H = Matrix(np.eye(info.x.shape[0], dtype=dtype))
             return info.H
         else:
             logger.debug("Performing SR1 Hessian inverse update.")
             H, s, y = info.ensure(info.H), info.ensure(info.s), info.ensure(info.y)
-            u: Vector = s - asVector(H @ y)
-            return asMatrix(H + np.outer(u, u) / Scalar(u.T @ y))
+            u = Vector(s - H @ y)
+            return Matrix(H + np.outer(u, u) / Scalar(u.T @ y))
 
 
 class DFPUpdate(QuasiNewtonOptimiser):
@@ -568,15 +568,15 @@ class DFPUpdate(QuasiNewtonOptimiser):
         if info.k == 0:
             if info.H is None:
                 logger.debug("Initialising Hessian inverse approximation to identity.")
-                info.H = np.eye(info.x.shape[0], dtype=dtype)
+                info.H = Matrix(np.eye(info.x.shape[0], dtype=dtype))
             return info.H
         else:
             logger.debug("Performing DFP Hessian inverse update.")
             H, s, y = info.ensure(info.H), info.ensure(info.s), info.ensure(info.y)
-            Hy: Vector = H @ y
-            term1: Matrix = asMatrix(np.outer(s, s) / Scalar(y.T @ s))
-            term2: Matrix = asMatrix(np.outer(Hy, Hy) / Scalar(y.T @ Hy))
-            return asMatrix(H + term1 - term2)
+            Hy = Vector(H @ y)
+            term1 = Matrix(np.outer(s, s) / Scalar(y.T @ s))
+            term2 = Matrix(np.outer(Hy, Hy) / Scalar(y.T @ Hy))
+            return Matrix(H + term1 - term2)
 
 
 class BFGSUpdate(QuasiNewtonOptimiser):
@@ -590,13 +590,13 @@ class BFGSUpdate(QuasiNewtonOptimiser):
         if info.k == 0:
             if info.H is None:
                 logger.debug("Initialising Hessian inverse approximation to identity.")
-                info.H = np.eye(info.x.shape[0], dtype=dtype)
+                info.H = Matrix(np.eye(info.x.shape[0], dtype=dtype))
             return info.H
         else:
             logger.debug("Performing BFGS Hessian inverse update.")
             H, s, y = info.ensure(info.H), info.ensure(info.s), info.ensure(info.y)
             rho = 1 / Scalar(y.T @ s)
-            eye: Matrix = np.eye(H.shape[0], dtype=dtype)
-            term1: Matrix = asMatrix(eye - rho * np.outer(s, y))
-            term2: Matrix = asMatrix(eye - rho * np.outer(y, s))
-            return asMatrix(term1 @ H @ term2 + rho * np.outer(s, s))
+            eye = Matrix(np.eye(H.shape[0], dtype=dtype))
+            term1 = Matrix(eye - rho * np.outer(s, y))
+            term2 = Matrix(eye - rho * np.outer(y, s))
+            return Matrix(term1 @ H @ term2 + rho * np.outer(s, s))

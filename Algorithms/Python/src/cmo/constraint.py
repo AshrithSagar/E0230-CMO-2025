@@ -10,11 +10,11 @@ References
 
 from abc import ABC, abstractmethod
 from enum import Enum, auto
-from typing import Any, Callable, Optional, Sequence
+from typing import Any, Callable, Literal, Optional, Sequence
 
 import numpy as np
 
-from .types import Matrix, Scalar, Vector, asMatrix, asVector
+from .types import Matrix, Scalar, Vector
 
 
 class ConstraintType(Enum):
@@ -123,37 +123,41 @@ class MultiConstraint[T: ConstraintType](AbstractConstraint[T], ABC):
         return [c for c in self.constraints if c.is_active(x, tol)]
 
 
-class LowerBoundConstraint(AbstractConstraint[ConstraintType.GREATER_THAN_OR_EQUAL_TO]):
+class LowerBoundConstraint(
+    AbstractConstraint[Literal[ConstraintType.GREATER_THAN_OR_EQUAL_TO]]
+):
     """A class representing a single lower bound constraint of the form `x >= lb`."""
 
     ctype = ConstraintType.GREATER_THAN_OR_EQUAL_TO
 
     def __init__(self, lb: Vector):
-        self.lb = asVector(lb)
+        self.lb = Vector(lb)
 
     def residual(self, x: Vector) -> Vector:
-        return x - self.lb
+        return Vector(x - self.lb)
 
     def project(self, x: Vector) -> Vector:
-        return np.maximum(x, self.lb)
+        return Vector(np.maximum(x, self.lb))
 
     def is_satisfied(self, x: Vector) -> bool:
         return bool(np.all(x >= self.lb))
 
 
-class UpperBoundConstraint(AbstractConstraint[ConstraintType.LESS_THAN_OR_EQUAL_TO]):
+class UpperBoundConstraint(
+    AbstractConstraint[Literal[ConstraintType.LESS_THAN_OR_EQUAL_TO]]
+):
     """A class representing a single upper bound constraint of the form `x <= ub`."""
 
     ctype = ConstraintType.LESS_THAN_OR_EQUAL_TO
 
     def __init__(self, ub: Vector):
-        self.ub = asVector(ub)
+        self.ub = Vector(ub)
 
     def residual(self, x: Vector) -> Vector:
-        return x - self.ub
+        return Vector(x - self.ub)
 
     def project(self, x: Vector) -> Vector:
-        return np.minimum(x, self.ub)
+        return Vector(np.minimum(x, self.ub))
 
     def is_satisfied(self, x: Vector) -> bool:
         return bool(np.all(x <= self.ub))
@@ -163,7 +167,7 @@ class LinearConstraint[T: ConstraintType](SingleConstraint[T]):
     """A single linear constraint with residual `(a^T x - b)`."""
 
     def __init__(self, a: Vector, b: Scalar):
-        self.a = asVector(a)
+        self.a = Vector(a)
         self.b = Scalar(b)
 
     def residual(self, x: Vector) -> Scalar:
@@ -180,14 +184,14 @@ class LinearConstraint[T: ConstraintType](SingleConstraint[T]):
 
 
 class LinearInequalityConstraint(
-    LinearConstraint[ConstraintType.LESS_THAN_OR_EQUAL_TO]
+    LinearConstraint[Literal[ConstraintType.LESS_THAN_OR_EQUAL_TO]]
 ):
     """A class representing a single linear constraint of the form `a^T x <= b`."""
 
     ctype = ConstraintType.LESS_THAN_OR_EQUAL_TO
 
 
-class LinearEqualityConstraint(LinearConstraint[ConstraintType.EQUALITY]):
+class LinearEqualityConstraint(LinearConstraint[Literal[ConstraintType.EQUALITY]]):
     """A class representing a single linear constraint of the form `a^T x = b`."""
 
     ctype = ConstraintType.EQUALITY
@@ -202,18 +206,19 @@ class LinearConstraintSet[T: ConstraintType](MultiConstraint[T]):
     constraint: type[LinearConstraint[T]]
 
     def __init__(self, A: Matrix, b: Vector):
-        self.A: Matrix = np.atleast_2d(A)
-        self.b: Vector = np.atleast_1d(b)
+        self.A = Matrix(A)
+        self.b = Vector(b)
         assert self.A.shape[0] == self.b.shape[0], (
             "Incompatible dimensions between A and b."
         )
 
         self.constraints = [
-            self.constraint(a_i, Scalar(b_i)) for a_i, b_i in zip(self.A, self.b)
+            self.constraint(Vector(a_i), Scalar(b_i))
+            for a_i, b_i in zip(self.A, self.b)
         ]
 
     def residual(self, x: Vector) -> Vector:
-        return self.A @ x - self.b
+        return Vector(self.A @ x - self.b)
 
     def project(self, x: Vector) -> Vector:
         x_proj = x.copy()
@@ -223,7 +228,7 @@ class LinearConstraintSet[T: ConstraintType](MultiConstraint[T]):
 
 
 class LinearInequalityConstraintSet(
-    LinearConstraintSet[ConstraintType.LESS_THAN_OR_EQUAL_TO]
+    LinearConstraintSet[Literal[ConstraintType.LESS_THAN_OR_EQUAL_TO]]
 ):
     """A class representing linear constraints of the form `Ax <= b`."""
 
@@ -231,7 +236,9 @@ class LinearInequalityConstraintSet(
     constraint = LinearInequalityConstraint
 
 
-class LinearEqualityConstraintSet(LinearConstraintSet[ConstraintType.EQUALITY]):
+class LinearEqualityConstraintSet(
+    LinearConstraintSet[Literal[ConstraintType.EQUALITY]]
+):
     """A class representing linear constraints of the form `Ax = b`."""
 
     ctype = ConstraintType.EQUALITY
@@ -243,7 +250,7 @@ class LinearEqualityConstraintSet(LinearConstraintSet[ConstraintType.EQUALITY]):
 
     def project(self, x: Vector) -> Vector:
         residual = self.residual(x)
-        x_proj: Vector = x - asVector(self.AT_AAT_pinv @ residual)
+        x_proj = Vector(x - self.AT_AAT_pinv @ residual)
         return x_proj
 
     @property
@@ -254,5 +261,5 @@ class LinearEqualityConstraintSet(LinearConstraintSet[ConstraintType.EQUALITY]):
         A = self.A
         AT = A.T
         _AT_AAT_pinv = AT @ np.linalg.pinv(A @ AT)
-        self._AT_AAT_pinv = asMatrix(_AT_AAT_pinv)
+        self._AT_AAT_pinv = Matrix(_AT_AAT_pinv)
         return self._AT_AAT_pinv

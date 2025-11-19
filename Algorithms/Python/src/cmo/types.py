@@ -4,33 +4,118 @@ Type aliases and utility types
 src/cmo/types.py
 """
 
-from typing import TypeAlias
+from typing import Any, Literal, TypeAlias, TypeVar, get_args, get_origin
 
 import numpy as np
 import numpy.typing as npt
 
-Scalar: TypeAlias = float
-"""A type alias for a scalar real number."""
+## Typed NDArray
+
+# `numpy` privates
+_Shape: TypeAlias = tuple[Any, ...]  # Weakened type reduction
+_AnyShape: TypeAlias = tuple[Any, ...]
+
+_ShapeT_co = TypeVar("_ShapeT_co", bound=_Shape, default=_AnyShape, covariant=True)
+_DTypeT_co = TypeVar("_DTypeT_co", bound=np.dtype, default=np.dtype, covariant=True)
+
+
+class DimensionError(Exception): ...
+
+
+class ShapeError(Exception): ...
+
+
+_AcceptedDim: TypeAlias = int | TypeVar | Any | None
+_RuntimeDim: TypeAlias = int | None
+_RuntimeShape: TypeAlias = tuple[_RuntimeDim, ...]
+
+
+def _normalise_dim(dim: _AcceptedDim) -> _RuntimeDim:
+    """Normalise a dimension specifier into something that can be runtime-validated."""
+
+    if dim is None:
+        return None
+    if isinstance(dim, int):
+        return dim
+    if isinstance(dim, TypeVar):
+        return None
+
+    origin = get_origin(dim)
+    if origin is Literal:
+        lit = get_args(dim)
+        if len(lit) == 1 and isinstance(lit[0], int):
+            return lit[0]
+
+    if dim is Any:
+        return None
+    return None  # Fallback
+
+
+def _normalise_shape(shape: _Shape) -> _RuntimeShape:
+    return tuple(_normalise_dim(dim) for dim in shape)
+
+
+class NDArray(np.ndarray[_ShapeT_co, _DTypeT_co]):
+    """Generic `numpy.ndarray` subclass with static shape typing and runtime shape validation."""
+
+    __shape__: _RuntimeShape | None = None
+    """Runtime shape metadata."""
+
+    def __new__(
+        cls,
+        arr: npt.ArrayLike,
+        *,
+        dtype: npt.DTypeLike | None = None,
+        shape: _ShapeT_co | None = None,
+    ) -> "NDArray[_ShapeT_co, _DTypeT_co]":
+        _arr: np.ndarray[tuple[int, ...]] = np.asarray(arr, dtype=dtype)
+        obj = _arr.view(cls)
+
+        # Set metadata
+        obj.__shape__ = _normalise_shape(shape) if shape is not None else None
+
+        # Runtime validation
+        if obj.__shape__ is not None:
+            expected = obj.__shape__
+            actual = _arr.shape
+
+            if len(expected) != len(actual):
+                raise DimensionError(
+                    f"Dimension mismatch: expected {len(expected)}, got {len(actual)}"
+                )
+
+            for exp, act in zip(expected, actual):
+                if exp is not None and exp != act:
+                    raise ShapeError(
+                        f"Shape mismatch: expected {expected}, got {actual}"
+                    )
+
+        return obj
+
+    def __array_finalize__(self, obj: npt.NDArray[Any] | None, /) -> None:
+        if obj is None:
+            return
+
+        # Propagate metadata
+        self.__shape__ = getattr(obj, "__shape__", None)
+
+
+## Helpers
 
 dtype: TypeAlias = np.double
-"""A type alias for the numpy data type representing real numbers."""
+"""The default `dtype` used throughout, mostly."""
 
-Vector: TypeAlias = np.ndarray[tuple[int], np.dtype[dtype]]
-"""A type alias for a 1D numpy array of real numbers."""
+# Shape type aliases
+Shape1D: TypeAlias = tuple[int]
+"""A tuple representing a 1D shape, i.e., `(N,)`."""
+Shape2D: TypeAlias = tuple[int, int]
+"""A tuple representing a 2D shape, i.e., `(M, N)`."""
 
-Matrix: TypeAlias = np.ndarray[tuple[int, int], np.dtype[dtype]]
-"""A type alias for a 2D numpy array of real numbers"""
+# Array type aliases
+Vector: TypeAlias = NDArray[Shape1D, np.dtype[dtype]]
+"""A `numpy.ndarray` of shape `(N,)` with the default `dtype`."""
+Matrix: TypeAlias = NDArray[Shape2D, np.dtype[dtype]]
+"""A `numpy.ndarray` of shape `(M, N)` with the default `dtype`."""
 
-
-def asVector(arr: npt.ArrayLike, dtype=dtype) -> Vector:
-    """Helper to convert an ArrayLike to a `Vector` (1D numpy array)."""
-    arr = np.asarray(arr, dtype=dtype)
-    assert arr.ndim == 1, "Input array must be 1-dimensional."
-    return arr
-
-
-def asMatrix(arr: npt.ArrayLike, dtype=dtype) -> Matrix:
-    """Helper to convert an ArrayLike to a `Matrix` (2D numpy array)."""
-    arr = np.asarray(arr, dtype=dtype)
-    assert arr.ndim == 2, "Input array must be 2-dimensional."
-    return arr
+Scalar: TypeAlias = float
+"""A type alias for a scalar real number."""

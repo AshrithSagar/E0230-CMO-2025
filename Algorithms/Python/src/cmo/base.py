@@ -38,7 +38,7 @@ from .stopping import (
     StoppingCriterion,
     StoppingCriterionType,
 )
-from .types import Matrix, Scalar, Vector, asVector
+from .types import Matrix, Scalar, Vector
 from .utils import format_subscript, format_time, format_value, show_solution
 
 
@@ -190,7 +190,7 @@ class IterativeOptimiser[T: StepInfo](ABC):
             x = info.x
 
         except OverflowError:  # Fallback, in case of non-convergence
-            x = np.full(oracle_fn.dim, np.nan)
+            x = Vector(np.full(oracle_fn.dim, np.nan))
 
         finally:
             if progress is not None:
@@ -287,7 +287,7 @@ class LineSearchOptimiser[T: LineSearchStepInfo](IterativeOptimiser[T]):
         )
         info_next = self.StepInfoClass(
             k=info.k + 1,
-            x=asVector(info.x + alpha_k * p_k),
+            x=Vector(info.x + alpha_k * p_k),
             oracle=info.oracle,
         )
         logger.debug(
@@ -320,7 +320,7 @@ class LineSearchOptimiser[T: LineSearchStepInfo](IterativeOptimiser[T]):
         """`phi(alpha) = f(x + alpha * d)`"""
         x = info.ensure(x if x is not None else info.x)
         direction = info.ensure(direction if direction is not None else info.direction)
-        return info.eval(asVector(x + alpha * direction))
+        return info.eval(Vector(x + alpha * direction))
 
     def _derphi(
         self,
@@ -332,7 +332,7 @@ class LineSearchOptimiser[T: LineSearchStepInfo](IterativeOptimiser[T]):
         """`phi'(alpha) = f'(x + alpha * d)^T d`"""
         x = info.ensure(x if x is not None else info.x)
         direction = info.ensure(direction if direction is not None else info.direction)
-        return Scalar(info.grad(asVector(x + alpha * direction)).T @ direction)
+        return Scalar(info.grad(Vector(x + alpha * direction)).T @ direction)
 
 
 class SteepestDescentDirectionMixin(LineSearchOptimiser[FirstOrderLineSearchStepInfo]):
@@ -394,7 +394,7 @@ class NewtonDirectionMixin(LineSearchOptimiser[SecondOrderLineSearchStepInfo]):
         grad = info.dfx
         hess = info.d2fx
 
-        p_k = asVector(np.linalg.solve(hess, -grad))
+        p_k = Vector(np.linalg.solve(hess, -grad))
         return p_k
 
 
@@ -440,12 +440,12 @@ class QuasiNewtonOptimiser(UnitStepLengthMixin[QuasiNewtonStepInfo], ABC):
         grad = info.dfx
         H = self.hess_inv(info)
         info.H = H
-        pk = -H @ grad
+        pk = Vector(-H @ grad)
         return pk
 
     def step(self, info: QuasiNewtonStepInfo) -> QuasiNewtonStepInfo:
         info_next = super().step(info)
         info_next.H = info.H  # [FIXME]
-        info_next.s = info_next.x - info.x
-        info_next.y = info_next.dfx - info.dfx
+        info_next.s = Vector(info_next.x - info.x)
+        info_next.y = Vector(info_next.dfx - info.dfx)
         return info_next
