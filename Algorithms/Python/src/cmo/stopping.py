@@ -13,16 +13,16 @@ from .info import FirstOrderStepInfo, StepInfo, ZeroOrderStepInfo
 from .logging import logger
 from .types import Scalar
 
-StoppingCriterionType = Union[
-    "StoppingCriterion", "CompositeCriterion", Iterable["StoppingCriterion"]
+type StoppingCriterionType[T: StepInfo] = Union[
+    "StoppingCriterion[T]", "CompositeCriterion", Iterable["StoppingCriterion[T]"]
 ]
-"""Type alias for stopping criteria."""
+"""Generic type alias for stopping criteria."""
 
 
 class StoppingCriterion[T: StepInfo](ABC):
     """An abstract base class to encapsulate various stopping criteria for iterative algorithms."""
 
-    def reset(self):
+    def reset(self) -> None:
         """Reset internal state, if any. Called at the beginning of each run."""
         name = self.__class__.__name__
         logger.debug(f"Stopping criterion [yellow]{name}[/] has been reset.")
@@ -51,11 +51,11 @@ class CompositeCriterion(StoppingCriterion[StepInfo]):
     Combines multiple stopping criteria. Stops when any one of the criteria is met.
     """
 
-    def __init__(self, criteria: Iterable[StoppingCriterion]):
+    def __init__(self, criteria: Iterable[StoppingCriterion]) -> None:
         self.criteria = criteria
         """Iterable of stopping criteria."""
 
-    def reset(self):
+    def reset(self) -> None:
         for criterion in self.criteria:
             criterion.reset()
 
@@ -73,7 +73,7 @@ class MaxIterationsCriterion(StoppingCriterion[StepInfo]):
     `k >= maxiter`
     """
 
-    def __init__(self, maxiter: int = 1000):
+    def __init__(self, maxiter: int = 1000) -> None:
         self.maxiter = int(maxiter)
         """Maximum number of iterations."""
 
@@ -88,7 +88,7 @@ class GradientNormCriterion(StoppingCriterion[FirstOrderStepInfo]):
     `||f'(x_k)|| < tol`
     """
 
-    def __init__(self, tol: Scalar = 1e-6):
+    def __init__(self, tol: Scalar = 1e-6) -> None:
         self.tol = Scalar(tol)
         """Tolerance for the gradient norm."""
 
@@ -103,7 +103,7 @@ class FunctionValueCriterion(StoppingCriterion[ZeroOrderStepInfo]):
     `f(x_k) < tol`
     """
 
-    def __init__(self, tol: Scalar = 1e-6):
+    def __init__(self, tol: Scalar = 1e-6) -> None:
         self.tol = Scalar(tol)
         """Tolerance for the function value."""
 

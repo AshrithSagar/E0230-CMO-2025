@@ -54,7 +54,7 @@ class IterativeOptimiser[T: StepInfo](ABC):
 
     StepInfoClass: type[T]
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs) -> None:
         # Initialises the iterative optimiser with configuration parameters.
         self.config = kwargs
 
@@ -82,7 +82,7 @@ class IterativeOptimiser[T: StepInfo](ABC):
         raise NotImplementedError
 
     @property
-    def stopping(self) -> list[StoppingCriterionType]:
+    def stopping(self) -> list[StoppingCriterionType[T]]:
         """Any stopping criteria defined by the optimiser itself."""
         return []
 
@@ -90,7 +90,7 @@ class IterativeOptimiser[T: StepInfo](ABC):
         self,
         oracle_fn: AbstractOracle,
         x0: Vector,
-        criteria: Optional[StoppingCriterionType] = None,
+        criteria: Optional[StoppingCriterionType[T]] = None,
         show_params: bool = True,
     ) -> RunInfo[T]:
         """
@@ -118,7 +118,7 @@ class IterativeOptimiser[T: StepInfo](ABC):
         )
         logger.info(f"Config parameters: {self.config}")
 
-        _crit: list[StoppingCriterion] = []
+        _crit: list[StoppingCriterion[T]] = []
         for crit in [self.stopping, criteria]:
             if crit is None:
                 continue
@@ -128,7 +128,7 @@ class IterativeOptimiser[T: StepInfo](ABC):
                 _crit.append(crit)
             elif isinstance(crit, Iterable):
                 _crit.extend(crit)
-        maxiter: Scalar = Scalar("inf")
+        maxiter = Scalar("inf")
         for crit in _crit:
             if isinstance(crit, MaxIterationsCriterion):
                 maxiter = min(maxiter, crit.maxiter)
@@ -306,7 +306,7 @@ class LineSearchOptimiser[T: LineSearchStepInfo](IterativeOptimiser[T]):
 
         return super().stopping + [StepLengthCriterion()]
 
-    def plot_step_lengths(self):
+    def plot_step_lengths(self) -> None:
         """Plot step lengths vs iterations for the best run."""
         plt.plot(self.step_lengths, marker="o", label=self.name)
 

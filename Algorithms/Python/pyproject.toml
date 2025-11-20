@@ -13,5 +13,5 @@ build-backend = "uv_build"
 
 [dependency-groups]
 dev = ["pytest>=8.4.2", "pytest-memray>=1.8.0"]
-extra = ["cvxpy>=1.7.3", "scipy>=1.16.3"]
+extra = ["cvxpy>=1.7.3", "scipy>=1.16.3", "scipy-stubs>=1.16.3.0"]
 notebook = ["jupyter>=1.1.1"]

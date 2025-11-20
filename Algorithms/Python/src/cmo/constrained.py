@@ -76,7 +76,9 @@ class ActiveSetMethod(LineSearchOptimiser[ActiveSetStepInfo]):
 
     StepInfoClass = ActiveSetStepInfo
 
-    def __init__(self, problem: InequalityConstrainedQuadraticProgram, **kwargs):
+    def __init__(
+        self, problem: InequalityConstrainedQuadraticProgram, **kwargs
+    ) -> None:
         self.problem = problem
         super().__init__(**kwargs)
 

@@ -14,6 +14,7 @@ from .constraint import (
     LinearInequalityConstraintSet,
 )
 from .functions import ConvexQuadratic, Function, LinearFunction
+from .info import RunInfo, StepInfo
 from .oracle import AbstractOracle
 from .stopping import StoppingCriterionType
 from .types import Vector
@@ -22,21 +23,21 @@ from .types import Vector
 class AbstractProblem[F: Function]:
     """A base class for optimisation problems."""
 
-    def __init__(self, objective: F, oracle: type[AbstractOracle]):
+    def __init__(self, objective: F, oracle: type[AbstractOracle]) -> None:
         self.objective = objective
         self.oracle = oracle(objective)
 
 
-class UnconstrainedProblem[F: Function, M: IterativeOptimiser](AbstractProblem[F]):
+class UnconstrainedProblem[F: Function](AbstractProblem[F]):
     """A class representing unconstrained optimisation problems."""
 
-    def solve(
+    def solve[T: StepInfo](
         self,
-        method: M,
+        method: IterativeOptimiser[T],
         x0: Vector,
         criteria: Optional[StoppingCriterionType] = None,
         show_params: bool = True,
-    ):
+    ) -> RunInfo[T]:
         """Solve the unconstrained optimisation problem."""
         info = method.run(
             oracle_fn=self.oracle, x0=x0, criteria=criteria, show_params=show_params
@@ -47,7 +48,9 @@ class UnconstrainedProblem[F: Function, M: IterativeOptimiser](AbstractProblem[F
 class ConstrainedProblem[F: Function, C: AbstractConstraint](AbstractProblem[F]):
     """A class representing constrained optimisation problems."""
 
-    def __init__(self, objective: F, oracle: type[AbstractOracle], constraint: C):
+    def __init__(
+        self, objective: F, oracle: type[AbstractOracle], constraint: C
+    ) -> None:
         super().__init__(objective, oracle)
         self.constraint = constraint
 

@@ -23,7 +23,7 @@ class Function(ABC):
     `f: R^d -> R`
     """
 
-    def __init__(self, dim: int):
+    def __init__(self, dim: int) -> None:
         self.dim: int = dim
         """Dimension of the input `x` for the function."""
 
@@ -54,7 +54,7 @@ class Function(ABC):
 class LinearFunction(Function):
     """A linear function of the form `f(x) = c^T x`"""
 
-    def __init__(self, dim: int, c: Vector):
+    def __init__(self, dim: int, c: Vector) -> None:
         self.c = Vector(c)
         assert self.c.shape == (dim,), "c must be of shape (dim,)."
         super().__init__(dim=dim)
@@ -72,7 +72,7 @@ class LinearFunction(Function):
 class ConvexQuadratic(Function):
     """A convex quadratic function of the form `f(x) = 0.5 * x^T Q x + h^T x`"""
 
-    def __init__(self, dim: int, Q: Matrix, h: Vector):
+    def __init__(self, dim: int, Q: Matrix, h: Vector) -> None:
         self.Q = Matrix(Q)
         self.h = Vector(h)
         assert self.Q.shape == (dim, dim), "Q must be of shape (dim, dim)."
@@ -101,7 +101,7 @@ class ConvexQuadratic(Function):
 class Rosenbrock(Function):
     """The Rosenbrock function"""
 
-    def __init__(self, dim: int, a: Scalar = 1.0, b: Scalar = 100.0):
+    def __init__(self, dim: int, a: Scalar = 1.0, b: Scalar = 100.0) -> None:
         self.a = Scalar(a)
         self.b = Scalar(b)
         super().__init__(dim=dim)
@@ -118,14 +118,16 @@ class Rosenbrock(Function):
     @property
     def f_star(self) -> Scalar:
         if self.dim == 2:
-            return 0.0
+            return Scalar(0.0)
         elif self.a == 0.0 or self.a == 1.0:
-            return 0.0
+            return Scalar(0.0)
         else:
             raise NotImplementedError
 
     def eval(self, x: Vector) -> Scalar:
-        return sum((self.a - x[:-1]) ** 2.0 + self.b * (x[1:] - x[:-1] ** 2.0) ** 2.0)
+        return Scalar(
+            np.sum((self.a - x[:-1]) ** 2.0 + self.b * (x[1:] - x[:-1] ** 2.0) ** 2.0)
+        )
 
     def grad(self, x: Vector) -> Vector:
         grad = Vector(np.zeros_like(x, dtype=dtype))
@@ -155,7 +157,7 @@ class Rosenbrock(Function):
 class Rastrigin(Function):
     """The Rastrigin function"""
 
-    def __init__(self, dim: int, A: Scalar = 10.0):
+    def __init__(self, dim: int, A: Scalar = 10.0) -> None:
         self.A = Scalar(A)
         super().__init__(dim=dim)
 
@@ -165,10 +167,10 @@ class Rastrigin(Function):
 
     @property
     def f_star(self) -> Scalar:
-        return 0.0
+        return Scalar(0.0)
 
     def eval(self, x: Vector) -> Scalar:
-        return self.A * len(x) + np.sum(x**2 - self.A * np.cos(2 * np.pi * x))
+        return Scalar(self.A * len(x) + np.sum(x**2 - self.A * np.cos(2 * np.pi * x)))
 
     def grad(self, x: Vector) -> Vector:
         return Vector(2 * x + 2 * np.pi * self.A * np.sin(2 * np.pi * x))
@@ -186,7 +188,7 @@ class Sphere(Function):
 
     @property
     def f_star(self) -> Scalar:
-        return 0.0
+        return Scalar(0.0)
 
     def eval(self, x: Vector) -> Scalar:
         return Scalar(np.sum(x**2))
@@ -203,7 +205,7 @@ class Ackley(Function):
 
     def __init__(
         self, dim: int, a: Scalar = 20.0, b: Scalar = 0.2, c: Scalar = 2 * np.pi
-    ):
+    ) -> None:
         self.a = Scalar(a)
         self.b = Scalar(b)
         self.c = Scalar(c)
@@ -215,7 +217,7 @@ class Ackley(Function):
 
     @property
     def f_star(self) -> Scalar:
-        return 0.0
+        return Scalar(0.0)
 
     def eval(self, x: Vector) -> Scalar:
         term1 = -self.a * np.exp(-self.b * np.sqrt(np.sum(x**2) / self.dim))
@@ -226,7 +228,7 @@ class Ackley(Function):
 class DropWave(Function):
     """The Drop-Wave function"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(dim=2)
 
     @property
@@ -235,7 +237,7 @@ class DropWave(Function):
 
     @property
     def f_star(self) -> Scalar:
-        return -1.0
+        return Scalar(-1.0)
 
     def eval(self, x: Vector) -> Scalar:
         r2 = sum(x**2)
@@ -246,7 +248,7 @@ class DropWave(Function):
 class Eggholder(Function):
     """The Eggholder function"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(dim=2)
 
     @property
@@ -255,7 +257,7 @@ class Eggholder(Function):
 
     @property
     def f_star(self) -> Scalar:
-        return -959.6407
+        return Scalar(-959.6407)
 
     def eval(self, x: Vector) -> Scalar:
         a = x[1] + 47
@@ -273,7 +275,7 @@ class Griewank(Function):
 
     @property
     def f_star(self) -> Scalar:
-        return 0.0
+        return Scalar(0.0)
 
     def eval(self, x: Vector) -> Scalar:
         sum_term = np.sum(x**2) / 4000
@@ -290,10 +292,10 @@ class Levy(Function):
 
     @property
     def f_star(self) -> Scalar:
-        return 0.0
+        return Scalar(0.0)
 
     def eval(self, x: Vector) -> Scalar:
-        w = 1 + (x - 1) / 4
+        w = Vector(1 + (x - 1) / 4)
         term1 = np.sin(np.pi * w[0]) ** 2
         term3 = (w[-1] - 1) ** 2 * (1 + np.sin(2 * np.pi * w[-1]) ** 2)
         term2 = sum((w[:-1] - 1) ** 2 * (1 + 10 * np.sin(np.pi * w[:-1] + 1) ** 2))
@@ -303,7 +305,7 @@ class Levy(Function):
 class Levy13(Function):
     """The Levy 13 function"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(dim=2)
 
     @property
@@ -312,7 +314,7 @@ class Levy13(Function):
 
     @property
     def f_star(self) -> Scalar:
-        return 0.0
+        return Scalar(0.0)
 
     def eval(self, x: Vector) -> Scalar:
         term1 = np.sin(3 * np.pi * x[0]) ** 2
@@ -330,7 +332,7 @@ class Schwefel(Function):
 
     @property
     def f_star(self) -> Scalar:
-        return 0.0
+        return Scalar(0.0)
 
     def eval(self, x: Vector) -> Scalar:
         return Scalar(418.9829 * self.dim - sum(x * np.sin(np.sqrt(abs(x)))))
@@ -339,7 +341,7 @@ class Schwefel(Function):
 class Booth(Function):
     """The Booth function"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(dim=2)
 
     @property
@@ -348,7 +350,7 @@ class Booth(Function):
 
     @property
     def f_star(self) -> Scalar:
-        return 0.0
+        return Scalar(0.0)
 
     def eval(self, x: Vector) -> Scalar:
         return Scalar((x[0] + 2 * x[1] - 7) ** 2 + (2 * x[0] + x[1] - 5) ** 2)
@@ -357,7 +359,7 @@ class Booth(Function):
 class Beale(Function):
     """The Beale function"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(dim=2)
 
     @property
@@ -366,7 +368,7 @@ class Beale(Function):
 
     @property
     def f_star(self) -> Scalar:
-        return 0.0
+        return Scalar(0.0)
 
     def eval(self, x: Vector) -> Scalar:
         term1 = (1.5 - x[0] + x[0] * x[1]) ** 2
@@ -378,7 +380,7 @@ class Beale(Function):
 class Matyas(Function):
     """The Matyas function"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(dim=2)
 
     @property
@@ -387,7 +389,7 @@ class Matyas(Function):
 
     @property
     def f_star(self) -> Scalar:
-        return 0.0
+        return Scalar(0.0)
 
     def eval(self, x: Vector) -> Scalar:
         return Scalar(0.26 * sum(x**2) - 0.48 * x[0] * x[1])
@@ -402,10 +404,10 @@ class SumSquares(Function):
 
     @property
     def f_star(self) -> Scalar:
-        return 0.0
+        return Scalar(0.0)
 
     def eval(self, x: Vector) -> Scalar:
-        return sum((i + 1) * x[i] ** 2 for i in range(len(x)))
+        return Scalar(sum((i + 1) * x[i] ** 2 for i in range(len(x))))
 
 
 class Zakharov(Function):
@@ -417,18 +419,18 @@ class Zakharov(Function):
 
     @property
     def f_star(self) -> Scalar:
-        return 0.0
+        return Scalar(0.0)
 
     def eval(self, x: Vector) -> Scalar:
         sum1 = sum(x**2)
         sum2 = sum(0.5 * (i + 1) * x[i] for i in range(len(x)))
-        return sum1 + sum2**2 + sum2**4
+        return Scalar(sum1 + sum2**2 + sum2**4)
 
 
 class ThreeHumpCamel(Function):
     """The Three-Hump Camel function"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(dim=2)
 
     @property
@@ -437,9 +439,9 @@ class ThreeHumpCamel(Function):
 
     @property
     def f_star(self) -> Scalar:
-        return 0.0
+        return Scalar(0.0)
 
     def eval(self, x: Vector) -> Scalar:
-        return (
+        return Scalar(
             2 * x[0] ** 2 - 1.05 * x[0] ** 4 + (x[0] ** 6) / 6 + x[0] * x[1] + x[1] ** 2
         )

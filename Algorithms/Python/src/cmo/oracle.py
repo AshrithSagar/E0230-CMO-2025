@@ -14,7 +14,7 @@ from .types import Matrix, Scalar, Vector
 class AbstractOracle:
     """A base class for oracles."""
 
-    def __init__(self, func: Function):
+    def __init__(self, func: Function) -> None:
         self._oracle_f = func
         """The objective function `f(x)`."""
 
@@ -37,7 +37,7 @@ class AbstractOracle:
 class ZeroOrderOracle(AbstractOracle):
     """`f = oracle(x)`"""
 
-    def __init__(self, func: Function):
+    def __init__(self, func: Function) -> None:
         super().__init__(func)
 
         self.eval_call_count: int = 0
@@ -56,7 +56,7 @@ class ZeroOrderOracle(AbstractOracle):
 class FirstOrderOracle(ZeroOrderOracle):
     """`f(x), f'(x) = oracle(x)`"""
 
-    def __init__(self, func: Function):
+    def __init__(self, func: Function) -> None:
         super().__init__(func)
         self.grad_call_count: int = 0
         """Tracks the number of gradient evaluations."""
@@ -74,7 +74,7 @@ class FirstOrderOracle(ZeroOrderOracle):
 class SecondOrderOracle(FirstOrderOracle):
     """`f(x), f'(x), f''(x) = oracle(x)`"""
 
-    def __init__(self, func: Function):
+    def __init__(self, func: Function) -> None:
         super().__init__(func)
         self.hess_call_count: int = 0
         """Tracks the number of Hessian evaluations."""

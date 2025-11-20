@@ -27,8 +27,8 @@ class StepInfo[T: AbstractOracle]:
     oracle: T
     """The oracle function used to evaluate `f`."""
 
-    def __str__(self, spacing: str | int = 2, prefix: str | int = 0) -> str:
-        """String representation of the StepInfo object."""
+    def format(self, spacing: str | int = 2, prefix: str | int = 0) -> str:
+        """Formatted string representation of the StepInfo object."""
         name: str = self.__class__.__name__
         s: str = " " * spacing if isinstance(spacing, int) else spacing
         p: str = " " * prefix if isinstance(prefix, int) else prefix
@@ -40,6 +40,9 @@ class StepInfo[T: AbstractOracle]:
             pfx = p + s + " " * 6 if f.name == "_d2fx" else ""
             repr.append(f"{f.name}={format_value(value, sep=', ', pfx=pfx)}")
         return f"{p}{name}(\n{p}{s}" + f",\n{p}{s}".join(repr) + f"\n{p})"
+
+    def __str__(self) -> str:
+        return self.format()
 
     def ensure[A](
         self,
@@ -219,7 +222,7 @@ class RunInfo[T: StepInfo]:
     time_taken: Scalar
     history: list[T]
 
-    def __str__(self, spacing: str | int = 2) -> str:
+    def format(self, spacing: str | int = 2) -> str:
         name: str = self.__class__.__name__
         s: str = " " * spacing if isinstance(spacing, int) else spacing
         repr: list[str] = []
@@ -235,5 +238,8 @@ class RunInfo[T: StepInfo]:
             f"{name}(\n{s}"
             + f",\n{s}".join(repr)
             + f",\n{s}history=[\n"
-            + f"{',\n'.join(step.__str__(prefix=spacing * 2, spacing=spacing) for step in self.history)}\n{s}]\n)"
+            + f"{',\n'.join(step.format(prefix=spacing * 2, spacing=spacing) for step in self.history)}\n{s}]\n)"
         )
+
+    def __str__(self) -> str:
+        return self.format()

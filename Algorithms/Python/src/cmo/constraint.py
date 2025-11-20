@@ -130,7 +130,7 @@ class LowerBoundConstraint(
 
     ctype = ConstraintType.GREATER_THAN_OR_EQUAL_TO
 
-    def __init__(self, lb: Vector):
+    def __init__(self, lb: Vector) -> None:
         self.lb = Vector(lb)
 
     def residual(self, x: Vector) -> Vector:
@@ -150,7 +150,7 @@ class UpperBoundConstraint(
 
     ctype = ConstraintType.LESS_THAN_OR_EQUAL_TO
 
-    def __init__(self, ub: Vector):
+    def __init__(self, ub: Vector) -> None:
         self.ub = Vector(ub)
 
     def residual(self, x: Vector) -> Vector:
@@ -166,7 +166,7 @@ class UpperBoundConstraint(
 class LinearConstraint[T: ConstraintType](SingleConstraint[T]):
     """A single linear constraint with residual `(a^T x - b)`."""
 
-    def __init__(self, a: Vector, b: Scalar):
+    def __init__(self, a: Vector, b: Scalar) -> None:
         self.a = Vector(a)
         self.b = Scalar(b)
 
@@ -205,7 +205,7 @@ class LinearConstraintSet[T: ConstraintType](MultiConstraint[T]):
 
     constraint: type[LinearConstraint[T]]
 
-    def __init__(self, A: Matrix, b: Vector):
+    def __init__(self, A: Matrix, b: Vector) -> None:
         self.A = Matrix(A)
         self.b = Vector(b)
         assert self.A.shape[0] == self.b.shape[0], (
@@ -244,7 +244,7 @@ class LinearEqualityConstraintSet(
     ctype = ConstraintType.EQUALITY
     constraint = LinearEqualityConstraint
 
-    def __init__(self, A: Matrix, b: Vector):
+    def __init__(self, A: Matrix, b: Vector) -> None:
         super().__init__(A, b)
         self._AT_AAT_pinv: Optional[Matrix] = None
 

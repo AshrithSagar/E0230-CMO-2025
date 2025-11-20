@@ -8,6 +8,8 @@ References
 - Nocedal, J., & Wright, S. J. (2006). Numerical optimization. Springer.
 """
 
+from typing import Self
+
 import numpy as np
 
 from .base import (
@@ -42,7 +44,7 @@ class ArmijoMixin(LineSearchOptimiser[FirstOrderLineSearchStepInfo]):
         alpha_step: Scalar = 1e-1,
         alpha_stop: Scalar = 1.0,
         **kwargs,
-    ):
+    ) -> None:
         super().__init__(
             c=c,
             alpha_min=alpha_min,
@@ -59,7 +61,7 @@ class ArmijoMixin(LineSearchOptimiser[FirstOrderLineSearchStepInfo]):
         self.alpha_step = Scalar(alpha_step)
         self.alpha_stop = Scalar(alpha_stop)
 
-    def reset(self):
+    def reset(self) -> Self:
         assert 0 < self.c < 1, "c must be in (0, 1)"
         return super().reset()
 
@@ -108,7 +110,7 @@ class BacktrackingMixin(LineSearchOptimiser[FirstOrderLineSearchStepInfo]):
         alpha_max: Scalar = 1e6,
         maxiter: int = 10,
         **kwargs,
-    ):
+    ) -> None:
         super().__init__(
             c=c,
             beta=beta,
@@ -128,7 +130,7 @@ class BacktrackingMixin(LineSearchOptimiser[FirstOrderLineSearchStepInfo]):
         self.alpha_max = Scalar(alpha_max)
         self.maxiter = int(maxiter)
 
-    def reset(self):
+    def reset(self) -> Self:
         assert 0 < self.c < 1, "c must be in (0, 1)"
         return super().reset()
 
@@ -171,7 +173,7 @@ class ArmijoGoldsteinMixin(LineSearchOptimiser[FirstOrderLineSearchStepInfo]):
         alpha_max: Scalar = 1e6,
         maxiter: int = 10,
         **kwargs,
-    ):
+    ) -> None:
         super().__init__(
             c=c,
             beta=beta,
@@ -191,7 +193,7 @@ class ArmijoGoldsteinMixin(LineSearchOptimiser[FirstOrderLineSearchStepInfo]):
         self.alpha_max = Scalar(alpha_max)
         self.maxiter = int(maxiter)
 
-    def reset(self):
+    def reset(self) -> Self:
         assert 0 < self.c < 0.5, "c must be in (0, 0.5)"
         return super().reset()
 
@@ -265,7 +267,7 @@ class StrongWolfeMixin(LineSearchOptimiser[FirstOrderLineSearchStepInfo]):
         alpha_max: Scalar = 1e6,
         maxiter: int = 10,
         **kwargs,
-    ):
+    ) -> None:
         super().__init__(
             c1=c1,
             c2=c2,
@@ -288,7 +290,7 @@ class StrongWolfeMixin(LineSearchOptimiser[FirstOrderLineSearchStepInfo]):
         self.alpha_max = Scalar(alpha_max)
         self.maxiter = int(maxiter)
 
-    def reset(self):
+    def reset(self) -> Self:
         assert 0 < self.c1 < self.c2 < 1, "0 < c1 < c2 < 1 must be satisfied"
         return super().reset()
 
@@ -336,7 +338,7 @@ class StrongWolfeMixin(LineSearchOptimiser[FirstOrderLineSearchStepInfo]):
         phi0: Scalar,
         derphi0: Scalar,
         maxiter: int = 50,
-    ):
+    ) -> Scalar:
         """
         Zoom procedure as in Nocedal & Wright (uses safe bisection interpolation).
         Returns an alpha that satisfies strong Wolfe (if found), otherwise the best found.
@@ -374,7 +376,7 @@ class GradientDescent(SteepestDescentDirectionMixin):
     `x_{k+1} = x_k - alpha_k * f'(x_k)`
     """
 
-    def __init__(self, lr: Scalar = 1e-3, **kwargs):
+    def __init__(self, lr: Scalar = 1e-3, **kwargs) -> None:
         super().__init__(lr=lr, **kwargs)
         self.lr = Scalar(lr)
         """Learning rate (step length)"""
@@ -452,12 +454,12 @@ class ConjugateDirectionMethod(LineSearchOptimiser[FirstOrderLineSearchStepInfo]
 
     StepInfoClass = FirstOrderLineSearchStepInfo
 
-    def __init__(self, directions: list[Vector], **kwargs):
+    def __init__(self, directions: list[Vector], **kwargs) -> None:
         super().__init__(directions=directions, **kwargs)
         self.directions: list[Vector] = directions
         self.line_search = ExactLineSearchMixin()
 
-    def reset(self):
+    def reset(self) -> Self:
         self.line_search.reset()
         return super().reset()
 
@@ -491,12 +493,11 @@ class ConjugateGradientMethod(LineSearchOptimiser[FirstOrderLineSearchStepInfo])
 
     StepInfoClass = FirstOrderLineSearchStepInfo
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
         self.line_search = ExactLineSearchMixin()
-        self.rTr_prev: Scalar
 
-    def reset(self):
+    def reset(self) -> Self:
         self.line_search.reset()
         return super().reset()
 
