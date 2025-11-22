@@ -15,15 +15,15 @@ from cmo.optimisers import (
 )
 from cmo.oracle import AbstractOracle, FirstOrderOracle, SecondOrderOracle
 from cmo.stopping import GradientNormCriterion, MaxIterationsCriterion
-from cmo.types import Vector, dtype
+from cmo.types import Vector
 
 Logger.configure(level="INFO")
 
 
 def test_rosenbrock():
-    dim: int = 2
+    dim = int(2)
     func = Rosenbrock(dim=dim, a=1.0, b=100.0)
-    x0 = Vector(np.zeros(dim, dtype=dtype))
+    x0 = Vector(np.zeros(dim))
     criteria = [
         MaxIterationsCriterion(maxiter=int(1e6)),
         GradientNormCriterion(tol=1e-6),
@@ -31,7 +31,7 @@ def test_rosenbrock():
 
     f_oracle = FirstOrderOracle(func)
     s_oracle = SecondOrderOracle(func)
-    runs: list[tuple[IterativeOptimiser, AbstractOracle]] = [
+    runs: list[tuple[IterativeOptimiser, AbstractOracle]] = [  # type: ignore
         (GradientDescent(lr=1e-3), f_oracle),
         (NewtonMethod(), s_oracle),
         (SR1Update(), f_oracle),

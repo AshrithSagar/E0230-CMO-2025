@@ -4,16 +4,18 @@ Utilities
 src/cmo/utils.py
 """
 
+from typing import Sequence
+
 import numpy as np
 from rich.console import Console
 from rich.table import Table
 from rich.text import TextType
 
-from .types import Matrix, Scalar, Vector, dtype
+from .types import Scalar, Vector
 
 
 def format_value(
-    obj: Scalar | int | list[Scalar | int] | Vector | Matrix | None,
+    obj: float | int | Sequence[float] | Sequence[int] | np.ndarray | None,
     dprec: int = 2,
     fprec: int = 6,
     ffmt: str = "f",
@@ -25,12 +27,12 @@ def format_value(
     if obj is None:
         return "None"
 
-    def _fmtr(x: Scalar | int | dtype) -> str:
+    def _fmtr(x: float | int | np.generic) -> str:
         if isinstance(x, int):
             return str(x)
         if isinstance(x, np.generic):
-            x = Scalar(x)
-        if isinstance(x, Scalar):
+            x = float(x)
+        if isinstance(x, float):
             _fmt = f"{{:{dprec}.{fprec}{ffmt}}}"
             s = _fmt.format(x)
             # Strip trailing zeros
@@ -42,33 +44,29 @@ def format_value(
         else:
             return "..."
 
-    if isinstance(obj, (Scalar, int)):
+    if isinstance(obj, (float, int)):
         return _fmtr(obj)
 
-    def _fmt_vec(vec: Vector | list[Scalar] | list[int]) -> str:
-        if isinstance(vec, np.ndarray):
-            size = vec.size
-        else:
-            size = len(vec)
-        if size <= lim:
+    def _fmt_vec(vec: Sequence[float] | Sequence[int] | np.ndarray) -> str:
+        if len(vec) <= lim:
             s = [_fmtr(x) for x in vec]
         else:
             # Show first two and last two items
             s = [_fmtr(x) for x in vec[:2]] + ["..."] + [_fmtr(x) for x in vec[-2:]]
         return "[" + sep.join(s) + "]"
 
-    if isinstance(obj, list):
+    if isinstance(obj, Sequence):
         return _fmt_vec(obj)
     elif isinstance(obj, np.ndarray):
         if obj.ndim == 1:
-            return _fmt_vec(Vector(obj))
+            return _fmt_vec(obj)
         elif obj.ndim == 2:
-            rows = [_fmt_vec(Vector(row)) for row in Matrix(obj)]
+            rows = [_fmt_vec(row) for row in obj]
             return "[" + f",\n{pfx}{spac}".join(rows) + "]"
     return "..."
 
 
-def format_time(t: Scalar | None) -> str:
+def format_time(t: float | None) -> str:
     """Format time in seconds to an appropriate unit"""
     if t is None:
         return "None"
@@ -79,7 +77,7 @@ def format_time(t: Scalar | None) -> str:
         if seconds < 1e-3:
             return f"{minutes} min"
         return f"{minutes} min {round(seconds)} s"
-    units: list[tuple[str, Scalar]] = [("s", 1), ("ms", 1e-3), ("\u03bcs", 1e-6)]
+    units: list[tuple[str, float]] = [("s", 1), ("ms", 1e-3), ("\u03bcs", 1e-6)]
     for unit, thresh in units:
         if abs_t >= thresh:
             val = t / thresh
