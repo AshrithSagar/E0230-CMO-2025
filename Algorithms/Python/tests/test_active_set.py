@@ -15,7 +15,7 @@ from cmo.types import Matrix, Vector
 Logger.configure(level="DEBUG")
 
 
-def test_active_set():
+def test_active_set() -> None:
     dim = int(2)
     Q = Matrix([[3, 0], [0, 2]])
     h = Vector([-2, -5])

@@ -8,13 +8,17 @@ from cmo.helpers import optimise
 from cmo.logging import Logger
 from cmo.optimisers import ConjugateGradientMethod
 from cmo.oracle import FirstOrderOracle
-from cmo.stopping import GradientNormCriterion, MaxIterationsCriterion
+from cmo.stopping import (
+    GradientNormCriterion,
+    MaxIterationsCriterion,
+    StoppingCriterionType,
+)
 from cmo.types import Matrix, Vector
 
 Logger.configure(level="DEBUG")
 
 
-def test_convex_quadratic():
+def test_convex_quadratic() -> None:
     dim = int(2)
     Q = Matrix([[3, 0], [0, 1]])
     h = Vector([-3, -1])
@@ -22,7 +26,7 @@ def test_convex_quadratic():
     oracle = FirstOrderOracle(func)
     optimiser = ConjugateGradientMethod()
     x0 = Vector(np.zeros(dim))
-    criteria = [
+    criteria: StoppingCriterionType = [  # type: ignore
         MaxIterationsCriterion(maxiter=int(1e2)),
         GradientNormCriterion(tol=1e-6),
     ]
@@ -32,7 +36,7 @@ def test_convex_quadratic():
     )
 
 
-def test_convex_quadratic2():
+def test_convex_quadratic2() -> None:
     optimise(
         objective=ConvexQuadratic(
             dim=2,

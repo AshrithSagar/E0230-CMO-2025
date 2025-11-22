@@ -14,17 +14,21 @@ from cmo.optimisers import (
     SR1Update,
 )
 from cmo.oracle import AbstractOracle, FirstOrderOracle, SecondOrderOracle
-from cmo.stopping import GradientNormCriterion, MaxIterationsCriterion
+from cmo.stopping import (
+    GradientNormCriterion,
+    MaxIterationsCriterion,
+    StoppingCriterionType,
+)
 from cmo.types import Vector
 
 Logger.configure(level="INFO")
 
 
-def test_rosenbrock():
+def test_rosenbrock() -> None:
     dim = int(2)
     func = Rosenbrock(dim=dim, a=1.0, b=100.0)
     x0 = Vector(np.zeros(dim))
-    criteria = [
+    criteria: StoppingCriterionType = [  # type: ignore
         MaxIterationsCriterion(maxiter=int(1e6)),
         GradientNormCriterion(tol=1e-6),
     ]
