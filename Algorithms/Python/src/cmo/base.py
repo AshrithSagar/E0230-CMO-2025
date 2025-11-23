@@ -203,7 +203,9 @@ class IterativeOptimiser[T: StepInfo](ABC):
         fx = oracle_fn._oracle_f.eval(x)
         n_iters = k + 1
         n_oracle = oracle_fn.call_count
-        info = RunInfo(
+        self._show_run_result(x, fx, x0, n_iters, n_oracle)
+        console.print(f"[dim]Time taken: [bold default]{format_time(t)}[/]")
+        return RunInfo(
             x0=x0,
             x_star=x,
             f_star=fx,
@@ -212,9 +214,6 @@ class IterativeOptimiser[T: StepInfo](ABC):
             time_taken=t,
             history=history,
         )
-        self._show_run_result(x, fx, x0, n_iters, n_oracle)
-        console.print(f"[dim]Time taken: [bold default]{format_time(t)}[/]")
-        return info
 
     def _show_run_result(
         self,
