@@ -5,7 +5,7 @@ src/cmo/stopping.py
 """
 
 from abc import ABC, abstractmethod
-from typing import Iterable, Union
+from typing import Any, Iterable, Union
 
 import numpy as np
 
@@ -13,13 +13,13 @@ from .info import FirstOrderStepInfo, StepInfo, ZeroOrderStepInfo
 from .logging import logger
 from .types import Scalar
 
-type StoppingCriterionType[T: StepInfo] = Union[
+type StoppingCriterionType[T: StepInfo[Any]] = Union[
     "StoppingCriterion[T]", "CompositeCriterion", Iterable["StoppingCriterion[T]"]
 ]
 """Generic type alias for stopping criteria."""
 
 
-class StoppingCriterion[T: StepInfo](ABC):
+class StoppingCriterion[T: StepInfo[Any]](ABC):
     """An abstract base class to encapsulate various stopping criteria for iterative algorithms."""
 
     def reset(self) -> None:
@@ -46,12 +46,12 @@ class StoppingCriterion[T: StepInfo](ABC):
         return f"{name}({params})"
 
 
-class CompositeCriterion(StoppingCriterion[StepInfo]):
+class CompositeCriterion(StoppingCriterion[StepInfo[Any]]):
     """
     Combines multiple stopping criteria. Stops when any one of the criteria is met.
     """
 
-    def __init__(self, criteria: Iterable[StoppingCriterion]) -> None:
+    def __init__(self, criteria: Iterable[StoppingCriterion[StepInfo[Any]]]) -> None:
         self.criteria = criteria
         """Iterable of stopping criteria."""
 
@@ -59,14 +59,14 @@ class CompositeCriterion(StoppingCriterion[StepInfo]):
         for criterion in self.criteria:
             criterion.reset()
 
-    def check(self, info: StepInfo) -> bool:
+    def check(self, info: StepInfo[Any]) -> bool:
         logger.debug(
             f"Checking stopping criteria for {info.__class__.__name__}(k={info.k})"
         )
         return any(criterion.check(info) for criterion in self.criteria)
 
 
-class MaxIterationsCriterion(StoppingCriterion[StepInfo]):
+class MaxIterationsCriterion(StoppingCriterion[StepInfo[Any]]):
     """
     Stops when the maximum number of iterations is reached.
 
@@ -77,11 +77,11 @@ class MaxIterationsCriterion(StoppingCriterion[StepInfo]):
         self.maxiter = int(maxiter)
         """Maximum number of iterations."""
 
-    def check(self, info: StepInfo) -> bool:
+    def check(self, info: StepInfo[Any]) -> bool:
         return bool(info.k >= self.maxiter)
 
 
-class GradientNormCriterion(StoppingCriterion[FirstOrderStepInfo]):
+class GradientNormCriterion(StoppingCriterion[FirstOrderStepInfo[Any]]):
     """
     Stops when the gradient norm is below a specified tolerance.
 
@@ -92,11 +92,11 @@ class GradientNormCriterion(StoppingCriterion[FirstOrderStepInfo]):
         self.tol = Scalar(tol)
         """Tolerance for the gradient norm."""
 
-    def check(self, info: FirstOrderStepInfo) -> bool:
+    def check(self, info: FirstOrderStepInfo[Any]) -> bool:
         return bool(np.linalg.norm(info.dfx) < self.tol)
 
 
-class FunctionValueCriterion(StoppingCriterion[ZeroOrderStepInfo]):
+class FunctionValueCriterion(StoppingCriterion[ZeroOrderStepInfo[Any]]):
     """
     Stops when the function value is below a specified tolerance.
 
@@ -107,5 +107,5 @@ class FunctionValueCriterion(StoppingCriterion[ZeroOrderStepInfo]):
         self.tol = Scalar(tol)
         """Tolerance for the function value."""
 
-    def check(self, info: ZeroOrderStepInfo) -> bool:
+    def check(self, info: ZeroOrderStepInfo[Any]) -> bool:
         return bool(info.fx < self.tol)

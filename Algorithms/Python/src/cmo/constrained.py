@@ -4,13 +4,16 @@ Constrained optimisation
 src/cmo/constrained.py
 """
 
+from abc import ABC
+from typing import Any
+
 import numpy as np
 
-from .base import IterativeOptimiser, LineSearchOptimiser
+from .base import FirstOrderLineSearchOptimiser, IterativeOptimiser
 from .constraint import LinearEqualityConstraintSet
 from .functions import ConvexQuadratic
-from .info import ActiveSetStepInfo
-from .oracle import FirstOrderOracle
+from .info import ActiveSetStepInfo, StepInfo
+from .oracle import FirstOrderOracle, Oracle
 from .problems import (
     EqualityConstrainedQuadraticProgram,
     InequalityConstrainedQuadraticProgram,
@@ -19,7 +22,7 @@ from .stopping import StoppingCriterion, StoppingCriterionType
 from .types import Matrix, Scalar, Vector, dtype
 
 
-class ConstrainedOptimiser(IterativeOptimiser):
+class ConstrainedOptimiser[O: Oracle, T: StepInfo[Any]](IterativeOptimiser[O, T], ABC):
     """Base class for iterative constrained optimisers."""
 
 
@@ -32,7 +35,7 @@ class EQPSolver:
     """
 
     def solve(
-        self, problem: EqualityConstrainedQuadraticProgram
+        self, problem: EqualityConstrainedQuadraticProgram[Any]
     ) -> tuple[Vector, Vector]:
         """
         Solve the equality-constrained quadratic program using KKT conditions.
@@ -71,27 +74,35 @@ class EQPSolver:
         return x, mu
 
 
-class ActiveSetMethod(LineSearchOptimiser[ActiveSetStepInfo]):
+class ActiveSetMethod(
+    FirstOrderLineSearchOptimiser[FirstOrderOracle, ActiveSetStepInfo[FirstOrderOracle]]
+):
     """Active set method for quadratic programs."""
 
-    StepInfoClass = ActiveSetStepInfo
+    StepInfoClass = ActiveSetStepInfo[FirstOrderOracle]
 
     def __init__(
-        self, problem: InequalityConstrainedQuadraticProgram, **kwargs
+        self,
+        problem: InequalityConstrainedQuadraticProgram[FirstOrderOracle],
+        **kwargs: Any,
     ) -> None:
         self.problem = problem
         super().__init__(**kwargs)
 
     @property
-    def stopping(self) -> list[StoppingCriterionType]:
-        class ActiveSetStoppingCriterion(StoppingCriterion[ActiveSetStepInfo]):
+    def stopping(
+        self,
+    ) -> list[StoppingCriterionType[ActiveSetStepInfo[FirstOrderOracle]]]:
+        class ActiveSetStoppingCriterion(
+            StoppingCriterion[ActiveSetStepInfo[FirstOrderOracle]]
+        ):
             """
             Stops when all the Lagrange multipliers associated with the active constraints are non-negative.
 
             `mu_i >= 0 for all i in W_k`
             """
 
-            def check(self, info: ActiveSetStepInfo) -> bool:
+            def check(self, info: ActiveSetStepInfo[FirstOrderOracle]) -> bool:
                 v = info.direction
                 if v is None:
                     return False
@@ -114,7 +125,7 @@ class ActiveSetMethod(LineSearchOptimiser[ActiveSetStepInfo]):
 
         return super().stopping + [ActiveSetStoppingCriterion()]
 
-    def direction(self, info: ActiveSetStepInfo) -> Vector:
+    def direction(self, info: ActiveSetStepInfo[FirstOrderOracle]) -> Vector:
         if not isinstance(info.oracle._oracle_f, ConvexQuadratic):
             raise NotImplementedError(
                 f"This implementation of {self.__class__.__name__} requires a ConvexQuadratic Function."
@@ -148,7 +159,7 @@ class ActiveSetMethod(LineSearchOptimiser[ActiveSetStepInfo]):
                 info.relax = W[idx]
         return v
 
-    def step_length(self, info: ActiveSetStepInfo) -> Scalar:
+    def step_length(self, info: ActiveSetStepInfo[FirstOrderOracle]) -> Scalar:
         v = info.ensure(info.direction, message="Direction has not been computed.")
         if np.allclose(v, 0):
             return 0
@@ -177,7 +188,9 @@ class ActiveSetMethod(LineSearchOptimiser[ActiveSetStepInfo]):
         info.W = W
         return alpha
 
-    def step(self, info: ActiveSetStepInfo) -> ActiveSetStepInfo:
+    def step(
+        self, info: ActiveSetStepInfo[FirstOrderOracle]
+    ) -> ActiveSetStepInfo[FirstOrderOracle]:
         info_next = super().step(info)
         info.W = info.ensure(info.W, message="Active set W has not been initialised.")
         info_next.W = info.W.copy()

@@ -138,6 +138,9 @@ class TypedNDArray(np.ndarray[_ShapeT_co, _DTypeT_co]):
         self.__shape__ = getattr(obj, "__shape__", None)
         self.__static_params__ = getattr(obj, "__static_params__", None)
 
+    def __repr__(self) -> str:
+        return str(np.asarray(self).__repr__())
+
 
 ## Helpers
 

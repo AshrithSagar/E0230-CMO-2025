@@ -13,7 +13,7 @@ from cmo.optimisers import (
     NewtonMethod,
     SR1Update,
 )
-from cmo.oracle import AbstractOracle, FirstOrderOracle, SecondOrderOracle
+from cmo.oracle import FirstOrderOracle, Oracle, SecondOrderOracle
 from cmo.stopping import (
     GradientNormCriterion,
     MaxIterationsCriterion,
@@ -35,7 +35,7 @@ def test_rosenbrock() -> None:
 
     f_oracle = FirstOrderOracle(func)
     s_oracle = SecondOrderOracle(func)
-    runs: list[tuple[IterativeOptimiser, AbstractOracle]] = [  # type: ignore
+    runs: list[tuple[IterativeOptimiser, Oracle]] = [  # type: ignore
         (GradientDescent(lr=1e-3), f_oracle),
         (NewtonMethod(), s_oracle),
         (SR1Update(), f_oracle),

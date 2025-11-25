@@ -4,27 +4,27 @@ Helpers
 src/cmo/helpers.py
 """
 
-from typing import Optional
+from typing import Any, Optional
 
 from .base import IterativeOptimiser
 from .constraint import AbstractConstraint
 from .functions import Function
 from .info import RunInfo, StepInfo
-from .oracle import AbstractOracle
+from .oracle import Oracle
 from .problems import UnconstrainedProblem
 from .stopping import StoppingCriterionType
 from .types import Vector
 
 
-def optimise[T: StepInfo](
+def optimise[O: Oracle, T: StepInfo[Any]](
     objective: Function,
-    oracle: type[AbstractOracle],
-    method: IterativeOptimiser[T],
+    oracle: type[O],
+    method: IterativeOptimiser[O, T],
     x0: Vector,
-    constaint: Optional[AbstractConstraint] = None,
-    criteria: Optional[StoppingCriterionType] = None,
+    constaint: Optional[AbstractConstraint[Any]] = None,
+    criteria: Optional[StoppingCriterionType[T]] = None,
     show_params: bool = True,
-) -> Optional[RunInfo[T]]:
+) -> Optional[RunInfo[O, T]]:
     if constaint is None:
         problem = UnconstrainedProblem(objective, oracle)
         info = problem.solve(method, x0, criteria, show_params)

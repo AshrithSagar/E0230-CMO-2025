@@ -11,7 +11,7 @@ References
 import logging
 import time
 from abc import ABC, abstractmethod
-from typing import Iterable, Optional, Self
+from typing import Any, Iterable, Optional, Self
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -24,14 +24,17 @@ from rich.tree import Tree
 from .functions import ConvexQuadratic
 from .info import (
     FirstOrderLineSearchStepInfo,
+    FirstOrderStepInfo,
     LineSearchStepInfo,
     QuasiNewtonStepInfo,
     RunInfo,
     SecondOrderLineSearchStepInfo,
     StepInfo,
+    ZeroOrderLineSearchStepInfo,
+    ZeroOrderStepInfo,
 )
 from .logging import logger
-from .oracle import AbstractOracle
+from .oracle import FirstOrderOracle, Oracle, SecondOrderOracle, ZeroOrderOracle
 from .stopping import (
     CompositeCriterion,
     MaxIterationsCriterion,
@@ -42,7 +45,7 @@ from .types import Matrix, Scalar, Vector
 from .utils import format_subscript, format_time, format_value, show_solution
 
 
-class IterativeOptimiser[T: StepInfo](ABC):
+class IterativeOptimiser[O: Oracle, T: StepInfo[Any]](ABC):
     """
     A base template class for iterative optimisation algorithms,
     particularly for the minimisation objective.
@@ -54,7 +57,7 @@ class IterativeOptimiser[T: StepInfo](ABC):
 
     StepInfoClass: type[T]
 
-    def __init__(self, **kwargs) -> None:
+    def __init__(self, **kwargs: Any) -> None:
         # Initialises the iterative optimiser with configuration parameters.
         self.config = kwargs
 
@@ -88,11 +91,11 @@ class IterativeOptimiser[T: StepInfo](ABC):
 
     def run(
         self,
-        oracle_fn: AbstractOracle,
+        oracle_fn: O,
         x0: Vector,
         criteria: Optional[StoppingCriterionType[T]] = None,
         show_params: bool = True,
-    ) -> RunInfo[T]:
+    ) -> RunInfo[O, T]:
         """
         Runs the iterative algorithm.
 
@@ -118,7 +121,7 @@ class IterativeOptimiser[T: StepInfo](ABC):
         )
         logger.info(f"Config parameters: {self.config}")
 
-        _crit: list[StoppingCriterion[T]] = []
+        _crit: list[StoppingCriterion[Any]] = []
         for crit in [self.stopping, criteria]:
             if crit is None:
                 continue
@@ -235,7 +238,25 @@ class IterativeOptimiser[T: StepInfo](ABC):
         show_solution(x, fx, table=table)
 
 
-class LineSearchOptimiser[T: LineSearchStepInfo](IterativeOptimiser[T]):
+class ZeroOrderOptimiser[O: ZeroOrderOracle, T: ZeroOrderStepInfo[Any]](
+    IterativeOptimiser[O, T], ABC
+):
+    @abstractmethod
+    def step(self, info: T) -> T:
+        raise NotImplementedError
+
+
+class FirstOrderOptimiser[O: FirstOrderOracle, T: FirstOrderStepInfo[Any]](
+    ZeroOrderOptimiser[O, T], ABC
+):
+    @abstractmethod
+    def step(self, info: T) -> T:
+        raise NotImplementedError
+
+
+class LineSearchOptimiser[O: Oracle, T: LineSearchStepInfo[Any]](
+    IterativeOptimiser[O, T]
+):
     """
     A base template class for line search-based iterative optimisation algorithms.
 
@@ -295,9 +316,9 @@ class LineSearchOptimiser[T: LineSearchStepInfo](IterativeOptimiser[T]):
         return info_next
 
     @property
-    def stopping(self) -> list[StoppingCriterionType]:
-        class StepLengthCriterion(StoppingCriterion[LineSearchStepInfo]):
-            def check(self, info: LineSearchStepInfo) -> bool:
+    def stopping(self) -> list[StoppingCriterionType[T]]:
+        class StepLengthCriterion(StoppingCriterion[T]):
+            def check(self, info: T) -> bool:
                 tol: Scalar = 1e-16
                 if info.alpha is None:
                     return False
@@ -309,9 +330,14 @@ class LineSearchOptimiser[T: LineSearchStepInfo](IterativeOptimiser[T]):
         """Plot step lengths vs iterations for the best run."""
         plt.plot(self.step_lengths, marker="o", label=self.name)
 
+
+class ZeroOrderLineSearchOptimiser[
+    O: ZeroOrderOracle,
+    T: ZeroOrderLineSearchStepInfo[Any],  # [FIXME] Type variance could remove Any
+](LineSearchOptimiser[O, T], ZeroOrderOptimiser[O, T]):
     def _phi(
         self,
-        info: FirstOrderLineSearchStepInfo,
+        info: T,
         alpha: Scalar,
         x: Optional[Vector] = None,
         direction: Optional[Vector] = None,
@@ -321,9 +347,14 @@ class LineSearchOptimiser[T: LineSearchStepInfo](IterativeOptimiser[T]):
         direction = info.ensure(direction if direction is not None else info.direction)
         return info.eval(Vector(x + alpha * direction))
 
+
+class FirstOrderLineSearchOptimiser[
+    O: FirstOrderOracle,
+    T: FirstOrderLineSearchStepInfo[FirstOrderOracle],
+](ZeroOrderLineSearchOptimiser[O, T], FirstOrderOptimiser[O, T]):
     def _derphi(
         self,
-        info: FirstOrderLineSearchStepInfo,
+        info: T,
         alpha: Scalar,
         x: Optional[Vector] = None,
         direction: Optional[Vector] = None,
@@ -334,7 +365,10 @@ class LineSearchOptimiser[T: LineSearchStepInfo](IterativeOptimiser[T]):
         return Scalar(info.grad(Vector(x + alpha * direction)).T @ direction)
 
 
-class SteepestDescentDirectionMixin(LineSearchOptimiser[FirstOrderLineSearchStepInfo]):
+class SteepestDescentDirectionMixin[
+    O: FirstOrderOracle,
+    T: FirstOrderLineSearchStepInfo[FirstOrderOracle],
+](FirstOrderLineSearchOptimiser[O, T]):
     """
     A mixin class that provides the steepest descent direction strategy,
     i.e., the Cauchy direction, which is the negative gradient direction.
@@ -342,14 +376,15 @@ class SteepestDescentDirectionMixin(LineSearchOptimiser[FirstOrderLineSearchStep
     `p_k = -f'(x_k)`
     """
 
-    StepInfoClass = FirstOrderLineSearchStepInfo
-
-    def direction(self, info: FirstOrderLineSearchStepInfo) -> Vector:
+    def direction(self, info: FirstOrderLineSearchStepInfo[FirstOrderOracle]) -> Vector:
         grad = info.dfx
         return -grad
 
 
-class ExactLineSearchMixin(LineSearchOptimiser[FirstOrderLineSearchStepInfo]):
+class ExactLineSearchMixin[
+    O: FirstOrderOracle,
+    T: FirstOrderLineSearchStepInfo[FirstOrderOracle],
+](FirstOrderLineSearchOptimiser[O, T]):
     """
     A mixin class that provides the exact line search step length strategy for convex quadratic functions.
 
@@ -357,9 +392,9 @@ class ExactLineSearchMixin(LineSearchOptimiser[FirstOrderLineSearchStepInfo]):
     where `Q` is the symmetric positive definite Hessian matrix of the convex quadratic function.
     """
 
-    StepInfoClass = FirstOrderLineSearchStepInfo
-
-    def step_length(self, info: FirstOrderLineSearchStepInfo) -> Scalar:
+    def step_length(
+        self, info: FirstOrderLineSearchStepInfo[FirstOrderOracle]
+    ) -> Scalar:
         if not isinstance(info.oracle._oracle_f, ConvexQuadratic):
             raise NotImplementedError(
                 f"This implementation of {self.__class__.__name__} requires a ConvexQuadratic Function."
@@ -380,16 +415,17 @@ class ExactLineSearchMixin(LineSearchOptimiser[FirstOrderLineSearchStepInfo]):
         return alpha
 
 
-class NewtonDirectionMixin(LineSearchOptimiser[SecondOrderLineSearchStepInfo]):
+class NewtonDirectionMixin[
+    O: SecondOrderOracle,
+    T: SecondOrderLineSearchStepInfo[SecondOrderOracle],
+](LineSearchOptimiser[O, T]):
     """
     A mixin class that provides the Newton direction strategy.
 
     `p_k = - (f''(x_k))^{-1} f'(x_k)`
     """
 
-    StepInfoClass = SecondOrderLineSearchStepInfo
-
-    def direction(self, info) -> Vector:
+    def direction(self, info: T) -> Vector:
         grad = info.dfx
         hess = info.d2fx
 
@@ -397,7 +433,9 @@ class NewtonDirectionMixin(LineSearchOptimiser[SecondOrderLineSearchStepInfo]):
         return p_k
 
 
-class UnitStepLengthMixin[T: LineSearchStepInfo](LineSearchOptimiser[T]):
+class UnitStepLengthMixin[O: Oracle, T: LineSearchStepInfo[Any]](
+    LineSearchOptimiser[O, T]
+):
     """
     A mixin class that provides a unit step length strategy.
 
@@ -408,7 +446,10 @@ class UnitStepLengthMixin[T: LineSearchStepInfo](LineSearchOptimiser[T]):
         return 1.0
 
 
-class QuasiNewtonOptimiser(UnitStepLengthMixin[QuasiNewtonStepInfo], ABC):
+class QuasiNewtonOptimiser[
+    O: FirstOrderOracle,
+    T: QuasiNewtonStepInfo[FirstOrderOracle],
+](UnitStepLengthMixin[O, T]):
     """
     A base template class for Quasi-Newton optimisation algorithms.
 
@@ -421,10 +462,8 @@ class QuasiNewtonOptimiser(UnitStepLengthMixin[QuasiNewtonStepInfo], ABC):
     `s0` and `y0` are not defined, so they are left as `None` for iteration `k=0`.
     """
 
-    StepInfoClass = QuasiNewtonStepInfo
-
     @abstractmethod
-    def hess_inv(self, info: QuasiNewtonStepInfo) -> Matrix:
+    def hess_inv(self, info: T) -> Matrix:
         """
         Updates and returns the approximate inverse Hessian matrix `H_k`.\\
         [Required]: This method should be implemented by subclasses to define the specific update rule.
@@ -435,14 +474,14 @@ class QuasiNewtonOptimiser(UnitStepLengthMixin[QuasiNewtonStepInfo], ABC):
         """
         raise NotImplementedError
 
-    def direction(self, info: QuasiNewtonStepInfo) -> Vector:
+    def direction(self, info: T) -> Vector:
         grad = info.dfx
         H = self.hess_inv(info)
         info.H = H
         pk = Vector(-H @ grad)
         return pk
 
-    def step(self, info: QuasiNewtonStepInfo) -> QuasiNewtonStepInfo:
+    def step(self, info: T) -> T:
         info_next = super().step(info)
         info_next.H = info.H  # [FIXME]
         info_next.s = Vector(info_next.x - info.x)

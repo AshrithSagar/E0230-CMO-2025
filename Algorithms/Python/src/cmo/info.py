@@ -6,16 +6,16 @@ src/cmo/info.py
 
 import inspect
 from dataclasses import dataclass, field, fields
-from typing import Optional
+from typing import Any, Optional
 
 from .logging import logger
-from .oracle import AbstractOracle, FirstOrderOracle, SecondOrderOracle, ZeroOrderOracle
+from .oracle import FirstOrderOracle, Oracle, SecondOrderOracle, ZeroOrderOracle
 from .types import Matrix, Scalar, Vector
 from .utils import format_subscript, format_time, format_value
 
 
 @dataclass
-class StepInfo[T: AbstractOracle]:
+class StepInfo[T: Oracle]:
     """A dataclass for the state of the algorithm at iteration `k`."""
 
     k: int
@@ -152,21 +152,28 @@ class SecondOrderStepInfo[T: SecondOrderOracle](FirstOrderStepInfo[T]):
 
 
 @dataclass
-class LineSearchStepInfo[T: AbstractOracle](StepInfo[T]):
+class LineSearchStepInfo[T: Oracle](StepInfo[T]):
     direction: Optional[Vector] = None
     alpha: Optional[Scalar] = None
 
 
 @dataclass
+class ZeroOrderLineSearchStepInfo[T: ZeroOrderOracle](
+    ZeroOrderStepInfo[T], LineSearchStepInfo[T]
+):
+    pass  # All attributes and methods are provided by the parent classes
+
+
+@dataclass
 class FirstOrderLineSearchStepInfo[T: FirstOrderOracle](
-    FirstOrderStepInfo[T], LineSearchStepInfo[T]
+    FirstOrderStepInfo[T], ZeroOrderLineSearchStepInfo[T]
 ):
     pass  # All attributes and methods are provided by the parent classes
 
 
 @dataclass
 class SecondOrderLineSearchStepInfo[T: SecondOrderOracle](
-    SecondOrderStepInfo[T], LineSearchStepInfo[T]
+    SecondOrderStepInfo[T], FirstOrderLineSearchStepInfo[T]
 ):
     pass  # All attributes and methods are provided by the parent classes
 
@@ -207,16 +214,16 @@ class ActiveSetStepInfo[T: FirstOrderOracle](FirstOrderLineSearchStepInfo[T]):
 
 
 @dataclass(kw_only=True)
-class RunInfo[T: StepInfo]:
+class RunInfo[O: Oracle, T: StepInfo[Any]]:
     """
     A dataclass that holds information about the optimisation run.
     - 'x0': Initial point.
     - 'x_star': Estimated minimum point.
     - 'f_star': Function value at the estimated minimum point.
     - 'n_iters': Number of iterations performed.
-    - 'history': List of `x` values at each iteration.
     - 'oracle_call_count': Total number of oracle calls made.
     - 'time_taken': Total time taken for the optimisation run.
+    - 'history': List of `x` values at each iteration.
     """
 
     x0: Vector

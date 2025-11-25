@@ -11,7 +11,7 @@ from .logging import logger
 from .types import Matrix, Scalar, Vector
 
 
-class AbstractOracle:
+class Oracle:
     """A base class for oracles."""
 
     def __init__(self, func: Function) -> None:
@@ -34,7 +34,7 @@ class AbstractOracle:
         return self
 
 
-class ZeroOrderOracle(AbstractOracle):
+class ZeroOrderOracle(Oracle):
     """`f = oracle(x)`"""
 
     def __init__(self, func: Function) -> None:

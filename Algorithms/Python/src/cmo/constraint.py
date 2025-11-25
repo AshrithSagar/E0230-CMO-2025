@@ -177,7 +177,7 @@ class LinearConstraint[T: ConstraintType](SingleConstraint[T]):
         """Projects point `x` onto the hyperplane defined by the constraint."""
         a = self.a
         residual = self.residual(x)
-        return x - (residual / np.dot(a, a)) * a
+        return Vector(x - (residual / np.dot(a, a)) * a)
 
     def project(self, x: Vector) -> Vector:
         return x if self.is_satisfied(x) else self._project(x)

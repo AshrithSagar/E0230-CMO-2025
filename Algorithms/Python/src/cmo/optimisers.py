@@ -8,33 +8,40 @@ References
 - Nocedal, J., & Wright, S. J. (2006). Numerical optimization. Springer.
 """
 
-from typing import Self
+from abc import ABC
+from typing import Any, Self
 
 import numpy as np
 
 from .base import (
     ExactLineSearchMixin,
-    LineSearchOptimiser,
+    FirstOrderLineSearchOptimiser,
     NewtonDirectionMixin,
     QuasiNewtonOptimiser,
     SteepestDescentDirectionMixin,
     UnitStepLengthMixin,
 )
 from .functions import ConvexQuadratic
-from .info import FirstOrderLineSearchStepInfo, QuasiNewtonStepInfo
+from .info import (
+    FirstOrderLineSearchStepInfo,
+    QuasiNewtonStepInfo,
+    SecondOrderLineSearchStepInfo,
+)
 from .logging import logger
+from .oracle import FirstOrderOracle, SecondOrderOracle
 from .types import Matrix, Scalar, Vector, dtype
 
 
-class ArmijoMixin(LineSearchOptimiser[FirstOrderLineSearchStepInfo]):
+class ArmijoMixin[
+    O: FirstOrderOracle,
+    T: FirstOrderLineSearchStepInfo[FirstOrderOracle],
+](FirstOrderLineSearchOptimiser[O, T], ABC):
     """
     A mixin class that provides the forward-expansion Armijo line search step length strategy.\\
     Increase alpha until Armijo condition holds (or until safe cap).
 
     `f(x_k + alpha_k * p_k) <= f(x_k) + c * alpha_k * f'(x_k)^T p_k`
     """
-
-    StepInfoClass = FirstOrderLineSearchStepInfo
 
     def __init__(
         self,
@@ -43,7 +50,7 @@ class ArmijoMixin(LineSearchOptimiser[FirstOrderLineSearchStepInfo]):
         alpha_start: Scalar = 0.0,
         alpha_step: Scalar = 1e-1,
         alpha_stop: Scalar = 1.0,
-        **kwargs,
+        **kwargs: Any,
     ) -> None:
         super().__init__(
             c=c,
@@ -65,7 +72,7 @@ class ArmijoMixin(LineSearchOptimiser[FirstOrderLineSearchStepInfo]):
         assert 0 < self.c < 1, "c must be in (0, 1)"
         return super().reset()
 
-    def step_length(self, info: FirstOrderLineSearchStepInfo) -> Scalar:
+    def step_length(self, info: T) -> Scalar:
         d = info.ensure(info.direction)
         f = info.fx
         grad = info.dfx
@@ -94,12 +101,13 @@ class ArmijoMixin(LineSearchOptimiser[FirstOrderLineSearchStepInfo]):
             return self.alpha_min
 
 
-class BacktrackingMixin(LineSearchOptimiser[FirstOrderLineSearchStepInfo]):
+class BacktrackingMixin[
+    O: FirstOrderOracle,
+    T: FirstOrderLineSearchStepInfo[FirstOrderOracle],
+](FirstOrderLineSearchOptimiser[O, T], ABC):
     """
     A mixin class for the standard backtracking Armijo (decreasing alpha).
     """
-
-    StepInfoClass = FirstOrderLineSearchStepInfo
 
     def __init__(
         self,
@@ -109,7 +117,7 @@ class BacktrackingMixin(LineSearchOptimiser[FirstOrderLineSearchStepInfo]):
         alpha_min: Scalar = 1e-14,
         alpha_max: Scalar = 1e6,
         maxiter: int = 10,
-        **kwargs,
+        **kwargs: Any,
     ) -> None:
         super().__init__(
             c=c,
@@ -134,7 +142,7 @@ class BacktrackingMixin(LineSearchOptimiser[FirstOrderLineSearchStepInfo]):
         assert 0 < self.c < 1, "c must be in (0, 1)"
         return super().reset()
 
-    def step_length(self, info: FirstOrderLineSearchStepInfo) -> Scalar:
+    def step_length(self, info: T) -> Scalar:
         d = info.ensure(info.direction)
         f = info.fx
         grad = info.dfx
@@ -154,15 +162,16 @@ class BacktrackingMixin(LineSearchOptimiser[FirstOrderLineSearchStepInfo]):
         return alpha
 
 
-class ArmijoGoldsteinMixin(LineSearchOptimiser[FirstOrderLineSearchStepInfo]):
+class ArmijoGoldsteinMixin[
+    O: FirstOrderOracle,
+    T: FirstOrderLineSearchStepInfo[FirstOrderOracle],
+](FirstOrderLineSearchOptimiser[O, T], ABC):
     """
     A mixin class for Armijo-Goldstein via expansion to bracket and then bisection.
 
     `f(x_k + alpha_k * p_k) <= f(x_k) + c * alpha_k * f'(x_k)^T p_k` (Armijo)\\
     `f(x_k + alpha_k * p_k) >= f(x_k) + (1 - c) * alpha_k * f'(x_k)^T p_k` (Goldstein)
     """
-
-    StepInfoClass = FirstOrderLineSearchStepInfo
 
     def __init__(
         self,
@@ -172,7 +181,7 @@ class ArmijoGoldsteinMixin(LineSearchOptimiser[FirstOrderLineSearchStepInfo]):
         alpha_min: Scalar = 1e-14,
         alpha_max: Scalar = 1e6,
         maxiter: int = 10,
-        **kwargs,
+        **kwargs: Any,
     ) -> None:
         super().__init__(
             c=c,
@@ -197,7 +206,7 @@ class ArmijoGoldsteinMixin(LineSearchOptimiser[FirstOrderLineSearchStepInfo]):
         assert 0 < self.c < 0.5, "c must be in (0, 0.5)"
         return super().reset()
 
-    def step_length(self, info: FirstOrderLineSearchStepInfo) -> Scalar:
+    def step_length(self, info: T) -> Scalar:
         d = info.ensure(info.direction)
         f = info.fx
         grad = info.dfx
@@ -244,7 +253,10 @@ class ArmijoGoldsteinMixin(LineSearchOptimiser[FirstOrderLineSearchStepInfo]):
         return 0.5 * (alpha_lo + alpha_hi)
 
 
-class StrongWolfeMixin(LineSearchOptimiser[FirstOrderLineSearchStepInfo]):
+class StrongWolfeMixin[
+    O: FirstOrderOracle,
+    T: FirstOrderLineSearchStepInfo[FirstOrderOracle],
+](FirstOrderLineSearchOptimiser[O, T], ABC):
     """
     A mixin class for the strong Wolfe line search using bracket + zoom (Nocedal & Wright).
 
@@ -255,8 +267,6 @@ class StrongWolfeMixin(LineSearchOptimiser[FirstOrderLineSearchStepInfo]):
     `phi'(alpha_k) = f'(x_k + alpha_k * p_k)^T p_k`.
     """
 
-    StepInfoClass = FirstOrderLineSearchStepInfo
-
     def __init__(
         self,
         c1: Scalar = 1e-4,
@@ -266,7 +276,7 @@ class StrongWolfeMixin(LineSearchOptimiser[FirstOrderLineSearchStepInfo]):
         alpha_min: Scalar = 1e-14,
         alpha_max: Scalar = 1e6,
         maxiter: int = 10,
-        **kwargs,
+        **kwargs: Any,
     ) -> None:
         super().__init__(
             c1=c1,
@@ -294,7 +304,7 @@ class StrongWolfeMixin(LineSearchOptimiser[FirstOrderLineSearchStepInfo]):
         assert 0 < self.c1 < self.c2 < 1, "0 < c1 < c2 < 1 must be satisfied"
         return super().reset()
 
-    def step_length(self, info: FirstOrderLineSearchStepInfo) -> Scalar:
+    def step_length(self, info: T) -> Scalar:
         d = info.ensure(info.direction)
         f = info.fx
         grad = info.dfx
@@ -332,7 +342,7 @@ class StrongWolfeMixin(LineSearchOptimiser[FirstOrderLineSearchStepInfo]):
 
     def _zoom(
         self,
-        info: FirstOrderLineSearchStepInfo,
+        info: T,
         alpha_lo: Scalar,
         alpha_hi: Scalar,
         phi0: Scalar,
@@ -369,24 +379,37 @@ class StrongWolfeMixin(LineSearchOptimiser[FirstOrderLineSearchStepInfo]):
         return 0.5 * (alpha_lo + alpha_hi)
 
 
-class GradientDescent(SteepestDescentDirectionMixin):
+class GradientDescent(
+    SteepestDescentDirectionMixin[
+        FirstOrderOracle, FirstOrderLineSearchStepInfo[FirstOrderOracle]
+    ]
+):
     """
     Standard gradient descent.
 
     `x_{k+1} = x_k - alpha_k * f'(x_k)`
     """
 
-    def __init__(self, lr: Scalar = 1e-3, **kwargs) -> None:
+    StepInfoClass = FirstOrderLineSearchStepInfo[FirstOrderOracle]
+
+    def __init__(self, lr: Scalar = 1e-3, **kwargs: Any) -> None:
         super().__init__(lr=lr, **kwargs)
         self.lr = Scalar(lr)
         """Learning rate (step length)"""
 
-    def step_length(self, info: FirstOrderLineSearchStepInfo) -> Scalar:
+    def step_length(
+        self, info: FirstOrderLineSearchStepInfo[FirstOrderOracle]
+    ) -> Scalar:
         return self.lr
 
 
 class GradientDescentExactLineSearch(
-    SteepestDescentDirectionMixin, ExactLineSearchMixin
+    SteepestDescentDirectionMixin[
+        FirstOrderOracle, FirstOrderLineSearchStepInfo[FirstOrderOracle]
+    ],
+    ExactLineSearchMixin[
+        FirstOrderOracle, FirstOrderLineSearchStepInfo[FirstOrderOracle]
+    ],
 ):
     """
     Gradient descent with exact line search for convex quadratic functions.
@@ -395,10 +418,17 @@ class GradientDescentExactLineSearch(
     where `alpha_k = (f'(x_k)^T f'(x_k)) / (f'(x_k)^T Q f'(x_k))`
     """
 
+    StepInfoClass = FirstOrderLineSearchStepInfo[FirstOrderOracle]
+
     pass  # All methods are provided by the mixins
 
 
-class GradientDescentArmijo(SteepestDescentDirectionMixin, ArmijoMixin):
+class GradientDescentArmijo(
+    SteepestDescentDirectionMixin[
+        FirstOrderOracle, FirstOrderLineSearchStepInfo[FirstOrderOracle]
+    ],
+    ArmijoMixin[FirstOrderOracle, FirstOrderLineSearchStepInfo[FirstOrderOracle]],
+):
     """
     Forward-expansion Armijo line search:\\
     Increase alpha until Armijo condition holds (or until safe cap).
@@ -406,19 +436,33 @@ class GradientDescentArmijo(SteepestDescentDirectionMixin, ArmijoMixin):
     `f(x_k + alpha_k * p_k) <= f(x_k) + c * alpha_k * f'(x_k)^T p_k`
     """
 
+    StepInfoClass = FirstOrderLineSearchStepInfo[FirstOrderOracle]
+
     pass  # All methods are provided by the mixins
 
 
-class GradientDescentBacktracking(SteepestDescentDirectionMixin, BacktrackingMixin):
+class GradientDescentBacktracking(
+    SteepestDescentDirectionMixin[
+        FirstOrderOracle, FirstOrderLineSearchStepInfo[FirstOrderOracle]
+    ],
+    BacktrackingMixin[FirstOrderOracle, FirstOrderLineSearchStepInfo[FirstOrderOracle]],
+):
     """
     Standard backtracking Armijo (decreasing alpha).
     """
+
+    StepInfoClass = FirstOrderLineSearchStepInfo[FirstOrderOracle]
 
     pass  # All methods are provided by the mixins
 
 
 class GradientDescentArmijoGoldstein(
-    SteepestDescentDirectionMixin, ArmijoGoldsteinMixin
+    SteepestDescentDirectionMixin[
+        FirstOrderOracle, FirstOrderLineSearchStepInfo[FirstOrderOracle]
+    ],
+    ArmijoGoldsteinMixin[
+        FirstOrderOracle, FirstOrderLineSearchStepInfo[FirstOrderOracle]
+    ],
 ):
     """
     Armijo-Goldstein via expansion to bracket and then bisection.
@@ -427,10 +471,17 @@ class GradientDescentArmijoGoldstein(
     `f(x_k + alpha_k * p_k) >= f(x_k) + (1 - c) * alpha_k * f'(x_k)^T p_k` (Goldstein)
     """
 
+    StepInfoClass = FirstOrderLineSearchStepInfo[FirstOrderOracle]
+
     pass  # All methods are provided by the mixins
 
 
-class GradientDescentWolfe(SteepestDescentDirectionMixin, StrongWolfeMixin):
+class GradientDescentWolfe(
+    SteepestDescentDirectionMixin[
+        FirstOrderOracle, FirstOrderLineSearchStepInfo[FirstOrderOracle]
+    ],
+    StrongWolfeMixin[FirstOrderOracle, FirstOrderLineSearchStepInfo[FirstOrderOracle]],
+):
     """
     Strong Wolfe line search using bracket + zoom (Nocedal & Wright).
 
@@ -441,10 +492,16 @@ class GradientDescentWolfe(SteepestDescentDirectionMixin, StrongWolfeMixin):
     `phi'(alpha_k) = f'(x_k + alpha_k * p_k)^T p_k`.
     """
 
+    StepInfoClass = FirstOrderLineSearchStepInfo[FirstOrderOracle]
+
     pass  # All methods are provided by the mixins
 
 
-class ConjugateDirectionMethod(LineSearchOptimiser[FirstOrderLineSearchStepInfo]):
+class ConjugateDirectionMethod(
+    FirstOrderLineSearchOptimiser[
+        FirstOrderOracle, FirstOrderLineSearchStepInfo[FirstOrderOracle]
+    ]
+):
     """
     Linear conjugate direction method for convex quadratic functions.
 
@@ -452,18 +509,20 @@ class ConjugateDirectionMethod(LineSearchOptimiser[FirstOrderLineSearchStepInfo]
     where `p_k` are conjugate directions and `alpha_k` is the exact line search step length.
     """
 
-    StepInfoClass = FirstOrderLineSearchStepInfo
+    StepInfoClass = FirstOrderLineSearchStepInfo[FirstOrderOracle]
 
-    def __init__(self, directions: list[Vector], **kwargs) -> None:
+    def __init__(self, directions: list[Vector], **kwargs: Any) -> None:
         super().__init__(directions=directions, **kwargs)
         self.directions: list[Vector] = directions
-        self.line_search = ExactLineSearchMixin()
+        self.line_search = ExactLineSearchMixin[
+            FirstOrderOracle, FirstOrderLineSearchStepInfo[FirstOrderOracle]
+        ]()
 
     def reset(self) -> Self:
         self.line_search.reset()
         return super().reset()
 
-    def direction(self, info: FirstOrderLineSearchStepInfo) -> Vector:
+    def direction(self, info: FirstOrderLineSearchStepInfo[FirstOrderOracle]) -> Vector:
         k = info.k
         if k < len(self.directions):
             direction = self.directions[k]
@@ -472,7 +531,9 @@ class ConjugateDirectionMethod(LineSearchOptimiser[FirstOrderLineSearchStepInfo]
         else:
             raise IndexError(f"No more directions available for iteration {k}.")
 
-    def step_length(self, info: FirstOrderLineSearchStepInfo) -> Scalar:
+    def step_length(
+        self, info: FirstOrderLineSearchStepInfo[FirstOrderOracle]
+    ) -> Scalar:
         if not isinstance(info.oracle._oracle_f, ConvexQuadratic):
             raise NotImplementedError(
                 f"This implementation of {self.__class__.__name__} requires a ConvexQuadratic Function."
@@ -483,7 +544,11 @@ class ConjugateDirectionMethod(LineSearchOptimiser[FirstOrderLineSearchStepInfo]
         return alpha
 
 
-class ConjugateGradientMethod(LineSearchOptimiser[FirstOrderLineSearchStepInfo]):
+class ConjugateGradientMethod(
+    FirstOrderLineSearchOptimiser[
+        FirstOrderOracle, FirstOrderLineSearchStepInfo[FirstOrderOracle]
+    ]
+):
     """
     Linear conjugate gradient method for convex quadratic functions.
 
@@ -491,17 +556,19 @@ class ConjugateGradientMethod(LineSearchOptimiser[FirstOrderLineSearchStepInfo])
     where `p_k` are conjugate directions and `alpha_k` is the exact line search step length.
     """
 
-    StepInfoClass = FirstOrderLineSearchStepInfo
+    StepInfoClass = FirstOrderLineSearchStepInfo[FirstOrderOracle]
 
-    def __init__(self, **kwargs) -> None:
+    def __init__(self, **kwargs: Any) -> None:
         super().__init__(**kwargs)
-        self.line_search = ExactLineSearchMixin()
+        self.line_search = ExactLineSearchMixin[
+            FirstOrderOracle, FirstOrderLineSearchStepInfo[FirstOrderOracle]
+        ]()
 
     def reset(self) -> Self:
         self.line_search.reset()
         return super().reset()
 
-    def direction(self, info: FirstOrderLineSearchStepInfo) -> Vector:
+    def direction(self, info: FirstOrderLineSearchStepInfo[FirstOrderOracle]) -> Vector:
         if not isinstance(info.oracle._oracle_f, ConvexQuadratic):
             raise NotImplementedError(
                 f"This implementation of {self.__class__.__name__} requires a ConvexQuadratic Function."
@@ -522,30 +589,45 @@ class ConjugateGradientMethod(LineSearchOptimiser[FirstOrderLineSearchStepInfo])
         self.line_search.step_directions.append(direction)
         return direction
 
-    def step_length(self, info: FirstOrderLineSearchStepInfo) -> Scalar:
+    def step_length(
+        self, info: FirstOrderLineSearchStepInfo[FirstOrderOracle]
+    ) -> Scalar:
         alpha = self.line_search.step_length(info)
         self.step_directions[-1] = self.line_search.step_directions[-1]
         return alpha
 
 
-class NewtonMethod(NewtonDirectionMixin, UnitStepLengthMixin):
+class NewtonMethod(
+    NewtonDirectionMixin[
+        SecondOrderOracle, SecondOrderLineSearchStepInfo[SecondOrderOracle]
+    ],
+    UnitStepLengthMixin[
+        SecondOrderOracle, SecondOrderLineSearchStepInfo[SecondOrderOracle]
+    ],
+):
     """
     Standard Newton's method.
 
     `x_{k+1} = x_k - [f''(x_k)]^{-1} f'(x_k)`
     """
 
+    StepInfoClass = SecondOrderLineSearchStepInfo[SecondOrderOracle]
+
     pass  # All methods are provided by the mixins
 
 
-class SR1Update(QuasiNewtonOptimiser):
+class SR1Update(
+    QuasiNewtonOptimiser[FirstOrderOracle, QuasiNewtonStepInfo[FirstOrderOracle]]
+):
     """
     Symmetric Rank-One (SR1) update for Hessian inverse approximation.
 
     `H_{k+1} = H_k + ((s_k - H_k y_k)(s_k - H_k y_k)^T) / ((s_k - H_k y_k)^T y_k)`
     """
 
-    def hess_inv(self, info: QuasiNewtonStepInfo) -> Matrix:
+    StepInfoClass = QuasiNewtonStepInfo[FirstOrderOracle]
+
+    def hess_inv(self, info: QuasiNewtonStepInfo[FirstOrderOracle]) -> Matrix:
         if info.k == 0:
             if info.H is None:
                 logger.debug("Initialising Hessian inverse approximation to identity.")
@@ -558,14 +640,18 @@ class SR1Update(QuasiNewtonOptimiser):
             return Matrix(H + np.outer(u, u) / Scalar(u.T @ y))
 
 
-class DFPUpdate(QuasiNewtonOptimiser):
+class DFPUpdate(
+    QuasiNewtonOptimiser[FirstOrderOracle, QuasiNewtonStepInfo[FirstOrderOracle]]
+):
     """
     Davidon-Fletcher-Powell (DFP) update for Hessian inverse approximation.
 
     `H_{k+1} = H_k + (s_k s_k^T) / (y_k^T s_k) - (H_k y_k y_k^T H_k) / (y_k^T H_k y_k)`
     """
 
-    def hess_inv(self, info: QuasiNewtonStepInfo) -> Matrix:
+    StepInfoClass = QuasiNewtonStepInfo[FirstOrderOracle]
+
+    def hess_inv(self, info: QuasiNewtonStepInfo[FirstOrderOracle]) -> Matrix:
         if info.k == 0:
             if info.H is None:
                 logger.debug("Initialising Hessian inverse approximation to identity.")
@@ -580,14 +666,18 @@ class DFPUpdate(QuasiNewtonOptimiser):
             return Matrix(H + term1 - term2)
 
 
-class BFGSUpdate(QuasiNewtonOptimiser):
+class BFGSUpdate(
+    QuasiNewtonOptimiser[FirstOrderOracle, QuasiNewtonStepInfo[FirstOrderOracle]]
+):
     """
     Broyden-Fletcher-Goldfarb-Shanno (BFGS) update for Hessian inverse approximation.
 
     `H_{k+1} = (I - (s_k y_k^T) / (y_k^T s_k)) H_k (I - (y_k s_k^T) / (y_k^T s_k)) + (s_k s_k^T) / (y_k^T s_k)`
     """
 
-    def hess_inv(self, info: QuasiNewtonStepInfo) -> Matrix:
+    StepInfoClass = QuasiNewtonStepInfo[FirstOrderOracle]
+
+    def hess_inv(self, info: QuasiNewtonStepInfo[FirstOrderOracle]) -> Matrix:
         if info.k == 0:
             if info.H is None:
                 logger.debug("Initialising Hessian inverse approximation to identity.")

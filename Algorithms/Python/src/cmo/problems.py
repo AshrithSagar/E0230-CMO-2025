@@ -4,7 +4,7 @@ Problem classes
 src/cmo/problems.py
 """
 
-from typing import Optional
+from typing import Any, Optional
 
 from .base import IterativeOptimiser
 from .constraint import (
@@ -15,29 +15,29 @@ from .constraint import (
 )
 from .functions import ConvexQuadratic, Function, LinearFunction
 from .info import RunInfo, StepInfo
-from .oracle import AbstractOracle
+from .oracle import Oracle
 from .stopping import StoppingCriterionType
 from .types import Vector
 
 
-class AbstractProblem[F: Function]:
+class AbstractProblem[F: Function, O: Oracle]:
     """A base class for optimisation problems."""
 
-    def __init__(self, objective: F, oracle: type[AbstractOracle]) -> None:
+    def __init__(self, objective: F, oracle: type[O]) -> None:
         self.objective = objective
         self.oracle = oracle(objective)
 
 
-class UnconstrainedProblem[F: Function](AbstractProblem[F]):
+class UnconstrainedProblem[F: Function, O: Oracle](AbstractProblem[F, O]):
     """A class representing unconstrained optimisation problems."""
 
-    def solve[T: StepInfo](
+    def solve[T: StepInfo[Any]](
         self,
-        method: IterativeOptimiser[T],
+        method: IterativeOptimiser[O, T],
         x0: Vector,
-        criteria: Optional[StoppingCriterionType] = None,
+        criteria: Optional[StoppingCriterionType[T]] = None,
         show_params: bool = True,
-    ) -> RunInfo[T]:
+    ) -> RunInfo[O, T]:
         """Solve the unconstrained optimisation problem."""
         info = method.run(
             oracle_fn=self.oracle, x0=x0, criteria=criteria, show_params=show_params
@@ -45,31 +45,35 @@ class UnconstrainedProblem[F: Function](AbstractProblem[F]):
         return info
 
 
-class ConstrainedProblem[F: Function, C: AbstractConstraint](AbstractProblem[F]):
+class ConstrainedProblem[F: Function, O: Oracle, C: AbstractConstraint[Any]](
+    AbstractProblem[F, O]
+):
     """A class representing constrained optimisation problems."""
 
-    def __init__(
-        self, objective: F, oracle: type[AbstractOracle], constraint: C
-    ) -> None:
+    def __init__(self, objective: F, oracle: type[O], constraint: C) -> None:
         super().__init__(objective, oracle)
         self.constraint = constraint
 
 
-class LinearProgram[C: LinearConstraintSet](ConstrainedProblem[LinearFunction, C]):
+class LinearProgram[O: Oracle, C: LinearConstraintSet[Any]](
+    ConstrainedProblem[LinearFunction, O, C]
+):
     """A class representing linear programming problems."""
 
 
-class QuadraticProgram[C: LinearConstraintSet](ConstrainedProblem[ConvexQuadratic, C]):
+class QuadraticProgram[O: Oracle, C: LinearConstraintSet[Any]](
+    ConstrainedProblem[ConvexQuadratic, O, C]
+):
     """A class representing convex quadratic programming problems."""
 
 
-class EqualityConstrainedQuadraticProgram(
-    QuadraticProgram[LinearEqualityConstraintSet]
+class EqualityConstrainedQuadraticProgram[O: Oracle](
+    QuadraticProgram[O, LinearEqualityConstraintSet]
 ):
     """A class representing convex equality-constrained quadratic programming problems."""
 
 
-class InequalityConstrainedQuadraticProgram(
-    QuadraticProgram[LinearInequalityConstraintSet]
+class InequalityConstrainedQuadraticProgram[O: Oracle](
+    QuadraticProgram[O, LinearInequalityConstraintSet]
 ):
     """A class representing convex inequality-constrained quadratic programming problems."""
