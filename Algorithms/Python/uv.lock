@@ -233,7 +233,7 @@ wheels = [
 
 [[package]]
 name = "cmo"
-version = "0.1.3"
+version = "0.1.4"
 source = { editable = "." }
 dependencies = [
     { name = "matplotlib" },
@@ -258,19 +258,19 @@ notebook = [
 [package.metadata]
 requires-dist = [
     { name = "matplotlib", specifier = ">=3.10.7" },
-    { name = "numpy", specifier = ">=2.3.4" },
+    { name = "numpy", specifier = ">=2.3.5" },
     { name = "rich", specifier = ">=14.2.0" },
 ]
 
 [package.metadata.requires-dev]
 dev = [
-    { name = "pytest", specifier = ">=8.4.2" },
+    { name = "pytest", specifier = ">=9.0.1" },
     { name = "pytest-memray", specifier = ">=1.8.0" },
 ]
 extra = [
-    { name = "cvxpy", specifier = ">=1.7.3" },
+    { name = "cvxpy", specifier = ">=1.7.4" },
     { name = "scipy", specifier = ">=1.16.3" },
-    { name = "scipy-stubs", specifier = ">=1.16.3.0" },
+    { name = "scipy-stubs", specifier = ">=1.16.3.1" },
 ]
 notebook = [{ name = "jupyter", specifier = ">=1.1.1" }]
 
@@ -327,7 +327,7 @@ wheels = [
 
 [[package]]
 name = "cvxpy"
-version = "1.7.3"
+version = "1.7.4"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "clarabel" },
@@ -336,7 +336,7 @@ dependencies = [
     { name = "scipy" },
     { name = "scs" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/e1/cf/583d8c25bf1ec8d43e0f9953fa3d48f095022dc2fc7e7a437ebdeaf16d9f/cvxpy-1.7.3.tar.gz", hash = "sha256:241d364f5962a1d68c4ae8393480766a09326e5771e2286d33a948e1976cbe70", size = 1635660, upload-time = "2025-09-22T18:21:42.245Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/83/16/b868ab1aeed4cb64ce982fab7815c3c56884d4e80957c202a4e5d7b0edaa/cvxpy-1.7.4.tar.gz", hash = "sha256:7248133dc2e3a82cf91516f62e32725a22eb029322248acc63f3aedb76637f5e", size = 1640552, upload-time = "2025-11-24T20:03:28.441Z" }
 
 [[package]]
 name = "cycler"
@@ -1660,14 +1660,14 @@ wheels = [
 
 [[package]]
 name = "scipy-stubs"
-version = "1.16.3.0"
+version = "1.16.3.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "optype", extra = ["numpy"] },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/bd/68/c53c3bce6bd069a164015be1be2671c968b526be4af1e85db64c88f04546/scipy_stubs-1.16.3.0.tar.gz", hash = "sha256:d6943c085e47a1ed431309f9ca582b6a206a9db808a036132a0bf01ebc34b506", size = 356462, upload-time = "2025-10-28T22:05:31.198Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/0b/3e/8baf960c68f012b8297930d4686b235813974833a417db8d0af798b0b93d/scipy_stubs-1.16.3.1.tar.gz", hash = "sha256:0738d55a7f8b0c94cdb8063f711d53330ebefe166f7d48dec9ffd932a337226d", size = 359990, upload-time = "2025-11-23T23:05:21.274Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/86/1c/0ba7305fa01cfe7a6f1b8c86ccdd1b7a0d43fa9bd769c059995311e291a2/scipy_stubs-1.16.3.0-py3-none-any.whl", hash = "sha256:90e5d82ced2183ef3c5c0a28a77df8cc227458624364fa0ff975ad24fa89d6ad", size = 557713, upload-time = "2025-10-28T22:05:29.454Z" },
+    { url = "https://files.pythonhosted.org/packages/0c/39/e2a69866518f88dc01940c9b9b044db97c3387f2826bd2a173e49a5c0469/scipy_stubs-1.16.3.1-py3-none-any.whl", hash = "sha256:69bc52ef6c3f8e09208abdfaf32291eb51e9ddf8fa4389401ccd9473bdd2a26d", size = 560397, upload-time = "2025-11-23T23:05:19.432Z" },
 ]
 
 [[package]]
