@@ -3,17 +3,17 @@ tests/test_convex_quadratic.py
 """
 
 import numpy as np
-from cmo.functions import ConvexQuadratic
-from cmo.helpers import optimise
-from cmo.logging import Logger
-from cmo.optimisers import ConjugateGradientMethod
-from cmo.oracle import FirstOrderOracle
-from cmo.stopping import (
+from cmo.core.oracle import FirstOrderOracle
+from cmo.core.stopping import (
     GradientNormCriterion,
     MaxIterationsCriterion,
     StoppingCriterionType,
 )
+from cmo.functions import ConvexQuadratic
+from cmo.optimisers import ConjugateGradientMethod
 from cmo.types import Matrix, Vector
+from cmo.utils.helpers import optimise
+from cmo.utils.logging import Logger
 
 Logger.configure(level="DEBUG")
 

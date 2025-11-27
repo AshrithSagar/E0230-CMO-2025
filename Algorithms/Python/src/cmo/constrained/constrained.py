@@ -9,17 +9,17 @@ from typing import Any
 
 import numpy as np
 
-from .constraint import LinearEqualityConstraintSet
-from .core import FirstOrderLineSearchOptimiser, IterativeOptimiser
-from .functions import ConvexQuadratic
-from .info import ActiveSetStepInfo, StepInfo
-from .oracle import FirstOrderOracle, Oracle
-from .problems import (
+from ..core.base import FirstOrderLineSearchOptimiser, IterativeOptimiser
+from ..core.info import ActiveSetStepInfo, StepInfo
+from ..core.oracle import FirstOrderOracle, Oracle
+from ..core.stopping import StoppingCriterion, StoppingCriterionType
+from ..functions import ConvexQuadratic
+from ..problems import (
     EqualityConstrainedQuadraticProgram,
     InequalityConstrainedQuadraticProgram,
 )
-from .stopping import StoppingCriterion, StoppingCriterionType
-from .types import Matrix, Scalar, Vector, dtype
+from ..types import Matrix, Scalar, Vector, dtype
+from .constraint import LinearEqualityConstraintSet
 
 
 class ConstrainedOptimiser[O: Oracle, T: StepInfo[Any]](IterativeOptimiser[O, T], ABC):

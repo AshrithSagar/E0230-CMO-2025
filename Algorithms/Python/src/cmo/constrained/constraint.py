@@ -14,7 +14,7 @@ from typing import Any, Callable, Literal, Optional, Sequence
 
 import numpy as np
 
-from .types import Matrix, Scalar, Vector
+from ..types import Matrix, Scalar, Vector
 
 
 class ConstraintType(Enum):

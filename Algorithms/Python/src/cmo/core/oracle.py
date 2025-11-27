@@ -6,9 +6,9 @@ src/cmo/oracle.py
 
 from typing import Self
 
-from .functions import Function
-from .logging import logger
-from .types import Matrix, Scalar, Vector
+from ..functions import Function
+from ..types import Matrix, Scalar, Vector
+from ..utils.logging import logger
 
 
 class Oracle:

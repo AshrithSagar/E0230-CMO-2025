@@ -11,7 +11,7 @@ from rich.console import Console
 from rich.table import Table
 from rich.text import TextType
 
-from .types import Scalar, Vector
+from ..types import Scalar, Vector
 
 
 def format_value(

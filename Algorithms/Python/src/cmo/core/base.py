@@ -1,7 +1,7 @@
 """
 Algorithm base and mixin classes.
 =======
-src/cmo/core.py
+src/cmo/core/base.py
 
 References
 -------
@@ -21,7 +21,10 @@ from rich.table import Table
 from rich.text import TextType
 from rich.tree import Tree
 
-from .functions import ConvexQuadratic
+from ..functions import ConvexQuadratic
+from ..types import Matrix, Scalar, Vector
+from ..utils.logging import logger
+from ..utils.utils import format_subscript, format_time, format_value, show_solution
 from .info import (
     FirstOrderLineSearchStepInfo,
     FirstOrderStepInfo,
@@ -33,7 +36,6 @@ from .info import (
     ZeroOrderLineSearchStepInfo,
     ZeroOrderStepInfo,
 )
-from .logging import logger
 from .oracle import FirstOrderOracle, Oracle, SecondOrderOracle, ZeroOrderOracle
 from .stopping import (
     CompositeCriterion,
@@ -41,8 +43,6 @@ from .stopping import (
     StoppingCriterion,
     StoppingCriterionType,
 )
-from .types import Matrix, Scalar, Vector
-from .utils import format_subscript, format_time, format_value, show_solution
 
 
 class IterativeOptimiser[O: Oracle, T: StepInfo[Any]](ABC):

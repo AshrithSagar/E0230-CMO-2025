@@ -6,11 +6,11 @@ src/cmo/optimisers/quasi_newton.py
 
 import numpy as np
 
-from ..core import NewtonDirectionMixin, QuasiNewtonOptimiser, UnitStepLengthMixin
-from ..info import QuasiNewtonStepInfo, SecondOrderLineSearchStepInfo
-from ..logging import logger
-from ..oracle import FirstOrderOracle, SecondOrderOracle
+from ..core.base import NewtonDirectionMixin, QuasiNewtonOptimiser, UnitStepLengthMixin
+from ..core.info import QuasiNewtonStepInfo, SecondOrderLineSearchStepInfo
+from ..core.oracle import FirstOrderOracle, SecondOrderOracle
 from ..types import Matrix, Scalar, Vector, dtype
+from ..utils.logging import logger
 
 
 class NewtonMethod(

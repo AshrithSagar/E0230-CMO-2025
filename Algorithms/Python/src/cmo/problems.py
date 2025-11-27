@@ -6,17 +6,17 @@ src/cmo/problems.py
 
 from typing import Any, Optional
 
-from .constraint import (
+from .constrained.constraint import (
     AbstractConstraint,
     LinearConstraintSet,
     LinearEqualityConstraintSet,
     LinearInequalityConstraintSet,
 )
-from .core import IterativeOptimiser
+from .core.base import IterativeOptimiser
+from .core.info import RunInfo, StepInfo
+from .core.oracle import Oracle
+from .core.stopping import StoppingCriterionType
 from .functions import ConvexQuadratic, Function, LinearFunction
-from .info import RunInfo, StepInfo
-from .oracle import Oracle
-from .stopping import StoppingCriterionType
 from .types import Vector
 
 

@@ -8,10 +8,10 @@ import inspect
 from dataclasses import dataclass, field, fields
 from typing import Any, Optional
 
-from .logging import logger
+from ..types import Matrix, Scalar, Vector
+from ..utils.logging import logger
+from ..utils.utils import format_subscript, format_time, format_value
 from .oracle import FirstOrderOracle, Oracle, SecondOrderOracle, ZeroOrderOracle
-from .types import Matrix, Scalar, Vector
-from .utils import format_subscript, format_time, format_value
 
 
 @dataclass

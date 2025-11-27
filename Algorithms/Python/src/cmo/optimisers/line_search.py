@@ -9,13 +9,13 @@ from typing import Any, Self
 
 import numpy as np
 
-from ..core import (
+from ..core.base import (
     ExactLineSearchMixin,
     FirstOrderLineSearchOptimiser,
     SteepestDescentDirectionMixin,
 )
-from ..info import FirstOrderLineSearchStepInfo
-from ..oracle import FirstOrderOracle
+from ..core.info import FirstOrderLineSearchStepInfo
+from ..core.oracle import FirstOrderOracle
 from ..types import Scalar, dtype
 
 

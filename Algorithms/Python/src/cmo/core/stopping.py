@@ -9,9 +9,9 @@ from typing import Any, Iterable, Union
 
 import numpy as np
 
+from ..types import Scalar
+from ..utils.logging import logger
 from .info import FirstOrderStepInfo, StepInfo, ZeroOrderStepInfo
-from .logging import logger
-from .types import Scalar
 
 type StoppingCriterionType[T: StepInfo[Any]] = Union[
     "StoppingCriterion[T]", "CompositeCriterion", Iterable["StoppingCriterion[T]"]
