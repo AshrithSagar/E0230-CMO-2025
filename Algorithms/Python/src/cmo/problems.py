@@ -6,13 +6,13 @@ src/cmo/problems.py
 
 from typing import Any, Optional
 
-from .base import IterativeOptimiser
 from .constraint import (
     AbstractConstraint,
     LinearConstraintSet,
     LinearEqualityConstraintSet,
     LinearInequalityConstraintSet,
 )
+from .core import IterativeOptimiser
 from .functions import ConvexQuadratic, Function, LinearFunction
 from .info import RunInfo, StepInfo
 from .oracle import Oracle

@@ -9,8 +9,8 @@ from typing import Any
 
 import numpy as np
 
-from .base import FirstOrderLineSearchOptimiser, IterativeOptimiser
 from .constraint import LinearEqualityConstraintSet
+from .core import FirstOrderLineSearchOptimiser, IterativeOptimiser
 from .functions import ConvexQuadratic
 from .info import ActiveSetStepInfo, StepInfo
 from .oracle import FirstOrderOracle, Oracle

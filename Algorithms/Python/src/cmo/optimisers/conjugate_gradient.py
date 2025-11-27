@@ -6,7 +6,7 @@ src/cmo/optimisers/conjugate_gradient.py
 
 from typing import Any, Self
 
-from ..base import ExactLineSearchMixin, FirstOrderLineSearchOptimiser
+from ..core import ExactLineSearchMixin, FirstOrderLineSearchOptimiser
 from ..functions import ConvexQuadratic
 from ..info import FirstOrderLineSearchStepInfo
 from ..oracle import FirstOrderOracle

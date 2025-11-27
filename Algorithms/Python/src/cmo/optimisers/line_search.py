@@ -9,7 +9,7 @@ from typing import Any, Self
 
 import numpy as np
 
-from ..base import (
+from ..core import (
     ExactLineSearchMixin,
     FirstOrderLineSearchOptimiser,
     SteepestDescentDirectionMixin,

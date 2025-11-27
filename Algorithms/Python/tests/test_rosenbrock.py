@@ -3,7 +3,7 @@ tests/test_rosenbrock.py
 """
 
 import numpy as np
-from cmo.base import IterativeOptimiser
+from cmo.core import IterativeOptimiser
 from cmo.functions import Rosenbrock
 from cmo.logging import Logger
 from cmo.optimisers import (

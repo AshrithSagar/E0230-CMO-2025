@@ -6,8 +6,8 @@ src/cmo/helpers.py
 
 from typing import Any, Optional
 
-from .base import IterativeOptimiser
 from .constraint import AbstractConstraint
+from .core import IterativeOptimiser
 from .functions import Function
 from .info import RunInfo, StepInfo
 from .oracle import Oracle
