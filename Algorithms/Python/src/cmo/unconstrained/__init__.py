@@ -1,15 +1,18 @@
 """
-Optimiser implementations
+Unconstrained optimisers implementations
 =======
-src/cmo/optimisers/__init__.py
+src/cmo/unconstrained/__init__.py
 
 References
 -------
 - Nocedal, J., & Wright, S. J. (2006). Numerical optimization. Springer.
 """
 
-from .conjugate_gradient import ConjugateDirectionMethod, ConjugateGradientMethod
-from .line_search import (
+from cmo.unconstrained.conjugate_gradient import (
+    ConjugateDirectionMethod,
+    ConjugateGradientMethod,
+)
+from cmo.unconstrained.line_search import (
     GradientDescent,
     GradientDescentArmijo,
     GradientDescentArmijoGoldstein,
@@ -17,7 +20,12 @@ from .line_search import (
     GradientDescentExactLineSearch,
     GradientDescentWolfe,
 )
-from .quasi_newton import BFGSUpdate, DFPUpdate, NewtonMethod, SR1Update
+from cmo.unconstrained.quasi_newton import (
+    BFGSUpdate,
+    DFPUpdate,
+    NewtonMethod,
+    SR1Update,
+)
 
 __all__ = [
     "ConjugateDirectionMethod",

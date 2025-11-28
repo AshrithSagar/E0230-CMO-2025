@@ -10,8 +10,8 @@ from cmo.core.stopping import (
     StoppingCriterionType,
 )
 from cmo.functions import ConvexQuadratic
-from cmo.optimisers import ConjugateGradientMethod
 from cmo.types import Matrix, Vector
+from cmo.unconstrained import ConjugateGradientMethod
 from cmo.utils.helpers import optimise
 from cmo.utils.logging import Logger
 

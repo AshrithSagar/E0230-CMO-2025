@@ -1,25 +1,24 @@
 """
-Constrained optimisation
+Constrained optimisation algorithms
 =======
-src/cmo/constrained.py
+src/cmo/constrained/optimisers.py
 """
 
 from abc import ABC
 from typing import Any
 
 import numpy as np
-
-from ..core.base import FirstOrderLineSearchOptimiser, IterativeOptimiser
-from ..core.info import ActiveSetStepInfo, StepInfo
-from ..core.oracle import FirstOrderOracle, Oracle
-from ..core.stopping import StoppingCriterion, StoppingCriterionType
-from ..functions import ConvexQuadratic
-from ..problems import (
+from cmo.constrained.constraint import LinearEqualityConstraintSet
+from cmo.core.base import FirstOrderLineSearchOptimiser, IterativeOptimiser
+from cmo.core.info import ActiveSetStepInfo, StepInfo
+from cmo.core.oracle import FirstOrderOracle, Oracle
+from cmo.core.stopping import StoppingCriterion, StoppingCriterionType
+from cmo.functions import ConvexQuadratic
+from cmo.problems import (
     EqualityConstrainedQuadraticProgram,
     InequalityConstrainedQuadraticProgram,
 )
-from ..types import Matrix, Scalar, Vector, dtype
-from .constraint import LinearEqualityConstraintSet
+from cmo.types import Matrix, Scalar, Vector, dtype
 
 
 class ConstrainedOptimiser[O: Oracle, T: StepInfo[Any]](IterativeOptimiser[O, T], ABC):

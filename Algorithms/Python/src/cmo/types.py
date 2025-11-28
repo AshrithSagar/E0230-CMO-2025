@@ -8,7 +8,7 @@ from typing import TypeAlias
 
 import numpy as np
 
-from .array.numpy import TypedNDArray
+from cmo.array.numpy import TypedNDArray
 
 ## Helpers
 

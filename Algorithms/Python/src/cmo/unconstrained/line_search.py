@@ -1,7 +1,7 @@
 """
 Line search methods
 =======
-src/cmo/optimisers/line_search.py
+src/cmo/unconstrained/line_search.py
 """
 
 from abc import ABC
@@ -9,14 +9,14 @@ from typing import Any, Self
 
 import numpy as np
 
-from ..core.base import (
+from cmo.core.base import (
     ExactLineSearchMixin,
     FirstOrderLineSearchOptimiser,
     SteepestDescentDirectionMixin,
 )
-from ..core.info import FirstOrderLineSearchStepInfo
-from ..core.oracle import FirstOrderOracle
-from ..types import Scalar, dtype
+from cmo.core.info import FirstOrderLineSearchStepInfo
+from cmo.core.oracle import FirstOrderOracle
+from cmo.types import Scalar, dtype
 
 
 class ArmijoMixin[

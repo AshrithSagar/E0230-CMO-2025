@@ -1,7 +1,7 @@
 """
-Utilities
+Formatting utils
 =======
-src/cmo/utils.py
+src/cmo/utils/format.py
 """
 
 from typing import Sequence
@@ -11,7 +11,7 @@ from rich.console import Console
 from rich.table import Table
 from rich.text import TextType
 
-from ..types import Scalar, Vector
+from cmo.types import Scalar, Vector
 
 
 def format_value(

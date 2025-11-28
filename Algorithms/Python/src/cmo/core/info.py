@@ -1,17 +1,17 @@
 """
 Info structures
 =======
-src/cmo/info.py
+src/cmo/core/info.py
 """
 
 import inspect
 from dataclasses import dataclass, field, fields
 from typing import Any, Optional
 
-from ..types import Matrix, Scalar, Vector
-from ..utils.logging import logger
-from ..utils.utils import format_subscript, format_time, format_value
-from .oracle import FirstOrderOracle, Oracle, SecondOrderOracle, ZeroOrderOracle
+from cmo.core.oracle import FirstOrderOracle, Oracle, SecondOrderOracle, ZeroOrderOracle
+from cmo.types import Matrix, Scalar, Vector
+from cmo.utils.format import format_subscript, format_time, format_value
+from cmo.utils.logging import logger
 
 
 @dataclass

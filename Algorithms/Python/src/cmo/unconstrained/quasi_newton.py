@@ -1,16 +1,20 @@
 """
 Newton and Quasi-Newton methods
 =======
-src/cmo/optimisers/quasi_newton.py
+src/cmo/unconstrained/quasi_newton.py
 """
 
 import numpy as np
 
-from ..core.base import NewtonDirectionMixin, QuasiNewtonOptimiser, UnitStepLengthMixin
-from ..core.info import QuasiNewtonStepInfo, SecondOrderLineSearchStepInfo
-from ..core.oracle import FirstOrderOracle, SecondOrderOracle
-from ..types import Matrix, Scalar, Vector, dtype
-from ..utils.logging import logger
+from cmo.core.base import (
+    NewtonDirectionMixin,
+    QuasiNewtonOptimiser,
+    UnitStepLengthMixin,
+)
+from cmo.core.info import QuasiNewtonStepInfo, SecondOrderLineSearchStepInfo
+from cmo.core.oracle import FirstOrderOracle, SecondOrderOracle
+from cmo.types import Matrix, Scalar, Vector, dtype
+from cmo.utils.logging import logger
 
 
 class NewtonMethod(

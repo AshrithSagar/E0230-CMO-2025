@@ -11,14 +11,14 @@ from cmo.core.stopping import (
     StoppingCriterionType,
 )
 from cmo.functions import Rosenbrock
-from cmo.optimisers import (
+from cmo.types import Vector
+from cmo.unconstrained import (
     BFGSUpdate,
     DFPUpdate,
     GradientDescent,
     NewtonMethod,
     SR1Update,
 )
-from cmo.types import Vector
 from cmo.utils.logging import Logger
 
 Logger.configure(level="INFO")

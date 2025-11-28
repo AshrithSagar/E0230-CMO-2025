@@ -1,7 +1,7 @@
 """
 Stopping criteria
 =======
-src/cmo/stopping.py
+src/cmo/core/stopping.py
 """
 
 from abc import ABC, abstractmethod
@@ -9,9 +9,9 @@ from typing import Any, Iterable, Union
 
 import numpy as np
 
-from ..types import Scalar
-from ..utils.logging import logger
-from .info import FirstOrderStepInfo, StepInfo, ZeroOrderStepInfo
+from cmo.core.info import FirstOrderStepInfo, StepInfo, ZeroOrderStepInfo
+from cmo.types import Scalar
+from cmo.utils.logging import logger
 
 type StoppingCriterionType[T: StepInfo[Any]] = Union[
     "StoppingCriterion[T]", "CompositeCriterion", Iterable["StoppingCriterion[T]"]

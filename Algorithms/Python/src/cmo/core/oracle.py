@@ -1,14 +1,14 @@
 """
 Oracle utils
 =======
-src/cmo/oracle.py
+src/cmo/core/oracle.py
 """
 
 from typing import Self
 
-from ..functions import Function
-from ..types import Matrix, Scalar, Vector
-from ..utils.logging import logger
+from cmo.functions import Function
+from cmo.types import Matrix, Scalar, Vector
+from cmo.utils.logging import logger
 
 
 class Oracle:

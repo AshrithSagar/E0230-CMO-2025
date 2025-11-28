@@ -1,19 +1,19 @@
 """
 Helpers
 =======
-src/cmo/helpers.py
+src/cmo/utils/helpers.py
 """
 
 from typing import Any, Optional
 
-from ..constrained.constraint import AbstractConstraint
-from ..core.base import IterativeOptimiser
-from ..core.info import RunInfo, StepInfo
-from ..core.oracle import Oracle
-from ..core.stopping import StoppingCriterionType
-from ..functions import Function
-from ..problems import UnconstrainedProblem
-from ..types import Vector
+from cmo.constrained.constraint import AbstractConstraint
+from cmo.core.base import IterativeOptimiser
+from cmo.core.info import RunInfo, StepInfo
+from cmo.core.oracle import Oracle
+from cmo.core.stopping import StoppingCriterionType
+from cmo.functions import Function
+from cmo.problems import UnconstrainedProblem
+from cmo.types import Vector
 
 
 def optimise[O: Oracle, T: StepInfo[Any]](

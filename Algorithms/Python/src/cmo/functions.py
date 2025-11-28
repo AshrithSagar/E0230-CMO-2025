@@ -13,7 +13,7 @@ from abc import ABC, abstractmethod
 
 import numpy as np
 
-from .types import Matrix, Scalar, Vector, dtype
+from cmo.types import Matrix, Scalar, Vector, dtype
 
 
 class Function(ABC):

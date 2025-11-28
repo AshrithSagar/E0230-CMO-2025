@@ -1,7 +1,7 @@
 """
 Logging utils
 =======
-src/cmo/logging.py
+src/cmo/utils/logging.py
 """
 
 import logging

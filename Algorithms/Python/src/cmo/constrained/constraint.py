@@ -1,7 +1,7 @@
 """
 Constraint utils
 =======
-src/cmo/constraint.py
+src/cmo/constrained/constraint.py
 
 References
 -------
@@ -13,8 +13,7 @@ from enum import Enum, auto
 from typing import Any, Callable, Literal, Optional, Sequence
 
 import numpy as np
-
-from ..types import Matrix, Scalar, Vector
+from cmo.types import Matrix, Scalar, Vector
 
 
 class ConstraintType(Enum):

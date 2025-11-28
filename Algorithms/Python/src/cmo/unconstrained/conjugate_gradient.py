@@ -1,16 +1,16 @@
 """
 Conjugate Gradient methods
 =======
-src/cmo/optimisers/conjugate_gradient.py
+src/cmo/unconstrained/conjugate_gradient.py
 """
 
 from typing import Any, Self
 
-from ..core.base import ExactLineSearchMixin, FirstOrderLineSearchOptimiser
-from ..core.info import FirstOrderLineSearchStepInfo
-from ..core.oracle import FirstOrderOracle
-from ..functions import ConvexQuadratic
-from ..types import Scalar, Vector
+from cmo.core.base import ExactLineSearchMixin, FirstOrderLineSearchOptimiser
+from cmo.core.info import FirstOrderLineSearchStepInfo
+from cmo.core.oracle import FirstOrderOracle
+from cmo.functions import ConvexQuadratic
+from cmo.types import Scalar, Vector
 
 
 class ConjugateDirectionMethod(

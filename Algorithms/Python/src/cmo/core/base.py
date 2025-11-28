@@ -21,11 +21,7 @@ from rich.table import Table
 from rich.text import TextType
 from rich.tree import Tree
 
-from ..functions import ConvexQuadratic
-from ..types import Matrix, Scalar, Vector
-from ..utils.logging import logger
-from ..utils.utils import format_subscript, format_time, format_value, show_solution
-from .info import (
+from cmo.core.info import (
     FirstOrderLineSearchStepInfo,
     FirstOrderStepInfo,
     LineSearchStepInfo,
@@ -36,13 +32,17 @@ from .info import (
     ZeroOrderLineSearchStepInfo,
     ZeroOrderStepInfo,
 )
-from .oracle import FirstOrderOracle, Oracle, SecondOrderOracle, ZeroOrderOracle
-from .stopping import (
+from cmo.core.oracle import FirstOrderOracle, Oracle, SecondOrderOracle, ZeroOrderOracle
+from cmo.core.stopping import (
     CompositeCriterion,
     MaxIterationsCriterion,
     StoppingCriterion,
     StoppingCriterionType,
 )
+from cmo.functions import ConvexQuadratic
+from cmo.types import Matrix, Scalar, Vector
+from cmo.utils.format import format_subscript, format_time, format_value, show_solution
+from cmo.utils.logging import logger
 
 
 class IterativeOptimiser[O: Oracle, T: StepInfo[Any]](ABC):

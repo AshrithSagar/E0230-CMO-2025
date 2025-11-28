@@ -3,8 +3,8 @@ tests/test_active_set.py
 """
 
 import numpy as np
-from cmo.constrained.constrained import ActiveSetMethod
 from cmo.constrained.constraint import LinearInequalityConstraintSet
+from cmo.constrained.optimisers import ActiveSetMethod
 from cmo.core.oracle import FirstOrderOracle
 from cmo.core.stopping import MaxIterationsCriterion
 from cmo.functions import ConvexQuadratic
