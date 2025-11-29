@@ -15,7 +15,11 @@ from cmo.types import Scalar, Vector
 
 class ConjugateDirectionMethod(
     FirstOrderLineSearchOptimiser[
-        FirstOrderOracle, FirstOrderLineSearchStepInfo[FirstOrderOracle]
+        ConvexQuadratic,
+        FirstOrderOracle[ConvexQuadratic],
+        FirstOrderLineSearchStepInfo[
+            ConvexQuadratic, FirstOrderOracle[ConvexQuadratic]
+        ],
     ]
 ):
     """
@@ -25,20 +29,31 @@ class ConjugateDirectionMethod(
     where `p_k` are conjugate directions and `alpha_k` is the exact line search step length.
     """
 
-    StepInfoClass = FirstOrderLineSearchStepInfo[FirstOrderOracle]
+    StepInfoClass = FirstOrderLineSearchStepInfo[
+        ConvexQuadratic, FirstOrderOracle[ConvexQuadratic]
+    ]
 
     def __init__(self, directions: list[Vector], **kwargs: Any) -> None:
         super().__init__(directions=directions, **kwargs)
         self.directions: list[Vector] = directions
         self.line_search = ExactLineSearchMixin[
-            FirstOrderOracle, FirstOrderLineSearchStepInfo[FirstOrderOracle]
+            ConvexQuadratic,
+            FirstOrderOracle[ConvexQuadratic],
+            FirstOrderLineSearchStepInfo[
+                ConvexQuadratic, FirstOrderOracle[ConvexQuadratic]
+            ],
         ]()
 
     def reset(self) -> Self:
         self.line_search.reset()
         return super().reset()
 
-    def direction(self, info: FirstOrderLineSearchStepInfo[FirstOrderOracle]) -> Vector:
+    def direction(
+        self,
+        info: FirstOrderLineSearchStepInfo[
+            ConvexQuadratic, FirstOrderOracle[ConvexQuadratic]
+        ],
+    ) -> Vector:
         k = info.k
         if k < len(self.directions):
             direction = self.directions[k]
@@ -48,9 +63,12 @@ class ConjugateDirectionMethod(
             raise IndexError(f"No more directions available for iteration {k}.")
 
     def step_length(
-        self, info: FirstOrderLineSearchStepInfo[FirstOrderOracle]
+        self,
+        info: FirstOrderLineSearchStepInfo[
+            ConvexQuadratic, FirstOrderOracle[ConvexQuadratic]
+        ],
     ) -> Scalar:
-        if not isinstance(info.oracle._oracle_f, ConvexQuadratic):
+        if not isinstance(info.oracle.func, ConvexQuadratic):
             raise NotImplementedError(
                 f"This implementation of {self.__class__.__name__} requires a ConvexQuadratic Function."
             )
@@ -62,7 +80,11 @@ class ConjugateDirectionMethod(
 
 class ConjugateGradientMethod(
     FirstOrderLineSearchOptimiser[
-        FirstOrderOracle, FirstOrderLineSearchStepInfo[FirstOrderOracle]
+        ConvexQuadratic,
+        FirstOrderOracle[ConvexQuadratic],
+        FirstOrderLineSearchStepInfo[
+            ConvexQuadratic, FirstOrderOracle[ConvexQuadratic]
+        ],
     ]
 ):
     """
@@ -72,20 +94,31 @@ class ConjugateGradientMethod(
     where `p_k` are conjugate directions and `alpha_k` is the exact line search step length.
     """
 
-    StepInfoClass = FirstOrderLineSearchStepInfo[FirstOrderOracle]
+    StepInfoClass = FirstOrderLineSearchStepInfo[
+        ConvexQuadratic, FirstOrderOracle[ConvexQuadratic]
+    ]
 
     def __init__(self, **kwargs: Any) -> None:
         super().__init__(**kwargs)
         self.line_search = ExactLineSearchMixin[
-            FirstOrderOracle, FirstOrderLineSearchStepInfo[FirstOrderOracle]
+            ConvexQuadratic,
+            FirstOrderOracle[ConvexQuadratic],
+            FirstOrderLineSearchStepInfo[
+                ConvexQuadratic, FirstOrderOracle[ConvexQuadratic]
+            ],
         ]()
 
     def reset(self) -> Self:
         self.line_search.reset()
         return super().reset()
 
-    def direction(self, info: FirstOrderLineSearchStepInfo[FirstOrderOracle]) -> Vector:
-        if not isinstance(info.oracle._oracle_f, ConvexQuadratic):
+    def direction(
+        self,
+        info: FirstOrderLineSearchStepInfo[
+            ConvexQuadratic, FirstOrderOracle[ConvexQuadratic]
+        ],
+    ) -> Vector:
+        if not isinstance(info.oracle.func, ConvexQuadratic):
             raise NotImplementedError(
                 f"This implementation of {self.__class__.__name__} requires a ConvexQuadratic Function."
             )
@@ -106,7 +139,10 @@ class ConjugateGradientMethod(
         return direction
 
     def step_length(
-        self, info: FirstOrderLineSearchStepInfo[FirstOrderOracle]
+        self,
+        info: FirstOrderLineSearchStepInfo[
+            ConvexQuadratic, FirstOrderOracle[ConvexQuadratic]
+        ],
     ) -> Scalar:
         alpha = self.line_search.step_length(info)
         self.step_directions[-1] = self.line_search.step_directions[-1]

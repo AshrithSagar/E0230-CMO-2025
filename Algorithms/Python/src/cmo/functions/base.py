@@ -1,7 +1,7 @@
 """
 Base functions
 =======
-src/cmo/functions.py
+src/cmo/functions/base.py
 
 Base class for real-valued scalar mathematical functions
 """

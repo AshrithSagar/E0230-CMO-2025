@@ -13,16 +13,25 @@ from cmo.core.base import (
 )
 from cmo.core.info import QuasiNewtonStepInfo, SecondOrderLineSearchStepInfo
 from cmo.core.oracle import FirstOrderOracle, SecondOrderOracle
+from cmo.functions.protocol import FirstOrderFunctionProto, SecondOrderFunctionProto
 from cmo.types import Matrix, Scalar, Vector, dtype
 from cmo.utils.logging import logger
 
 
 class NewtonMethod(
     NewtonDirectionMixin[
-        SecondOrderOracle, SecondOrderLineSearchStepInfo[SecondOrderOracle]
+        SecondOrderFunctionProto,
+        SecondOrderOracle[SecondOrderFunctionProto],
+        SecondOrderLineSearchStepInfo[
+            SecondOrderFunctionProto, SecondOrderOracle[SecondOrderFunctionProto]
+        ],
     ],
     UnitStepLengthMixin[
-        SecondOrderOracle, SecondOrderLineSearchStepInfo[SecondOrderOracle]
+        SecondOrderFunctionProto,
+        SecondOrderOracle[SecondOrderFunctionProto],
+        SecondOrderLineSearchStepInfo[
+            SecondOrderFunctionProto, SecondOrderOracle[SecondOrderFunctionProto]
+        ],
     ],
 ):
     """
@@ -31,13 +40,21 @@ class NewtonMethod(
     `x_{k+1} = x_k - [f''(x_k)]^{-1} f'(x_k)`
     """
 
-    StepInfoClass = SecondOrderLineSearchStepInfo[SecondOrderOracle]
+    StepInfoClass = SecondOrderLineSearchStepInfo[
+        SecondOrderFunctionProto, SecondOrderOracle[SecondOrderFunctionProto]
+    ]
 
     pass  # All methods are provided by the mixins
 
 
 class SR1Update(
-    QuasiNewtonOptimiser[FirstOrderOracle, QuasiNewtonStepInfo[FirstOrderOracle]]
+    QuasiNewtonOptimiser[
+        FirstOrderFunctionProto,
+        FirstOrderOracle[FirstOrderFunctionProto],
+        QuasiNewtonStepInfo[
+            FirstOrderFunctionProto, FirstOrderOracle[FirstOrderFunctionProto]
+        ],
+    ]
 ):
     """
     Symmetric Rank-One (SR1) update for Hessian inverse approximation.
@@ -45,9 +62,16 @@ class SR1Update(
     `H_{k+1} = H_k + ((s_k - H_k y_k)(s_k - H_k y_k)^T) / ((s_k - H_k y_k)^T y_k)`
     """
 
-    StepInfoClass = QuasiNewtonStepInfo[FirstOrderOracle]
+    StepInfoClass = QuasiNewtonStepInfo[
+        FirstOrderFunctionProto, FirstOrderOracle[FirstOrderFunctionProto]
+    ]
 
-    def hess_inv(self, info: QuasiNewtonStepInfo[FirstOrderOracle]) -> Matrix:
+    def hess_inv(
+        self,
+        info: QuasiNewtonStepInfo[
+            FirstOrderFunctionProto, FirstOrderOracle[FirstOrderFunctionProto]
+        ],
+    ) -> Matrix:
         if info.k == 0:
             if info.H is None:
                 logger.debug("Initialising Hessian inverse approximation to identity.")
@@ -61,7 +85,13 @@ class SR1Update(
 
 
 class DFPUpdate(
-    QuasiNewtonOptimiser[FirstOrderOracle, QuasiNewtonStepInfo[FirstOrderOracle]]
+    QuasiNewtonOptimiser[
+        FirstOrderFunctionProto,
+        FirstOrderOracle[FirstOrderFunctionProto],
+        QuasiNewtonStepInfo[
+            FirstOrderFunctionProto, FirstOrderOracle[FirstOrderFunctionProto]
+        ],
+    ]
 ):
     """
     Davidon-Fletcher-Powell (DFP) update for Hessian inverse approximation.
@@ -69,9 +99,16 @@ class DFPUpdate(
     `H_{k+1} = H_k + (s_k s_k^T) / (y_k^T s_k) - (H_k y_k y_k^T H_k) / (y_k^T H_k y_k)`
     """
 
-    StepInfoClass = QuasiNewtonStepInfo[FirstOrderOracle]
+    StepInfoClass = QuasiNewtonStepInfo[
+        FirstOrderFunctionProto, FirstOrderOracle[FirstOrderFunctionProto]
+    ]
 
-    def hess_inv(self, info: QuasiNewtonStepInfo[FirstOrderOracle]) -> Matrix:
+    def hess_inv(
+        self,
+        info: QuasiNewtonStepInfo[
+            FirstOrderFunctionProto, FirstOrderOracle[FirstOrderFunctionProto]
+        ],
+    ) -> Matrix:
         if info.k == 0:
             if info.H is None:
                 logger.debug("Initialising Hessian inverse approximation to identity.")
@@ -87,7 +124,13 @@ class DFPUpdate(
 
 
 class BFGSUpdate(
-    QuasiNewtonOptimiser[FirstOrderOracle, QuasiNewtonStepInfo[FirstOrderOracle]]
+    QuasiNewtonOptimiser[
+        FirstOrderFunctionProto,
+        FirstOrderOracle[FirstOrderFunctionProto],
+        QuasiNewtonStepInfo[
+            FirstOrderFunctionProto, FirstOrderOracle[FirstOrderFunctionProto]
+        ],
+    ]
 ):
     """
     Broyden-Fletcher-Goldfarb-Shanno (BFGS) update for Hessian inverse approximation.
@@ -95,9 +138,16 @@ class BFGSUpdate(
     `H_{k+1} = (I - (s_k y_k^T) / (y_k^T s_k)) H_k (I - (y_k s_k^T) / (y_k^T s_k)) + (s_k s_k^T) / (y_k^T s_k)`
     """
 
-    StepInfoClass = QuasiNewtonStepInfo[FirstOrderOracle]
+    StepInfoClass = QuasiNewtonStepInfo[
+        FirstOrderFunctionProto, FirstOrderOracle[FirstOrderFunctionProto]
+    ]
 
-    def hess_inv(self, info: QuasiNewtonStepInfo[FirstOrderOracle]) -> Matrix:
+    def hess_inv(
+        self,
+        info: QuasiNewtonStepInfo[
+            FirstOrderFunctionProto, FirstOrderOracle[FirstOrderFunctionProto]
+        ],
+    ) -> Matrix:
         if info.k == 0:
             if info.H is None:
                 logger.debug("Initialising Hessian inverse approximation to identity.")

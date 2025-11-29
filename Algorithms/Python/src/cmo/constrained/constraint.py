@@ -42,10 +42,10 @@ class ConstraintType(Enum):
                 raise ValueError(f"Unknown constraint type: {self}")
 
 
-class AbstractConstraint[T: ConstraintType](ABC):
+class AbstractConstraint[C: ConstraintType](ABC):
     """A base class for constraints."""
 
-    ctype: T
+    ctype: C
     """The type of the constraint."""
 
     @abstractmethod
@@ -75,7 +75,7 @@ class AbstractConstraint[T: ConstraintType](ABC):
         }
 
 
-class SingleConstraint[T: ConstraintType](AbstractConstraint[T], ABC):
+class SingleConstraint[C: ConstraintType](AbstractConstraint[C], ABC):
     """A class representing a single constraint."""
 
     @abstractmethod
@@ -97,10 +97,10 @@ class SingleConstraint[T: ConstraintType](AbstractConstraint[T], ABC):
             return abs(self.residual(x)) <= tol
 
 
-class MultiConstraint[T: ConstraintType](AbstractConstraint[T], ABC):
+class MultiConstraint[C: ConstraintType](AbstractConstraint[C], ABC):
     """A class representing multiple (similar) constraints."""
 
-    constraints: Sequence[SingleConstraint[T]]
+    constraints: Sequence[SingleConstraint[C]]
     """The sequence of constraints."""
 
     @abstractmethod
@@ -117,7 +117,7 @@ class MultiConstraint[T: ConstraintType](AbstractConstraint[T], ABC):
 
     def active_set(
         self, x: Vector, tol: Scalar = 1e-8
-    ) -> Sequence[SingleConstraint[T]]:
+    ) -> Sequence[SingleConstraint[C]]:
         """Returns the set of active constraints at point `x` within a tolerance."""
         return [c for c in self.constraints if c.is_active(x, tol)]
 
@@ -162,7 +162,7 @@ class UpperBoundConstraint(
         return bool(np.all(x <= self.ub))
 
 
-class LinearConstraint[T: ConstraintType](SingleConstraint[T]):
+class LinearConstraint[C: ConstraintType](SingleConstraint[C]):
     """A single linear constraint with residual `(a^T x - b)`."""
 
     def __init__(self, a: Vector, b: Scalar) -> None:
@@ -199,10 +199,10 @@ class LinearEqualityConstraint(LinearConstraint[Literal[ConstraintType.EQUALITY]
         return self._project(x)
 
 
-class LinearConstraintSet[T: ConstraintType](MultiConstraint[T]):
+class LinearConstraintSet[C: ConstraintType](MultiConstraint[C]):
     """A collection of linear constraints of the form `Ax <= b` or `Ax = b`."""
 
-    constraint: type[LinearConstraint[T]]
+    constraint: type[LinearConstraint[C]]
 
     def __init__(self, A: Matrix, b: Vector) -> None:
         self.A = Matrix(A)

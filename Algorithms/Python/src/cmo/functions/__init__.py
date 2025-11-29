@@ -2,11 +2,6 @@
 Optimisation functions
 =======
 src/cmo/functions/__init__.py
-
-References
--------
-- https://www.sfu.ca/~ssurjano/optimization.html
-- https://en.wikipedia.org/wiki/Test_functions_for_optimization
 """
 
 from cmo.functions.base import ConvexQuadratic, Function, LinearFunction

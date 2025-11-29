@@ -14,6 +14,7 @@ from cmo.core.info import ActiveSetStepInfo, StepInfo
 from cmo.core.oracle import FirstOrderOracle, Oracle
 from cmo.core.stopping import StoppingCriterion, StoppingCriterionType
 from cmo.functions import ConvexQuadratic
+from cmo.functions.protocol import FunctionProto
 from cmo.problems import (
     EqualityConstrainedQuadraticProgram,
     InequalityConstrainedQuadraticProgram,
@@ -21,7 +22,11 @@ from cmo.problems import (
 from cmo.types import Matrix, Scalar, Vector, dtype
 
 
-class ConstrainedOptimiser[O: Oracle, T: StepInfo[Any]](IterativeOptimiser[O, T], ABC):
+class ConstrainedOptimiser[
+    F: FunctionProto,
+    O: Oracle[Any],
+    S: StepInfo[Any, Any],
+](IterativeOptimiser[F, O, S], ABC):
     """Base class for iterative constrained optimisers."""
 
 
@@ -74,15 +79,23 @@ class EQPSolver:
 
 
 class ActiveSetMethod(
-    FirstOrderLineSearchOptimiser[FirstOrderOracle, ActiveSetStepInfo[FirstOrderOracle]]
+    FirstOrderLineSearchOptimiser[
+        ConvexQuadratic,
+        FirstOrderOracle[ConvexQuadratic],
+        ActiveSetStepInfo[ConvexQuadratic, FirstOrderOracle[ConvexQuadratic]],
+    ]
 ):
     """Active set method for quadratic programs."""
 
-    StepInfoClass = ActiveSetStepInfo[FirstOrderOracle]
+    StepInfoClass = ActiveSetStepInfo[
+        ConvexQuadratic, FirstOrderOracle[ConvexQuadratic]
+    ]
 
     def __init__(
         self,
-        problem: InequalityConstrainedQuadraticProgram[FirstOrderOracle],
+        problem: InequalityConstrainedQuadraticProgram[
+            FirstOrderOracle[ConvexQuadratic]
+        ],
         **kwargs: Any,
     ) -> None:
         self.problem = problem
@@ -91,9 +104,19 @@ class ActiveSetMethod(
     @property
     def stopping(
         self,
-    ) -> list[StoppingCriterionType[ActiveSetStepInfo[FirstOrderOracle]]]:
+    ) -> list[
+        StoppingCriterionType[
+            ConvexQuadratic,
+            FirstOrderOracle[ConvexQuadratic],
+            ActiveSetStepInfo[ConvexQuadratic, FirstOrderOracle[ConvexQuadratic]],
+        ]
+    ]:
         class ActiveSetStoppingCriterion(
-            StoppingCriterion[ActiveSetStepInfo[FirstOrderOracle]]
+            StoppingCriterion[
+                ConvexQuadratic,
+                FirstOrderOracle[ConvexQuadratic],
+                ActiveSetStepInfo[ConvexQuadratic, FirstOrderOracle[ConvexQuadratic]],
+            ]
         ):
             """
             Stops when all the Lagrange multipliers associated with the active constraints are non-negative.
@@ -101,7 +124,12 @@ class ActiveSetMethod(
             `mu_i >= 0 for all i in W_k`
             """
 
-            def check(self, info: ActiveSetStepInfo[FirstOrderOracle]) -> bool:
+            def check(
+                self,
+                info: ActiveSetStepInfo[
+                    ConvexQuadratic, FirstOrderOracle[ConvexQuadratic]
+                ],
+            ) -> bool:
                 v = info.direction
                 if v is None:
                     return False
@@ -124,13 +152,16 @@ class ActiveSetMethod(
 
         return super().stopping + [ActiveSetStoppingCriterion()]
 
-    def direction(self, info: ActiveSetStepInfo[FirstOrderOracle]) -> Vector:
-        if not isinstance(info.oracle._oracle_f, ConvexQuadratic):
+    def direction(
+        self,
+        info: ActiveSetStepInfo[ConvexQuadratic, FirstOrderOracle[ConvexQuadratic]],
+    ) -> Vector:
+        if not isinstance(info.oracle.func, ConvexQuadratic):
             raise NotImplementedError(
                 f"This implementation of {self.__class__.__name__} requires a ConvexQuadratic Function."
             )
 
-        Q: Matrix = info.oracle._oracle_f.Q
+        Q: Matrix = info.oracle.func.Q
         h: Vector = info.dfx
         dim: int = Q.shape[0]
         objective = ConvexQuadratic(dim=dim, Q=Q, h=h)
@@ -146,7 +177,7 @@ class ActiveSetMethod(
         constraint = LinearEqualityConstraintSet(A_eq, b_eq)
 
         ceqp = EqualityConstrainedQuadraticProgram(
-            objective, FirstOrderOracle, constraint
+            objective, FirstOrderOracle[ConvexQuadratic], constraint
         )
         v, mu = EQPSolver().solve(ceqp)
         info.mu = mu
@@ -158,7 +189,10 @@ class ActiveSetMethod(
                 info.relax = W[idx]
         return v
 
-    def step_length(self, info: ActiveSetStepInfo[FirstOrderOracle]) -> Scalar:
+    def step_length(
+        self,
+        info: ActiveSetStepInfo[ConvexQuadratic, FirstOrderOracle[ConvexQuadratic]],
+    ) -> Scalar:
         v = info.ensure(info.direction, message="Direction has not been computed.")
         if np.allclose(v, 0):
             return 0
@@ -188,8 +222,9 @@ class ActiveSetMethod(
         return alpha
 
     def step(
-        self, info: ActiveSetStepInfo[FirstOrderOracle]
-    ) -> ActiveSetStepInfo[FirstOrderOracle]:
+        self,
+        info: ActiveSetStepInfo[ConvexQuadratic, FirstOrderOracle[ConvexQuadratic]],
+    ) -> ActiveSetStepInfo[ConvexQuadratic, FirstOrderOracle[ConvexQuadratic]]:
         info_next = super().step(info)
         info.W = info.ensure(info.W, message="Active set W has not been initialised.")
         info_next.W = info.W.copy()

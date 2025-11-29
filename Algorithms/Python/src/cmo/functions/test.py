@@ -1,7 +1,12 @@
 """
 Optimisation test problems
 =======
-src/cmo/functions.py
+src/cmo/functions/test.py
+
+References
+-------
+- https://www.sfu.ca/~ssurjano/optimization.html
+- https://en.wikipedia.org/wiki/Test_functions_for_optimization
 """
 
 import numpy as np
