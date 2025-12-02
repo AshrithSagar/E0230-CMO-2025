@@ -14,7 +14,7 @@ from cmo.core.info import ActiveSetStepInfo, StepInfo
 from cmo.core.oracle import FirstOrderOracle, Oracle
 from cmo.core.stopping import StoppingCriterion, StoppingCriterionType
 from cmo.functions import ConvexQuadratic
-from cmo.functions.protocol import FunctionProto
+from cmo.functions.protocol import ZeroOrderFunctionProto
 from cmo.problems import (
     EqualityConstrainedQuadraticProgram,
     InequalityConstrainedQuadraticProgram,
@@ -23,10 +23,8 @@ from cmo.types import Matrix, Scalar, Vector, dtype
 
 
 class ConstrainedOptimiser[
-    F: FunctionProto,
-    O: Oracle[Any],
-    S: StepInfo[Any, Any],
-](IterativeOptimiser[F, O, S], ABC):
+    S: StepInfo[Oracle[ZeroOrderFunctionProto]],
+](IterativeOptimiser[S], ABC):
     """Base class for iterative constrained optimisers."""
 
 
@@ -79,17 +77,11 @@ class EQPSolver:
 
 
 class ActiveSetMethod(
-    FirstOrderLineSearchOptimiser[
-        ConvexQuadratic,
-        FirstOrderOracle[ConvexQuadratic],
-        ActiveSetStepInfo[ConvexQuadratic, FirstOrderOracle[ConvexQuadratic]],
-    ]
+    FirstOrderLineSearchOptimiser[ActiveSetStepInfo[FirstOrderOracle[ConvexQuadratic]]]
 ):
     """Active set method for quadratic programs."""
 
-    StepInfoClass = ActiveSetStepInfo[
-        ConvexQuadratic, FirstOrderOracle[ConvexQuadratic]
-    ]
+    StepInfoClass = ActiveSetStepInfo[FirstOrderOracle[ConvexQuadratic]]
 
     def __init__(
         self,
@@ -105,18 +97,10 @@ class ActiveSetMethod(
     def stopping(
         self,
     ) -> list[
-        StoppingCriterionType[
-            ConvexQuadratic,
-            FirstOrderOracle[ConvexQuadratic],
-            ActiveSetStepInfo[ConvexQuadratic, FirstOrderOracle[ConvexQuadratic]],
-        ]
+        StoppingCriterionType[ActiveSetStepInfo[FirstOrderOracle[ConvexQuadratic]]]
     ]:
         class ActiveSetStoppingCriterion(
-            StoppingCriterion[
-                ConvexQuadratic,
-                FirstOrderOracle[ConvexQuadratic],
-                ActiveSetStepInfo[ConvexQuadratic, FirstOrderOracle[ConvexQuadratic]],
-            ]
+            StoppingCriterion[ActiveSetStepInfo[FirstOrderOracle[ConvexQuadratic]]]
         ):
             """
             Stops when all the Lagrange multipliers associated with the active constraints are non-negative.
@@ -125,10 +109,7 @@ class ActiveSetMethod(
             """
 
             def check(
-                self,
-                info: ActiveSetStepInfo[
-                    ConvexQuadratic, FirstOrderOracle[ConvexQuadratic]
-                ],
+                self, info: ActiveSetStepInfo[FirstOrderOracle[ConvexQuadratic]]
             ) -> bool:
                 v = info.direction
                 if v is None:
@@ -153,8 +134,7 @@ class ActiveSetMethod(
         return super().stopping + [ActiveSetStoppingCriterion()]
 
     def direction(
-        self,
-        info: ActiveSetStepInfo[ConvexQuadratic, FirstOrderOracle[ConvexQuadratic]],
+        self, info: ActiveSetStepInfo[FirstOrderOracle[ConvexQuadratic]]
     ) -> Vector:
         if not isinstance(info.oracle.func, ConvexQuadratic):
             raise NotImplementedError(
@@ -190,8 +170,7 @@ class ActiveSetMethod(
         return v
 
     def step_length(
-        self,
-        info: ActiveSetStepInfo[ConvexQuadratic, FirstOrderOracle[ConvexQuadratic]],
+        self, info: ActiveSetStepInfo[FirstOrderOracle[ConvexQuadratic]]
     ) -> Scalar:
         v = info.ensure(info.direction, message="Direction has not been computed.")
         if np.allclose(v, 0):
@@ -222,9 +201,8 @@ class ActiveSetMethod(
         return alpha
 
     def step(
-        self,
-        info: ActiveSetStepInfo[ConvexQuadratic, FirstOrderOracle[ConvexQuadratic]],
-    ) -> ActiveSetStepInfo[ConvexQuadratic, FirstOrderOracle[ConvexQuadratic]]:
+        self, info: ActiveSetStepInfo[FirstOrderOracle[ConvexQuadratic]]
+    ) -> ActiveSetStepInfo[FirstOrderOracle[ConvexQuadratic]]:
         info_next = super().step(info)
         info.W = info.ensure(info.W, message="Active set W has not been initialised.")
         info_next.W = info.W.copy()

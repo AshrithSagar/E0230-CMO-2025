@@ -6,9 +6,18 @@ src/cmo/core/info.py
 
 import inspect
 from dataclasses import dataclass, field, fields
-from typing import Any, Optional
+from typing import Generic, Optional, TypeVar
 
-from cmo.core.oracle import FirstOrderOracle, Oracle, SecondOrderOracle, ZeroOrderOracle
+from cmo.core.oracle import (
+    FirstOrderOracle,
+    FirstOrderOracleT_co,
+    Oracle,
+    OracleT_co,
+    SecondOrderOracle,
+    SecondOrderOracleT_co,
+    ZeroOrderOracle,
+    ZeroOrderOracleT_co,
+)
 from cmo.functions.protocol import (
     FirstOrderFunctionProto,
     FunctionProto,
@@ -21,7 +30,7 @@ from cmo.utils.logging import logger
 
 
 @dataclass
-class StepInfo[F: FunctionProto, O: Oracle[Any]]:
+class StepInfo(Generic[OracleT_co]):
     """A dataclass for the state of the algorithm at iteration `k`."""
 
     k: int
@@ -30,7 +39,7 @@ class StepInfo[F: FunctionProto, O: Oracle[Any]]:
     x: Vector
     """The current point `x_k` in the input space."""
 
-    oracle: O
+    oracle: OracleT_co  # type: ignore[misc]
     """The oracle function used to evaluate `f`."""
 
     def to_str(self, spacing: str | int = 2, prefix: str | int = 0) -> str:
@@ -96,10 +105,7 @@ class StepInfo[F: FunctionProto, O: Oracle[Any]]:
 
 
 @dataclass
-class ZeroOrderStepInfo[
-    F: ZeroOrderFunctionProto,
-    O: ZeroOrderOracle[Any],
-](StepInfo[F, O]):
+class ZeroOrderStepInfo(StepInfo[ZeroOrderOracleT_co], Generic[ZeroOrderOracleT_co]):
     _fx: Optional[Scalar] = field(init=False, default=None)
     """Internal function value at `x_k`."""
 
@@ -121,10 +127,9 @@ class ZeroOrderStepInfo[
 
 
 @dataclass
-class FirstOrderStepInfo[
-    F: FirstOrderFunctionProto,
-    O: FirstOrderOracle[Any],
-](ZeroOrderStepInfo[F, O]):
+class FirstOrderStepInfo(
+    ZeroOrderStepInfo[FirstOrderOracleT_co], Generic[FirstOrderOracleT_co]
+):
     _dfx: Optional[Vector] = field(init=False, default=None)
     """Internal gradient at `x_k`."""
 
@@ -144,10 +149,9 @@ class FirstOrderStepInfo[
 
 
 @dataclass
-class SecondOrderStepInfo[
-    F: SecondOrderFunctionProto,
-    O: SecondOrderOracle[Any],
-](FirstOrderStepInfo[F, O]):
+class SecondOrderStepInfo(
+    FirstOrderStepInfo[SecondOrderOracleT_co], Generic[SecondOrderOracleT_co]
+):
     _d2fx: Optional[Matrix] = field(init=False, default=None)
     """Internal Hessian at `x_k`."""
 
@@ -167,40 +171,42 @@ class SecondOrderStepInfo[
 
 
 @dataclass
-class LineSearchStepInfo[F: FunctionProto, O: Oracle[Any]](StepInfo[F, O]):
+class LineSearchStepInfo(StepInfo[OracleT_co], Generic[OracleT_co]):
     direction: Optional[Vector] = None
     alpha: Optional[Scalar] = None
 
 
 @dataclass
-class ZeroOrderLineSearchStepInfo[
-    F: ZeroOrderFunctionProto,
-    O: ZeroOrderOracle[Any],
-](ZeroOrderStepInfo[F, O], LineSearchStepInfo[F, O]):
+class ZeroOrderLineSearchStepInfo(
+    ZeroOrderStepInfo[ZeroOrderOracleT_co],
+    LineSearchStepInfo[ZeroOrderOracleT_co],
+    Generic[ZeroOrderOracleT_co],
+):
     pass  # All attributes and methods are provided by the parent classes
 
 
 @dataclass
-class FirstOrderLineSearchStepInfo[
-    F: FirstOrderFunctionProto,
-    O: FirstOrderOracle[Any],
-](FirstOrderStepInfo[F, O], ZeroOrderLineSearchStepInfo[F, O]):
+class FirstOrderLineSearchStepInfo(
+    FirstOrderStepInfo[FirstOrderOracleT_co],
+    ZeroOrderLineSearchStepInfo[FirstOrderOracleT_co],
+    Generic[FirstOrderOracleT_co],
+):
     pass  # All attributes and methods are provided by the parent classes
 
 
 @dataclass
-class SecondOrderLineSearchStepInfo[
-    F: SecondOrderFunctionProto,
-    O: SecondOrderOracle[Any],
-](SecondOrderStepInfo[F, O], FirstOrderLineSearchStepInfo[F, O]):
+class SecondOrderLineSearchStepInfo(
+    SecondOrderStepInfo[SecondOrderOracleT_co],
+    FirstOrderLineSearchStepInfo[SecondOrderOracleT_co],
+    Generic[SecondOrderOracleT_co],
+):
     pass  # All attributes and methods are provided by the parent classes
 
 
 @dataclass
-class QuasiNewtonStepInfo[
-    F: FirstOrderFunctionProto,
-    O: FirstOrderOracle[Any],
-](FirstOrderLineSearchStepInfo[F, O]):
+class QuasiNewtonStepInfo(
+    FirstOrderLineSearchStepInfo[FirstOrderOracleT_co], Generic[FirstOrderOracleT_co]
+):
     H: Optional[Matrix] = None
     """Approximate inverse Hessian matrix at iteration `k`."""
 
@@ -220,10 +226,9 @@ class QuasiNewtonStepInfo[
 
 
 @dataclass
-class ActiveSetStepInfo[
-    F: FirstOrderFunctionProto,
-    O: FirstOrderOracle[Any],
-](FirstOrderLineSearchStepInfo[F, O]):
+class ActiveSetStepInfo(
+    FirstOrderLineSearchStepInfo[FirstOrderOracleT_co], Generic[FirstOrderOracleT_co]
+):
     W: Optional[list[int]] = None
     """Indices of the active constraints at iteration `k`."""
 
@@ -238,7 +243,7 @@ class ActiveSetStepInfo[
 
 
 @dataclass(kw_only=True)
-class RunInfo[F: FunctionProto, O: Oracle[Any], S: StepInfo[Any, Any]]:
+class RunInfo[S: StepInfo[Oracle[FunctionProto]]]:
     """
     A dataclass that holds information about the optimisation run.
     - 'x0': Initial point.
@@ -284,3 +289,55 @@ class RunInfo[F: FunctionProto, O: Oracle[Any], S: StepInfo[Any, Any]]:
         if spec.isdigit():
             return self.to_str(spacing=int(spec))
         return self.to_str()
+
+
+StepInfoT_co = TypeVar(
+    "StepInfoT_co",
+    bound=StepInfo[Oracle[FunctionProto]],
+    covariant=True,
+)
+ZeroOrderStepInfoT_co = TypeVar(
+    "ZeroOrderStepInfoT_co",
+    bound=ZeroOrderStepInfo[ZeroOrderOracle[ZeroOrderFunctionProto]],
+    covariant=True,
+)
+FirstOrderStepInfoT_co = TypeVar(
+    "FirstOrderStepInfoT_co",
+    bound=FirstOrderStepInfo[FirstOrderOracle[FirstOrderFunctionProto]],
+    covariant=True,
+)
+SecondOrderStepInfoT_co = TypeVar(
+    "SecondOrderStepInfoT_co",
+    bound=SecondOrderStepInfo[SecondOrderOracle[SecondOrderFunctionProto]],
+    covariant=True,
+)
+LineSearchStepInfoT_co = TypeVar(
+    "LineSearchStepInfoT_co",
+    bound=LineSearchStepInfo[Oracle[FunctionProto]],
+    covariant=True,
+)
+ZeroOrderLineSearchStepInfoT_co = TypeVar(
+    "ZeroOrderLineSearchStepInfoT_co",
+    bound=ZeroOrderLineSearchStepInfo[ZeroOrderOracle[ZeroOrderFunctionProto]],
+    covariant=True,
+)
+FirstOrderLineSearchStepInfoT_co = TypeVar(
+    "FirstOrderLineSearchStepInfoT_co",
+    bound=FirstOrderLineSearchStepInfo[FirstOrderOracle[FirstOrderFunctionProto]],
+    covariant=True,
+)
+SecondOrderLineSearchStepInfoT_co = TypeVar(
+    "SecondOrderLineSearchStepInfoT_co",
+    bound=SecondOrderLineSearchStepInfo[SecondOrderOracle[SecondOrderFunctionProto]],
+    covariant=True,
+)
+QuasiNewtonStepInfoT_co = TypeVar(
+    "QuasiNewtonStepInfoT_co",
+    bound=QuasiNewtonStepInfo[FirstOrderOracle[FirstOrderFunctionProto]],
+    covariant=True,
+)
+ActiveSetStepInfoT_co = TypeVar(
+    "ActiveSetStepInfoT_co",
+    bound=ActiveSetStepInfo[FirstOrderOracle[FirstOrderFunctionProto]],
+    covariant=True,
+)

@@ -5,7 +5,7 @@ src/cmo/core/stopping.py
 """
 
 from abc import ABC, abstractmethod
-from typing import Any, Iterable, Union
+from typing import Iterable, Union
 
 import numpy as np
 
@@ -19,17 +19,13 @@ from cmo.functions.protocol import (
 from cmo.types import Scalar
 from cmo.utils.logging import logger
 
-type StoppingCriterionType[F: FunctionProto, O: Oracle[Any], S: StepInfo[Any, Any]] = (
-    Union[
-        "StoppingCriterion[F, O, S]",
-        "CompositeCriterion",
-        Iterable["StoppingCriterion[F, O, S]"],
-    ]
-)
+type StoppingCriterionType[S: StepInfo[Oracle[FunctionProto]]] = Union[
+    "StoppingCriterion[S]", "CompositeCriterion[S]", Iterable["StoppingCriterion[S]"]
+]
 """Generic type alias for stopping criteria."""
 
 
-class StoppingCriterion[F: FunctionProto, O: Oracle[Any], S: StepInfo[Any, Any]](ABC):
+class StoppingCriterion[S: StepInfo[Oracle[FunctionProto]]](ABC):
     """An abstract base class to encapsulate various stopping criteria for iterative algorithms."""
 
     def reset(self) -> None:
@@ -55,16 +51,12 @@ class StoppingCriterion[F: FunctionProto, O: Oracle[Any], S: StepInfo[Any, Any]]
         return f"{name}({params})"
 
 
-class CompositeCriterion[
-    F: FunctionProto,
-    O: Oracle[Any],
-    S: StepInfo[Any, Any],
-](StoppingCriterion[F, O, S]):
+class CompositeCriterion[S: StepInfo[Oracle[FunctionProto]]](StoppingCriterion[S]):
     """
     Combines multiple stopping criteria. Stops when any one of the criteria is met.
     """
 
-    def __init__(self, criteria: Iterable[StoppingCriterion[F, O, S]]) -> None:
+    def __init__(self, criteria: Iterable[StoppingCriterion[S]]) -> None:
         self.criteria = criteria
         """Iterable of stopping criteria."""
 
@@ -79,11 +71,7 @@ class CompositeCriterion[
         return any(criterion.check(info) for criterion in self.criteria)
 
 
-class MaxIterationsCriterion[
-    F: FunctionProto,
-    O: Oracle[Any],
-    S: StepInfo[Any, Any],
-](StoppingCriterion[F, O, S]):
+class MaxIterationsCriterion[S: StepInfo[Oracle[FunctionProto]]](StoppingCriterion[S]):
     """
     Stops when the maximum number of iterations is reached.
 
@@ -99,10 +87,8 @@ class MaxIterationsCriterion[
 
 
 class GradientNormCriterion[
-    F: FirstOrderFunctionProto,
-    O: FirstOrderOracle[Any],
-    S: FirstOrderStepInfo[Any, Any],
-](StoppingCriterion[F, O, S]):
+    S: FirstOrderStepInfo[FirstOrderOracle[FirstOrderFunctionProto]]
+](StoppingCriterion[S]):
     """
     Stops when the gradient norm is below a specified tolerance.
 
@@ -118,10 +104,8 @@ class GradientNormCriterion[
 
 
 class FunctionValueCriterion[
-    F: ZeroOrderFunctionProto,
-    O: ZeroOrderOracle[Any],
-    S: ZeroOrderStepInfo[Any, Any],
-](StoppingCriterion[F, O, S]):
+    S: ZeroOrderStepInfo[ZeroOrderOracle[ZeroOrderFunctionProto]]
+](StoppingCriterion[S]):
     """
     Stops when the function value is below a specified tolerance.
 

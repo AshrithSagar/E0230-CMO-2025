@@ -4,22 +4,26 @@ Oracle utils
 src/cmo/core/oracle.py
 """
 
-from typing import Self
+from typing import Generic, Self, TypeVar
 
 from cmo.functions.protocol import (
     FirstOrderFunctionProto,
+    FirstOrderFunctionProtoT_co,
     FunctionProto,
+    FunctionProtoT_co,
     SecondOrderFunctionProto,
+    SecondOrderFunctionProtoT_co,
     ZeroOrderFunctionProto,
+    ZeroOrderFunctionProtoT_co,
 )
 from cmo.types import Matrix, Scalar, Vector
 from cmo.utils.logging import logger
 
 
-class Oracle[F: FunctionProto]:
+class Oracle(Generic[FunctionProtoT_co]):
     """A base class for oracles."""
 
-    def __init__(self, func: F) -> None:
+    def __init__(self, func: FunctionProtoT_co) -> None:
         self.func = func
         """The objective function `f(x)`."""
 
@@ -39,10 +43,10 @@ class Oracle[F: FunctionProto]:
         return self
 
 
-class ZeroOrderOracle[F: ZeroOrderFunctionProto](Oracle[F]):
+class ZeroOrderOracle(Oracle[ZeroOrderFunctionProtoT_co]):
     """`f = oracle(x)`"""
 
-    def __init__(self, func: F) -> None:
+    def __init__(self, func: ZeroOrderFunctionProtoT_co) -> None:
         super().__init__(func)
 
         self.eval_call_count: int = 0
@@ -58,10 +62,10 @@ class ZeroOrderOracle[F: ZeroOrderFunctionProto](Oracle[F]):
         return super().reset()
 
 
-class FirstOrderOracle[F: FirstOrderFunctionProto](ZeroOrderOracle[F]):
+class FirstOrderOracle(ZeroOrderOracle[FirstOrderFunctionProtoT_co]):
     """`f(x), f'(x) = oracle(x)`"""
 
-    def __init__(self, func: F) -> None:
+    def __init__(self, func: FirstOrderFunctionProtoT_co) -> None:
         super().__init__(func)
         self.grad_call_count: int = 0
         """Tracks the number of gradient evaluations."""
@@ -76,10 +80,10 @@ class FirstOrderOracle[F: FirstOrderFunctionProto](ZeroOrderOracle[F]):
         return super().reset()
 
 
-class SecondOrderOracle[F: SecondOrderFunctionProto](FirstOrderOracle[F]):
+class SecondOrderOracle(FirstOrderOracle[SecondOrderFunctionProtoT_co]):
     """`f(x), f'(x), f''(x) = oracle(x)`"""
 
-    def __init__(self, func: F) -> None:
+    def __init__(self, func: SecondOrderFunctionProtoT_co) -> None:
         super().__init__(func)
         self.hess_call_count: int = 0
         """Tracks the number of Hessian evaluations."""
@@ -92,3 +96,25 @@ class SecondOrderOracle[F: SecondOrderFunctionProto](FirstOrderOracle[F]):
     def reset(self) -> Self:
         self.hess_call_count = 0
         return super().reset()
+
+
+OracleT_co = TypeVar(
+    "OracleT_co",
+    bound=Oracle[FunctionProto],
+    covariant=True,
+)
+ZeroOrderOracleT_co = TypeVar(
+    "ZeroOrderOracleT_co",
+    bound=ZeroOrderOracle[ZeroOrderFunctionProto],
+    covariant=True,
+)
+FirstOrderOracleT_co = TypeVar(
+    "FirstOrderOracleT_co",
+    bound=FirstOrderOracle[FirstOrderFunctionProto],
+    covariant=True,
+)
+SecondOrderOracleT_co = TypeVar(
+    "SecondOrderOracleT_co",
+    bound=SecondOrderOracle[SecondOrderFunctionProto],
+    covariant=True,
+)

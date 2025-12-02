@@ -21,10 +21,8 @@ from cmo.types import Scalar, dtype
 
 
 class ArmijoMixin[
-    F: FirstOrderFunctionProto,
-    O: FirstOrderOracle[Any],
-    S: FirstOrderLineSearchStepInfo[Any, Any],
-](FirstOrderLineSearchOptimiser[F, O, S], ABC):
+    S: FirstOrderLineSearchStepInfo[FirstOrderOracle[FirstOrderFunctionProto]]
+](FirstOrderLineSearchOptimiser[S], ABC):
     """
     A mixin class that provides the forward-expansion Armijo line search step length strategy.\\
     Increase alpha until Armijo condition holds (or until safe cap).
@@ -91,10 +89,8 @@ class ArmijoMixin[
 
 
 class BacktrackingMixin[
-    F: FirstOrderFunctionProto,
-    O: FirstOrderOracle[Any],
-    S: FirstOrderLineSearchStepInfo[Any, Any],
-](FirstOrderLineSearchOptimiser[F, O, S], ABC):
+    S: FirstOrderLineSearchStepInfo[FirstOrderOracle[FirstOrderFunctionProto]]
+](FirstOrderLineSearchOptimiser[S], ABC):
     """
     A mixin class for the standard backtracking Armijo (decreasing alpha).
     """
@@ -153,10 +149,8 @@ class BacktrackingMixin[
 
 
 class ArmijoGoldsteinMixin[
-    F: FirstOrderFunctionProto,
-    O: FirstOrderOracle[Any],
-    S: FirstOrderLineSearchStepInfo[Any, Any],
-](FirstOrderLineSearchOptimiser[F, O, S], ABC):
+    S: FirstOrderLineSearchStepInfo[FirstOrderOracle[FirstOrderFunctionProto]]
+](FirstOrderLineSearchOptimiser[S], ABC):
     """
     A mixin class for Armijo-Goldstein via expansion to bracket and then bisection.
 
@@ -245,10 +239,8 @@ class ArmijoGoldsteinMixin[
 
 
 class StrongWolfeMixin[
-    F: FirstOrderFunctionProto,
-    O: FirstOrderOracle[Any],
-    S: FirstOrderLineSearchStepInfo[Any, Any],
-](FirstOrderLineSearchOptimiser[F, O, S], ABC):
+    S: FirstOrderLineSearchStepInfo[FirstOrderOracle[FirstOrderFunctionProto]]
+](FirstOrderLineSearchOptimiser[S], ABC):
     """
     A mixin class for the strong Wolfe line search using bracket + zoom (Nocedal & Wright).
 
@@ -373,11 +365,7 @@ class StrongWolfeMixin[
 
 class GradientDescent(
     SteepestDescentDirectionMixin[
-        FirstOrderFunctionProto,
-        FirstOrderOracle[FirstOrderFunctionProto],
-        FirstOrderLineSearchStepInfo[
-            FirstOrderFunctionProto, FirstOrderOracle[FirstOrderFunctionProto]
-        ],
+        FirstOrderLineSearchStepInfo[FirstOrderOracle[FirstOrderFunctionProto]]
     ]
 ):
     """
@@ -387,7 +375,7 @@ class GradientDescent(
     """
 
     StepInfoClass = FirstOrderLineSearchStepInfo[
-        FirstOrderFunctionProto, FirstOrderOracle[FirstOrderFunctionProto]
+        FirstOrderOracle[FirstOrderFunctionProto]
     ]
 
     def __init__(self, lr: Scalar = 1e-3, **kwargs: Any) -> None:
@@ -397,27 +385,17 @@ class GradientDescent(
 
     def step_length(
         self,
-        info: FirstOrderLineSearchStepInfo[
-            FirstOrderFunctionProto, FirstOrderOracle[FirstOrderFunctionProto]
-        ],
+        info: FirstOrderLineSearchStepInfo[FirstOrderOracle[FirstOrderFunctionProto]],
     ) -> Scalar:
         return self.lr
 
 
 class GradientDescentExactLineSearch(
     SteepestDescentDirectionMixin[
-        FirstOrderFunctionProto,
-        FirstOrderOracle[FirstOrderFunctionProto],
-        FirstOrderLineSearchStepInfo[
-            FirstOrderFunctionProto, FirstOrderOracle[FirstOrderFunctionProto]
-        ],
+        FirstOrderLineSearchStepInfo[FirstOrderOracle[FirstOrderFunctionProto]]
     ],
     ExactLineSearchMixin[
-        FirstOrderFunctionProto,
-        FirstOrderOracle[FirstOrderFunctionProto],
-        FirstOrderLineSearchStepInfo[
-            FirstOrderFunctionProto, FirstOrderOracle[FirstOrderFunctionProto]
-        ],
+        FirstOrderLineSearchStepInfo[FirstOrderOracle[FirstOrderFunctionProto]]
     ],
 ):
     """
@@ -428,7 +406,7 @@ class GradientDescentExactLineSearch(
     """
 
     StepInfoClass = FirstOrderLineSearchStepInfo[
-        FirstOrderFunctionProto, FirstOrderOracle[FirstOrderFunctionProto]
+        FirstOrderOracle[FirstOrderFunctionProto]
     ]
 
     pass  # All methods are provided by the mixins
@@ -436,18 +414,10 @@ class GradientDescentExactLineSearch(
 
 class GradientDescentArmijo(
     SteepestDescentDirectionMixin[
-        FirstOrderFunctionProto,
-        FirstOrderOracle[FirstOrderFunctionProto],
-        FirstOrderLineSearchStepInfo[
-            FirstOrderFunctionProto, FirstOrderOracle[FirstOrderFunctionProto]
-        ],
+        FirstOrderLineSearchStepInfo[FirstOrderOracle[FirstOrderFunctionProto]]
     ],
     ArmijoMixin[
-        FirstOrderFunctionProto,
-        FirstOrderOracle[FirstOrderFunctionProto],
-        FirstOrderLineSearchStepInfo[
-            FirstOrderFunctionProto, FirstOrderOracle[FirstOrderFunctionProto]
-        ],
+        FirstOrderLineSearchStepInfo[FirstOrderOracle[FirstOrderFunctionProto]]
     ],
 ):
     """
@@ -458,7 +428,7 @@ class GradientDescentArmijo(
     """
 
     StepInfoClass = FirstOrderLineSearchStepInfo[
-        FirstOrderFunctionProto, FirstOrderOracle[FirstOrderFunctionProto]
+        FirstOrderOracle[FirstOrderFunctionProto]
     ]
 
     pass  # All methods are provided by the mixins
@@ -466,18 +436,10 @@ class GradientDescentArmijo(
 
 class GradientDescentBacktracking(
     SteepestDescentDirectionMixin[
-        FirstOrderFunctionProto,
-        FirstOrderOracle[FirstOrderFunctionProto],
-        FirstOrderLineSearchStepInfo[
-            FirstOrderFunctionProto, FirstOrderOracle[FirstOrderFunctionProto]
-        ],
+        FirstOrderLineSearchStepInfo[FirstOrderOracle[FirstOrderFunctionProto]]
     ],
     BacktrackingMixin[
-        FirstOrderFunctionProto,
-        FirstOrderOracle[FirstOrderFunctionProto],
-        FirstOrderLineSearchStepInfo[
-            FirstOrderFunctionProto, FirstOrderOracle[FirstOrderFunctionProto]
-        ],
+        FirstOrderLineSearchStepInfo[FirstOrderOracle[FirstOrderFunctionProto]]
     ],
 ):
     """
@@ -485,7 +447,7 @@ class GradientDescentBacktracking(
     """
 
     StepInfoClass = FirstOrderLineSearchStepInfo[
-        FirstOrderFunctionProto, FirstOrderOracle[FirstOrderFunctionProto]
+        FirstOrderOracle[FirstOrderFunctionProto]
     ]
 
     pass  # All methods are provided by the mixins
@@ -493,18 +455,10 @@ class GradientDescentBacktracking(
 
 class GradientDescentArmijoGoldstein(
     SteepestDescentDirectionMixin[
-        FirstOrderFunctionProto,
-        FirstOrderOracle[FirstOrderFunctionProto],
-        FirstOrderLineSearchStepInfo[
-            FirstOrderFunctionProto, FirstOrderOracle[FirstOrderFunctionProto]
-        ],
+        FirstOrderLineSearchStepInfo[FirstOrderOracle[FirstOrderFunctionProto]]
     ],
     ArmijoGoldsteinMixin[
-        FirstOrderFunctionProto,
-        FirstOrderOracle[FirstOrderFunctionProto],
-        FirstOrderLineSearchStepInfo[
-            FirstOrderFunctionProto, FirstOrderOracle[FirstOrderFunctionProto]
-        ],
+        FirstOrderLineSearchStepInfo[FirstOrderOracle[FirstOrderFunctionProto]]
     ],
 ):
     """
@@ -515,7 +469,7 @@ class GradientDescentArmijoGoldstein(
     """
 
     StepInfoClass = FirstOrderLineSearchStepInfo[
-        FirstOrderFunctionProto, FirstOrderOracle[FirstOrderFunctionProto]
+        FirstOrderOracle[FirstOrderFunctionProto]
     ]
 
     pass  # All methods are provided by the mixins
@@ -523,18 +477,10 @@ class GradientDescentArmijoGoldstein(
 
 class GradientDescentWolfe(
     SteepestDescentDirectionMixin[
-        FirstOrderFunctionProto,
-        FirstOrderOracle[FirstOrderFunctionProto],
-        FirstOrderLineSearchStepInfo[
-            FirstOrderFunctionProto, FirstOrderOracle[FirstOrderFunctionProto]
-        ],
+        FirstOrderLineSearchStepInfo[FirstOrderOracle[FirstOrderFunctionProto]]
     ],
     StrongWolfeMixin[
-        FirstOrderFunctionProto,
-        FirstOrderOracle[FirstOrderFunctionProto],
-        FirstOrderLineSearchStepInfo[
-            FirstOrderFunctionProto, FirstOrderOracle[FirstOrderFunctionProto]
-        ],
+        FirstOrderLineSearchStepInfo[FirstOrderOracle[FirstOrderFunctionProto]]
     ],
 ):
     """
@@ -548,7 +494,7 @@ class GradientDescentWolfe(
     """
 
     StepInfoClass = FirstOrderLineSearchStepInfo[
-        FirstOrderFunctionProto, FirstOrderOracle[FirstOrderFunctionProto]
+        FirstOrderOracle[FirstOrderFunctionProto]
     ]
 
     pass  # All methods are provided by the mixins

@@ -28,14 +28,14 @@ def test_rosenbrock() -> None:
     dim = int(2)
     func = Rosenbrock(dim=dim, a=1.0, b=100.0)
     x0 = Vector(np.zeros(dim))
-    criteria: StoppingCriterionType = [  # type: ignore
+    criteria: StoppingCriterionType = [
         MaxIterationsCriterion(maxiter=int(1e6)),
         GradientNormCriterion(tol=1e-6),
     ]
 
     f_oracle = FirstOrderOracle(func)
     s_oracle = SecondOrderOracle(func)
-    runs: list[tuple[IterativeOptimiser, Oracle]] = [  # type: ignore
+    runs: list[tuple[IterativeOptimiser, Oracle]] = [
         (GradientDescent(lr=1e-3), f_oracle),
         (NewtonMethod(), s_oracle),
         (SR1Update(), f_oracle),

@@ -17,7 +17,7 @@ from cmo.core.info import RunInfo, StepInfo
 from cmo.core.oracle import Oracle
 from cmo.core.stopping import StoppingCriterionType
 from cmo.functions import ConvexQuadratic, LinearFunction
-from cmo.functions.protocol import FunctionProto
+from cmo.functions.protocol import FunctionProto, ZeroOrderFunctionProto
 from cmo.types import Vector
 
 
@@ -32,13 +32,13 @@ class AbstractProblem[F: FunctionProto, O: Oracle[Any]]:
 class UnconstrainedProblem[F: FunctionProto, O: Oracle[Any]](AbstractProblem[F, O]):
     """A class representing unconstrained optimisation problems."""
 
-    def solve[S: StepInfo[Any, Any]](
+    def solve[S: StepInfo[Oracle[ZeroOrderFunctionProto]]](
         self,
-        method: IterativeOptimiser[F, O, S],
+        method: IterativeOptimiser[S],
         x0: Vector,
-        criteria: Optional[StoppingCriterionType[F, O, S]] = None,
+        criteria: Optional[StoppingCriterionType[S]] = None,
         show_params: bool = True,
-    ) -> RunInfo[F, O, S]:
+    ) -> RunInfo[S]:
         """Solve the unconstrained optimisation problem."""
         info = method.run(
             oracle_fn=self.oracle, x0=x0, criteria=criteria, show_params=show_params

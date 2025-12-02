@@ -6,7 +6,7 @@ src/cmo/functions/protocol.py
 Protocols for real-valued scalar mathematical functions
 """
 
-from typing import Protocol
+from typing import Protocol, TypeVar
 
 from cmo.types import Matrix, Scalar, Vector
 
@@ -56,3 +56,15 @@ class SupportsFStarProto(Protocol):
     def f_star(self) -> Scalar:
         """The known minimum function value."""
         raise NotImplementedError
+
+
+FunctionProtoT_co = TypeVar("FunctionProtoT_co", bound=FunctionProto, covariant=True)
+ZeroOrderFunctionProtoT_co = TypeVar(
+    "ZeroOrderFunctionProtoT_co", bound=ZeroOrderFunctionProto, covariant=True
+)
+FirstOrderFunctionProtoT_co = TypeVar(
+    "FirstOrderFunctionProtoT_co", bound=FirstOrderFunctionProto, covariant=True
+)
+SecondOrderFunctionProtoT_co = TypeVar(
+    "SecondOrderFunctionProtoT_co", bound=SecondOrderFunctionProto, covariant=True
+)

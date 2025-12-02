@@ -20,18 +20,10 @@ from cmo.utils.logging import logger
 
 class NewtonMethod(
     NewtonDirectionMixin[
-        SecondOrderFunctionProto,
-        SecondOrderOracle[SecondOrderFunctionProto],
-        SecondOrderLineSearchStepInfo[
-            SecondOrderFunctionProto, SecondOrderOracle[SecondOrderFunctionProto]
-        ],
+        SecondOrderLineSearchStepInfo[SecondOrderOracle[SecondOrderFunctionProto]]
     ],
     UnitStepLengthMixin[
-        SecondOrderFunctionProto,
-        SecondOrderOracle[SecondOrderFunctionProto],
-        SecondOrderLineSearchStepInfo[
-            SecondOrderFunctionProto, SecondOrderOracle[SecondOrderFunctionProto]
-        ],
+        SecondOrderLineSearchStepInfo[SecondOrderOracle[SecondOrderFunctionProto]]
     ],
 ):
     """
@@ -41,20 +33,14 @@ class NewtonMethod(
     """
 
     StepInfoClass = SecondOrderLineSearchStepInfo[
-        SecondOrderFunctionProto, SecondOrderOracle[SecondOrderFunctionProto]
+        SecondOrderOracle[SecondOrderFunctionProto]
     ]
 
     pass  # All methods are provided by the mixins
 
 
 class SR1Update(
-    QuasiNewtonOptimiser[
-        FirstOrderFunctionProto,
-        FirstOrderOracle[FirstOrderFunctionProto],
-        QuasiNewtonStepInfo[
-            FirstOrderFunctionProto, FirstOrderOracle[FirstOrderFunctionProto]
-        ],
-    ]
+    QuasiNewtonOptimiser[QuasiNewtonStepInfo[FirstOrderOracle[FirstOrderFunctionProto]]]
 ):
     """
     Symmetric Rank-One (SR1) update for Hessian inverse approximation.
@@ -62,15 +48,10 @@ class SR1Update(
     `H_{k+1} = H_k + ((s_k - H_k y_k)(s_k - H_k y_k)^T) / ((s_k - H_k y_k)^T y_k)`
     """
 
-    StepInfoClass = QuasiNewtonStepInfo[
-        FirstOrderFunctionProto, FirstOrderOracle[FirstOrderFunctionProto]
-    ]
+    StepInfoClass = QuasiNewtonStepInfo[FirstOrderOracle[FirstOrderFunctionProto]]
 
     def hess_inv(
-        self,
-        info: QuasiNewtonStepInfo[
-            FirstOrderFunctionProto, FirstOrderOracle[FirstOrderFunctionProto]
-        ],
+        self, info: QuasiNewtonStepInfo[FirstOrderOracle[FirstOrderFunctionProto]]
     ) -> Matrix:
         if info.k == 0:
             if info.H is None:
@@ -85,13 +66,7 @@ class SR1Update(
 
 
 class DFPUpdate(
-    QuasiNewtonOptimiser[
-        FirstOrderFunctionProto,
-        FirstOrderOracle[FirstOrderFunctionProto],
-        QuasiNewtonStepInfo[
-            FirstOrderFunctionProto, FirstOrderOracle[FirstOrderFunctionProto]
-        ],
-    ]
+    QuasiNewtonOptimiser[QuasiNewtonStepInfo[FirstOrderOracle[FirstOrderFunctionProto]]]
 ):
     """
     Davidon-Fletcher-Powell (DFP) update for Hessian inverse approximation.
@@ -99,15 +74,10 @@ class DFPUpdate(
     `H_{k+1} = H_k + (s_k s_k^T) / (y_k^T s_k) - (H_k y_k y_k^T H_k) / (y_k^T H_k y_k)`
     """
 
-    StepInfoClass = QuasiNewtonStepInfo[
-        FirstOrderFunctionProto, FirstOrderOracle[FirstOrderFunctionProto]
-    ]
+    StepInfoClass = QuasiNewtonStepInfo[FirstOrderOracle[FirstOrderFunctionProto]]
 
     def hess_inv(
-        self,
-        info: QuasiNewtonStepInfo[
-            FirstOrderFunctionProto, FirstOrderOracle[FirstOrderFunctionProto]
-        ],
+        self, info: QuasiNewtonStepInfo[FirstOrderOracle[FirstOrderFunctionProto]]
     ) -> Matrix:
         if info.k == 0:
             if info.H is None:
@@ -124,13 +94,7 @@ class DFPUpdate(
 
 
 class BFGSUpdate(
-    QuasiNewtonOptimiser[
-        FirstOrderFunctionProto,
-        FirstOrderOracle[FirstOrderFunctionProto],
-        QuasiNewtonStepInfo[
-            FirstOrderFunctionProto, FirstOrderOracle[FirstOrderFunctionProto]
-        ],
-    ]
+    QuasiNewtonOptimiser[QuasiNewtonStepInfo[FirstOrderOracle[FirstOrderFunctionProto]]]
 ):
     """
     Broyden-Fletcher-Goldfarb-Shanno (BFGS) update for Hessian inverse approximation.
@@ -138,15 +102,10 @@ class BFGSUpdate(
     `H_{k+1} = (I - (s_k y_k^T) / (y_k^T s_k)) H_k (I - (y_k s_k^T) / (y_k^T s_k)) + (s_k s_k^T) / (y_k^T s_k)`
     """
 
-    StepInfoClass = QuasiNewtonStepInfo[
-        FirstOrderFunctionProto, FirstOrderOracle[FirstOrderFunctionProto]
-    ]
+    StepInfoClass = QuasiNewtonStepInfo[FirstOrderOracle[FirstOrderFunctionProto]]
 
     def hess_inv(
-        self,
-        info: QuasiNewtonStepInfo[
-            FirstOrderFunctionProto, FirstOrderOracle[FirstOrderFunctionProto]
-        ],
+        self, info: QuasiNewtonStepInfo[FirstOrderOracle[FirstOrderFunctionProto]]
     ) -> Matrix:
         if info.k == 0:
             if info.H is None:

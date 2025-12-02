@@ -26,7 +26,7 @@ def test_convex_quadratic() -> None:
     oracle = FirstOrderOracle(func)
     optimiser = ConjugateGradientMethod()
     x0 = Vector(np.zeros(dim))
-    criteria: StoppingCriterionType = [  # type: ignore
+    criteria: StoppingCriterionType = [
         MaxIterationsCriterion(maxiter=int(1e2)),
         GradientNormCriterion(tol=1e-6),
     ]
