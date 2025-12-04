@@ -8,10 +8,10 @@ requires-python = ">=3.14"
 dependencies = ["matplotlib>=3.10.7", "numpy>=2.3.5", "rich>=14.2.0"]
 
 [build-system]
-requires = ["uv_build>=0.9.11,<0.10.0"]
+requires = ["uv_build>=0.9.15,<0.10.0"]
 build-backend = "uv_build"
 
 [dependency-groups]
 dev = ["pytest>=9.0.1", "pytest-memray>=1.8.0"]
-extra = ["cvxpy>=1.7.4", "scipy>=1.16.3", "scipy-stubs>=1.16.3.1"]
+extra = ["cvxpy>=1.7.4", "scipy>=1.16.3", "scipy-stubs>=1.16.3.2"]
 notebook = ["jupyter>=1.1.1"]
