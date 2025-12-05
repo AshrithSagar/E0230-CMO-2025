@@ -5,7 +5,8 @@ src/cmo/core/info.py
 """
 
 import inspect
-from dataclasses import dataclass, field, fields
+from dataclasses import dataclass, fields
+from functools import cached_property
 from typing import Generic, Optional, TypeVar
 
 from cmo.core.oracle import (
@@ -106,18 +107,14 @@ class StepInfo(Generic[OracleT_co]):
 
 @dataclass
 class ZeroOrderStepInfo(StepInfo[ZeroOrderOracleT_co], Generic[ZeroOrderOracleT_co]):
-    _fx: Optional[Scalar] = field(init=False, default=None)
-    """Internal function value at `x_k`."""
-
-    @property
+    @cached_property
     def fx(self) -> Scalar:
         """The function value `f(x_k)` at the current point."""
-        if self._fx is None:
-            self._fx = self.eval(self.x)
-            logger.debug(
-                f"=> Function value [bold magenta]\U0001d453(\U0001d431{format_subscript(self.k)})[/] = {format_value(self._fx)}"
-            )
-        return self._fx
+        _fx = self.eval(self.x)
+        logger.debug(
+            f"=> Function value [bold magenta]\U0001d453(\U0001d431{format_subscript(self.k)})[/] = {format_value(_fx)}"
+        )
+        return _fx
 
     def eval(self, x: Vector) -> Scalar:
         logger.debug(
@@ -130,18 +127,14 @@ class ZeroOrderStepInfo(StepInfo[ZeroOrderOracleT_co], Generic[ZeroOrderOracleT_
 class FirstOrderStepInfo(
     ZeroOrderStepInfo[FirstOrderOracleT_co], Generic[FirstOrderOracleT_co]
 ):
-    _dfx: Optional[Vector] = field(init=False, default=None)
-    """Internal gradient at `x_k`."""
-
-    @property
+    @cached_property
     def dfx(self) -> Vector:
         """The gradient `f'(x_k)` at the current point."""
-        if self._dfx is None:
-            self._dfx = self.grad(self.x)
-            logger.debug(
-                f"=> Gradient [bold magenta]\U0001d6c1\U0001d453(\U0001d431{format_subscript(self.k)})[/] = {format_value(self._dfx, sep=', ')}"
-            )
-        return self._dfx
+        _dfx = self.grad(self.x)
+        logger.debug(
+            f"=> Gradient [bold magenta]\U0001d6c1\U0001d453(\U0001d431{format_subscript(self.k)})[/] = {format_value(_dfx, sep=', ')}"
+        )
+        return _dfx
 
     def grad(self, x: Vector) -> Vector:
         logger.debug(f"Computing gradient at \U0001d431 = {format_value(x, sep=', ')}")
@@ -152,18 +145,14 @@ class FirstOrderStepInfo(
 class SecondOrderStepInfo(
     FirstOrderStepInfo[SecondOrderOracleT_co], Generic[SecondOrderOracleT_co]
 ):
-    _d2fx: Optional[Matrix] = field(init=False, default=None)
-    """Internal Hessian at `x_k`."""
-
-    @property
+    @cached_property
     def d2fx(self) -> Matrix:
         """The Hessian `f''(x_k)` at the current point."""
-        if self._d2fx is None:
-            self._d2fx = self.hess(self.x)
-            logger.debug(
-                f"=> Hessian [bold magenta]\U0001d6c1\u00b2\U0001d453(\U0001d431{format_subscript(self.k)})[/] = {format_value(self._d2fx, sep=', ')}"
-            )
-        return self._d2fx
+        _d2fx = self.hess(self.x)
+        logger.debug(
+            f"=> Hessian [bold magenta]\U0001d6c1\u00b2\U0001d453(\U0001d431{format_subscript(self.k)})[/] = {format_value(_d2fx, sep=', ')}"
+        )
+        return _d2fx
 
     def hess(self, x: Vector) -> Matrix:
         logger.debug(f"Computing Hessian at \U0001d431 = {format_value(x, sep=', ')}")
