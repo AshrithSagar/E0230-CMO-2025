@@ -1,5 +1,11 @@
 # cmo-py
 
+> [!NOTE]
+> This library has been moved to [AshrithSagar/stepopt](https://github.com/AshrithSagar/stepopt).
+>
+> This folder/repository is kept only for historical reference.
+> No new changes will be made here.
+
 [![Checked with mypy](https://www.mypy-lang.org/static/mypy_badge.svg)](https://mypy-lang.org/)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
